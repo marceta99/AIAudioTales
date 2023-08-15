@@ -7,5 +7,7 @@
 
         public int BookId { get; set; }
         public Book Book { get; set; }
+        public PurchaseType PurchaseType { get; set; }
+        public Language Language { get; set; }
     }
 }
