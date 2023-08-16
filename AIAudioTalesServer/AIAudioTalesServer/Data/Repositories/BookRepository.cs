@@ -107,7 +107,7 @@ namespace AIAudioTalesServer.Data.Repositories
             }
 
         }
-        public async Task<int> UploadAudioForBook(int bookId, IFormFile imageFile)
+        public async Task<int> UploadAudioForBook(int bookId, IFormFile audioFile)
         {
             var bookToEdit = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
             if (bookToEdit == null)
@@ -117,10 +117,10 @@ namespace AIAudioTalesServer.Data.Repositories
 
             using (var memoryStream = new MemoryStream())
             {
-                await imageFile.CopyToAsync(memoryStream);
-                var imageBytes = memoryStream.ToArray();
+                await audioFile.CopyToAsync(memoryStream);
+                var audioBytes = memoryStream.ToArray();
 
-                bookToEdit.ImageData = imageBytes;
+                bookToEdit.AudioData = audioBytes;
 
                 return await _dbContext.SaveChangesAsync();
             }
