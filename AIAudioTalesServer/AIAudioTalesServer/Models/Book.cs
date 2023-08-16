@@ -7,6 +7,7 @@
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
         public byte[]? ImageData { get; set; }
+        public byte[]? AudioData { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
     }
 }

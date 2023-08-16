@@ -28,7 +28,6 @@ namespace AIAudioTalesServer.Data.Repositories
             var returnBook = _mapper.Map<BookReturnDTO>(createdBook.Entity);
             return returnBook;
         }
-
         public async Task<int> DeleteBook(int bookId)
         {
             var bookToDelete = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
@@ -45,7 +44,6 @@ namespace AIAudioTalesServer.Data.Repositories
             var returnBooks = _mapper.Map<IList<BookReturnDTO>>(books);
             return returnBooks;
         }
-
         public async Task<BookReturnDTO> GetBook(int id)
         {
             var book = await _dbContext.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
@@ -53,7 +51,6 @@ namespace AIAudioTalesServer.Data.Repositories
             var returnBook = _mapper.Map<BookReturnDTO>(book);
             return returnBook;
         }
-
         public async Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory)
         {
             var books = await _dbContext.Books.Where(b => b.BookCategory == bookCategory).ToListAsync();
@@ -61,7 +58,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return returnBooks;
         }
-
         public async Task<IList<BookReturnDTO>?> GetBooksFromSpecificUser(int userId)
         {
             var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
@@ -80,7 +76,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return returnBooks;
         }
-
         public async Task<int> UpdateBookDetails(BookUpdateDTO book)
         {
             var bookToEdit = await _dbContext.Books.Where(b => b.Id == book.Id).FirstOrDefaultAsync();
@@ -112,5 +107,41 @@ namespace AIAudioTalesServer.Data.Repositories
             }
 
         }
+        public async Task<int> UploadAudioForBook(int bookId, IFormFile imageFile)
+        {
+            var bookToEdit = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+            if (bookToEdit == null)
+            {
+                return 0;
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+
+                bookToEdit.ImageData = imageBytes;
+
+                return await _dbContext.SaveChangesAsync();
+            }
+
+        }
+        public async Task<byte[]?> GetBookAudio(int bookId)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            return book.AudioData;
+        }
+        public async Task<byte[]?> GetBookImage(int bookId)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            return book.ImageData;
+        }
+
     }
 }

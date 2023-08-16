@@ -75,17 +75,17 @@ namespace AIAudioTalesServer.Controllers
         public ActionResult PurchaseBook(int bookId)
         {
             return NoContent();
-        }        
-        
+        }
+
         [HttpPut("UpdateBookDetails/{bookId}")]
         public async Task<ActionResult> UpdateBookDetails(int bookId, [FromBody] BookUpdateDTO book)
         {
-            if(!ModelState.IsValid || bookId != book.Id)
+            if (!ModelState.IsValid || bookId != book.Id)
             {
                 return BadRequest();
             }
             var result = await _bookRepository.UpdateBookDetails(book);
-            if(result == 0)
+            if (result == 0)
             {
                 return BadRequest("Problem with updating book details");
             }
@@ -104,7 +104,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPatch("UploadImageForBook/{bookId}")]
-        public async Task<ActionResult> UploadImageForBook(int bookId,IFormFile imageFile)
+        public async Task<ActionResult> UploadImageForBook(int bookId, IFormFile imageFile)
         {
             if (imageFile == null || imageFile.Length == 0)
             {
@@ -119,5 +119,46 @@ namespace AIAudioTalesServer.Controllers
             return NoContent();
 
         }
+
+        [HttpPatch("UploadAudioForBook/{bookId}")]
+        public async Task<IActionResult> UploadAudioFile(int bookId, IFormFile audioFile)
+        {
+            if (audioFile == null || audioFile.Length == 0)
+            {
+                return BadRequest("Invalid audio file");
+            }
+
+            var result = await _bookRepository.UploadAudioForBook(bookId, audioFile);
+            if (result == 0)
+            {
+                return BadRequest("Problem with uploading the audio");
+            }
+            return NoContent();
+        }
+
+        [HttpGet("GetBookImage/{bookId}")]
+        public async Task<ActionResult<byte[]?>> GetBookImage(int bookId)
+        {
+
+            var bookImage = await _bookRepository.GetBookImage(bookId);
+            if (bookImage == null)
+            {
+                return NotFound("That book does not exists");
+            }
+            return File(bookImage, "image/jpeg");
+        }
+
+        [HttpGet("GetBookAudio/{bookId}")]
+        public async Task<ActionResult<byte[]?>> GetBookAudio(int bookId)
+        {
+
+            var bookAudio = await _bookRepository.GetBookAudio(bookId);
+            if (bookAudio == null)
+            {
+                return NotFound("That book does not exists");
+            }
+            return File(bookAudio, "audio/mp3"); 
+        }
+
     }
 }
