@@ -5,5 +5,6 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
+
     }
 }

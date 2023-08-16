@@ -4,6 +4,8 @@ using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -101,6 +103,21 @@ namespace AIAudioTalesServer.Controllers
             return NoContent();
         }
 
-        
+        [HttpPatch("UploadImageForBook/{bookId}")]
+        public async Task<ActionResult> UploadImageForBook(int bookId,IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("Invalid image file");
+            }
+
+            var result = await _bookRepository.UploadImageForBook(bookId, imageFile);
+            if (result == 0)
+            {
+                return BadRequest("Problem with uploading the image");
+            }
+            return NoContent();
+
+        }
     }
 }

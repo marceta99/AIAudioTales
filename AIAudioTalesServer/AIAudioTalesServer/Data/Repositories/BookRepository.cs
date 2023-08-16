@@ -3,6 +3,7 @@ using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace AIAudioTalesServer.Data.Repositories
@@ -91,6 +92,25 @@ namespace AIAudioTalesServer.Data.Repositories
             bookToEdit.Description = book.Description;
             return await _dbContext.SaveChangesAsync();
         
+        }
+        public async Task<int> UploadImageForBook(int bookId, IFormFile imageFile)
+        {
+            var bookToEdit = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+            if (bookToEdit == null)
+            {
+                return 0;
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
+
+                bookToEdit.ImageData = imageBytes;
+
+                return await _dbContext.SaveChangesAsync();
+            }
+
         }
     }
 }
