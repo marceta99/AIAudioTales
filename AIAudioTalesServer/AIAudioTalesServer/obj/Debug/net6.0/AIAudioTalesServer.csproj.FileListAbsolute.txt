@@ -66,3 +66,5 @@ C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIA
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\obj\Debug\net6.0\AIAudioTalesServer.pdb
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\obj\Debug\net6.0\AIAudioTalesServer.genruntimeconfig.cache
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\obj\Debug\net6.0\ref\AIAudioTalesServer.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

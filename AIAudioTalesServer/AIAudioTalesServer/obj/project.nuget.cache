@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "EeW7YalM8D1zejnsr1ntlTBBOHiE89eFGeALKDfTdy0wAIxI+S2BIPI5m7eR5DRvhPwU596TjpcKraom9R7MKg==",
+  "dgSpecHash": "LlLKz/cmS4iCb7NnRxa6uyriVEbvX58t7ixhWTopByDz5XyUXnof/nUMgyzwopCZD1GcCSbdlBWkzw+DhlQcjQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Mihailo\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\Mihailo\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\Mihailo\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
-    "C:\\Users\\Mihailo\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\Mihailo\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Mihailo\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\Mihailo\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",
     "C:\\Users\\Mihailo\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.21\\microsoft.entityframeworkcore.6.0.21.nupkg.sha512",

@@ -1,16 +1,18 @@
 ﻿using AIAudioTalesServer.Models;
+using AIAudioTalesServer.Models.DTOS.Incoming;
+using AIAudioTalesServer.Models.DTOS.Outgoing;
 
 namespace AIAudioTalesServer.Data.Interfaces
 {
     public interface IBookRepository
     {
-        Task<IList<Book>> GetAllBooks();
-        Task<IList<Book>> GetBooksFromSpecificUser(int userId);
-        Task<IList<Book>> GetBooksForCategory(BookCategory bookCategory);
-        Task<Book> GetBook(int id);
-        Task AddNewBook(Book book);
-        Task UpdateBookDetails(Book book);
-        Task DeleteBook(int bookId);
+        Task<IList<BookReturnDTO>> GetAllBooks();
+        Task<IList<BookReturnDTO>> GetBooksFromSpecificUser(int userId);
+        Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory);
+        Task<BookReturnDTO> GetBook(int id);
+        Task<BookReturnDTO> AddNewBook(BookCreationDTO newBook);
+        Task<int> UpdateBookDetails(BookUpdateDTO book);
+        Task<int> DeleteBook(int bookId);
 
     }
 }
