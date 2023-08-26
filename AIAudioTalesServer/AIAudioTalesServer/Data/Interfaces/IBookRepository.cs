@@ -1,6 +1,6 @@
-﻿using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.DTOS.Incoming;
+﻿using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 
 namespace AIAudioTalesServer.Data.Interfaces
 {
@@ -14,8 +14,10 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<int> UpdateBookDetails(BookUpdateDTO book);
         Task<int> DeleteBook(int bookId);
         public Task<int> UploadImageForBook(int bookId, IFormFile imageFile);
-        public Task<int> UploadAudioForBook(int bookId, IFormFile imageFile);
-        public Task<byte[]?> GetBookAudio(int bookId);
+        
         public Task<byte[]?> GetBookImage(int bookId);
+
+        
+
     }
 }

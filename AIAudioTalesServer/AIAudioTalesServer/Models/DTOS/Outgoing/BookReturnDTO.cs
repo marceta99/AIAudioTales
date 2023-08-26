@@ -1,4 +1,6 @@
-﻿namespace AIAudioTalesServer.Models.DTOS.Outgoing
+﻿using AIAudioTalesServer.Models.Enums;
+
+namespace AIAudioTalesServer.Models.DTOS.Outgoing
 {
     public class BookReturnDTO
     {

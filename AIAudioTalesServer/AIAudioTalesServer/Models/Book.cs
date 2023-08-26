@@ -1,4 +1,6 @@
-﻿namespace AIAudioTalesServer.Models
+﻿using AIAudioTalesServer.Models.Enums;
+
+namespace AIAudioTalesServer.Models
 {
     public class Book
     {
@@ -7,7 +9,7 @@
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
         public byte[]? ImageData { get; set; }
-        public byte[]? AudioData { get; set; }
+        public IList<Story> Stories { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
     }
 }

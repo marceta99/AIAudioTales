@@ -1,4 +1,6 @@
-﻿namespace AIAudioTalesServer.Models
+﻿using AIAudioTalesServer.Models.Enums;
+
+namespace AIAudioTalesServer.Models
 {
     public class PurchasedBooks
     {

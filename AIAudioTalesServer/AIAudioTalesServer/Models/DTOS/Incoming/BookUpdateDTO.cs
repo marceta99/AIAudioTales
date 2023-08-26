@@ -1,4 +1,6 @@
-﻿namespace AIAudioTalesServer.Models.DTOS.Incoming
+﻿using AIAudioTalesServer.Models.Enums;
+
+namespace AIAudioTalesServer.Models.DTOS.Incoming
 {
     public class BookUpdateDTO
     {

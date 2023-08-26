@@ -2,8 +2,8 @@
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace AIAudioTalesServer.Data.Repositories
@@ -18,7 +18,6 @@ namespace AIAudioTalesServer.Data.Repositories
             _dbContext = dbContext;
             _mapper = mapper;
         }
-
         public async Task<BookReturnDTO> AddNewBook(BookCreationDTO newBook)
         {
             var book = _mapper.Map<Book>(newBook);
@@ -107,33 +106,7 @@ namespace AIAudioTalesServer.Data.Repositories
             }
 
         }
-        public async Task<int> UploadAudioForBook(int bookId, IFormFile audioFile)
-        {
-            var bookToEdit = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
-            if (bookToEdit == null)
-            {
-                return 0;
-            }
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await audioFile.CopyToAsync(memoryStream);
-                var audioBytes = memoryStream.ToArray();
-
-                bookToEdit.AudioData = audioBytes;
-
-                return await _dbContext.SaveChangesAsync();
-            }
-
-        }
-        public async Task<byte[]?> GetBookAudio(int bookId)
-        {
-            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
-
-            if (book == null) return null;
-
-            return book.AudioData;
-        }
+        
         public async Task<byte[]?> GetBookImage(int bookId)
         {
             var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
@@ -142,6 +115,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return book.ImageData;
         }
-
+        
     }
 }

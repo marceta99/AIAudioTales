@@ -1,4 +1,4 @@
-﻿namespace AIAudioTalesServer.Models
+﻿namespace AIAudioTalesServer.Models.Enums
 {
     public enum PurchaseType
     {

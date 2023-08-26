@@ -1,7 +1,7 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
-using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -50,7 +50,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBook/{bookId}")]
-        public async Task<ActionResult<IList<BookReturnDTO>>> GetBook(int bookId)
+        public async Task<ActionResult<BookReturnDTO>> GetBook(int bookId)
         {
             var book = await _bookRepository.GetBook(bookId);
             if (book == null)
@@ -120,22 +120,6 @@ namespace AIAudioTalesServer.Controllers
 
         }
 
-        [HttpPatch("UploadAudioForBook/{bookId}")]
-        public async Task<IActionResult> UploadAudioFile(int bookId, IFormFile audioFile)
-        {
-            if (audioFile == null || audioFile.Length == 0)
-            {
-                return BadRequest("Invalid audio file");
-            }
-
-            var result = await _bookRepository.UploadAudioForBook(bookId, audioFile);
-            if (result == 0)
-            {
-                return BadRequest("Problem with uploading the audio");
-            }
-            return NoContent();
-        }
-
         [HttpGet("GetBookImage/{bookId}")]
         public async Task<ActionResult<byte[]?>> GetBookImage(int bookId)
         {
@@ -148,17 +132,7 @@ namespace AIAudioTalesServer.Controllers
             return File(bookImage, "image/jpeg");
         }
 
-        [HttpGet("GetBookAudio/{bookId}")]
-        public async Task<ActionResult<byte[]?>> GetBookAudio(int bookId)
-        {
 
-            var bookAudio = await _bookRepository.GetBookAudio(bookId);
-            if (bookAudio == null)
-            {
-                return NotFound("That book does not exists");
-            }
-            return File(bookAudio, "audio/mp3"); 
-        }
 
     }
 }
