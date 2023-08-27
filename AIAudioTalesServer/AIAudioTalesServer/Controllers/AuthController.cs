@@ -135,7 +135,7 @@ namespace AIAudioTalesServer.Controllers
                     new Claim("userName", user.UserName),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(2),
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -155,7 +155,7 @@ namespace AIAudioTalesServer.Controllers
             HttpContext.Response.Cookies.Append("X-Access-Token", encriptedToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(2),
+                    Expires = DateTime.Now.AddMinutes(5),
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,

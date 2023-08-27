@@ -13,9 +13,9 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<BookReturnDTO> AddNewBook(BookCreationDTO newBook);
         Task<int> UpdateBookDetails(BookUpdateDTO book);
         Task<int> DeleteBook(int bookId);
-        public Task<int> UploadImageForBook(int bookId, IFormFile imageFile);
-        
-        public Task<byte[]?> GetBookImage(int bookId);
+        Task<int> UploadImageForBook(int bookId, IFormFile imageFile);
+        Task<byte[]?> GetBookImage(int bookId);
+        Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language); 
 
         
 

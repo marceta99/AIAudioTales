@@ -65,15 +65,17 @@ namespace AIAudioTalesServer.Data.Repositories
 
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId).ToListAsync();
 
-            List<Book> books = new List<Book>();
+            List<BookReturnDTO> books = new List<BookReturnDTO>();
 
             foreach(var pb in purchasedBooks)
             {
-                books.Add(pb.Book);
+                var book = await GetBook(pb.BookId);
+                book.PurchaseType = pb.PurchaseType;
+                book.Language = pb.Language;
+                books.Add(book);
             }
-            var returnBooks = _mapper.Map<IList<BookReturnDTO>>(books);
-
-            return returnBooks;
+     
+            return books;
         }
         public async Task<int> UpdateBookDetails(BookUpdateDTO book)
         {
@@ -115,6 +117,18 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return book.ImageData;
         }
-        
+
+        public async Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language)
+        {
+            PurchasedBooks pb = new PurchasedBooks
+            {
+                BookId = bookId,
+                UserId = userId,
+                PurchaseType = purchaseType,
+                Language = language
+            };
+            await _dbContext.PurchasedBooks.AddAsync(pb);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

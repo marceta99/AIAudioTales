@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -14,9 +15,11 @@ namespace AIAudioTalesServer.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
-        public BookController(IBookRepository bookRepository)
+        private readonly IAuthRepository _authRepository;
+        public BookController(IBookRepository bookRepository, IAuthRepository authRepository)
         {
             _bookRepository = bookRepository;
+            _authRepository = authRepository;
         }
 
         [HttpGet("GetAllBooks")]
@@ -37,16 +40,41 @@ namespace AIAudioTalesServer.Controllers
             return Ok(books);
         }
 
-        [HttpGet("GetUserBooks/{userId}")]
-        public async Task<ActionResult<IList<BookReturnDTO>>> GetUserBooks(int userId)
+        [HttpGet("GetUserBooks")]
+        public async Task<ActionResult<IList<BookReturnDTO>>> GetUserBooks()
         {
-            var books = await _bookRepository.GetBooksFromSpecificUser(userId);
-            if (books == null)
-            {
-                return NotFound("That user does not exists");
-            }
-            return Ok(books);
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
 
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "userName"
+                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+
+                if (userNameClaim != null)
+                {
+                    var userName = userNameClaim.Value;
+
+                    var user = await _authRepository.GetUserWithUserName(userName);
+                    if (user == null) return BadRequest();
+
+                    var books = await _bookRepository.GetBooksFromSpecificUser(user.Id);
+                    
+                    return Ok(books);    
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("GetBook/{bookId}")]
@@ -71,10 +99,41 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest();
         }
 
-        [HttpPost("PurchaseBook/{bookId}")]
-        public ActionResult PurchaseBook(int bookId)
+        [HttpPost("PurchaseBook")]
+        public async Task<ActionResult> PurchaseBook([FromBody] Purchase purchase)
         {
-            return NoContent();
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "userName"
+                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+
+                if (userNameClaim != null)
+                {
+                    var userName = userNameClaim.Value;
+
+                    var user = await _authRepository.GetUserWithUserName(userName);
+                    if (user == null) return BadRequest();
+
+                    await _bookRepository.PurchaseBook(user.Id, purchase.BookId, purchase.PurchaseType, purchase.Language);
+
+                    return Ok("Book was successfully purchased");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPut("UpdateBookDetails/{bookId}")]

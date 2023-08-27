@@ -8,7 +8,8 @@ namespace AIAudioTalesServer.Models.DTOS.Outgoing
         public string Title { get; set; }
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
-        public byte[]? ImageData { get; set; }
+        public PurchaseType? PurchaseType { get; set; }
+        public Language? Language { get; set; }
 
     }
 }
