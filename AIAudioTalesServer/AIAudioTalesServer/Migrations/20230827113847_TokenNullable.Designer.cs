@@ -4,6 +4,7 @@ using AIAudioTalesServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIAudioTalesServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230827113847_TokenNullable")]
+    partial class TokenNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,26 +72,6 @@ namespace AIAudioTalesServer.Migrations
                     b.ToTable("PurchasedBooks");
                 });
 
-            modelBuilder.Entity("AIAudioTalesServer.Models.RefreshToken", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("RefreshTokens");
-                });
-
             modelBuilder.Entity("AIAudioTalesServer.Models.Story", b =>
                 {
                     b.Property<int>("Id")
@@ -138,6 +120,15 @@ namespace AIAudioTalesServer.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TokenCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -169,17 +160,6 @@ namespace AIAudioTalesServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AIAudioTalesServer.Models.RefreshToken", b =>
-                {
-                    b.HasOne("AIAudioTalesServer.Models.User", "User")
-                        .WithOne("RefreshToken")
-                        .HasForeignKey("AIAudioTalesServer.Models.RefreshToken", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AIAudioTalesServer.Models.Story", b =>
                 {
                     b.HasOne("AIAudioTalesServer.Models.Book", "Book")
@@ -201,9 +181,6 @@ namespace AIAudioTalesServer.Migrations
             modelBuilder.Entity("AIAudioTalesServer.Models.User", b =>
                 {
                     b.Navigation("PurchasedBooks");
-
-                    b.Navigation("RefreshToken")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

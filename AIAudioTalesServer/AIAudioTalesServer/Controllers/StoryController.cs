@@ -3,6 +3,7 @@ using AIAudioTalesServer.Data.Repositories;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace AIAudioTalesServer.Controllers
         {
             _storyRepository = storyRepository;
         }
-
+        
         [HttpPost("AddNewStoryToBook/{bookId}")]
         public async Task<ActionResult<StoryReturnDTO>> AddNewStoryToBook(int bookId, [FromBody] StoryCreationDTO story)
         {

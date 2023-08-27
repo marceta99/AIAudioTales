@@ -68,3 +68,10 @@ C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIA
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\obj\Debug\net6.0\ref\AIAudioTalesServer.dll
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Google.Apis.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Google.Apis.Auth.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Google.Apis.Core.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Newtonsoft.Json.dll
