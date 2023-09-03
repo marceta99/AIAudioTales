@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
+using AIAudioTalesServer.Data.Repositories;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -95,11 +96,40 @@ namespace AIAudioTalesServer.Controllers
         //this metod will be called as the last method to delete current refresh token on that user
         //if refresh token expires or refresh token is invalid, and user will have to login again 
         //to get new refresh token
-        [HttpDelete("RevokeToken/{username}")]
-        public async Task<IActionResult> RevokeToken(string username)
+        [HttpDelete("RevokeToken")]
+        public async Task<IActionResult> RevokeToken()
         {
-            await _authRepository.DeleteRefreshTokenForUser(username);
-            return Ok();
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "userName"
+                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+
+                if (userNameClaim != null)
+                {
+                    var userName = userNameClaim.Value;
+
+                    var user = await _authRepository.GetUserWithUserName(userName);
+                    if (user == null) return BadRequest();
+
+                    await _authRepository.DeleteRefreshTokenForUser(user.UserName);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("LoginWithGoogle")]

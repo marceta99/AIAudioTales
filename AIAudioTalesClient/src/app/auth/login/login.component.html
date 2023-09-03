@@ -1,0 +1,15 @@
+<p>login works!</p>
+<h2>Login Below With Google</h2>
+<div id="buttonDiv"></div>
+
+<form (ngSubmit)="login(f)" #f="ngForm">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" #email required ngModel>
+
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" #password required ngModel>
+
+  <button type="submit">Login</button>
+</form>
