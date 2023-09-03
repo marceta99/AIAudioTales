@@ -24,7 +24,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<int> AddNewUser(User user)
         {
-            var isUsed = await IsUserNameUsed(user.UserName); 
+            var isUsed = await IsEmailUsed(user.Email); 
 
             if (isUsed)
             {
@@ -36,13 +36,13 @@ namespace AIAudioTalesServer.Data.Repositories
             return 1;
         }
 
-        public async Task<bool> IsUserNameUsed(string userName)
+        public async Task<bool> IsEmailUsed(string email)
         {
-            var userExists = await _dbContext.Users.Where(u => u.UserName == userName).FirstOrDefaultAsync();
+            var userExists = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
-            if (userExists == null) return false; //user with that username does not exists
+            if (userExists == null) return false; //user with that email does not exists
 
-            return true; //user with that userName already exists 
+            return true; //user with that email already exists 
         }
 
         public bool CheckPassword(string password, User user)
@@ -58,9 +58,9 @@ namespace AIAudioTalesServer.Data.Repositories
 
         }
 
-        public async Task<User> GetUserWithUserName(string userName)
+        public async Task<User> GetUserWithEmail(string email)
         {
-            var user = await _dbContext.Users.Where(u => u.UserName == userName).FirstOrDefaultAsync();
+            var user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
             return user;
         }
@@ -94,9 +94,9 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return token;
         }
-        public async Task DeleteRefreshTokenForUser(string userName)
+        public async Task DeleteRefreshTokenForUser(string email)
         {
-            var user = await _dbContext.Users.Where(u => u.UserName == userName).FirstOrDefaultAsync();
+            var user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
             if (user == null) return;
 
             var refreshToken = await _dbContext.RefreshTokens.Where(rt => rt.UserId == user.Id).FirstOrDefaultAsync();

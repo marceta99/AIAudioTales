@@ -7,12 +7,12 @@ namespace AIAudioTalesServer.Data.Interfaces
     public interface IAuthRepository
     {
         Task<int> AddNewUser(User user);
-        Task<bool> IsUserNameUsed(string userName);
+        Task<bool> IsEmailUsed(string userName);
         bool CheckPassword(string password, User user);
-        Task<User> GetUserWithUserName(string userName);
+        Task<User> GetUserWithEmail(string email);
         Task<RefreshToken> GetRefreshToken(string refreshToken);
         Task<User> GetUserWithRefreshToken(RefreshToken refreshToken);
         Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user);
-        Task DeleteRefreshTokenForUser(string userName);
+        Task DeleteRefreshTokenForUser(string email);
     }
 }

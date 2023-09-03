@@ -4,6 +4,7 @@ import { environment } from 'src/environment/environment';
 import { AuthService } from '../services/auth.service';
 import { CredentialResponse } from 'google-one-tap';
 import { NgForm } from '@angular/forms';
+import { User } from 'src/app/entities';
 
 @Component({
   selector: 'app-login',
@@ -57,8 +58,8 @@ export class LoginComponent {
    login(form: NgForm){
     console.log(form);
     this.service.login(form.form.value.email,form.form.value.password).subscribe({
-      next :(x:any) => {
-          localStorage.setItem("user","mihailo marcetic");
+      next :(user:User) => {
+          localStorage.setItem("user",JSON.stringify(user));
           this.router.navigate(['/home']);
       },
       error :(error:any) => {

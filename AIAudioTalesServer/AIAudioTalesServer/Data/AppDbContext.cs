@@ -23,7 +23,7 @@ namespace AIAudioTalesServer.Data
             modelBuilder.Entity<RefreshToken>().HasKey(t => t.UserId);
 
             modelBuilder.Entity<User>()
-            .HasIndex(u => u.UserName) 
+            .HasIndex(u => u.Email) 
             .IsUnique();
 
             modelBuilder.Entity<PurchasedBooks>().HasKey(pb => new { pb.UserId, pb.BookId });

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environment/environment';
 import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { RegisterUser } from 'src/app/entities';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,22 +15,23 @@ export class AuthService {
     localStorage.removeItem("user");
   }
 
-  public login(email: String, password: String): Observable<any>{
+  public login(email: string, password: string): Observable<any>{
     const user = {
-      "userName": email,
+      "email": email,
       "password": password
     };
     return this.httpClient.post(
-      this.path + "Auth/Login", user, {withCredentials : true}
+      this.path + "Auth/Login", user
     );
+  }
+  public register(user: RegisterUser):Observable<any>{
+    return this.httpClient.post(this.path+"Auth/Register", user );
   }
 
   public loginWithGoogle(credentials: string): Observable<any>{
-    const header = new HttpHeaders().set('Content-type', 'application/json');
     return this.httpClient.post(
       this.path + "Auth/LoginWithGoogle",
-      JSON.stringify(credentials),
-      { headers: header}
+      JSON.stringify(credentials)
     );
   }
 
@@ -39,13 +41,11 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
-    const header = new HttpHeaders().set('Content-type', 'application/json');
-    return this.httpClient.get(this.path + "Auth/RefreshToken", { headers: header, withCredentials: true });
+    return this.httpClient.get(this.path + "Auth/RefreshToken");
   }
 
   revokeToken(): Observable<any> {
-    const header = new HttpHeaders().set('Content-type', 'application/json');
-    return this.httpClient.delete(this.path + "Auth/RevokeToken/marcetic.mihailo99@gmail.com" , { headers: header, withCredentials: true });
+    return this.httpClient.delete(this.path + "Auth/RevokeToken");
   }
 
 }

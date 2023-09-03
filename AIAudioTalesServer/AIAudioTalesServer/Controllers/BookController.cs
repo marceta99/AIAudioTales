@@ -52,14 +52,14 @@ namespace AIAudioTalesServer.Controllers
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
 
-                // Access custom claim "userName"
-                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
 
-                if (userNameClaim != null)
+                if (emailClaim != null)
                 {
-                    var userName = userNameClaim.Value;
+                    var email = emailClaim.Value;
 
-                    var user = await _authRepository.GetUserWithUserName(userName);
+                    var user = await _authRepository.GetUserWithEmail(email);
                     if (user == null) return BadRequest();
 
                     var books = await _bookRepository.GetBooksFromSpecificUser(user.Id);
@@ -111,14 +111,14 @@ namespace AIAudioTalesServer.Controllers
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
 
-                // Access custom claim "userName"
-                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
 
-                if (userNameClaim != null)
+                if (emailClaim != null)
                 {
-                    var userName = userNameClaim.Value;
+                    var email = emailClaim.Value;
 
-                    var user = await _authRepository.GetUserWithUserName(userName);
+                    var user = await _authRepository.GetUserWithEmail(email);
                     if (user == null) return BadRequest();
 
                     await _bookRepository.PurchaseBook(user.Id, purchase.BookId, purchase.PurchaseType, purchase.Language);

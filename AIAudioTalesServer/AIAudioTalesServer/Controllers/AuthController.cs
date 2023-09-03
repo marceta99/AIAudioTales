@@ -30,7 +30,7 @@ namespace AIAudioTalesServer.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new User() { UserName = model.UserName, Role = Role.Listener };
+            var user = new User() { Email = model.Email, Role = Role.LISTENER };
 
             if (model.ConfirmPassword == model.Password)
             {
@@ -58,13 +58,13 @@ namespace AIAudioTalesServer.Controllers
             {
                 return BadRequest("Bad Request");
             }
-            var userNameExists = await _authRepository.IsUserNameUsed(model.UserName);
+            var userNameExists = await _authRepository.IsEmailUsed(model.Email);
 
             if (userNameExists == false)
             {
                 return BadRequest("User name or password was invalid");
             }
-            var user = await _authRepository.GetUserWithUserName(model.UserName);
+            var user = await _authRepository.GetUserWithEmail(model.Email);
             var match = _authRepository.CheckPassword(model.Password, user);
 
             if (!match)
@@ -72,7 +72,7 @@ namespace AIAudioTalesServer.Controllers
                 return BadRequest("User name or password was invalid");
             }
             JwtGenerator(user);
-            return Ok();
+            return Ok(new { email = user.Email, role = user.Role.ToString() });
         }
 
         //this metod will generate new jwt token, when current jwt token expires
@@ -109,16 +109,16 @@ namespace AIAudioTalesServer.Controllers
                 var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
 
                 // Access custom claim "userName"
-                var userNameClaim = token.Claims.FirstOrDefault(c => c.Type == "userName");
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
 
-                if (userNameClaim != null)
+                if (emailClaim != null)
                 {
-                    var userName = userNameClaim.Value;
+                    var email = emailClaim.Value;
 
-                    var user = await _authRepository.GetUserWithUserName(userName);
+                    var user = await _authRepository.GetUserWithEmail(email);
                     if (user == null) return BadRequest();
 
-                    await _authRepository.DeleteRefreshTokenForUser(user.UserName);
+                    await _authRepository.DeleteRefreshTokenForUser(user.Email);
                     return Ok();
                 }
                 else
@@ -142,12 +142,12 @@ namespace AIAudioTalesServer.Controllers
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(credentials, settings);
 
-            var user = await _authRepository.GetUserWithUserName(payload.Email);
+            var user = await _authRepository.GetUserWithEmail(payload.Email);
             
             if (user != null)
             {
                 JwtGenerator(user);
-                return Ok();
+                return Ok(new {email = user.Email, role = user.Role.ToString() });
             }
             else
             {
@@ -162,7 +162,7 @@ namespace AIAudioTalesServer.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim("userName", user.UserName),
+                    new Claim("email", user.Email),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(5),
@@ -178,7 +178,7 @@ namespace AIAudioTalesServer.Controllers
 
             SetRefreshToken(refreshToken, user);
 
-            return new { token = encripterToken, username = user.UserName };
+            return new { token = encripterToken, email = user.Email };
         }
         private void SetJwt(string encriptedToken)
         {
