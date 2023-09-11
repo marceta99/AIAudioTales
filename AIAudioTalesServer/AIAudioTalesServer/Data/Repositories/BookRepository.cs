@@ -5,6 +5,7 @@ using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models.Enums;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -57,7 +58,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return returnBooks;
         }
-        public async Task<IList<BookReturnDTO>?> GetBooksFromSpecificUser(int userId)
+        public async Task<IList<PurchasedBookReturnDTO>?> GetBooksFromSpecificUser(int userId)
         {
             var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
 
@@ -65,14 +66,21 @@ namespace AIAudioTalesServer.Data.Repositories
 
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId).ToListAsync();
 
-            List<BookReturnDTO> books = new List<BookReturnDTO>();
+            List<PurchasedBookReturnDTO> books = new List<PurchasedBookReturnDTO>();
 
             foreach(var pb in purchasedBooks)
             {
-                var book = await GetBook(pb.BookId);
-                book.PurchaseType = pb.PurchaseType;
-                book.Language = pb.Language;
-                books.Add(book);
+                var book = await GetBook(pb.BookId); //type Book
+                var purchasedBook = new PurchasedBookReturnDTO
+                {
+                    Id = book.Id,
+                    Description = book.Description,
+                    Title = book.Title,
+                    PurchaseType = pb.PurchaseType,
+                    Language = pb.Language
+                };
+                
+                books.Add(purchasedBook);
             }
      
             return books;
@@ -117,7 +125,18 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return book.ImageData;
         }
+        public async Task<IList<Book>> GetAllBooksWithImages()
+        {
+            var books = await _dbContext.Books.ToListAsync();
 
+            return books;
+        }
+        public async Task<Book> GetBookWithImage(int bookId)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            return book;
+        }
         public async Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language)
         {
             PurchasedBooks pb = new PurchasedBooks

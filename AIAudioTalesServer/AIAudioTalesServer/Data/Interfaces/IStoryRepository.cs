@@ -8,6 +8,7 @@ namespace AIAudioTalesServer.Data.Interfaces
     {
         Task<byte[]?> GetStoryAudio(int storyId);
         Task<IList<StoryReturnDTO>> GetAllStoriesForBook(int bookId);
+        Task<IList<StoryReturnDTO>> GetAllPlayableStoriesForBook(int bookId);
         Task<StoryReturnDTO> GetStory(int storyId);
         Task<StoryReturnDTO> AddNewStoryToBook(int bookId,StoryCreationDTO newStory);
 

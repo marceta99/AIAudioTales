@@ -1,0 +1,4 @@
+<div *ngFor="let story of stories">
+  <h3>{{ story.title }}</h3>
+  <audio controls [src]="story.audioDataUrl"></audio>
+</div>

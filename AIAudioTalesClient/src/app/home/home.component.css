@@ -1,0 +1,5 @@
+img {
+  width: 200px; /* Set the width to 50 pixels */
+  height: 200px; /* Set the height to 50 pixels */
+  object-fit: cover; /* Maintain aspect ratio and cover the 50x50 box */
+}

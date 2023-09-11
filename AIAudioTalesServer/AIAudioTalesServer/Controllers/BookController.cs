@@ -1,4 +1,5 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
+using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models.Enums;
@@ -6,7 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Text;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -191,7 +195,18 @@ namespace AIAudioTalesServer.Controllers
             return File(bookImage, "image/jpeg");
         }
 
+        [HttpGet("GetAllBooksWithImages")]
+        public async Task<IList<Book>> GetAllBooksWithImages()
+        {
+            return await _bookRepository.GetAllBooksWithImages();
+        }
 
+        [HttpGet("GetBookWithImage/{bookId}")]
+        public async Task<Book> GetBookWithImage(int bookId)
+        {
+
+            return await _bookRepository.GetBookWithImage(bookId);
+        }
 
     }
 }

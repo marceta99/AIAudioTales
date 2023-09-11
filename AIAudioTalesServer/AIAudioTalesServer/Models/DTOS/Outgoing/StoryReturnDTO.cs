@@ -7,5 +7,7 @@
         public string Text { get; set; }
 
         public int BookId { get; set; }
+        public string AudioDataUrl { get; set; }
+
     }
 }

@@ -21,7 +21,7 @@ export class AuthService {
       "password": password
     };
     return this.httpClient.post(
-      this.path + "Auth/Login", user
+      this.path + "Auth/Login", user, {withCredentials: true}
     );
   }
   public register(user: RegisterUser):Observable<any>{
@@ -29,15 +29,17 @@ export class AuthService {
   }
 
   public loginWithGoogle(credentials: string): Observable<any>{
+    const headers = new HttpHeaders().set('Content-type', 'application/json');
+
+    const requestOptions = {
+      headers: headers,
+      withCredentials: true
+    }
     return this.httpClient.post(
       this.path + "Auth/LoginWithGoogle",
-      JSON.stringify(credentials)
+      JSON.stringify(credentials),
+      requestOptions
     );
-  }
-
-  public getColors():Observable<any>{
-    return this.httpClient.get(this.path + "Item/GetColorList",
-    {withCredentials : true});
   }
 
   refreshToken(): Observable<any> {

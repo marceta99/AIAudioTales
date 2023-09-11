@@ -1,5 +1,5 @@
 import { of, throwError } from 'rxjs';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, switchMap } from 'rxjs';
@@ -12,7 +12,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const headers = new HttpHeaders().set('Content-type', 'application/json');
     request = request.clone({
+      headers: headers,
       withCredentials: true
     });
     return next.handle(request).pipe(catchError(err => this.handleAuthError(err, request, next)));

@@ -14,9 +14,11 @@ namespace AIAudioTalesServer.Controllers
     public class StoryController : ControllerBase
     {
         private readonly IStoryRepository _storyRepository;
-        public StoryController(IStoryRepository storyRepository)
+        private readonly IAuthorizationService _authorizationService;
+        public StoryController(IStoryRepository storyRepository, IAuthorizationService authorizationService)
         {
             _storyRepository = storyRepository;
+            _authorizationService = authorizationService;
         }
         
         [HttpPost("AddNewStoryToBook/{bookId}")]
@@ -55,9 +57,9 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetStoryAudio/{storyId}")]
-        public async Task<ActionResult<byte[]?>> GetStoryAudio(int bookId)
+        public async Task<ActionResult<byte[]?>> GetStoryAudio(int storyId)
         {
-            var storyAudio = await _storyRepository.GetStoryAudio(bookId);
+            var storyAudio = await _storyRepository.GetStoryAudio(storyId);
             if (storyAudio == null)
             {
                 return NotFound("That story does not exists");
@@ -75,6 +77,19 @@ namespace AIAudioTalesServer.Controllers
             }
             return Ok(stories);
         }
+
+        [Authorize(Policy ="ListenerOnly")]
+        [HttpGet("GetPlayableStoriesForBook/{bookId}")]
+        public async Task<ActionResult<IList<StoryReturnDTO>>> GetPlayableStoriesForBook(int bookId)
+        {
+            var stories = await _storyRepository.GetAllPlayableStoriesForBook(bookId);
+            if (stories == null)
+            {
+                return NotFound("That book does not exists");
+            }
+            return Ok(stories);
+        }
+
 
         [HttpPut("UpdateStoryDetails/{storyId}")]
         public async Task<ActionResult> UpdateStoryDetails(int storyId, [FromBody] StoryUpdateDTO story)

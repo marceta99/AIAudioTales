@@ -53,6 +53,18 @@ namespace AIAudioTalesServer.Data.Repositories
             return returnStories ;
         }
 
+        public async Task<IList<StoryReturnDTO>> GetAllPlayableStoriesForBook(int bookId)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            var stories = await _dbContext.Stories.Where(s => s.BookId == book.Id).ToListAsync();
+            var returnStories = _mapper.Map<IList<StoryReturnDTO>>(stories);
+            
+            return returnStories;
+        }
+
         public async Task<StoryReturnDTO> GetStory(int storyId)
         {
             var story = await _dbContext.Stories.Where(s => s.Id == storyId).FirstOrDefaultAsync();
@@ -98,9 +110,12 @@ namespace AIAudioTalesServer.Data.Repositories
 
                 storyToEdit.AudioData = audioBytes;
 
-                return await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
+
+                return 1; 
             }
 
         }
+    
     }
 }

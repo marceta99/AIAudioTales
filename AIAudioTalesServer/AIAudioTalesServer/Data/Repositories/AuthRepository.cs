@@ -71,8 +71,11 @@ namespace AIAudioTalesServer.Data.Repositories
             if (token == null) //if token was never created before for that user
             {
                 refreshToken.UserId = user.Id;
+                refreshToken.User = user;
                 _dbContext.RefreshTokens.Add(refreshToken);
-            }else
+                await _dbContext.SaveChangesAsync();
+            }
+            else
             {
                 token.Token = refreshToken.Token;
                 token.Expires = refreshToken.Expires;

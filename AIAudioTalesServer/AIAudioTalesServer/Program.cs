@@ -61,6 +61,11 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddAuthorization(options => 
+{
+    options.AddPolicy("ListenerOnly", policy => policy.RequireRole("LISTENER"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "CorsPolicy", builder =>

@@ -1,6 +1,5 @@
 ﻿using AIAudioTalesServer.Models.Auth;
 using AIAudioTalesServer.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,7 +10,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
-using AIAudioTalesServer.Data.Repositories;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -71,7 +69,7 @@ namespace AIAudioTalesServer.Controllers
             {
                 return BadRequest("User name or password was invalid");
             }
-            JwtGenerator(user);
+            await JwtGenerator(user);
             return Ok(new { email = user.Email, role = user.Role.ToString() });
         }
 
@@ -88,7 +86,7 @@ namespace AIAudioTalesServer.Controllers
                 return Unauthorized("Token has expired");
             }
             var userWithThatRefreshToken = await _authRepository.GetUserWithRefreshToken(token);
-            JwtGenerator(userWithThatRefreshToken);
+            await JwtGenerator(userWithThatRefreshToken);
 
             return Ok();
         }
@@ -146,7 +144,7 @@ namespace AIAudioTalesServer.Controllers
             
             if (user != null)
             {
-                JwtGenerator(user);
+                await JwtGenerator(user);
                 return Ok(new {email = user.Email, role = user.Role.ToString() });
             }
             else
@@ -155,17 +153,18 @@ namespace AIAudioTalesServer.Controllers
             }
         }
 
-        private dynamic JwtGenerator(User user)
+        private async Task JwtGenerator(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this._applicationSettings.Secret);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("email", user.Email),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Role, user.Role == Role.LISTENER ? "LISTENER":"ADMIN")
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -176,20 +175,21 @@ namespace AIAudioTalesServer.Controllers
 
             var refreshToken = GenerateRefreshToken();
 
-            SetRefreshToken(refreshToken, user);
+            await SetRefreshToken(refreshToken, user);
 
-            return new { token = encripterToken, email = user.Email };
         }
         private void SetJwt(string encriptedToken)
         {
             HttpContext.Response.Cookies.Append("X-Access-Token", encriptedToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(5),
+                    Expires = DateTime.Now.AddDays(7),
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,
-                    SameSite = SameSiteMode.None
+                    SameSite = SameSiteMode.None,
+                    Domain = "localhost", 
+                    Path = "/"
                 });
         }
 
@@ -199,13 +199,13 @@ namespace AIAudioTalesServer.Controllers
             {
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                 Created = DateTime.Now,
-                Expires = DateTime.Now.AddMinutes(2)
+                Expires = DateTime.Now.AddDays(7)
             };
 
             return refreshToken;
         }
 
-        private void SetRefreshToken(RefreshToken refreshToken, User user)
+        private async Task SetRefreshToken(RefreshToken refreshToken, User user)
         {
             HttpContext.Response.Cookies.Append("X-Refresh-Token", refreshToken.Token,
                 new CookieOptions
@@ -214,10 +214,12 @@ namespace AIAudioTalesServer.Controllers
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,
-                    SameSite = SameSiteMode.None
+                    SameSite = SameSiteMode.None,
+                    Domain = "localhost",
+                    Path = "/"
                 });
 
-            _authRepository.SaveRefreshTokenInDb(refreshToken, user);           
+            await _authRepository.SaveRefreshTokenInDb(refreshToken, user);           
         }
     }
 }

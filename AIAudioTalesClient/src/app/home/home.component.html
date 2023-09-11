@@ -1,0 +1,6 @@
+<router-outlet></router-outlet>
+<div *ngFor="let book of booksWithImages" >
+  <h2>{{ book.title }}</h2>
+  <p>{{ book.description }}</p>
+  <img [src]="book.photo" />
+</div>

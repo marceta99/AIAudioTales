@@ -8,6 +8,21 @@ export interface RegisterUser{
   password : string,
   confirmPassword: string
 }
+export interface Book{
+  id: number,
+  title: string,
+  description: string,
+  bookCategory: number,
+  imageData: string
+}
+
+export interface Story{
+  id: number,
+  title: string,
+  text: string,
+  bookId: number,
+  audioDataUrl: string
+}
 
 //Enums
 export enum Role{
