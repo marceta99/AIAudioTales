@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { BookService } from './services/book.service';
 import { Book } from '../entities';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SideNavToggle } from './sidenav/sidenav.component';
 
 @Component({
   selector: 'app-home',
@@ -13,8 +14,10 @@ export class HomeComponent {
   booksWithImages : any;
   constructor(private bookService: BookService, private _sanitizer: DomSanitizer) { }
 
-  ngOnInit():void{
+  isSideNavCollapsed = false;
+  screenWidth = 0;
 
+  ngOnInit():void{
   this.bookService.getAllBooksWithImages().subscribe({
     next :(booksWithImages:any) => {
       console.log(booksWithImages);
@@ -30,9 +33,11 @@ export class HomeComponent {
     error :(error:any) => {
         console.log(error);
       }
-});
+});}
 
+  onToggleSideNav(data: SideNavToggle): void{
+    this.screenWidth = data.screenWidth;
+    this.isSideNavCollapsed = data.collapsed;
   }
-
 
 }

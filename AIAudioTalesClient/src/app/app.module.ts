@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { BookComponent } from './home/book/book.component';
 import { AuthInterceptor } from './auth/services/auth.interceptor';
+import { SidenavComponent } from './home/sidenav/sidenav.component';
+import { DashboardComponent } from './home/dashboard/dashboard.component';
+import { ProductsComponent } from './home/products/products.component';
+import { StatisticsComponent } from './home/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { AuthInterceptor } from './auth/services/auth.interceptor';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    BookComponent
+    BookComponent,
+    SidenavComponent,
+    DashboardComponent,
+    ProductsComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,

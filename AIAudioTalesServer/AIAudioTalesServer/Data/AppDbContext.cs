@@ -1,5 +1,7 @@
 ﻿using AIAudioTalesServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Diagnostics;
 
 namespace AIAudioTalesServer.Data
@@ -13,7 +15,18 @@ namespace AIAudioTalesServer.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)
         {
-
+            try
+            {
+                var databaseCreator = Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+                if(databaseCreator != null)
+                {
+                    if (!databaseCreator.CanConnect()) databaseCreator.Create();
+                    if(!databaseCreator.HasTables()) databaseCreator.CreateTables();
+                }
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

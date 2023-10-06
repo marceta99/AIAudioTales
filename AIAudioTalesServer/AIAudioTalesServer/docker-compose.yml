@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  # SQL Server container
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: Marcetakralj10!
+      ACCEPT_EULA: Y
+    ports:
+      - "1433:1433"
+    networks:
+      - api-network
+
+  # ASP.NET Web API container
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - sql-server
+    networks:
+      - api-network
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sql-server;Database=AudioTalesDbDocker;User=sa;Password=Marcetakralj10!;"
+
+networks:
+  api-network:
