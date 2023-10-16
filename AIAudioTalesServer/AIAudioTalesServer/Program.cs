@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
+configuration.AddJsonFile("appsettings.json");
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -23,8 +26,8 @@ var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
 var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword}";
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    options.UseSqlServer(builder.Configuration["ConnectionStrings__DefaultConnection"]);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //options.UseSqlServer(builder.Configuration["ConnectionStrings__DefaultConnection"]);
 });
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
@@ -92,7 +95,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseCors("CorsPolicy");
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
