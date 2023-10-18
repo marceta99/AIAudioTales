@@ -75,3 +75,14 @@ C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIA
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\out\web.config
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\web.config
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\AIAudioTalesServer.deps.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\AIAudioTalesServer.runtimeconfig.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\appsettings.Development.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\appsettings.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\out\AIAudioTalesServer.deps.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\out\AIAudioTalesServer.runtimeconfig.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\out\appsettings.Development.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\out\out\appsettings.json
+C:\Users\Mihailo\Desktop\ProgrammingProjects\AIAudioTales\AIAudioTalesServer\AIAudioTalesServer\bin\Debug\net6.0\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll

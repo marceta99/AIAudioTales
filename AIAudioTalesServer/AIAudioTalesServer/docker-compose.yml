@@ -17,13 +17,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "5000:5000"
     depends_on:
       - sql-server
     networks:
       - api-network
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sql-server;Database=AudioTalesDbDocker;User=sa;Password=Marcetakralj10!;"
+      - DB_HOST=demotalesdb
+      - DB_NAME=demotalesdbname
+      - DB_SA_PASSWORD=Marcetakralj10!
 
 networks:
   api-network:

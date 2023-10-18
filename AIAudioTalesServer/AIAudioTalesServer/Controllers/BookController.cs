@@ -26,6 +26,12 @@ namespace AIAudioTalesServer.Controllers
             _authRepository = authRepository;
         }
 
+        [HttpGet("Test")]
+        public ActionResult<string> Test()
+        {
+            return "Test is it everything working";
+        }
+
         [HttpGet("GetAllBooks")]
         public async Task<ActionResult<IList<BookReturnDTO>>> GetAllBooks()
         {
