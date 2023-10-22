@@ -1,15 +1,22 @@
-<p>login works!</p>
-<h2>Login Below With Google</h2>
-<div id="buttonDiv"></div>
+<div class="login">
+  
+  <img class="logo-login" src="../../../assets/logo.png">
+  <form (ngSubmit)="login(f)" #f="ngForm">
+      <h3>Login to Your Account</h3>
+      <input class="input_1" type="email" id="email" name="email" placeholder="Email" #email required ngModel>
+      <input class="input_1" type="password" id="password" name="password" placeholder=" Password" #password required ngModel>
+  
+    <button class="btn_prim" type="submit">Login</button>
+    <p class="orange_click">Forgot Password ?</p>
+  </form>
+  <p>Or login with</p>
+  <div id="buttonDiv"></div>
+  <div class="goToRegistration">
+    <span>Don't have an account ?</span>
+    <span class="orange_click">Register</span>
+  </div>
 
-<form (ngSubmit)="login(f)" #f="ngForm">
-
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" #email required ngModel>
+</div>
 
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" #password required ngModel>
 
-  <button type="submit">Login</button>
-</form>

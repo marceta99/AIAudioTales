@@ -1,19 +1,20 @@
 <div class="container">
+  <img class="logo-login" src="../../../assets/logo.png">
   <h2>Registration</h2>
   <form (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" [(ngModel)]="user.email" required>
+      <input class="input_1" type="email" id="email" placeholder="Email" name="email" [(ngModel)]="user.email" required>
     </div>
     <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" [(ngModel)]="user.password" required>
+      <input class="input_1" type="password" id="password" placeholder="Password" name="password" [(ngModel)]="user.password" required>
     </div>
     <div class="form-group">
-      <label for="confirmPassword">Confirm Password:</label>
-      <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword" required>
+      <input class="input_1" type="password" id="confirmPassword" placeholder="Confirm Password" name="confirmPassword" [(ngModel)]="user.confirmPassword" required>
       <div *ngIf="passwordsMismatch" class="error-message">Passwords do not match.</div>
     </div>
-    <button type="submit" [disabled]="passwordsMismatch">Register</button>
+    <p class="terms">By signing up, you agree to our Terms,
+      Data Policy and Cookies Policy.</p>
+    <button type="submit" class="btn_prim" [disabled]="passwordsMismatch">Register</button>
+    <button type="button" class="btn_ghost">Cancel</button>
   </form>
 </div>
