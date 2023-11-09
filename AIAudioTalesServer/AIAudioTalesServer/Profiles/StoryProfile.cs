@@ -9,7 +9,7 @@ namespace AIAudioTalesServer.Profiles
     public class StoryProfile : Profile
     {
         public StoryProfile()
-        {
+        {/*
             CreateMap<StoryCreationDTO, Story>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
@@ -21,7 +21,7 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
                 .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.BookId))
                 .ForMember(dest => dest.AudioDataUrl, opt => opt.MapFrom(src => $"data:audio/mpeg;base64,{Convert.ToBase64String(src.AudioData)}"))
-                ;
+                ;*/
         }
     }
 }

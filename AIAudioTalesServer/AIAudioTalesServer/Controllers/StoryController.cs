@@ -12,7 +12,7 @@ namespace AIAudioTalesServer.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class StoryController : ControllerBase
-    {
+    {/*
         private readonly IStoryRepository _storyRepository;
         private readonly IAuthorizationService _authorizationService;
         public StoryController(IStoryRepository storyRepository, IAuthorizationService authorizationService)
@@ -121,5 +121,6 @@ namespace AIAudioTalesServer.Controllers
             }
             return NoContent();
         }
+        */    
     }
 }

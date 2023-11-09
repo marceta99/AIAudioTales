@@ -17,7 +17,7 @@ namespace AIAudioTalesServer.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase
-    {
+    {/*
         private readonly IBookRepository _bookRepository;
         private readonly IAuthRepository _authRepository;
         public BookController(IBookRepository bookRepository, IAuthRepository authRepository)
@@ -213,6 +213,6 @@ namespace AIAudioTalesServer.Controllers
 
             return await _bookRepository.GetBookWithImage(bookId);
         }
-
+        */
     }
 }

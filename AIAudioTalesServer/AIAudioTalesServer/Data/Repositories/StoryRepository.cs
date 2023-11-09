@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
-    public class StoryRepository : IStoryRepository
-    {
+    public class StoryRepository
+    {   /*
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
 
@@ -115,7 +115,7 @@ namespace AIAudioTalesServer.Data.Repositories
                 return 1; 
             }
 
-        }
+        }*/
     
     }
 }

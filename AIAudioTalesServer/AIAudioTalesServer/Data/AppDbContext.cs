@@ -12,6 +12,8 @@ namespace AIAudioTalesServer.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<PurchasedBooks> PurchasedBooks { get; set; }
         public DbSet<Story> Stories { get; set; }
+        public DbSet<Part> Parts { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -61,10 +63,32 @@ namespace AIAudioTalesServer.Data
            .HasForeignKey(s => s.BookId)
            .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Part>()
+           .HasOne<Story>(p => p.Story)
+           .WithMany(s => s.Parts)
+           .HasForeignKey(p => p.StoryId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Answer>()
+           .HasOne<Part>(a => a.CurrentPart)
+           .WithMany(p => p.Answers)
+           .HasForeignKey(a => a.CurrentPartId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Part>()
+            .HasOne(p => p.ParentAnswer)
+            .WithOne(a => a.NextPart)
+            .HasForeignKey<Answer>(a => a.NextPartId)
+            .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<User>()
             .HasOne(u => u.RefreshToken)
             .WithOne(rt => rt.User)
             .HasForeignKey<RefreshToken>(rt => rt.UserId);
+
+            modelBuilder.Entity<Answer>()
+            .Property(a => a.NextPartId)
+            .IsRequired(false);
         }
        
     }

@@ -9,8 +9,8 @@ using System.Net;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
-    public class BookRepository : IBookRepository
-    {
+    public class BookRepository
+    {   /*
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
 
@@ -148,6 +148,6 @@ namespace AIAudioTalesServer.Data.Repositories
             };
             await _dbContext.PurchasedBooks.AddAsync(pb);
             await _dbContext.SaveChangesAsync();
-        }
+        }*/
     }
 }

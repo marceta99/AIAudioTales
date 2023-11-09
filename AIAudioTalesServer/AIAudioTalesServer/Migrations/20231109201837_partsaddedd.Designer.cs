@@ -4,6 +4,7 @@ using AIAudioTalesServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIAudioTalesServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231109201837_partsaddedd")]
+    partial class partsaddedd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +40,7 @@ namespace AIAudioTalesServer.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("NextPartId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("AnswerId");
@@ -45,8 +48,7 @@ namespace AIAudioTalesServer.Migrations
                     b.HasIndex("CurrentPartId");
 
                     b.HasIndex("NextPartId")
-                        .IsUnique()
-                        .HasFilter("[NextPartId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Answers");
                 });
@@ -209,7 +211,8 @@ namespace AIAudioTalesServer.Migrations
                     b.HasOne("AIAudioTalesServer.Models.Part", "NextPart")
                         .WithOne("ParentAnswer")
                         .HasForeignKey("AIAudioTalesServer.Models.Answer", "NextPartId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("CurrentPart");
 
