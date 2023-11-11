@@ -33,7 +33,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 //builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
