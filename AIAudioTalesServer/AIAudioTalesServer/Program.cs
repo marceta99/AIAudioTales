@@ -2,12 +2,11 @@ using AIAudioTalesServer;
 using AIAudioTalesServer.Data;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Data.Repositories;
+using AIAudioTalesServer.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -97,6 +96,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 

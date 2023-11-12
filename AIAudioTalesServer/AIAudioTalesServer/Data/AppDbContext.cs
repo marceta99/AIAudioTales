@@ -1,4 +1,5 @@
-﻿using AIAudioTalesServer.Models;
+﻿using AIAudioTalesServer.Data.Seed.BooksPictures;
+using AIAudioTalesServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -24,6 +25,8 @@ namespace AIAudioTalesServer.Data
                 {
                     if (!databaseCreator.CanConnect()) databaseCreator.Create();
                     if(!databaseCreator.HasTables()) databaseCreator.CreateTables();
+                    DbSeederService seed = new DbSeederService(this);
+                    seed.Seed();
                 }
             }catch(Exception ex)
             {
