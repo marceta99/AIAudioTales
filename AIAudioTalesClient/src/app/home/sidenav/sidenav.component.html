@@ -1,4 +1,4 @@
-<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':'' ">
+<!-- <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':'' ">
   <div class="logo-container">
     <button class="logo" (click)="toggleCollapse()">A</button>
     <div class="logo-text" *ngIf="collapsed">Angular</div>
@@ -14,4 +14,39 @@
       </a>
     </li>
   </ul>
+</div> -->
+
+<div class="sidenav">
+
+  <div class="topnav-lg">
+    <span class="logo-span">
+      <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
+      <p class="logo-text">Kumadio</p>
+    </span>
+  </div>
+
+
+
+  <span class="menu_ctg">
+    <img src="../../../assets/icons/home.svg" alt="home"><a>Home</a>
+  </span>
+  <span class="menu_ctg">
+    <img src="../../../assets/icons/search.svg" alt="search"><a>Search</a>
+  </span>
+  <span class="menu_ctg">
+    <img src="../../../assets/icons/library.svg" alt="library"><a>Library</a>
+  </span>
+  <span class="menu_ctg my-prof">
+    <img src="../../../assets/icons/settings.svg" alt="settings"><a>My Profile</a>
+  </span>
+</div>
+
+
+<div class="topnav-mob">
+  <span class="logo-span">
+    <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
+    <p class="logo-text">Kumadio</p>
+  </span>
+
+  <img src="../../../assets/icons/settings.svg" alt="settings">
 </div>

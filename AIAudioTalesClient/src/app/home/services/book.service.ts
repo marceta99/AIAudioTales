@@ -16,7 +16,7 @@ export class BookService {
     return this.httpClient.get<Book[]>(this.path + "Book/GetAllBooks", {withCredentials: true});
   }
   public getAllBooksWithImages():Observable<any>{
-    return this.httpClient.get<Book[]>(this.path + "Book/GetAllBooksWithImages", {withCredentials: true});
+    return this.httpClient.get<Book[]>(this.path + "Books/GetAllBooks", {withCredentials: true});/// avoiding error
   }
   public getBookWithImage(bookId: number):Observable<any>{
     return this.httpClient.get<Book>(this.path + "Book/GetBookWithImage/"+bookId, {withCredentials: true});
