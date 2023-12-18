@@ -1,19 +1,21 @@
 <div class="login">
-  
+
   <img class="logo-login" src="../../../assets/logo_t.png">
-  <form (ngSubmit)="login(f)" #f="ngForm">
-      <h3>Login to Your Account</h3>
-      <input class="input_1" type="email" id="email" name="email" placeholder="Email" #email required ngModel>
-      <input class="input_1" type="password" id="password" name="password" placeholder=" Password" #password required ngModel>
-  
-    <button class="btn_prim" type="submit">Login</button>
+  <form (ngSubmit)="login()"  [formGroup]="loginForm">
+    <h3>Login to Your Account</h3>
+    <input class="input_1" type="email" formControlName="email" placeholder="Email" autocomplete="on">
+    <input class="input_1" type="password" formControlName="password" placeholder="Password" autocomplete="on">
+
+    <button class="btn_prim" type="submit" [disabled]="!loginForm.valid">Login</button>
+
+    <p *ngIf="showErrorMessage"class="orange_click">Wrong email or password. Try again</p>
     <p class="orange_click">Forgot Password ?</p>
   </form>
   <p>Or login with</p>
   <div id="buttonDiv"></div>
   <div class="goToRegistration">
     <span>Don't have an account ?</span>
-    <span class="orange_click">Register</span>
+    <span class="orange_click" [routerLink]="['/register']">Register</span>
   </div>
 
 </div>

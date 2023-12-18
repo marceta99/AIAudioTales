@@ -24,7 +24,15 @@
     max-width: 350px;
 }
 
+input.ng-invalid.ng-touched{
+  border: 1px solid red;
+}
 
+button:disabled{
+  background-color: #bdc3c7;
+  color: #7f8c8d;
+  cursor: not-allowed;
+}
 
 
 /* Small devices (tablets, 768px and up) */

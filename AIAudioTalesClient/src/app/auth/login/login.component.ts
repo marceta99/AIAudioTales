@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environment/environment';
 import { AuthService } from '../services/auth.service';
 import { CredentialResponse } from 'google-one-tap';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { User } from 'src/app/entities';
 
 @Component({
@@ -13,6 +13,8 @@ import { User } from 'src/app/entities';
 })
 export class LoginComponent {
   private clientId = environment.clientId;
+  showErrorMessage = false;
+  loginForm!: FormGroup;
 
   constructor(
     private router: Router,
@@ -21,6 +23,11 @@ export class LoginComponent {
     ) {}
 
   ngOnInit():void{
+      this.loginForm = new FormGroup({
+        email: new FormControl(null, [Validators.required, Validators.email]),
+        password: new FormControl(null, [Validators.required, Validators.minLength(6)])
+      });
+
       // @ts-ignore
       window.onGoogleLibraryLoad = () => {
         // @ts-ignore
@@ -55,16 +62,19 @@ export class LoginComponent {
 
    }
 
-   login(form: NgForm){
-    console.log(form);
-    this.service.login(form.form.value.email,form.form.value.password).subscribe({
+   login(){
+    this.service.login(this.loginForm.controls['email'].value ,this.loginForm.controls['password'].value)
+    .subscribe({
       next :(user:User) => {
+          this.showErrorMessage=false;
           localStorage.setItem("user",JSON.stringify(user));
           this.router.navigate(['/home']);
       },
       error :(error:any) => {
           console.log(error);
+          this.loginForm.reset();
+          this.showErrorMessage = true;
         }
-  });
-   }
+    });
+  }
 }
