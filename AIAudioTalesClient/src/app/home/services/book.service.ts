@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Book, Story } from 'src/app/entities';
@@ -24,6 +24,14 @@ export class BookService {
   public getBookStories(bookId: number): Observable<Story[]>{
     return this.httpClient.get<Story[]>
     (this.path + "Story/GetPlayableStoriesForBook/"+bookId, {withCredentials: true});
+  }
+  public getBooksFromCategory(bookCategory: number, page: number, pageSize: number) :Observable<Book[]>{
+    const params = new HttpParams()
+      .set('bookCategory', bookCategory)
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    return this.httpClient.get<Book[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
 
 }

@@ -1,10 +1,10 @@
 ﻿using AIAudioTalesServer.Models.DTOS.Incoming;
-using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models;
 using AutoMapper;
 using AIAudioTalesServer.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 using AIAudioTalesServer.Data.Interfaces;
+using AIAudioTalesServer.Models.Enums;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -44,6 +44,14 @@ namespace AIAudioTalesServer.Data.Repositories
         {
             var book = await _dbContext.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
             return book;
+        }
+
+        public async Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory)
+        {
+            var books = await _dbContext.Books.Where(b => b.BookCategory == bookCategory).ToListAsync();
+            var returnBooks = _mapper.Map<IList<BookReturnDTO>>(books);
+
+            return returnBooks;
         }
 
 

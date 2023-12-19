@@ -2,7 +2,7 @@
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
 using AIAudioTalesServer.Models.DTOS.Incoming;
-using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +41,20 @@ namespace AIAudioTalesServer.Controllers
                 return NotFound("That book does not exists");
             }
             return Ok(book);
+        }
+
+        [HttpGet("GetBooksFromCategory")]
+        public async Task<ActionResult<IList<BookReturnDTO>>> GetBooksForCategory([FromQuery] BookCategory bookCategory, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var books = await _booksRepository.GetBooksForCategory(bookCategory);
+            if (books == null)
+            {
+                return NotFound("There is no books for that category");
+            }
+
+            //skip elements until you came to that page that is specified in "page" and take only number elements from page that is specified in "pageSize"
+            var paginatedBooks = books.Skip((page - 1)*pageSize).Take(pageSize);
+            return Ok(paginatedBooks);
         }
 
         [HttpPost("AddNewBook")]

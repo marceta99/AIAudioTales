@@ -10,9 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { BookComponent } from './home/book/book.component';
 import { AuthInterceptor } from './auth/services/auth.interceptor';
 import { SidenavComponent } from './home/sidenav/sidenav.component';
-import { DashboardComponent } from './home/dashboard/dashboard.component';
-import { ProductsComponent } from './home/products/products.component';
-import { StatisticsComponent } from './home/statistics/statistics.component';
+import { BooksComponent } from './home/books/books.component';
 
 @NgModule({
   declarations: [
@@ -22,9 +20,7 @@ import { StatisticsComponent } from './home/statistics/statistics.component';
     HomeComponent,
     BookComponent,
     SidenavComponent,
-    DashboardComponent,
-    ProductsComponent,
-    StatisticsComponent
+    BooksComponent
   ],
   imports: [
     BrowserModule,

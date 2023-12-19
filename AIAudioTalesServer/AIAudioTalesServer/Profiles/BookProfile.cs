@@ -20,12 +20,14 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.BookCategory, opt => opt.MapFrom(src => src.BookCategory))
-                ;
+                ;*/
             CreateMap<Book, BookReturnDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.BookCategory, opt => opt.MapFrom(src => src.BookCategory))
-                ;*/
+                .ForMember(dest => dest.ImageData, opt => opt.MapFrom(src => src.ImageData))
+                ;
         }
     }
 }
