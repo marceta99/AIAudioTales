@@ -13,7 +13,13 @@ export interface Book{
   title: string,
   description: string,
   bookCategory: number,
-  imageData: string
+  imageURL: string
+}
+export interface BooksPaginated{
+  booksCategory: BookCategory,
+  books: Book[],
+  pageSize: number,
+  pageNumber: number
 }
 
 export interface Story{

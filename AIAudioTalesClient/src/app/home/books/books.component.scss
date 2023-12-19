@@ -1,0 +1,23 @@
+.category-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.books-container{
+  display: flex;
+  flex-direction: row;
+}
+
+button{
+  height: 60px;
+  width: 60px;
+}
+
+.book{
+  margin: 10px;
+}
+
+img{
+  width: 80px;
+  height: 80px;
+}

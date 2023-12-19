@@ -1,4 +1,17 @@
 <p>books works!</p>
-<div *ngFor="let book of bedTimeBooks">
-  <p>{{book.title}}</p>
+<div *ngFor="let bookPaginated of booksPaginated">
+  <div class="category-container">
+
+    <h1>{{bookPaginated.booksCategory | bookCategoryPipe}}</h1>
+    <button>previous</button>
+    <div class="books-container">
+
+      <div class="book" *ngFor="let book of bookPaginated.books">
+        <p>{{book.title}}</p>
+        <img [src]="book.imageURL" alt="">
+      </div>
+    </div>
+    <button>next</button>
+
+  </div>
 </div>

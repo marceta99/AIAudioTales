@@ -11,6 +11,7 @@ import { BookComponent } from './home/book/book.component';
 import { AuthInterceptor } from './auth/services/auth.interceptor';
 import { SidenavComponent } from './home/sidenav/sidenav.component';
 import { BooksComponent } from './home/books/books.component';
+import { BookCategoryPipe } from './pipes/category.pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { BooksComponent } from './home/books/books.component';
     HomeComponent,
     BookComponent,
     SidenavComponent,
-    BooksComponent
+    BooksComponent,
+    BookCategoryPipe
   ],
   imports: [
     BrowserModule,

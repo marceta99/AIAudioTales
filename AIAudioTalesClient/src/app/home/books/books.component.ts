@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, BookCategory } from 'src/app/entities';
+import { Book, BookCategory, BooksPaginated } from 'src/app/entities';
 
 @Component({
   selector: 'app-books',
@@ -8,37 +8,29 @@ import { Book, BookCategory } from 'src/app/entities';
   styleUrls: ['./books.component.scss']
 })
 export class BooksComponent implements OnInit {
-  bedTimeBooks!: Book[];
-  natureBooks!: Book[];
-  historyBooks!: Book[];
+  booksPaginated: BooksPaginated[] = [];
 
   constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
-    this.bookService.getBooksFromCategory(BookCategory.BedTime, 1, 10).subscribe({
-      next: (books : Book[] ) => {
-        console.log(books);
-        this.bedTimeBooks = books ;
-    },
-      error: error => {
-        console.error('There was an error!', error);
+    for(const category in BookCategory){
+      if(!isNaN(Number(category))){
+        this.loadBooksFromCategory(category, 1, 6)
+      }
     }
-    })
+  }
 
-    this.bookService.getBooksFromCategory(BookCategory.Nature, 1, 10).subscribe({
+  loadBooksFromCategory(bookCategory: string, pageNumber: number, pageSize: number): void{
+    this.bookService.getBooksFromCategory(Number(bookCategory), pageNumber, pageSize).subscribe({
       next: (books : Book[] ) => {
-        console.log(books);
-        this.natureBooks = books ;
-    },
-      error: error => {
-        console.error('There was an error!', error);
-    }
-    })
-
-    this.bookService.getBooksFromCategory(BookCategory.History, 1, 10).subscribe({
-      next: (books : Book[] ) => {
-        console.log(books);
-        this.historyBooks = books ;
+        console.log(books)
+        const bookPaginated : BooksPaginated = {
+          booksCategory: Number(bookCategory) as BookCategory,
+          books: books,
+          pageSize: pageSize,
+          pageNumber: pageNumber
+        }
+        this.booksPaginated.push(bookPaginated);
     },
       error: error => {
         console.error('There was an error!', error);
@@ -46,4 +38,10 @@ export class BooksComponent implements OnInit {
     })
   }
 
+  loadNextPage(bookCategory: BookCategory, pageNumber: number, pageSize: number): void{
+
+  }
+  loadPreviousPage(bookCategory: BookCategory, pageNumber: number, pageSize: number): void{
+
+  }
 }

@@ -21,13 +21,6 @@ namespace AIAudioTalesServer.Data.Repositories
         public async Task<Book> AddNewBook(BookCreateDTO newBook)
         {
             var book = _mapper.Map<Book>(newBook);
-            using (var memoryStream = new MemoryStream())
-            {
-                await newBook.ImageFile.CopyToAsync(memoryStream);
-                var imageBytes = memoryStream.ToArray();
-
-                book.ImageData = imageBytes;
-            }
             
             var createdBook = _dbContext.Books.Add(book);
             await _dbContext.SaveChangesAsync();

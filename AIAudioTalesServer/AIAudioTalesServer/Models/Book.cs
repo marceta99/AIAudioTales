@@ -8,7 +8,7 @@ namespace AIAudioTalesServer.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
-        public byte[]? ImageData { get; set; }
+        public string ImageURL { get; set; }
         public IList<Story> Stories { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
     }

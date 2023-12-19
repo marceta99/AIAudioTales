@@ -49,7 +49,8 @@ namespace AIAudioTalesServer.Controllers
             var books = await _booksRepository.GetBooksForCategory(bookCategory);
             if (books == null)
             {
-                return NotFound("There is no books for that category");
+                //return empty array if there is no books in that category
+                return new List<BookReturnDTO>();
             }
 
             //skip elements until you came to that page that is specified in "page" and take only number elements from page that is specified in "pageSize"
@@ -58,13 +59,9 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("AddNewBook")]
-        public async Task<ActionResult<BookReturnDTO>> AddNewBook([FromForm] BookCreateDTO book)
+        public async Task<ActionResult<BookReturnDTO>> AddNewBook([FromBody] BookCreateDTO book)
         {
             
-            if (book.ImageFile == null || book.ImageFile.Length == 0)
-            {
-                return BadRequest("Invalid image file");
-            }
             if (ModelState.IsValid)
             {
                 var newBook = await _booksRepository.AddNewBook(book);
