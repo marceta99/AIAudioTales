@@ -3,3 +3,11 @@ img {
   height: 200px; /* Set the height to 50 pixels */
   object-fit: cover; /* Maintain aspect ratio and cover the 50x50 box */
 }
+#body-container {
+  margin-left: 1.3rem;
+}
+@media (min-width: 768px) {
+  #body-container {
+    margin-left: 240px;
+  }
+}
