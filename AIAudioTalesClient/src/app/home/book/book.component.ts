@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Story } from 'src/app/entities';
+import { Book } from 'src/app/entities';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-book',
@@ -8,21 +9,25 @@ import { Story } from 'src/app/entities';
   styleUrls: ['./book.component.scss']
 })
 export class BookComponent {
-  stories! : Story[];
+  book! : Book;
 
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService, private route: ActivatedRoute) {}
 
   ngOnInit():void{
+    this.route.params.subscribe(params => {
+      const id = +params['bookId'];
 
-    this.bookService.getBookStories(1).subscribe({
-      next :(bookStories:Story[]) => {
-          console.log(bookStories);
-          this.stories= bookStories;
-      },
-      error :(error:any) => {
+      this.bookService.getBookWithId(id).subscribe({
+        next: (book: Book) => {
+          console.log(book);
+          this.book = book;
+        },
+        error: (error: any) => {
           console.log(error);
         }
-  });
+      });
+    });
+
  }
 
 }

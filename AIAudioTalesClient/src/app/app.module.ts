@@ -12,7 +12,6 @@ import { AuthInterceptor } from './auth/services/auth.interceptor';
 import { SidenavComponent } from './home/sidenav/sidenav.component';
 import { BooksComponent } from './home/books/books.component';
 import { BookCategoryPipe } from './pipes/category.pipe';
-import { TestsliderComponent } from './home/testslider/testslider.component';
 import { SliderComponent } from './home/slider/slider.component';
 
 @NgModule({
@@ -25,7 +24,6 @@ import { SliderComponent } from './home/slider/slider.component';
     SidenavComponent,
     BooksComponent,
     BookCategoryPipe,
-    TestsliderComponent,
     SliderComponent
   ],
   imports: [

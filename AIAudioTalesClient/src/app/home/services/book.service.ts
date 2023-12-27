@@ -33,6 +33,10 @@ export class BookService {
 
     return this.httpClient.get<Book[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
+  public getBookWithId(bookId: number): Observable<Book>{
+    return this.httpClient.get<Book>
+    (this.path + "Books/GetBook/"+bookId, {withCredentials: true});
+  }
 
 }
 

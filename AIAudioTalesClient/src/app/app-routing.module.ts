@@ -5,16 +5,14 @@ import { RegisterComponent } from './auth/register/register.component';
 import { HomeComponent } from './home/home.component';
 import { BookComponent } from './home/book/book.component';
 import { BooksComponent } from './home/books/books.component';
-import { TestsliderComponent } from './home/testslider/testslider.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
   {path:"register", component : RegisterComponent},
-  {path:"testslider", component : TestsliderComponent},
   {path:"home", component : HomeComponent, children :
   [
     {path: "", component: BooksComponent},
-    { path: "books/:bookId", component : BookComponent},
+    {path: "books/:bookId", component : BookComponent},
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

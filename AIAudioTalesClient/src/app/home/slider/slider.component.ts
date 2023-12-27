@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BooksPaginated } from 'src/app/entities';
 
 @Component({
@@ -20,13 +21,17 @@ export class SliderComponent implements OnInit, AfterViewInit{
   timeoutId: any;
   @Input() bookPaginated!: BooksPaginated;
 
-  constructor(private elRef: ElementRef) {}
+  constructor(private elRef: ElementRef, private router: Router) {}
 
   ngAfterViewInit(): void {
     this.helperFunction(this.bookPaginated.booksCategory);
   }
 
   ngOnInit(): void {}
+
+  navigateToBook(bookId: number){
+    this.router.navigate(['/home/books',bookId])
+  }
 
   helperFunction(booksCategory: number){
     this.wrapper = this.elRef.nativeElement.querySelector(".wrapper"+booksCategory);
