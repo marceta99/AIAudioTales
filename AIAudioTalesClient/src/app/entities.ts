@@ -41,5 +41,12 @@ export enum BookCategory{
   History = 1,
   Math = 2,
   Geography = 3,
-  Nature = 4
+  Nature = 4,
+  Trending = 5,
+  Recommended = 6
+
+}
+
+export enum HomePageCategories{
+
 }

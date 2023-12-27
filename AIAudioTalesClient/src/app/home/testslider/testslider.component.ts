@@ -1,16 +1,17 @@
+
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { Book, BookCategory, BooksPaginated } from 'src/app/entities';
 
 @Component({
-  selector: 'app-books',
-  templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss']
+  selector: 'app-testslider',
+  templateUrl: './testslider.component.html',
+  styleUrls: ['./testslider.component.scss']
 })
-export class BooksComponent implements OnInit {
+export class TestsliderComponent implements OnInit{
+
   booksPaginated: BooksPaginated[] = [];
   homePageCategories : number[] = [5, 6];
-
   constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
@@ -36,4 +37,5 @@ export class BooksComponent implements OnInit {
     }
     })
   }
+
 }
