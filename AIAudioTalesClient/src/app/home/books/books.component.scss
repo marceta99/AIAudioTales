@@ -1,23 +1,49 @@
 .category-container{
   display: flex;
   flex-direction: column;
+  h2 {
+    margin: 1rem 0;
+  }
+}
+.categories {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
 }
 
 .books-container{
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-button{
-  height: 60px;
-  width: 60px;
+.carousel-btn {
+  border: none;
+  cursor: pointer;
+  max-width: 2rem;
+  border-radius: 15px;
+  font-size: 1.2rem;
 }
-
+.carousel-btns {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+.book-title {
+  font-size: 1.2rem;
+  max-width: 100px;
+}
 .book{
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
 }
 
 img{
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
 }
