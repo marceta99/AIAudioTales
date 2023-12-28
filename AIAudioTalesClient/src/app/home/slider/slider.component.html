@@ -1,4 +1,4 @@
-<div (mouseup)="dragStop()">
+<div (mouseup)="dragStop()" class="slider-box">
 
 <div [ngClass]="'wrapper '+'wrapper'+bookPaginated.booksCategory" ><!--(mouseenter)="clearTimeout()">-->
   <i [id]="'left'+bookPaginated.booksCategory" class="fa-solid fa-angle-left" (click)="arrowButtonsClick(leftButton)" #leftButton></i>
@@ -6,8 +6,7 @@
 
     <li [ngClass]="'card '+'card'+bookPaginated.booksCategory" *ngFor="let book of bookPaginated.books" (click)="navigateToBook(book.id)">
       <div class="img"><img [src]="book.imageURL" alt="img" draggable="false"></div>
-      <h2>{{book.title}}</h2>
-      <span>Knjiga {{book.id}}</span>
+      <h4>{{book.title}}</h4>
     </li>
 
   </ul>

@@ -1,6 +1,24 @@
-<div *ngIf="book">
-  <h1>{{book.title}}</h1>
-  <p>{{book.description}}</p>
-  <img [src]="book.imageURL" alt="">
+<div class="book-route" *ngIf="book">
+  <div class="book-head">
+    <img src="../../../assets/icons/left.svg" alt="back" class="back">
+    <h3 class="book-title">{{book.title}}</h3>
+  </div>
+  <img class="book-img" [src]="book.imageURL" alt="">
+  <div class="title-block">
+    <h2 class="book-title">{{book.title}}</h2>
+    <h4>By: Kumadio</h4>
+  </div>
+  <ul class="list-categories">
+    <li>categor</li>
+    <li>categories</li>
+    <li>categ</li>
+  </ul>
+  <div class="btn-div">
+    <button class="btn_prim"><img src="../../../assets/icons/enroll.svg" alt="play">
+      Enroll</button>
+    <button class="btn_ghost btn-g"><img src="../../../assets/icons/story-list.svg" alt="story-list">
+      Story List</button>
+  </div>
+  <p class="book-desc">{{book.description}}</p>
 </div>
 

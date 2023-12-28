@@ -1,11 +1,3 @@
-/* Import Google font - Poppins */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
 .main-container {
   display: flex;
   padding: 0 35px;
@@ -16,11 +8,12 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
 .wrapper {
   max-width: 1100px;
   width: 100%;
   position: relative;
-  margin: 20px;
+  margin: 10px;
 }
 .wrapper i {
   top: 50%;
@@ -33,18 +26,19 @@
   line-height: 50px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.23);
+  // box-shadow: 0 3px 6px rgba(0,0,0,0.23);
   transform: translateY(-50%);
+  opacity: 0.8;
   transition: transform 0.1s linear;
 }
 .wrapper i:active{
   transform: translateY(-50%) scale(0.85);
 }
 .wrapper i:first-child{
-  left: -22px;
+  left: -30px;
 }
 .wrapper i:last-child{
-  right: -22px;
+  right: -30px;
 }
 .wrapper .carousel{
   display: grid;
@@ -78,24 +72,21 @@
 }
 .carousel .card {
   scroll-snap-align: start;
-  height: 342px;
+  max-height: 300px;
   list-style: none;
-  background: #6179ff;
   cursor: pointer;
-  padding-bottom: 15px;
   flex-direction: column;
-  border-radius: 8px;
+
 }
 .carousel .card .img {
-  background: #8B53FF;
-  height: 148px;
-  width: 148px;
-  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+
 }
 .card .img img {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+
   object-fit: cover;
   border: 4px solid #fff;
 }
@@ -108,15 +99,25 @@
   color: #6A6D78;
   font-size: 1.31rem;
 }
-
+@media screen and (max-width: 1250px) {
+  .wrapper .carousel {
+    grid-auto-columns: calc((100% / 4) - 9px);
+  }
+}
+@media screen and (max-width: 1250px) {
+  .wrapper .carousel {
+    grid-auto-columns: calc((100% / 3) - 9px);
+  }
+}
 @media screen and (max-width: 900px) {
   .wrapper .carousel {
     grid-auto-columns: calc((100% / 2) - 9px);
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 450px) {
   .wrapper .carousel {
     grid-auto-columns: 100%;
   }
+
 }

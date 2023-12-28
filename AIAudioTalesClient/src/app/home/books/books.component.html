@@ -1,7 +1,11 @@
 <div class="main-container" ><!--(mouseup)="dragStop()"> (mouseleave)="autoPlay()">-->
-
+  <span>BANER</span>
   <div *ngFor="let bookPaginated of booksPaginated">
-    <h1>{{bookPaginated.booksCategory | bookCategoryPipe}}</h1>
+    <div class="cat-head">
+
+      <h2>{{bookPaginated.booksCategory | bookCategoryPipe}}</h2>
+      <h5>View All</h5>
+    </div>
 
     <app-slider [bookPaginated]="bookPaginated"></app-slider>
   </div>
