@@ -81,8 +81,14 @@ namespace AIAudioTalesServer.Controllers
 
             var token = await _authRepository.GetRefreshToken(refreshToken);
 
-            if (token == null || token.Expires < DateTime.Now)
+            if (token == null)
             {
+                return Unauthorized("That refresh token doesn't exists");
+            }
+            if(token.Expires < DateTime.Now)
+            {
+                // if refresh token is expred just delete refresh token for that user in database and return user to login page
+                await RevokeToken();
                 return Unauthorized("Token has expired");
             }
             var userWithThatRefreshToken = await _authRepository.GetUserWithRefreshToken(token);
@@ -94,8 +100,8 @@ namespace AIAudioTalesServer.Controllers
         //this metod will be called as the last method to delete current refresh token on that user
         //if refresh token expires or refresh token is invalid, and user will have to login again 
         //to get new refresh token
-        [HttpDelete("RevokeToken")]
-        public async Task<IActionResult> RevokeToken()
+        //[HttpDelete("RevokeToken")]
+        private async Task RevokeToken()
         {
             // Get the JWT token cookie
             var jwtTokenCookie = Request.Cookies["X-Access-Token"];
@@ -114,19 +120,11 @@ namespace AIAudioTalesServer.Controllers
                     var email = emailClaim.Value;
 
                     var user = await _authRepository.GetUserWithEmail(email);
-                    if (user == null) return BadRequest();
+                    if (user == null) return;
 
                     await _authRepository.DeleteRefreshTokenForUser(user.Email);
-                    return Ok();
                 }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
-                return NotFound();
+                
             }
         }
 
@@ -164,7 +162,7 @@ namespace AIAudioTalesServer.Controllers
                     new Claim("email", user.Email),
                     new Claim(ClaimTypes.Role, user.Role == Role.LISTENER ? "LISTENER":"ADMIN")
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -183,7 +181,7 @@ namespace AIAudioTalesServer.Controllers
             HttpContext.Response.Cookies.Append("X-Access-Token", encriptedToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddDays(7),
+                    Expires = DateTime.Now.AddMinutes(5),
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,

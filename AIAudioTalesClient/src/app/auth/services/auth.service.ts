@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environment/environment';
 import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RegisterUser } from 'src/app/entities';
+import { RegisterUser, User } from 'src/app/entities';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,12 +15,12 @@ export class AuthService {
     localStorage.removeItem("user");
   }
 
-  public login(email: string, password: string): Observable<any>{
+  public login(email: string, password: string): Observable<User>{
     const user = {
       "email": email,
       "password": password
     };
-    return this.httpClient.post(
+    return this.httpClient.post<User>(
       this.path + "Auth/Login", user, {withCredentials: true}
     );
   }
@@ -28,14 +28,14 @@ export class AuthService {
     return this.httpClient.post(this.path+"Auth/Register", user );
   }
 
-  public loginWithGoogle(credentials: string): Observable<any>{
+  public loginWithGoogle(credentials: string): Observable<User>{
     const headers = new HttpHeaders().set('Content-type', 'application/json');
 
     const requestOptions = {
       headers: headers,
       withCredentials: true
     }
-    return this.httpClient.post(
+    return this.httpClient.post<User>(
       this.path + "Auth/LoginWithGoogle",
       JSON.stringify(credentials),
       requestOptions

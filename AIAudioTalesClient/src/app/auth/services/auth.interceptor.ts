@@ -37,12 +37,8 @@ export class AuthInterceptor implements HttpInterceptor {
           );
         }),
         catchError((refreshErr: any) => {
-          return this.authService.revokeToken().pipe(
-            switchMap(() => {
-              this.router.navigate(['/login']).then(()=> window.location.reload());
-              return throwError(()=> new Error(refreshErr));
-            })
-          );
+          this.router.navigate(['/login']).then(()=> window.location.reload());
+          return throwError(()=> new Error(refreshErr));
         })
       );
     } else {

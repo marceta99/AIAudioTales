@@ -2,8 +2,9 @@
 {
     public enum PurchaseType
     {
-        Basic = 0,
+        BasicPurchase = 0,
         CustomVoice = 1,
-        CustomStory = 2
+        CustomStory = 2,
+        Enroled = 3
     }
 }

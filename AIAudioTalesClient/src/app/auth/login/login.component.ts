@@ -14,6 +14,7 @@ import { User } from 'src/app/entities';
 export class LoginComponent {
   private clientId = environment.clientId;
   showErrorMessage = false;
+  showGoogleErrorMessage = false;
   loginForm!: FormGroup;
 
   constructor(
@@ -50,29 +51,33 @@ export class LoginComponent {
 
    handleCredentialResponse(response: CredentialResponse) {
     this.service.loginWithGoogle(response.credential).subscribe({
-      next :(x:any) => {
-        localStorage.setItem("user","mihailo marcetic");
+      next :(user:User) => {
+        localStorage.setItem("user",JSON.stringify(user));
         this._ngZone.run(() => {
           this.router.navigate(['/home']);
         })},
       error :(error:any) => {
-          console.log(error);
+        console.log(error);
+        this.loginForm.reset();
+        this._ngZone.run(() => {
+          this.showErrorMessage = false;
+          this.showGoogleErrorMessage = true;
+        })
         }
-  });
-
+    });
    }
 
    login(){
     this.service.login(this.loginForm.controls['email'].value ,this.loginForm.controls['password'].value)
     .subscribe({
       next :(user:User) => {
-          this.showErrorMessage=false;
           localStorage.setItem("user",JSON.stringify(user));
           this.router.navigate(['/home']);
       },
       error :(error:any) => {
           console.log(error);
           this.loginForm.reset();
+          this.showGoogleErrorMessage = false;
           this.showErrorMessage = true;
         }
     });

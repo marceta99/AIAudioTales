@@ -3,11 +3,13 @@ using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Controllers
 {
+    [Authorize(Policy = "ListenerOnly")]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
@@ -69,6 +71,8 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }
+
+
        
     }
 }
