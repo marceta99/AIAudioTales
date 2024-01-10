@@ -3,6 +3,7 @@
     public enum Role
     {
         ADMIN = 0,
-        LISTENER = 1
+        LISTENER_WITH_SUBSCRIPTION = 1,
+        LISTENER_NO_SUBSCRIPTION = 2
     }
 }

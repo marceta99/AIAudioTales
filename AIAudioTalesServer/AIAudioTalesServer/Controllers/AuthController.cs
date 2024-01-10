@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
+using Microsoft.AspNetCore.Identity;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -28,7 +29,7 @@ namespace AIAudioTalesServer.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new User() { Email = model.Email, Role = Role.LISTENER };
+            var user = new User() { Email = model.Email, Role = Role.LISTENER_NO_SUBSCRIPTION };
 
             if (model.ConfirmPassword == model.Password)
             {
@@ -160,7 +161,9 @@ namespace AIAudioTalesServer.Controllers
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("email", user.Email),
-                    new Claim(ClaimTypes.Role, user.Role == Role.LISTENER ? "LISTENER":"ADMIN")
+                    new Claim(ClaimTypes.Role, user.Role == Role.ADMIN ? "ADMIN":
+                                               user.Role == Role.LISTENER_WITH_SUBSCRIPTION ? "LISTENER_WITH_SUBSCRIPTION":
+                                               "LISTENER_NO_SUBSCRIPTION")
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
@@ -218,6 +221,37 @@ namespace AIAudioTalesServer.Controllers
                 });
 
             await _authRepository.SaveRefreshTokenInDb(refreshToken, user);           
+        }
+
+        [HttpGet("GetCurrentUser")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "userName"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    return Ok(new { email = user.Email, role = user.Role.ToString() });
+
+                }
+                return BadRequest();
+            }
+            // if there is no user return null
+            return BadRequest(); 
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Controllers
 {
-    [Authorize(Policy = "ListenerOnly")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase

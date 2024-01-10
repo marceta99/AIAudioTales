@@ -5,11 +5,12 @@ import { RegisterComponent } from './auth/register/register.component';
 import { HomeComponent } from './home/home.component';
 import { BookComponent } from './home/book/book.component';
 import { BooksComponent } from './home/books/books.component';
+import { IsUserLoginGuard } from './guards/is-user-login.guard';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
   {path:"register", component : RegisterComponent},
-  {path:"home", component : HomeComponent, children :
+  {path:"home", component : HomeComponent, canActivate:[IsUserLoginGuard], children :
   [
     {path: "", component: BooksComponent},
     {path: "books/:bookId", component : BookComponent},

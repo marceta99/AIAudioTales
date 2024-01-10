@@ -37,6 +37,9 @@ export class AuthInterceptor implements HttpInterceptor {
           );
         }),
         catchError((refreshErr: any) => {
+          this.authService.isLoggedIn=false;
+          this.authService.loggedUser = null;
+          //localStorage.removeItem('c23fj2');
           this.router.navigate(['/login']).then(()=> window.location.reload());
           return throwError(()=> new Error(refreshErr));
         })

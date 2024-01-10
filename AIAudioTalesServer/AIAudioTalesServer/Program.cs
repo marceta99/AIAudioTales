@@ -74,7 +74,8 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization(options => 
 {
-    options.AddPolicy("ListenerOnly", policy => policy.RequireRole("LISTENER"));
+    
+    options.AddPolicy("ListenerNoSubscription", policy => policy.RequireRole("LISTENER_NO_SUBSCRIPTION"));
 });
 
 builder.Services.AddCors(options =>

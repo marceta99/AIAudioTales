@@ -51,11 +51,7 @@ export class LoginComponent {
 
    handleCredentialResponse(response: CredentialResponse) {
     this.service.loginWithGoogle(response.credential).subscribe({
-      next :(user:User) => {
-        localStorage.setItem("user",JSON.stringify(user));
-        this._ngZone.run(() => {
-          this.router.navigate(['/home']);
-        })},
+      next :(user:User) => {},
       error :(error:any) => {
         console.log(error);
         this.loginForm.reset();
@@ -70,10 +66,7 @@ export class LoginComponent {
    login(){
     this.service.login(this.loginForm.controls['email'].value ,this.loginForm.controls['password'].value)
     .subscribe({
-      next :(user:User) => {
-          localStorage.setItem("user",JSON.stringify(user));
-          this.router.navigate(['/home']);
-      },
+      next :(user:User) => {},
       error :(error:any) => {
           console.log(error);
           this.loginForm.reset();
