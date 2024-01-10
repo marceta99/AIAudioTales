@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book } from 'src/app/entities';
+import { Book, User } from 'src/app/entities';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-book',
@@ -10,8 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BookComponent {
   book! : Book;
-
-  constructor(private bookService: BookService, private route: ActivatedRoute) {}
+  currentUser!: User;
+  constructor(private bookService: BookService, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit():void{
     this.route.params.subscribe(params => {
@@ -28,6 +29,7 @@ export class BookComponent {
       });
     });
 
+  this.currentUser = this.authService.loggedUser;
  }
 
 }

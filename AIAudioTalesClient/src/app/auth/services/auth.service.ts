@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private path = environment.apiUrl;
-  loggedUser!: User | null;
+  loggedUser!: User;
   isLoggedIn: boolean = false;
 
   constructor(private httpClient: HttpClient, private _ngZone: NgZone, private router: Router) { }

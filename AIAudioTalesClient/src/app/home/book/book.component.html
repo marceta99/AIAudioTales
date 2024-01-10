@@ -14,8 +14,10 @@
     <li>categ</li>
   </ul>
   <div class="btn-div">
-    <button class="btn_prim"><img src="../../../assets/icons/enroll.svg" alt="play">
+    <button *ngIf="currentUser.role === 'LISTENER_WITH_SUBSCRIPTION'" class="btn_prim"><img src="../../../assets/icons/enroll.svg" alt="play">
       Enroll</button>
+      <button *ngIf="currentUser.role === 'LISTENER_NO_SUBSCRIPTION'" class="btn_prim"><img src="../../../assets/icons/enroll.svg" alt="play">
+        Buy</button>
     <button class="btn_ghost btn-g"><img src="../../../assets/icons/story-list.svg" alt="story-list">
       Story List</button>
   </div>

@@ -32,8 +32,9 @@ export interface Story{
 
 //Enums
 export enum Role{
-  Admin="ADMIN",
-  Listener="LISTENER"
+  ADMIN="ADMIN",
+  LISTENER_WITH_SUBSCRIPTION="LISTENER_WITH_SUBSCRIPTION",
+  LISTENER_NO_SUBSCRIPTION="LISTENER_NO_SUBSCRIPTION"
 }
 
 export enum BookCategory{
