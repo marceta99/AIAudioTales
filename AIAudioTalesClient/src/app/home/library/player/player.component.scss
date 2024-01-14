@@ -1,0 +1,14 @@
+img{
+  width: 200px;
+  height: 200px;
+}
+
+.player-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.player-container button{
+  height: 50px;
+  width: 50px;
+}
