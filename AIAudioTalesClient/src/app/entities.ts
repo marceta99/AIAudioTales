@@ -47,6 +47,13 @@ export interface Purchase{
   language: Language
 }
 
+export interface Toast {
+  id: string;
+  icon: string;
+  text: string;
+  timeoutId?: any; // Optional property to store the timeout ID
+}
+
 //Enums
 export enum Role{
   ADMIN="ADMIN",

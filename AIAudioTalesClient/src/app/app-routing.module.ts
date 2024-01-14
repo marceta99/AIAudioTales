@@ -9,6 +9,7 @@ import { IsUserLoginGuard } from './guards/is-user-login.guard';
 import { LibraryComponent } from './home/library/library.component';
 import { PlayerComponent } from './home/library/player/player.component';
 import { MyProfileComponent } from './home/my-profile/my-profile.component';
+import { ToastNotificationComponent } from './home/toast-notification/toast-notification.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -22,6 +23,8 @@ const routes: Routes = [
     {path: "library/player/:bookId", component: PlayerComponent},
 
     {path: "my-profile", component: MyProfileComponent},
+    {path: "notifications", component: ToastNotificationComponent},
+
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},
