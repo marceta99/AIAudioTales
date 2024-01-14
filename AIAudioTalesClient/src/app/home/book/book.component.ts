@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, User } from 'src/app/entities';
-import { ActivatedRoute } from '@angular/router';
+import { Book, Language, Purchase, PurchaseType, User } from 'src/app/entities';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
@@ -9,10 +9,15 @@ import { AuthService } from 'src/app/auth/services/auth.service';
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss']
 })
-export class BookComponent {
+export class BookComponent implements OnInit{
   book! : Book;
   currentUser!: User;
-  constructor(private bookService: BookService, private route: ActivatedRoute, private authService: AuthService) {}
+  userHasBook: boolean = false;
+  constructor(
+    private bookService: BookService,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private router: Router) {}
 
   ngOnInit():void{
     this.route.params.subscribe(params => {
@@ -22,6 +27,16 @@ export class BookComponent {
         next: (book: Book) => {
           console.log(book);
           this.book = book;
+
+          this.bookService.userHasBook(this.book.id).subscribe({
+            next: (hasBook: boolean) => {
+              this.userHasBook = hasBook;
+            },
+            error: (error: any) => {
+              console.log(error);
+            }
+          });
+
         },
         error: (error: any) => {
           console.log(error);
@@ -29,7 +44,23 @@ export class BookComponent {
       });
     });
 
-  this.currentUser = this.authService.loggedUser;
- }
+    this.currentUser = this.authService.loggedUser;
+  }
+
+  purchaseBook(purchaseType: PurchaseType){
+    const purchase : Purchase = {
+      bookId : this.book.id,
+      language: Language.ENGLISH_USA,
+      purchaseType: purchaseType
+    }
+    this.bookService.purchaseBook(purchase).subscribe({
+      next: () => {
+        this.router.navigate(['/home/library/player',this.book.id])
+    },
+      error: (error : Error) => {
+        console.log(error)
+    }
+    })
+  }
 
 }

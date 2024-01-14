@@ -6,6 +6,9 @@ import { HomeComponent } from './home/home.component';
 import { BookComponent } from './home/book/book.component';
 import { BooksComponent } from './home/books/books.component';
 import { IsUserLoginGuard } from './guards/is-user-login.guard';
+import { LibraryComponent } from './home/library/library.component';
+import { PlayerComponent } from './home/library/player/player.component';
+import { MyProfileComponent } from './home/my-profile/my-profile.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -14,6 +17,11 @@ const routes: Routes = [
   [
     {path: "", component: BooksComponent},
     {path: "books/:bookId", component : BookComponent},
+
+    {path: "library", component: LibraryComponent},
+    {path: "library/player/:bookId", component: PlayerComponent},
+
+    {path: "my-profile", component: MyProfileComponent},
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

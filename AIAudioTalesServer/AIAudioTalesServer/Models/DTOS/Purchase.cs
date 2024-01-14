@@ -1,6 +1,6 @@
 ﻿using AIAudioTalesServer.Models.Enums;
 
-namespace AIAudioTalesServer.Models.DTOS.Incoming
+namespace AIAudioTalesServer.Models.DTOS
 {
     public class Purchase
     {

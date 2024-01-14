@@ -4,7 +4,6 @@
     {
         BasicPurchase = 0,
         CustomVoice = 1,
-        CustomStory = 2,
-        Enroled = 3
+        Enroled = 2
     }
 }

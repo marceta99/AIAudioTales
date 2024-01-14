@@ -13,6 +13,9 @@ import { SidenavComponent } from './home/sidenav/sidenav.component';
 import { BooksComponent } from './home/books/books.component';
 import { BookCategoryPipe } from './pipes/category.pipe';
 import { SliderComponent } from './home/slider/slider.component';
+import { LibraryComponent } from './home/library/library.component';
+import { MyProfileComponent } from './home/my-profile/my-profile.component';
+import { PlayerComponent } from './home/library/player/player.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,10 @@ import { SliderComponent } from './home/slider/slider.component';
     SidenavComponent,
     BooksComponent,
     BookCategoryPipe,
-    SliderComponent
+    SliderComponent,
+    LibraryComponent,
+    MyProfileComponent,
+    PlayerComponent
   ],
   imports: [
     BrowserModule,

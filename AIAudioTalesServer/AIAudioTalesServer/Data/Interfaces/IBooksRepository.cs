@@ -10,5 +10,10 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<IList<Book>> GetAllBooks();
         Task<Book> GetBook(int id);
         Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory);
+        Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language);
+        Task<bool> UserHasBook(int bookId, int userId);
+        Task<IList<PurchasedBookReturnDTO>> GetUserBooks(int userId);
+
+        Task<PurchasedBookReturnDTO> GetPurchasedBook(int userId, int bookId);
     }
 }

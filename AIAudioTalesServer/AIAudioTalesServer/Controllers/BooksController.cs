@@ -1,11 +1,11 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
-using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -71,8 +71,160 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }
+        [HttpPost("PurchaseBook")]
+        public async Task<ActionResult> PurchaseBook([FromBody] Purchase purchase)
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var userHasBook = await _booksRepository.UserHasBook(purchase.BookId, user.Id);
+                    if (userHasBook) return BadRequest("User already has that book");
+
+                    await _booksRepository.PurchaseBook(user.Id, purchase.BookId, purchase.PurchaseType, purchase.Language);
+
+                    return Ok("Book was successfully purchased");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("UserHasBook/{bookId}")]
+        public async Task<ActionResult<bool>> UserHasBook(int bookId)
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    bool hasBook = await _booksRepository.UserHasBook(bookId, user.Id);
+
+                    return Ok(hasBook);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpGet("GetUserBooks")]
+        public async Task<ActionResult<IList<PurchasedBookReturnDTO>>> GetUserBooks()
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var books = await _booksRepository.GetUserBooks(user.Id);
+
+                    return Ok(books);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("GetPurchasedBook/{bookId}")]
+        public async Task<ActionResult<PurchasedBookReturnDTO>> GetPurchasedBook(int bookId)
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var book = await _booksRepository.GetPurchasedBook(user.Id, bookId);
+
+                    if (book == null) return BadRequest("User does not have that book");
+
+                    return Ok(book);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
 
-       
     }
 }

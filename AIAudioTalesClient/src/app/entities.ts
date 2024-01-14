@@ -12,9 +12,20 @@ export interface Book{
   id: number,
   title: string,
   description: string,
-  bookCategory: number,
+  bookCategory: BookCategory,
   imageURL: string
 }
+
+export interface PurchasedBook{
+  id: number,
+  title: string,
+  description: string,
+  bookCategory: BookCategory,
+  imageURL: string,
+  purchaseType: PurchaseType,
+  language: Language
+}
+
 export interface BooksPaginated{
   booksCategory: BookCategory,
   books: Book[],
@@ -28,6 +39,12 @@ export interface Story{
   text: string,
   bookId: number,
   audioDataUrl: string
+}
+
+export interface Purchase{
+  bookId: number,
+  purchaseType: PurchaseType,
+  language: Language
 }
 
 //Enums
@@ -48,6 +65,27 @@ export enum BookCategory{
 
 }
 
-export enum HomePageCategories{
+export enum HomePageCategories{}
 
+export enum PurchaseType{
+  BasicPurchase = 0,
+  CustomVoice = 1,
+  Enroled = 2
+}
+
+export enum Language{
+  ENGLISH_USA=0,
+  ENGLISH_UK=1,
+  ENGLISH_AUSTRALIA=2,
+  ENGLISH_CANADA=3,
+  GERMAN=4,
+  POLISH=5,
+  SPANISH_SPAIN=6,
+  SPANISH_MEXICO=7,
+  ITALIAN=8,
+  FRENCH_FRANCE=9,
+  FRENCH_CANADA=10,
+  PORTUGUESE_PORTUGAL=11,
+  PORTUGUESE_BRASIL=12,
+  HINDI=13
 }
