@@ -48,13 +48,26 @@ export interface Purchase{
 }
 
 export interface Toast {
-  id: string;
-  icon: string;
+  toastType: ToastType,
+  toastIcon: ToastIcon,
   text: string;
   timeoutId?: any; // Optional property to store the timeout ID
 }
 
 //Enums
+export enum ToastType{
+  Success = "success",
+  Error = "error",
+  Warning = "warning",
+  Info = "info"
+}
+export enum ToastIcon{
+  Success = "fa-circle-check",
+  Error = "fa-circle-xmark",
+  Warning = "fa-triangle-exclamation",
+  Info = "fa-circle-info"
+}
+
 export enum Role{
   ADMIN="ADMIN",
   LISTENER_WITH_SUBSCRIPTION="LISTENER_WITH_SUBSCRIPTION",

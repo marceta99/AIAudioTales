@@ -17,6 +17,7 @@ import { LibraryComponent } from './home/library/library.component';
 import { MyProfileComponent } from './home/my-profile/my-profile.component';
 import { PlayerComponent } from './home/library/player/player.component';
 import { ToastNotificationComponent } from './home/toast-notification/toast-notification.component';
+import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ToastNotificationComponent } from './home/toast-notification/toast-noti
     LibraryComponent,
     MyProfileComponent,
     PlayerComponent,
-    ToastNotificationComponent
+    ToastNotificationComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,

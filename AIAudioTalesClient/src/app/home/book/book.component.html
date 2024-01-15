@@ -14,9 +14,9 @@
     <li>categ</li>
   </ul>
   <div class="btn-div">
-    <button *ngIf="!userHasBook && currentUser.role === 'LISTENER_WITH_SUBSCRIPTION'" class="btn_prim" (click)="purchaseBook(2)"><img src="../../../assets/icons/enroll.svg" alt="play">
+    <button *ngIf="!userHasBook && currentUser.role === 'LISTENER_WITH_SUBSCRIPTION'" (click)="purchaseBook(2)" [disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
       Enroll</button>
-    <button *ngIf="!userHasBook && currentUser.role === 'LISTENER_NO_SUBSCRIPTION'" class="btn_prim"(click)="purchaseBook(0)"><img src="../../../assets/icons/enroll.svg" alt="play">
+    <button *ngIf="!userHasBook && currentUser.role === 'LISTENER_NO_SUBSCRIPTION'" (click)="purchaseBook(0)"[disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
       Buy</button>
 
     <a  *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library/player',book.id]"><img src="../../../assets/icons/enroll.svg" alt="play">

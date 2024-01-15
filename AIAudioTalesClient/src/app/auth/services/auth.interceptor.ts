@@ -25,8 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.errorCounter++;
       return this.authService.refreshToken().pipe(
         switchMap(() => {
-          alert('token refreshed');
-
+          //alert('token refreshed');
           // Re-send the original request after token refresh
           return next.handle(request).pipe(
             catchError((retryErr: any) => {

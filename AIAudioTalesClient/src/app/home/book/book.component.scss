@@ -18,7 +18,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem; 
+  gap: 1.5rem;
 }
 .book-img {
   max-width: 250px;
@@ -72,4 +72,8 @@
     max-width: 300px;
     max-height: 300px;
   }
+}
+
+.disable{
+    cursor: not-allowed; /* Cursor to indicate that the button is not clickable */
 }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, Language, Purchase, PurchaseType, User } from 'src/app/entities';
+import { Book, Language, Purchase, PurchaseType, Toast, ToastIcon, ToastType, User } from 'src/app/entities';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-book',
@@ -13,11 +14,13 @@ export class BookComponent implements OnInit{
   book! : Book;
   currentUser!: User;
   userHasBook: boolean = false;
+  disableButton: boolean = false;
   constructor(
     private bookService: BookService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router) {}
+    private router: Router,
+    private toastNotificationService: ToastNotificationService) {}
 
   ngOnInit():void{
     this.route.params.subscribe(params => {
@@ -48,6 +51,7 @@ export class BookComponent implements OnInit{
   }
 
   purchaseBook(purchaseType: PurchaseType){
+    this.disableButton = true;
     const purchase : Purchase = {
       bookId : this.book.id,
       language: Language.ENGLISH_USA,
@@ -55,10 +59,23 @@ export class BookComponent implements OnInit{
     }
     this.bookService.purchaseBook(purchase).subscribe({
       next: () => {
-        this.router.navigate(['/home/library/player',this.book.id])
+        this.userHasBook = true;
+        const toast: Toast = {
+          text: "Successfully purchased book",
+          toastIcon: ToastIcon.Success,
+          toastType: ToastType.Success
+        }
+        this.toastNotificationService.show(toast);
     },
       error: (error : Error) => {
         console.log(error)
+        this.disableButton = false;
+        const toast: Toast = {
+          text: "We're sorry! An error occurred. Please try again later.",
+          toastIcon: ToastIcon.Error,
+          toastType: ToastType.Error
+        }
+        this.toastNotificationService.show(toast);
     }
     })
   }
