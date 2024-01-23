@@ -12,5 +12,6 @@ namespace AIAudioTalesServer.Models
         public Role Role { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
         public RefreshToken RefreshToken { get; set; }
+        public SearchHistory SearchHistory { get; set; }
     }
 }

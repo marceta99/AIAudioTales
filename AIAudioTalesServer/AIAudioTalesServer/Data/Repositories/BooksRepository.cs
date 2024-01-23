@@ -5,6 +5,7 @@ using AIAudioTalesServer.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models.Enums;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -12,11 +13,13 @@ namespace AIAudioTalesServer.Data.Repositories
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
 
-        public BooksRepository(AppDbContext dbContext, IMapper mapper)
+        public BooksRepository(AppDbContext dbContext, IMapper mapper, IMemoryCache cache)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _cache = cache;
         }
         public async Task<Book> AddNewBook(BookCreateDTO newBook)
         {
@@ -113,6 +116,71 @@ namespace AIAudioTalesServer.Data.Repositories
             return purchasedBook;
         }
 
+        public async Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
+        {
+            string cacheKey = $"Search_{searchTerm}_{pageNumber}_{pageSize}";
+            if (!_cache.TryGetValue(cacheKey, out IEnumerable<Book> books))
+            {
+                books = await _dbContext.Books
+                                       .Where(b => b.Title.Contains(searchTerm))
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
 
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                _cache.Set(cacheKey, books, cacheEntryOptions);
+            }
+
+            return books;
+        }
+        public async Task<IEnumerable<string>> GetSearchHistory(int userId)
+        {
+            var history = await _dbContext.SearchHistories
+                                    .Where(h => h.UserId == userId)
+                                    .OrderByDescending(h => h.SearchDate)
+                                    .Take(10)
+                                    .Select(h => h.SearchTerm)
+                                    .ToListAsync();
+
+            return history;
+        }
+
+        public async Task SaveSearchTerm(int userId, string searchTerm)
+        {
+            // Check if the same search term already exists for this user
+            var existingTerm = await _dbContext.SearchHistories
+                                             .FirstOrDefaultAsync(sh => sh.UserId == userId && sh.SearchTerm == searchTerm);
+
+            if (existingTerm == null)
+            {
+                // Get the count of search terms for this user
+                var count = await _dbContext.SearchHistories.CountAsync(sh => sh.UserId == userId);
+
+                // If there are already 10 search terms, remove the oldest one
+                if (count >= 10)
+                {
+                    var oldestSearchTerm = await _dbContext.SearchHistories
+                                                         .Where(sh => sh.UserId == userId)
+                                                         .OrderBy(sh => sh.SearchDate)
+                                                         .FirstOrDefaultAsync();
+                    if (oldestSearchTerm != null)
+                    {
+                        _dbContext.SearchHistories.Remove(oldestSearchTerm);
+                    }
+                }
+
+                // Add the new search term
+                var newSearchHistory = new SearchHistory
+                {
+                    UserId = userId,
+                    SearchTerm = searchTerm,
+                    SearchDate = DateTime.UtcNow
+                };
+                _dbContext.SearchHistories.Add(newSearchHistory);
+
+                await _dbContext.SaveChangesAsync();
+            }
+
+        }
     }
 }

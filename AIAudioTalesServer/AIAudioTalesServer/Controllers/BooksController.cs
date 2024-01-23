@@ -5,7 +5,9 @@ using AIAudioTalesServer.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -225,6 +227,86 @@ namespace AIAudioTalesServer.Controllers
             }
         }
 
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchBooks([FromQuery] string searchTerm, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {   
+            var books = await _booksRepository.SearchBooks(searchTerm, pageNumber, pageSize);
+            return Ok(books);
+        }
 
+        [HttpGet("GetSearchHistory")]
+        public async Task<IActionResult> GetSearchHistory()
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var history = await _booksRepository.GetSearchHistory(user.Id);
+                    return Ok(history);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            
+        }
+
+        [HttpPost("SaveSearchTerm")]
+        public async Task<IActionResult> SaveSearchTerm([FromQuery] string searchTerm)
+        {
+
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    await _booksRepository.SaveSearchTerm(user.Id, searchTerm);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

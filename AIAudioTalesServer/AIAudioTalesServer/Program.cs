@@ -42,6 +42,8 @@ builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")
 );
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

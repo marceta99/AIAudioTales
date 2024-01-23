@@ -18,6 +18,8 @@ import { MyProfileComponent } from './home/my-profile/my-profile.component';
 import { PlayerComponent } from './home/library/player/player.component';
 import { ToastNotificationComponent } from './home/toast-notification/toast-notification.component';
 import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
+import { DiscoverComponent } from './home/discover/discover.component';
+import { SearchBarComponent } from './home/discover/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.
     MyProfileComponent,
     PlayerComponent,
     ToastNotificationComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    DiscoverComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,

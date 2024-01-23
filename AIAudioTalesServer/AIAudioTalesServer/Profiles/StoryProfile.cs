@@ -2,7 +2,6 @@
 using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models;
 using AutoMapper;
-using AIAudioTalesServer.Migrations;
 
 namespace AIAudioTalesServer.Profiles
 {

@@ -16,6 +16,7 @@ namespace AIAudioTalesServer.Data
         public DbSet<Part> Parts { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<SearchHistory> SearchHistories { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)
         {
             try
@@ -39,6 +40,16 @@ namespace AIAudioTalesServer.Data
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Story>().HasKey(s => s.Id);
             modelBuilder.Entity<RefreshToken>().HasKey(t => t.UserId);
+
+            modelBuilder.Entity<SearchHistory>()
+            .HasKey(sh => sh.Id)
+            .IsClustered(false); // Remove clustered index from primary key
+
+            modelBuilder.Entity<SearchHistory>()
+             .HasIndex(sh => sh.UserId)
+             .IsClustered(true)
+             .IsUnique(false);
+            // Add clustered index on UserId
 
             modelBuilder.Entity<User>()
             .HasIndex(u => u.Email) 
@@ -92,7 +103,21 @@ namespace AIAudioTalesServer.Data
             modelBuilder.Entity<Answer>()
             .Property(a => a.NextPartId)
             .IsRequired(false);
+
+            modelBuilder.Entity<User>()
+            .HasOne(u => u.SearchHistory)
+            .WithOne(sh => sh.User)
+            .HasForeignKey<SearchHistory>(sh => sh.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            //Indexes
+            modelBuilder.Entity<Book>()
+                .HasIndex(b => b.Title);
+
+            modelBuilder.Entity<Book>()
+                .HasIndex(b => b.BookCategory);
+
         }
-       
+
     }
 }
