@@ -13,11 +13,10 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language);
         Task<bool> UserHasBook(int bookId, int userId);
         Task<IList<PurchasedBookReturnDTO>> GetUserBooks(int userId);
-
         Task<PurchasedBookReturnDTO> GetPurchasedBook(int userId, int bookId);
-
         Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize);
         Task <IEnumerable<string>> GetSearchHistory(int id);
         Task SaveSearchTerm(int userId, string searchTerm);
+        Task<IList<Category>> GetAllCategories();
     }
 }

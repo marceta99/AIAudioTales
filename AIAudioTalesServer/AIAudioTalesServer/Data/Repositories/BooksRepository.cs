@@ -109,6 +109,7 @@ namespace AIAudioTalesServer.Data.Repositories
                 Description = book.Description,
                 Title = book.Title,
                 ImageURL = book.ImageURL,
+                CategoryId = book.CategoryId,
                 PurchaseType = pb.PurchaseType,
                 Language = pb.Language
             };
@@ -181,6 +182,12 @@ namespace AIAudioTalesServer.Data.Repositories
                 await _dbContext.SaveChangesAsync();
             }
 
+        }
+
+        public async Task<IList<Category>> GetAllCategories()
+        {
+            var categories = await _dbContext.BookCategories.ToListAsync();
+            return categories;
         }
     }
 }

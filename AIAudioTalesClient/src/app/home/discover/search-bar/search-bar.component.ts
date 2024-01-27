@@ -83,6 +83,7 @@ export class SearchBarComponent {
     this.isInputActive = false;
     this.bookService.searchBooks(searchTerm,1,10).subscribe({
       next: (books : Book[] ) => {
+        console.log(books)
         this.bookService.libraryBooks.next(books);
       },
       error: error => {

@@ -15,6 +15,7 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.BookCategory, opt => opt.MapFrom(src => src.BookCategory))
                 .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 ;
             /*
             CreateMap<BookCreationDTO, Book>()
@@ -28,6 +29,7 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.BookCategory, opt => opt.MapFrom(src => src.BookCategory))
                 .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 ;
         }
     }

@@ -17,6 +17,8 @@ namespace AIAudioTalesServer.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
+        public DbSet<Category> BookCategories { get; set; }
+
         public AppDbContext(DbContextOptions options) : base(options)
         {
             try
@@ -40,6 +42,7 @@ namespace AIAudioTalesServer.Data
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Story>().HasKey(s => s.Id);
             modelBuilder.Entity<RefreshToken>().HasKey(t => t.UserId);
+            modelBuilder.Entity<Category>().HasKey(c => c.Id);
 
             modelBuilder.Entity<SearchHistory>()
             .HasKey(sh => sh.Id)
@@ -61,14 +64,14 @@ namespace AIAudioTalesServer.Data
             .HasOne<User>(pb => pb.User)
             .WithMany(u => u.PurchasedBooks)
             .HasForeignKey(pb => pb.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<PurchasedBooks>()
             .HasOne<Book>(pb => pb.Book)
             .WithMany(b => b.PurchasedBooks)
             .HasForeignKey(pb => pb.BookId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<Story>()
@@ -76,6 +79,12 @@ namespace AIAudioTalesServer.Data
            .WithMany(b => b.Stories)
            .HasForeignKey(s => s.BookId)
            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Book>()
+            .HasOne<Category>(b => b.Category)
+            .WithMany(c => c.BooksFromCategory)
+            .HasForeignKey(b => b.CategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Part>()
            .HasOne<Story>(p => p.Story)
@@ -98,7 +107,8 @@ namespace AIAudioTalesServer.Data
             modelBuilder.Entity<User>()
             .HasOne(u => u.RefreshToken)
             .WithOne(rt => rt.User)
-            .HasForeignKey<RefreshToken>(rt => rt.UserId);
+            .HasForeignKey<RefreshToken>(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Answer>()
             .Property(a => a.NextPartId)

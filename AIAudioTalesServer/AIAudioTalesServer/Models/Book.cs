@@ -9,6 +9,8 @@ namespace AIAudioTalesServer.Models
         public string Description { get; set; }
         public BookCategory BookCategory { get; set; }
         public string ImageURL { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
         public IList<Story> Stories { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
     }

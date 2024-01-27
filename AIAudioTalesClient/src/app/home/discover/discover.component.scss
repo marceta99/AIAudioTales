@@ -1,0 +1,22 @@
+.discover-container{
+  display: flex;
+  flex-direction: column;
+}
+.books{
+  display: flex;
+  flex-direction: column;
+}
+.book img{
+  height: 100px;
+  width: 100px;
+}
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.categories{
+  display: flex;
+  flex-direction: column;
+}

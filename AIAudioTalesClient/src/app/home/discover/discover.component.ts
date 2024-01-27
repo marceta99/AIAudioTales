@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
-import { Book } from 'src/app/entities';
+import { Book, Category } from 'src/app/entities';
 import { BookService } from '../services/book.service';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-discover',
@@ -12,15 +11,16 @@ import { FormControl } from '@angular/forms';
 })
 export class DiscoverComponent implements OnInit{
   books! : Book[];
-
-
-constructor(private bookService : BookService) {
-
-}
+  bookCategories!: Category[];
+  constructor(private bookService : BookService) {}
 
   ngOnInit(): void {
     this.bookService.libraryBooks.subscribe((books: Book[])=>{
       this.books= books;
+    })
+    this.bookService.getAllCategories().subscribe((categories: Category[])=>{
+      console.log(categories);
+      this.bookCategories = categories;
     })
   }
 

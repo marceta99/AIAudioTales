@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, finalize } from 'rxjs';
-import { Book, Purchase, PurchasedBook, Story } from 'src/app/entities';
+import { Book, Category, Purchase, PurchasedBook, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -71,6 +71,10 @@ export class BookService {
     const params = new HttpParams().set('searchTerm', searchTerm);
 
     this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params, withCredentials: true}).subscribe((res:any)=>console.log(res));
+  }
+
+  public getAllCategories(): Observable<Category[]> {
+    return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories", {withCredentials: true});
   }
 }
 

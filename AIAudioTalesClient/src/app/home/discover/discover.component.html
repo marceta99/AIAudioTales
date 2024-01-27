@@ -1,3 +1,18 @@
-<p>discover works!</p>
-<app-search-bar></app-search-bar>
-<div *ngFor="let book of books">{{book.title}}</div>
+<div class="discover-container">
+    <app-search-bar></app-search-bar>
+  <div class="container">
+    <div class="categories">
+      <div class="categorie" *ngFor="let category of bookCategories">
+        <h3>{{category.categoryName}}</h3>
+      </div>
+    </div>
+
+    <div class="books">
+      <div class="book" *ngFor="let book of books">
+        <h3>{{book.title}}</h3>
+        <img [src]="book.imageURL" alt="">
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -6,7 +6,7 @@ namespace AIAudioTalesServer.Models.DTOS.Incoming
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public BookCategory BookCategory { get; set; }
+        public Category BookCategory { get; set; }
 
     }
 }

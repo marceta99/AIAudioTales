@@ -13,7 +13,8 @@ export interface Book{
   title: string,
   description: string,
   bookCategory: BookCategory,
-  imageURL: string
+  imageURL: string,
+  categoryId: number
 }
 
 export interface PurchasedBook{
@@ -54,6 +55,12 @@ export interface Toast {
   timeoutId?: any; // Optional property to store the timeout ID
 }
 
+export interface Category{
+  id: number,
+  categoryName: string,
+  description: string
+}
+
 //Enums
 export enum ToastType{
   Success = "success",
@@ -82,7 +89,6 @@ export enum BookCategory{
   Nature = 4,
   Trending = 5,
   Recommended = 6
-
 }
 
 export enum HomePageCategories{}

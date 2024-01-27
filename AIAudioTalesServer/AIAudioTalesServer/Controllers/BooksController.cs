@@ -36,6 +36,13 @@ namespace AIAudioTalesServer.Controllers
             var books = await _booksRepository.GetAllBooks();
             return Ok(books);
         }
+
+        [HttpGet("GetAllCategories")]
+        public async Task<ActionResult<IList<Category>>> GetAllCategories()
+        {
+            var categories = await _booksRepository.GetAllCategories();
+            return Ok(categories);
+        }
         [HttpGet("GetBook/{bookId}")]
         public async Task<ActionResult<Book>> GetBook(int bookId)
         {
