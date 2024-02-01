@@ -20,7 +20,7 @@ export class BookComponent implements OnInit{
     private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
-    private toastNotificationService: ToastNotificationService) {}
+    private notificationService: ToastNotificationService) {}
 
   ngOnInit():void{
     this.route.params.subscribe(params => {
@@ -65,7 +65,7 @@ export class BookComponent implements OnInit{
           toastIcon: ToastIcon.Success,
           toastType: ToastType.Success
         }
-        this.toastNotificationService.show(toast);
+        this.notificationService.show(toast);
     },
       error: (error : Error) => {
         console.log(error)
@@ -75,7 +75,7 @@ export class BookComponent implements OnInit{
           toastIcon: ToastIcon.Error,
           toastType: ToastType.Error
         }
-        this.toastNotificationService.show(toast);
+        this.notificationService.show(toast);
     }
     })
   }

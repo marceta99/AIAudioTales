@@ -12,13 +12,13 @@ import { Observable } from 'rxjs';
 export class HomeComponent implements OnInit{
   isLoading!: Observable<boolean>;
 
-  constructor(private loadingSpinnerService: LoadingSpinnerService) { }
+  constructor(private spinnerService: LoadingSpinnerService) { }
 
   isSideNavCollapsed = false;
   screenWidth = 0;
 
   ngOnInit():void {
-    this.isLoading = this.loadingSpinnerService.loading$;
+    this.isLoading = this.spinnerService.loading$;
   }
 
   onToggleSideNav(data: SideNavToggle): void{

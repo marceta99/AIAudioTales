@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, finalize } from 'rxjs';
-import { Book, Category, Purchase, PurchasedBook, Story } from 'src/app/entities';
+import { BehaviorSubject, Observable, Subject, finalize } from 'rxjs';
+import { Book, Category, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -10,9 +10,9 @@ import { LoadingSpinnerService } from './loading-spinner.service';
 })
 export class BookService {
   private path = environment.apiUrl;
-  libraryBooks = new BehaviorSubject<Book[]>([]);
+  libraryBooks = new Subject<SearchedBooks>();
 
-  constructor(private httpClient: HttpClient, private loadingSpinnerService: LoadingSpinnerService) { }
+  constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
   public getBooksFromCategory(bookCategory: number, page: number, pageSize: number) :Observable<Book[]>{
     const params = new HttpParams()
@@ -23,11 +23,11 @@ export class BookService {
     return this.httpClient.get<Book[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
   public getBookWithId(bookId: number): Observable<Book>{
-    this.loadingSpinnerService.setLoading(true);
+    this.spinnerService.setLoading(true);
 
     return this.httpClient.get<Book>
     (this.path + "Books/GetBook/"+bookId, {withCredentials: true}).pipe(
-      finalize(() => this.loadingSpinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
+      finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
   public purchaseBook(purchase: Purchase){
@@ -39,18 +39,18 @@ export class BookService {
   }
 
   public getUserBooks():Observable<PurchasedBook[]>{
-    this.loadingSpinnerService.setLoading(true);
+    this.spinnerService.setLoading(true);
 
     return this.httpClient.get<PurchasedBook[]>(this.path + "Books/GetUserBooks", {withCredentials: true}).pipe(
-      finalize(() => this.loadingSpinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
+      finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
 
   public getPurchasedBook(bookId: number):Observable<PurchasedBook>{
-    this.loadingSpinnerService.setLoading(true);
+    this.spinnerService.setLoading(true);
 
     return this.httpClient.get<PurchasedBook>(this.path + "Books/GetPurchasedBook/"+ bookId, {withCredentials: true}).pipe(
-      finalize(() => this.loadingSpinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
+      finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
 

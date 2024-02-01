@@ -26,7 +26,10 @@ export interface PurchasedBook{
   purchaseType: PurchaseType,
   language: Language
 }
-
+export interface SearchedBooks{
+  searchTerm: string,
+  books: Book[]
+}
 export interface BooksPaginated{
   booksCategory: BookCategory,
   books: Book[],

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
-import { Book } from 'src/app/entities';
+import { Book, SearchedBooks } from 'src/app/entities';
 import { FormControl } from '@angular/forms';
 import { LoadingSpinnerService } from '../../services/loading-spinner.service';
 import { BookService } from '../../services/book.service';
@@ -18,10 +18,10 @@ export class SearchBarComponent {
   searchHistory: string[] = [];
   searchIsNotEmptyString: boolean = false;
 
-  constructor(private loadingSpinnerService: LoadingSpinnerService, private cdr: ChangeDetectorRef, private bookService: BookService) {}
+  constructor(private spinnerService: LoadingSpinnerService, private cdr: ChangeDetectorRef, private bookService: BookService) {}
 
   ngOnInit(): void {
-    this.loadingSpinnerService.setLoading(false);
+    this.spinnerService.setLoading(false);
     this.cdr.detectChanges();
 
     this.fetchSearchHistory();
@@ -84,7 +84,11 @@ export class SearchBarComponent {
     this.bookService.searchBooks(searchTerm,1,10).subscribe({
       next: (books : Book[] ) => {
         console.log(books)
-        this.bookService.libraryBooks.next(books);
+        const searchBooks : SearchedBooks = {
+          searchTerm: searchTerm,
+          books: books
+        }
+        this.bookService.libraryBooks.next(searchBooks);
       },
       error: error => {
         console.error('There was an error!', error);

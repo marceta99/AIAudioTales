@@ -13,13 +13,13 @@ export class ToastNotificationComponent implements OnInit, AfterViewInit, OnDest
 
   private toastSubscription!: Subscription;
 
-  constructor(private toastNotificationService: ToastNotificationService) {}
+  constructor(private notificationService: ToastNotificationService) {}
 
   ngAfterViewInit(): void {
 
   }
   ngOnInit(): void {
-    this.toastSubscription = this.toastNotificationService.toast$.subscribe(toast =>{
+    this.toastSubscription = this.notificationService.toast$.subscribe(toast =>{
         this.createToast(toast);
     })
   }
