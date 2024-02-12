@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize } from 'rxjs';
-import { Book, Category, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { Basket, BasketItem, Book, Category, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -9,8 +9,10 @@ import { LoadingSpinnerService } from './loading-spinner.service';
   providedIn: 'root'
 })
 export class BookService {
+
   private path = environment.apiUrl;
   libraryBooks = new Subject<SearchedBooks>();
+  cartBooks = new BehaviorSubject<Book[]>([]);
 
   constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
@@ -36,6 +38,10 @@ export class BookService {
 
   public userHasBook(bookId: number):Observable<boolean>{
     return this.httpClient.get<boolean>(this.path + "Books/UserHasBook/"+bookId, {withCredentials: true});
+  }
+
+  public isBasketItem(bookId: number):Observable<boolean>{
+    return this.httpClient.get<boolean>(this.path + "Books/IsBasketItem/"+bookId, {withCredentials: true});
   }
 
   public getUserBooks():Observable<PurchasedBook[]>{
@@ -75,6 +81,20 @@ export class BookService {
 
   public getAllCategories(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories", {withCredentials: true});
+  }
+
+  public addBasketItem(bookId: number){
+    const params = new HttpParams().set('bookId', bookId);
+    return this.httpClient.post<Book[]>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
+  }
+
+  public getBasket(): Observable<Basket> {
+    return this.httpClient.get<Basket>(this.path+"Books/GetBasket", {withCredentials: true});
+  }
+
+  public removeBasketItem(itemId: number): Observable<Basket>{
+    const params = new HttpParams().set('itemId', itemId);
+    return this.httpClient.delete<Basket>(this.path+"Books/RemoveBasketItem",{ params, withCredentials : true});
   }
 }
 

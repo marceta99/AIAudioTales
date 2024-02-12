@@ -18,6 +18,7 @@ namespace AIAudioTalesServer.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
         public DbSet<Category> BookCategories { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -48,8 +49,18 @@ namespace AIAudioTalesServer.Data
             .HasKey(sh => sh.Id)
             .IsClustered(false); // Remove clustered index from primary key
 
+            modelBuilder.Entity<BasketItem>()
+            .HasKey(bi => bi.Id)
+            .IsClustered(false);
+
             modelBuilder.Entity<SearchHistory>()
              .HasIndex(sh => sh.UserId)
+             .IsClustered(true)
+             .IsUnique(false);
+            // Add clustered index on UserId
+
+            modelBuilder.Entity<BasketItem>()
+             .HasIndex(bi => bi.UserId)
              .IsClustered(true)
              .IsUnique(false);
             // Add clustered index on UserId
@@ -119,6 +130,18 @@ namespace AIAudioTalesServer.Data
             .WithOne(sh => sh.User)
             .HasForeignKey<SearchHistory>(sh => sh.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BasketItem>()
+           .HasOne<User>(bi => bi.User)
+           .WithMany(u => u.BasketItems)
+           .HasForeignKey(bi => bi.UserId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BasketItem>()
+           .HasOne<Book>(bi => bi.Book)
+           .WithMany(b => b.BasketItems)
+           .HasForeignKey(bi => bi.BookId)
+           .OnDelete(DeleteBehavior.Cascade);
 
             //Indexes
             modelBuilder.Entity<Book>()

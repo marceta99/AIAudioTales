@@ -20,6 +20,7 @@ import { ToastNotificationComponent } from './home/toast-notification/toast-noti
 import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
 import { DiscoverComponent } from './home/discover/discover.component';
 import { SearchBarComponent } from './home/discover/search-bar/search-bar.component';
+import { BasketComponent } from './home/basket/basket.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SearchBarComponent } from './home/discover/search-bar/search-bar.compon
     ToastNotificationComponent,
     LoadingSpinnerComponent,
     DiscoverComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    BasketComponent
   ],
   imports: [
     BrowserModule,

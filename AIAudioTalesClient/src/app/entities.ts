@@ -64,6 +64,18 @@ export interface Category{
   description: string
 }
 
+export interface BasketItem{
+  id: number,
+  itemPrice: number,
+  bookId: number,
+  book: Book
+}
+
+export interface Basket{
+  basketItems: BasketItem[],
+  totalPrice: number
+}
+
 //Enums
 export enum ToastType{
   Success = "success",

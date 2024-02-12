@@ -1,0 +1,11 @@
+<h1>My Basket Items: </h1>
+<div class="container" *ngIf="basket">
+  <div class="basket-item" *ngFor="let item of basket.basketItems">
+    <h1>{{item.book.title}}</h1>
+    <img [src]="item.book.imageURL" alt="">
+    <h2>Price : {{item.itemPrice}} $</h2>
+    <button (click)="removeBasketItem(item.id)">Remove</button>
+  </div>
+
+  <button>Checkout {{basket.totalPrice}} $</button>
+</div>

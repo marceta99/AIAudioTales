@@ -68,7 +68,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                 var initialData = new List<Book>
                 {
                     new Book
-                    {
+                    {   Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="The Little Farm Tales",
                         Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
@@ -76,7 +76,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Chronicles of Celestial Harmony",
                         Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
@@ -84,7 +84,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Ephemeral Echoes",
                         Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
@@ -92,7 +92,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="The Alchemist's Legacy",
                         Description="A gripping adventure that follows an alchemist's apprentice in pursuit of a mythical artifact, rumored to hold the power to transmute the ordinary into the extraordinary.",
@@ -100,14 +100,14 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Serenade of Shadows",
                         Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781781085677/string-city-9781781085677_hr.jpg"
                     },
                     new Book
-                    {
+                    {   Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Cogs of Destiny",
                         Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
@@ -115,7 +115,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -131,7 +131,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -139,7 +139,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -147,7 +147,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -155,7 +155,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -163,7 +163,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -171,7 +171,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -179,7 +179,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -187,7 +187,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -195,7 +195,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -203,7 +203,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -211,7 +211,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -219,7 +219,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -227,7 +227,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -235,7 +235,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -243,7 +243,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -251,7 +251,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -259,7 +259,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -267,7 +267,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -275,7 +275,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -283,7 +283,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -291,7 +291,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -299,7 +299,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -307,7 +307,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -315,7 +315,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -323,7 +323,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -331,7 +331,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -339,7 +339,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="The Little Farm Tales",
                         Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
@@ -347,7 +347,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Chronicles of Celestial Harmony",
                         Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
@@ -355,7 +355,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Ephemeral Echoes",
                         Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
@@ -371,7 +371,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Serenade of Shadows",
                         Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
@@ -379,7 +379,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Cogs of Destiny",
                         Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
@@ -387,7 +387,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -395,7 +395,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -403,7 +403,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -411,7 +411,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -419,7 +419,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=5,BookCategory=BookCategory.Nature,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -427,7 +427,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -435,7 +435,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -443,7 +443,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -451,7 +451,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=3,BookCategory=BookCategory.Math,
                         Title="Math 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -459,7 +459,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -467,7 +467,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -475,7 +475,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -483,7 +483,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=4,BookCategory=BookCategory.Geography,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -491,7 +491,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -499,7 +499,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -507,7 +507,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -515,7 +515,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=2,BookCategory=BookCategory.History,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -531,7 +531,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -539,7 +539,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -547,7 +547,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Bedtime 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -555,7 +555,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -563,7 +563,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -571,7 +571,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -579,7 +579,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -587,7 +587,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -595,7 +595,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -603,7 +603,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=1,BookCategory=BookCategory.BedTime,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -613,7 +613,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     ///
                      new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -621,7 +621,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -629,7 +629,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -637,7 +637,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -645,7 +645,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -653,7 +653,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -661,7 +661,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Bedtime 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -669,7 +669,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Bedtime 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -677,7 +677,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Bedtime 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -685,7 +685,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Bedtime 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -693,7 +693,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -701,7 +701,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -709,7 +709,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -717,7 +717,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -725,7 +725,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -733,7 +733,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -741,7 +741,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -749,7 +749,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="The Little Farm Tales",
                         Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
@@ -757,7 +757,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Chronicles of Celestial Harmony",
                         Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
@@ -765,7 +765,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Ephemeral Echoes",
                         Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
@@ -773,7 +773,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="The Alchemist's Legacy",
                         Description="A gripping adventure that follows an alchemist's apprentice in pursuit of a mythical artifact, rumored to hold the power to transmute the ordinary into the extraordinary.",
@@ -781,7 +781,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Serenade of Shadows",
                         Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
@@ -789,7 +789,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Cogs of Destiny",
                         Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
@@ -797,7 +797,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -805,7 +805,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -813,7 +813,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -821,7 +821,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=7,BookCategory=BookCategory.Recommended,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -829,7 +829,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -837,7 +837,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -845,7 +845,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -853,7 +853,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -861,7 +861,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -869,7 +869,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -877,7 +877,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -885,7 +885,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -893,7 +893,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -901,7 +901,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -909,7 +909,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -917,7 +917,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -925,7 +925,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Geography 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -933,7 +933,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Bedtime 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -941,7 +941,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Bedtime 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -949,7 +949,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Bedtime 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -957,7 +957,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Bedtime 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -965,7 +965,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -973,7 +973,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Nature 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -981,7 +981,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Nature 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -989,7 +989,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Nature 4",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -997,7 +997,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 1",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -1005,7 +1005,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 2",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
@@ -1013,7 +1013,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                     },
                     new Book
                     {
-
+                        Price = 6,
                         CategoryId=6,BookCategory=BookCategory.Trending,
                         Title="Math 3",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",

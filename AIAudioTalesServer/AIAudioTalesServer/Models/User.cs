@@ -11,6 +11,7 @@ namespace AIAudioTalesServer.Models
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
+        public IList<BasketItem> BasketItems { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public SearchHistory SearchHistory { get; set; }
     }

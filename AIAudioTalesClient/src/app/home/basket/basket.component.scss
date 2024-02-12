@@ -1,0 +1,19 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.basket-item{
+  display: flex;
+  flex-direction: column;
+}
+img{
+  width: 100px;
+  height: 100px;
+}
+
+button{
+  width: 95px;
+  height: 50px;
+}

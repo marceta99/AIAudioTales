@@ -158,6 +158,44 @@ namespace AIAudioTalesServer.Controllers
 
         }
 
+        [HttpGet("IsBasketItem/{bookId}")]
+        public async Task<ActionResult<bool>> IsBasketItem(int bookId)
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    bool hasBook = await _booksRepository.IsBasketItem(bookId, user.Id);
+
+                    return Ok(hasBook);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
         [HttpGet("GetUserBooks")]
         public async Task<ActionResult<IList<PurchasedBookReturnDTO>>> GetUserBooks()
         {
@@ -183,6 +221,43 @@ namespace AIAudioTalesServer.Controllers
                     var books = await _booksRepository.GetUserBooks(user.Id);
 
                     return Ok(books);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("GetBasket")]
+        public async Task<ActionResult<BasketReturnDTO>> GetBasket()
+        {
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var basket = await _booksRepository.GetBasket(user.Id);
+
+                    return Ok(basket);
                 }
                 else
                 {
@@ -233,6 +308,7 @@ namespace AIAudioTalesServer.Controllers
                 return NotFound();
             }
         }
+
 
         [HttpGet("Search")]
         public async Task<IActionResult> SearchBooks([FromQuery] string searchTerm, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
@@ -304,6 +380,89 @@ namespace AIAudioTalesServer.Controllers
 
                     await _booksRepository.SaveSearchTerm(user.Id, searchTerm);
                     return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("AddBasketItem")]
+        public async Task<IActionResult> AddBasketItem([FromQuery] int bookId)
+        {
+
+            // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var result = await _booksRepository.AddBasketItem(user.Id, bookId);
+                    if (result == null) return BadRequest();
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("RemoveBasketItem")]
+        public async Task<ActionResult<BasketReturnDTO>> RemoveBasketItem([FromQuery] int itemId)
+        {
+            
+             // Get the JWT token cookie
+            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                // Decode the JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                // Access custom claim "email"
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                if (emailClaim != null)
+                {
+                    var email = emailClaim.Value;
+
+                    var user = await _authRepository.GetUserWithEmail(email);
+                    if (user == null) return BadRequest();
+
+                    var item = await _booksRepository.GetItemById(itemId);
+
+                    if (item == null) return BadRequest();
+
+                    await _booksRepository.RemoveBasketItem(item);
+
+                    var updatedBasket = await _booksRepository.GetBasket(user.Id);
+
+                    return updatedBasket;
                 }
                 else
                 {

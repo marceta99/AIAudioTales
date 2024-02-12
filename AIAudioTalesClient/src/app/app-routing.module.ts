@@ -12,6 +12,7 @@ import { MyProfileComponent } from './home/my-profile/my-profile.component';
 import { ToastNotificationComponent } from './home/toast-notification/toast-notification.component';
 import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
 import { DiscoverComponent } from './home/discover/discover.component';
+import { BasketComponent } from './home/basket/basket.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -25,7 +26,8 @@ const routes: Routes = [
     {path: "library/player/:bookId", component: PlayerComponent},
 
     {path: "my-profile", component: MyProfileComponent},
-    {path: "discover", component: DiscoverComponent}
+    {path: "discover", component: DiscoverComponent},
+    {path: "basket", component: BasketComponent}
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

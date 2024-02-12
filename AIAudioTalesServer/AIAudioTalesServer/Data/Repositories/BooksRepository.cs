@@ -70,6 +70,13 @@ namespace AIAudioTalesServer.Data.Repositories
             return true;
         }
 
+        public async Task<bool> IsBasketItem(int bookId, int userId)
+        {
+            var basketItem = await _dbContext.BasketItems.Where(bi => bi.UserId == userId && bi.BookId == bookId).FirstOrDefaultAsync();
+            if (basketItem == null) return false;
+            return true;
+        }
+
         public async Task<IList<PurchasedBookReturnDTO>> GetUserBooks(int userId)
         {
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId).ToListAsync();
@@ -188,6 +195,60 @@ namespace AIAudioTalesServer.Data.Repositories
         {
             var categories = await _dbContext.BookCategories.ToListAsync();
             return categories;
+        }
+
+        public async Task<BasketReturnDTO> GetBasket(int userId)
+        {
+            var basketItems = await _dbContext.BasketItems
+                                              .Where(bi => bi.UserId == userId)
+                                              .Include(bi => bi.Book)
+                                              .ToListAsync();
+            var itemsDto = _mapper.Map<IList<BasketItemReturnDTO>>(basketItems);
+            var totalPrice = 0m;
+
+            foreach (var item in itemsDto)
+            {
+                totalPrice += item.ItemPrice;
+            }
+
+            var basket = new BasketReturnDTO
+            {
+                BasketItems = itemsDto,
+                TotalPrice = totalPrice
+            };
+
+            return basket;
+        }
+
+        public async Task<BasketItem> AddBasketItem(int userId, int bookId)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            var basketItem = new BasketItem
+            {
+                UserId = userId,
+                BookId = bookId,
+                ItemPrice = book.Price
+            };
+
+            var item = await _dbContext.BasketItems.AddAsync(basketItem);
+            await _dbContext.SaveChangesAsync();
+
+            return item.Entity;
+        }
+
+        public async Task<BasketItem?> GetItemById(int itemId)
+        {
+            return await _dbContext.BasketItems.FindAsync(itemId);            
+        }
+
+
+        public async Task RemoveBasketItem(BasketItem item)
+        {
+            _dbContext.BasketItems.Remove(item);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

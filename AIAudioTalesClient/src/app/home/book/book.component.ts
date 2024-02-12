@@ -14,12 +14,12 @@ export class BookComponent implements OnInit{
   book! : Book;
   currentUser!: User;
   userHasBook: boolean = false;
+  isBasketItem: boolean = false;
   disableButton: boolean = false;
   constructor(
     private bookService: BookService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router,
     private notificationService: ToastNotificationService) {}
 
   ngOnInit():void{
@@ -39,7 +39,14 @@ export class BookComponent implements OnInit{
               console.log(error);
             }
           });
-
+          this.bookService.isBasketItem(this.book.id).subscribe({
+            next: (isBasketItem: boolean) => {
+              this.isBasketItem = isBasketItem;
+            },
+            error: (error: any) => {
+              console.log(error);
+            }
+          });
         },
         error: (error: any) => {
           console.log(error);
@@ -80,4 +87,30 @@ export class BookComponent implements OnInit{
     })
   }
 
+  addBasketItem(bookId: number){
+    this.disableButton = true;
+    this.bookService.addBasketItem(bookId).subscribe({
+      next: () => {
+        const toast: Toast = {
+          text: "Added to basket",
+          toastIcon: ToastIcon.Success,
+          toastType: ToastType.Success
+        }
+        this.notificationService.show(toast);
+        this.isBasketItem = true;
+        this.disableButton = false;
+
+    },
+      error: (error : Error) => {
+        console.log(error)
+        this.disableButton = false;
+        const toast: Toast = {
+          text: "We're sorry! An error occurred. Please try again later.",
+          toastIcon: ToastIcon.Error,
+          toastType: ToastType.Error
+        }
+        this.notificationService.show(toast);
+    }
+    })
+  }
 }
