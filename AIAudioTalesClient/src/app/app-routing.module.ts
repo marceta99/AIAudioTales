@@ -13,6 +13,8 @@ import { ToastNotificationComponent } from './home/toast-notification/toast-noti
 import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
 import { DiscoverComponent } from './home/discover/discover.component';
 import { BasketComponent } from './home/basket/basket.component';
+import { RouterLinkActive } from '@angular/router';
+
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},

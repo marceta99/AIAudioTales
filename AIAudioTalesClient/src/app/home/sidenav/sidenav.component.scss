@@ -59,8 +59,26 @@
 .my-prof {
   display: none;
 }
+.active-link {
+
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+.mob-icons {
+  display: flex;
+  gap: 1rem;
+  span {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+  }
+}
+
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
+  .my-prof-mob {
+    display: flex;
+  }
   .sidenav {
     background-color: var(--main-bg-color);
     position: fixed;

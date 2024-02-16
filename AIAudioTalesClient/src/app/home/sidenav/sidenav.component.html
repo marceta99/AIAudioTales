@@ -1,21 +1,3 @@
-<!-- <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':'' ">
-  <div class="logo-container">
-    <button class="logo" (click)="toggleCollapse()">A</button>
-    <div class="logo-text" *ngIf="collapsed">Angular</div>
-    <button class="btn-close" *ngIf="collapsed" (click)="closesSidenav()">
-      <i class="fal fa-times close-icon "></i>
-    </button>
-  </div>
-  <ul class="sidenav-nav">
-    <li class="sidenav-nav-item" *ngFor="let data of navData">
-      <a [routerLink]="[data.routeLink]" class="sidenav-nav-link">
-        <i [class]="data.icon" class="sidenav-link-icon"></i>
-        <span class="sidenav-link-text" *ngIf="collapsed">{{data.label}}</span>
-      </a>
-    </li>
-  </ul>
-</div> -->
-
 <div class="sidenav">
 
   <div class="topnav-lg">
@@ -27,18 +9,22 @@
 
 
 
-  <span class="menu_ctg" [routerLink]="['/home']">
+  <span class="menu_ctg" [routerLink]="['/home']" routerLinkActive="active-link">
     <img src="../../../assets/icons/home.svg" alt="home"><a>Home</a>
   </span>
-  <span class="menu_ctg" [routerLink]="['/home/discover']">
+  <span class="menu_ctg" [routerLink]="['/home/discover']" routerLinkActive="active-link">
     <img src="../../../assets/icons/search.svg" alt="search"><a>Search</a>
   </span>
-  <span class="menu_ctg" [routerLink]="['/home/library']">
+  <span class="menu_ctg" [routerLink]="['/home/library']" routerLinkActive="active-link">
     <img src="../../../assets/icons/library.svg" alt="library"><a>Library</a>
   </span>
-  <span class="menu_ctg my-prof" [routerLink]="['/home/my-profile']">
+  <span class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
+    <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ basket }}</span>
+  </span>
+  <span class="menu_ctg my-prof" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
     <img src="../../../assets/icons/settings.svg" alt="settings"><a>My Profile</a>
   </span>
+
 </div>
 
 
@@ -47,6 +33,12 @@
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
     <p class="logo-text">Kumadio</p>
   </span>
-
-  <img src="../../../assets/icons/settings.svg" alt="settings">
+<div class="mob-icons">
+  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
+    <img src="../../../assets/icons/settings.svg" alt="settings">
+  </span>
+  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" routerLinkActive="active-link">
+    <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ basket }}</span>
+  </span>
+</div>
 </div>

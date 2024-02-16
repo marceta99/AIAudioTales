@@ -7,6 +7,15 @@
   justify-content: space-between;
   margin: 0 2rem;
 }
+.banner-div {
+  background-image: url(../../../assets/banner.png);
+  min-height: 100px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 @media (min-width: 768px) {
   .main-container {
   margin-left: 1rem;

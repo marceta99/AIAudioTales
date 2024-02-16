@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { navbarData } from './nav-data';
+import { RouterLinkActive } from '@angular/router';
+
 
 export interface SideNavToggle{
   screenWidth: number;
@@ -25,4 +27,5 @@ export class SidenavComponent {
     this.collapsed = false;
     this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth})
   }
+  basket = 0
 }
