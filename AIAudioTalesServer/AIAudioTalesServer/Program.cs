@@ -6,6 +6,7 @@ using AIAudioTalesServer.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//stripe config
+StripeConfiguration.ApiKey = configuration["ApplicationSettings:StripeSecretKey"];
+builder.Services.AddHttpContextAccessor();
 
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
@@ -35,6 +39,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 //builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -84,7 +89,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        builder.WithOrigins(configuration["ApplicationSettings:ClientUrl"])
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, finalize } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
 import { Basket, BasketItem, Book, Category, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
@@ -12,7 +12,10 @@ export class BookService {
 
   private path = environment.apiUrl;
   libraryBooks = new Subject<SearchedBooks>();
-  cartBooks = new BehaviorSubject<Book[]>([]);
+  basket = new BehaviorSubject<Basket>({
+    basketItems : [],
+    totalPrice : 0
+  });
 
   constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
@@ -83,13 +86,21 @@ export class BookService {
     return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories", {withCredentials: true});
   }
 
-  public addBasketItem(bookId: number){
+  public addBasketItem(bookId: number): Observable<Basket>{
     const params = new HttpParams().set('bookId', bookId);
-    return this.httpClient.post<Book[]>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
+    return this.httpClient.post<Basket>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
   }
 
-  public getBasket(): Observable<Basket> {
-    return this.httpClient.get<Basket>(this.path+"Books/GetBasket", {withCredentials: true});
+  public getBasket(): void{
+    this.httpClient
+               .get<Basket>(this.path+"Books/GetBasket", {withCredentials: true})
+               .subscribe({
+                next: (basket: Basket) => {
+                  this.basket.next(basket)
+              },
+                error: error => {
+                  console.error('There was an error!', error);
+              }})  
   }
 
   public removeBasketItem(itemId: number): Observable<Basket>{

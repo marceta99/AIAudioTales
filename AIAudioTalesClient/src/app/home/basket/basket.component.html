@@ -7,5 +7,5 @@
     <button (click)="removeBasketItem(item.id)">Remove</button>
   </div>
 
-  <button>Checkout {{basket.totalPrice}} $</button>
+  <button (click)="checkout()">Checkout {{basket.totalPrice}} $</button>
 </div>

@@ -14,6 +14,8 @@ import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.
 import { DiscoverComponent } from './home/discover/discover.component';
 import { BasketComponent } from './home/basket/basket.component';
 import { RouterLinkActive } from '@angular/router';
+import { SuccessPurchaseComponent } from './home/basket/success-purchase/success-purchase.component';
+import { CancelPurchaseComponent } from './home/basket/cancel-purchase/cancel-purchase.component';
 
 
 const routes: Routes = [
@@ -29,7 +31,10 @@ const routes: Routes = [
 
     {path: "my-profile", component: MyProfileComponent},
     {path: "discover", component: DiscoverComponent},
-    {path: "basket", component: BasketComponent}
+    {path: "basket", component: BasketComponent},
+    {path: "success-purchase", component: SuccessPurchaseComponent},
+    {path: "cancel-purchase", component: CancelPurchaseComponent}
+
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

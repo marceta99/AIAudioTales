@@ -19,7 +19,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task <IEnumerable<string>> GetSearchHistory(int id);
         Task SaveSearchTerm(int userId, string searchTerm);
         Task<IList<Category>> GetAllCategories();
-        Task<BasketReturnDTO> GetBasket(int userId);
+        Task<BasketDTO> GetBasket(int userId);
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task<BasketItem> GetItemById(int itemId);
         Task RemoveBasketItem(BasketItem item);

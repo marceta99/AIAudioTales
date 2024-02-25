@@ -197,7 +197,7 @@ namespace AIAudioTalesServer.Data.Repositories
             return categories;
         }
 
-        public async Task<BasketReturnDTO> GetBasket(int userId)
+        public async Task<BasketDTO> GetBasket(int userId)
         {
             var basketItems = await _dbContext.BasketItems
                                               .Where(bi => bi.UserId == userId)
@@ -211,7 +211,7 @@ namespace AIAudioTalesServer.Data.Repositories
                 totalPrice += item.ItemPrice;
             }
 
-            var basket = new BasketReturnDTO
+            var basket = new BasketDTO
             {
                 BasketItems = itemsDto,
                 TotalPrice = totalPrice

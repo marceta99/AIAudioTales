@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, Language, Purchase, PurchaseType, Toast, ToastIcon, ToastType, User } from 'src/app/entities';
+import { Basket, Book, Language, Purchase, PurchaseType, Toast, ToastIcon, ToastType, User } from 'src/app/entities';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
@@ -90,7 +90,8 @@ export class BookComponent implements OnInit{
   addBasketItem(bookId: number){
     this.disableButton = true;
     this.bookService.addBasketItem(bookId).subscribe({
-      next: () => {
+      next: (basket: Basket) => {
+        this.bookService.basket.next(basket);
         const toast: Toast = {
           text: "Added to basket",
           toastIcon: ToastIcon.Success,

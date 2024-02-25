@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AIAudioTalesServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+322e5826e362fec5a3ce8d2ce4700c3f69cdc340")]
 [assembly: System.Reflection.AssemblyProductAttribute("AIAudioTalesServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AIAudioTalesServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

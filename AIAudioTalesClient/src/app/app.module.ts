@@ -21,6 +21,8 @@ import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.
 import { DiscoverComponent } from './home/discover/discover.component';
 import { SearchBarComponent } from './home/discover/search-bar/search-bar.component';
 import { BasketComponent } from './home/basket/basket.component';
+import { SuccessPurchaseComponent } from './home/basket/success-purchase/success-purchase.component';
+import { CancelPurchaseComponent } from './home/basket/cancel-purchase/cancel-purchase.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { BasketComponent } from './home/basket/basket.component';
     LoadingSpinnerComponent,
     DiscoverComponent,
     SearchBarComponent,
-    BasketComponent
+    BasketComponent,
+    SuccessPurchaseComponent,
+    CancelPurchaseComponent
   ],
   imports: [
     BrowserModule,

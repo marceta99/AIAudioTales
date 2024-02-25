@@ -19,7 +19,7 @@
     <img src="../../../assets/icons/library.svg" alt="library"><a>Library</a>
   </span>
   <span class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
-    <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ basket }}</span>
+    <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ itemsCount }}</span>
   </span>
   <span class="menu_ctg my-prof" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
     <img src="../../../assets/icons/settings.svg" alt="settings"><a>My Profile</a>
@@ -38,7 +38,7 @@
     <img src="../../../assets/icons/settings.svg" alt="settings">
   </span>
   <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" routerLinkActive="active-link">
-    <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ basket }}</span>
+    <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ itemsCount }}</span>
   </span>
 </div>
 </div>

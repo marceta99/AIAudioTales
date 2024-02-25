@@ -234,7 +234,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBasket")]
-        public async Task<ActionResult<BasketReturnDTO>> GetBasket()
+        public async Task<ActionResult<BasketDTO>> GetBasket()
         {
             // Get the JWT token cookie
             var jwtTokenCookie = Request.Cookies["X-Access-Token"];
@@ -393,7 +393,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("AddBasketItem")]
-        public async Task<IActionResult> AddBasketItem([FromQuery] int bookId)
+        public async Task<ActionResult<BasketDTO>> AddBasketItem([FromQuery] int bookId)
         {
 
             // Get the JWT token cookie
@@ -418,7 +418,9 @@ namespace AIAudioTalesServer.Controllers
                     var result = await _booksRepository.AddBasketItem(user.Id, bookId);
                     if (result == null) return BadRequest();
 
-                    return Ok();
+                    var newBasket = await _booksRepository.GetBasket(user.Id);
+
+                    return Ok(newBasket);
                 }
                 else
                 {
@@ -432,7 +434,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpDelete("RemoveBasketItem")]
-        public async Task<ActionResult<BasketReturnDTO>> RemoveBasketItem([FromQuery] int itemId)
+        public async Task<ActionResult<BasketDTO>> RemoveBasketItem([FromQuery] int itemId)
         {
             
              // Get the JWT token cookie

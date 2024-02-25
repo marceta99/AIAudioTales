@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj": {}
+    "C:\\Users\\mihai\\OneDrive\\Desktop\\Projects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj": {
+    "C:\\Users\\mihai\\OneDrive\\Desktop\\Projects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj",
+        "projectUniqueName": "C:\\Users\\mihai\\OneDrive\\Desktop\\Projects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj",
         "projectName": "AIAudioTalesServer",
-        "projectPath": "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj",
-        "packagesPath": "C:\\Users\\Mihailo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mihailo\\Desktop\\ProgrammingProjects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\obj\\",
+        "projectPath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Projects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\AIAudioTalesServer.csproj",
+        "packagesPath": "C:\\Users\\mihai\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Projects\\AIAudioTales\\AIAudioTalesServer\\AIAudioTalesServer\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mihailo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mihai\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -74,6 +74,10 @@
               "target": "Package",
               "version": "[6.0.21, )"
             },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[43.15.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
@@ -102,7 +106,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
