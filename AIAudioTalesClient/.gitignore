@@ -40,3 +40,15 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.tmp
+*.userprefs
+*.csproj.user
+*.vbproj.user
