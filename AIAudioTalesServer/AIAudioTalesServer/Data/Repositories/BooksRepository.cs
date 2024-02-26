@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models.Enums;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -60,6 +61,25 @@ namespace AIAudioTalesServer.Data.Repositories
                 Language = language
             };
             await _dbContext.PurchasedBooks.AddAsync(pb);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task PurchaseBooks(int userId, IList<BasketItemReturnDTO> basketItems, PurchaseType purchaseType, Language language)
+        {
+            List<PurchasedBooks> purchasedBooks = new List<PurchasedBooks>();
+            foreach (BasketItemReturnDTO basketItem in basketItems)
+            {
+                PurchasedBooks pb = new PurchasedBooks
+                {
+                    BookId = basketItem.BookId,
+                    UserId = userId,
+                    PurchaseType = purchaseType,
+                    Language = language
+                };
+                purchasedBooks.Add(pb);
+            }
+            
+            await _dbContext.PurchasedBooks.AddRangeAsync(purchasedBooks);
             await _dbContext.SaveChangesAsync();
         }
 

@@ -23,7 +23,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task<BasketItem> GetItemById(int itemId);
         Task RemoveBasketItem(BasketItem item);
-
+        Task PurchaseBooks(int userId, IList<BasketItemReturnDTO> basketItems, PurchaseType purchaseType, Language language);
 
     }
 }
