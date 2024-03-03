@@ -10,7 +10,6 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<IList<Book>> GetAllBooks();
         Task<Book> GetBook(int id);
         Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory);
-        Task PurchaseBook(int userId, int bookId, PurchaseType purchaseType, Language language);
         Task<bool> UserHasBook(int bookId, int userId);
         Task<bool> IsBasketItem(int bookId, int userId);
         Task<IList<PurchasedBookReturnDTO>> GetUserBooks(int userId);
@@ -23,7 +22,10 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task<BasketItem> GetItemById(int itemId);
         Task RemoveBasketItem(BasketItem item);
-        Task PurchaseBooks(int userId, IList<BasketItemReturnDTO> basketItems, PurchaseType purchaseType, Language language);
-
+        Task PurchaseBooks(int userId, IList<BasketItemReturnDTO> basketItems, PurchaseType purchaseType, Language language, string sessionId);
+        Task<bool> UpdatePurchaseStatus(string sessionId);
+        Task<bool> RemoveCanceledPurchase(string sessionId);
+        Task RemoveBasketItems(int userId);
+        Task<bool> RemoveUserPendingPurchases(User user);
     }
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Basket, BasketItem } from 'src/app/entities';
+import { Basket, BasketItem, Toast, ToastIcon, ToastType } from 'src/app/entities';
 import { BookService } from '../services/book.service';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { environment } from 'src/environment/environment';
 import { StripeService } from '../services/stripe.service';
+import { ActivatedRoute } from '@angular/router';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-basket',
@@ -15,13 +17,29 @@ export class BasketComponent implements OnInit{
   private stripePromise!: Promise<Stripe | null>;
   basket!: Basket;
 
-  constructor(private bookService : BookService, private spinnerService: LoadingSpinnerService, private stripeService: StripeService) {}
+  constructor(
+     private bookService : BookService,
+     private spinnerService: LoadingSpinnerService,
+     private stripeService: StripeService, 
+     private activatedRoute: ActivatedRoute,
+     private notificationService: ToastNotificationService
+     ) {}
 
   ngOnInit(): void {
     this.spinnerService.setLoading(false);
     this.bookService.basket.subscribe((basket: Basket)=>{
       this.basket = basket;
     })
+    this.activatedRoute.fragment.subscribe(fragment => {
+      if(fragment === "error"){
+        const toast: Toast = {
+          text: "We're sorry! An error occurred. Please try again later.",
+          toastIcon: ToastIcon.Error,
+          toastType: ToastType.Error
+        }
+        this.notificationService.show(toast);
+      }
+    });
   }
 
   removeBasketItem(itemId: number){

@@ -45,7 +45,7 @@ namespace AIAudioTalesServer.Data.Repositories
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = $"{baseUrl}/api/payment/success?sessionId=" + "{CHECKOUT_SESSION_ID}",
-                    CancelUrl = $"{baseUrl}/api/payment/canceled",
+                    CancelUrl = $"{baseUrl}/api/payment/canceled?sessionId=" + "{CHECKOUT_SESSION_ID}",
                     PaymentMethodTypes = new List<string>
                 {
                     "card"

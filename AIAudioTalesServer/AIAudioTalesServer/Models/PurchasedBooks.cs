@@ -11,5 +11,7 @@ namespace AIAudioTalesServer.Models
         public Book Book { get; set; }
         public PurchaseType PurchaseType { get; set; }
         public Language Language { get; set; }
+        public PurchaseStatus PurchaseStatus { get; set; }
+        public string SessionId { get; set; }
     }
 }

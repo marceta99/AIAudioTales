@@ -80,45 +80,6 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }
-        [HttpPost("PurchaseBook")]
-        public async Task<ActionResult> PurchaseBook([FromBody] Purchase purchase)
-        {
-            // Get the JWT token cookie
-            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
-
-            if (!string.IsNullOrEmpty(jwtTokenCookie))
-            {
-                // Decode the JWT token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
-
-                // Access custom claim "email"
-                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-
-                if (emailClaim != null)
-                {
-                    var email = emailClaim.Value;
-
-                    var user = await _authRepository.GetUserWithEmail(email);
-                    if (user == null) return BadRequest();
-
-                    var userHasBook = await _booksRepository.UserHasBook(purchase.BookId, user.Id);
-                    if (userHasBook) return BadRequest("User already has that book");
-
-                    await _booksRepository.PurchaseBook(user.Id, purchase.BookId, purchase.PurchaseType, purchase.Language);
-
-                    return Ok("Book was successfully purchased");
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
 
         [HttpGet("UserHasBook/{bookId}")]
         public async Task<ActionResult<bool>> UserHasBook(int bookId)

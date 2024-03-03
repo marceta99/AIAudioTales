@@ -41,9 +41,9 @@ testem.log
 Thumbs.db
 
 # Visual Studio - Adjusted for the server project
-AIAudioTalesServer/.vs/
-AIAudioTalesServer/bin/
-AIAudioTalesServer/obj/
+AIAudioTalesServer/.vs/*
+AIAudioTalesServer/AIAudioTalesServer/bin/*
+AIAudioTalesServer/AIAudioTalesServer/obj/*
 *.user
 *.userosscache
 *.suo
