@@ -12,7 +12,7 @@ import { ToastNotificationService } from '../services/toast-notification.service
 })
 export class BookComponent implements OnInit{
   book! : Book;
-  currentUser!: User;
+  currentUser!: User | null;
   userHasBook: boolean = false;
   isBasketItem: boolean = false;
   disableButton: boolean = false;
@@ -54,7 +54,7 @@ export class BookComponent implements OnInit{
       });
     });
 
-    this.currentUser = this.authService.loggedUser;
+    this.authService.currentUser.subscribe(user=> {this.currentUser = user})
   }
 
   purchaseBook(purchaseType: PurchaseType){

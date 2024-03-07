@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environment/environment';
 import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { RegisterUser, User } from 'src/app/entities';
 import { Router } from '@angular/router';
 @Injectable({
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private path = environment.apiUrl;
-  loggedUser!: User;
+  currentUser: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   isLoggedIn: boolean = false;
 
   constructor(private httpClient: HttpClient, private _ngZone: NgZone, private router: Router) { }
@@ -23,7 +23,7 @@ export class AuthService {
       this.path + "Auth/Login", user, {withCredentials: true}
     ).pipe(tap((response : User) =>{
         console.log(response)
-        this.loggedUser = response;
+        this.currentUser.next(response);
         this.isLoggedIn = true;
         //localStorage.setItem("c23fj2",JSON.stringify(this.customEncode(response)));
 
@@ -48,7 +48,7 @@ export class AuthService {
       requestOptions
     ).pipe(tap((response : User) =>{
       console.log(response)
-      this.loggedUser = response;
+      this.currentUser.next(response);
       this.isLoggedIn = true;
       //localStorage.setItem("c23fj2",JSON.stringify(this.customEncode(response)));
 
@@ -62,22 +62,6 @@ export class AuthService {
   }
   public getCurrentUser(): Observable<User> {
     return this.httpClient.get<User>(this.path + "Auth/GetCurrentUser");
-  }
-
-  private customEncode(data: User) {
-    let encoded = '';
-    const str = JSON.stringify(data);
-    for (let i = str.length - 1; i >= 0; i--) {
-        encoded += str[i] + String.fromCharCode(65 + Math.floor(Math.random() * 26));
-    }
-    return encoded;
-  }
-  private customDecode(encoded : string) {
-      let decoded = '';
-      for (let i = 0; i < encoded.length; i += 2) {
-          decoded = encoded[i] + decoded;
-      }
-      return JSON.parse(decoded);
   }
 
 }

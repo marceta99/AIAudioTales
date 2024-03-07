@@ -18,7 +18,7 @@
   <span class="menu_ctg" [routerLink]="['/home/library']" routerLinkActive="active-link">
     <img src="../../../assets/icons/library.svg" alt="library"><a>Library</a>
   </span>
-  <span class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
+  <span *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'" class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
     <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ itemsCount }}</span>
   </span>
   <span class="menu_ctg my-prof" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">

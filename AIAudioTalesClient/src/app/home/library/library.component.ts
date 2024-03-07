@@ -9,13 +9,13 @@ import { AuthService } from 'src/app/auth/services/auth.service';
   styleUrls: ['./library.component.scss']
 })
 export class LibraryComponent implements OnInit{
-  currentUser!: User;
+  currentUser!: User | null;
   books!: PurchasedBook[];
 
   constructor(private bookService: BookService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.currentUser = this.authService.loggedUser;
+    this.authService.currentUser.subscribe(user=> {this.currentUser = user})
 
     this.bookService.getUserBooks().subscribe({
       next: (books : PurchasedBook[] ) => {

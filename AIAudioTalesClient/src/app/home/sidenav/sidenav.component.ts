@@ -3,7 +3,8 @@ import { navbarData } from './nav-data';
 import { RouterLinkActive } from '@angular/router';
 import { BookService } from '../services/book.service';
 import { Observable } from 'rxjs';
-import { Basket, BasketItem, Book } from 'src/app/entities';
+import { Basket, BasketItem, Book, User } from 'src/app/entities';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 
 export interface SideNavToggle{
@@ -23,13 +24,16 @@ export class SidenavComponent implements OnInit {
   collapsed = false;
   navData = navbarData;
   itemsCount: number = 0;
+  currentUser!: User | null;
 
-  constructor(private bookService: BookService) {}
+  constructor(private bookService: BookService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.bookService.basket.subscribe((basket: Basket)=>{
       this.itemsCount = basket.basketItems.length;
     })
+
+    this.authService.currentUser.subscribe(user=> {this.currentUser = user});
   }
 
   toggleCollapse(): void{

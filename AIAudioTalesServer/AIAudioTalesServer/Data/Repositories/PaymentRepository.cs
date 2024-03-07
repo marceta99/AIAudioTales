@@ -1,16 +1,24 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
+using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
+using AIAudioTalesServer.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 using Stripe.Checkout;
+using System.Linq;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AppDbContext _dbContext;
+        private readonly IAuthRepository _authRepository;
 
-        public PaymentRepository(IHttpContextAccessor httpContextAccessor)
+        public PaymentRepository(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext, IAuthRepository authRepository)
         {
             this._httpContextAccessor = httpContextAccessor;
+            this._dbContext = dbContext;
+            this._authRepository = authRepository;
         }
 
         public async Task<string> CheckOut(BasketDTO basket)
@@ -65,6 +73,68 @@ namespace AIAudioTalesServer.Data.Repositories
                 throw;
             }
 
+        }
+        
+        public async Task<string> GetSubscribeSessionId()
+        {
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        Price = "price_1OqHJLBQEYQBClyqiHgYJ2N9",
+                        Quantity = 1,
+                    },
+                },
+                Mode = "subscription",
+                SuccessUrl = "http://localhost:4200/home/my-profile#success",
+                CancelUrl = "http://localhost:4200/home/my-profile#error",
+            };
+
+            var service = new SessionService();
+            Session session = await service.CreateAsync(options);
+
+            return session.Id;
+        }
+
+        public async Task AddPendingSubscription(int userId, string sessionId)
+        {
+            var subscription = new Subscription
+            {
+                SessionId = sessionId,
+                UserId = userId,
+                SubscriptionStatus = SubscriptionStatus.Pending
+            };
+            
+            await _dbContext.Subscriptions.AddAsync(subscription);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateSubscriptionStatus(string sessionId, SubscriptionStatus status)
+        {
+            var subscription = await _dbContext.Subscriptions.Where(s => s.SessionId == sessionId).FirstOrDefaultAsync();
+
+            if(subscription != null)
+            {
+                subscription.SubscriptionStatus = status;
+                await _authRepository.UpdateUserRole(Role.LISTENER_WITH_SUBSCRIPTION, subscription.UserId);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveUserPendingSubscriptions(int userId)
+        {
+            var user = await _dbContext.Subscriptions.Where(s => s.UserId == userId).FirstOrDefaultAsync();
+
+            if(user != null)
+            {
+                var subsriptions = await _dbContext.Subscriptions.Where(s => s.UserId != userId).ToListAsync();
+
+                _dbContext.Subscriptions.RemoveRange(subsriptions);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

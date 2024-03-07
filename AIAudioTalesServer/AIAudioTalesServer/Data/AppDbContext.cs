@@ -19,6 +19,7 @@ namespace AIAudioTalesServer.Data
         public DbSet<SearchHistory> SearchHistories { get; set; }
         public DbSet<Category> BookCategories { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -119,6 +120,12 @@ namespace AIAudioTalesServer.Data
             .HasOne(u => u.RefreshToken)
             .WithOne(rt => rt.User)
             .HasForeignKey<RefreshToken>(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+            .HasOne(u => u.Subscription)
+            .WithOne(s => s.User)
+            .HasForeignKey<Subscription>(s => s.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Answer>()

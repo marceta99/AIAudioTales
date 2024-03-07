@@ -14,5 +14,6 @@ namespace AIAudioTalesServer.Models
         public IList<BasketItem> BasketItems { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public SearchHistory SearchHistory { get; set; }
+        public Subscription Subscription { get; set; }
     }
 }

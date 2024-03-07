@@ -1,6 +1,7 @@
 ﻿using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Incoming;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 
 namespace AIAudioTalesServer.Data.Interfaces
 {
@@ -14,5 +15,6 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<User> GetUserWithRefreshToken(RefreshToken refreshToken);
         Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user);
         Task DeleteRefreshTokenForUser(string email);
+        Task UpdateUserRole(Role role, int userId);
     }
 }

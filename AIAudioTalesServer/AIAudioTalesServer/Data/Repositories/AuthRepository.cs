@@ -1,6 +1,7 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS.Outgoing;
+using AIAudioTalesServer.Models.Enums;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -104,6 +105,17 @@ namespace AIAudioTalesServer.Data.Repositories
             var refreshToken = await _dbContext.RefreshTokens.Where(rt => rt.UserId == user.Id).FirstOrDefaultAsync();
             _dbContext.RefreshTokens.Remove(refreshToken);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserRole(Role role, int userId)
+        {
+            var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+            if(user != null)
+            {
+                user.Role = role;
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
 

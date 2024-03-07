@@ -16,11 +16,11 @@ export class IsUserLoginGuard implements CanActivate {
       if(this.authService.isLoggedIn)return true;
 
       return this.authService.getCurrentUser().pipe(
-        map((user) => {
+        map((user: User) => {
           // If the user is obtained successfully
           console.log(user)
           this.authService.isLoggedIn = true;
-          this.authService.loggedUser = user;
+          this.authService.currentUser.next(user);
           return true;
         }),
         catchError((error) => {

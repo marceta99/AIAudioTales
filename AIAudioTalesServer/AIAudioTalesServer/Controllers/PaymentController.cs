@@ -7,6 +7,7 @@ using AutoMapper.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Stripe;
 using Stripe.Checkout;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -36,11 +37,11 @@ namespace AIAudioTalesServer.Controllers
             this._booksRepository = booksRepository;
             this._authRepository = authRepository;
             _frontendSuccessUrl = _appSettings.Value.ClientUrl + "/home/library";
-            _frontendCanceledUrl = _appSettings.Value.ClientUrl + "/home/basket";
+            _frontendCanceledUrl = _appSettings.Value.ClientUrl + "/home/basket#error";
         }
 
         [HttpPost("PlaceOrder")]
-        public async Task<ActionResult<string>> PlaceOrder([FromBody] BasketDTO basket)
+        public async Task<IActionResult> PlaceOrder([FromBody] BasketDTO basket)
         {
             try
             {   // Get the JWT token cookie
@@ -149,6 +150,98 @@ namespace AIAudioTalesServer.Controllers
             }
 
 
+        }
+
+        [HttpPost("ListenWebHook")]
+        public async Task<IActionResult> ListenWebhook()
+        {
+            var endpointSecret = "whsec_8f61e7d5876e86d3d84907f39baad3ee309ffd4b7a7770bfdc46ff8da28756f1";
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            try
+            {
+                var stripeEvent = EventUtility.ConstructEvent(json,
+                    Request.Headers["Stripe-Signature"], endpointSecret);
+
+                // Handle the event
+                switch (stripeEvent.Type)
+                {
+                    case Events.CustomerSubscriptionDeleted:
+                            break;
+                    case Events.InvoicePaymentFailed:
+                            break;
+                    case Events.InvoicePaymentSucceeded:
+                            break;
+                    case Events.CustomerSubscriptionCreated:
+                            break;
+                    case Events.CheckoutSessionCompleted:
+                        var session = stripeEvent.Data.Object as Session;
+                        //if (session != null && session.Object == "subscription")
+                        //{
+                            // Retrieve the session ID from the event
+                            var sessionId = session.Id;
+
+                            // Update the subscription status to "active" and role to LISTENER_WITH_SUBSCRIPTION
+                            await _paymentRepository.UpdateSubscriptionStatus(sessionId, SubscriptionStatus.Active);    
+                        //}
+                        break;
+                    default:
+                        break;
+                }
+
+                return Ok();
+            }
+            catch (StripeException e)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("CreateSubscribeSession")]
+        public async Task<IActionResult> CreateSubscribeSession()
+        {
+            try
+            {   // Get the JWT token cookie
+                var jwtTokenCookie = Request.Cookies["X-Access-Token"];
+
+                if (!string.IsNullOrEmpty(jwtTokenCookie))
+                {
+                    // Decode the JWT token
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+
+                    // Access custom claim "email"
+                    var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+
+                    if (emailClaim != null)
+                    {
+                        var email = emailClaim.Value;
+
+                        var user = await _authRepository.GetUserWithEmail(email);
+                        if (user == null) return BadRequest();
+
+                        //remove users previous pending subscriptions
+                        await _paymentRepository.RemoveUserPendingSubscriptions(user.Id);
+
+                        var sessionId = await _paymentRepository.GetSubscribeSessionId();
+
+                        await _paymentRepository.AddPendingSubscription(user.Id, sessionId);
+
+                        return Ok(new { sessionId = sessionId });
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
 }

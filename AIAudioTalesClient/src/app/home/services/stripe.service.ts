@@ -16,4 +16,8 @@ import { Observable } from "rxjs";
     createOrder(basket: Basket): Observable<{sessionId: string}> {       
         return this.httpClient.post<{sessionId: string}>(this.path + "Payment/PlaceOrder", basket, {withCredentials: true});
     }
+    
+    createSubscribeSession(): Observable<{sessionId: string}> {       
+      return this.httpClient.post<{sessionId: string}>(this.path + "Payment/CreateSubscribeSession",{withCredentials: true});
+    }
   }
