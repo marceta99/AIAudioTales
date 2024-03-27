@@ -1,3 +1,7 @@
+.slider-box {
+  margin: 0.8rem;
+}
+
 .main-container {
   display: flex;
   padding: 0 35px;
@@ -35,10 +39,10 @@
   transform: translateY(-50%) scale(0.85);
 }
 .wrapper i:first-child{
-  left: -30px;
+  left: 0px;
 }
 .wrapper i:last-child{
-  right: -30px;
+  right: 0px;
 }
 .wrapper .carousel{
   display: grid;
@@ -76,6 +80,8 @@
   list-style: none;
   cursor: pointer;
   flex-direction: column;
+  overflow: hidden;
+
 
 }
 .carousel .card .img {
@@ -88,7 +94,6 @@
   height: 200px;
 
   object-fit: cover;
-  border: 4px solid #fff;
 }
 .carousel .card h2 {
   font-weight: 500;
