@@ -7,14 +7,31 @@
   justify-content: space-between;
   margin: 0 2rem;
 }
-.banner-div {
-  background-image: url(../../../assets/banner.png);
-  min-height: 100px;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+.main-book-div {
+  max-width: 1100px;
+  margin: 0 auto;
 }
+.banner-div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1500px;
+  margin: 0 auto;
+
+}
+  
+// .scrolable-banner {
+//   min-height: 100px;
+//   background-attachment: fixed;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   margin: 0 1rem;
+//   background-image: url(../../../assets/banner.png);
+//  } 
+
+
 
 @media (min-width: 768px) {
   .main-container {

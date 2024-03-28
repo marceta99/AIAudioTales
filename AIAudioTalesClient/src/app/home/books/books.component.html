@@ -1,8 +1,9 @@
 <div class="main-container"><!--(mouseup)="dragStop()"> (mouseleave)="autoPlay()">-->
   <div class="banner-div">
-    <span class="banner"></span>
+    <img class="banner2" src="../../../assets/banner-test2.png" alt="banner">
+    <img class="banner2" src="../../../assets/test-banner.png" alt="banner">
   </div>
-  <div *ngFor="let bookPaginated of booksPaginated">
+  <div class="main-book-div" *ngFor="let bookPaginated of booksPaginated">
     <div class="cat-head">
 
       <h2>{{bookPaginated.booksCategory | bookCategoryPipe}}</h2>
