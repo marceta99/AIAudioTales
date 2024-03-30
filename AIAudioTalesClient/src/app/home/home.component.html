@@ -1,8 +1,0 @@
-<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
-<div id="body-container">
-    <app-loading-spinner *ngIf="isLoading | async"></app-loading-spinner>
-    <div [ngClass]="(isLoading | async) ? 'hide':'show'">
-      <router-outlet></router-outlet>
-    </div>
-</div>
-

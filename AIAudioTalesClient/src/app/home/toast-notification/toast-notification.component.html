@@ -1,9 +1,0 @@
-<ul class="notifications">
-  <li *ngFor="let toast of toasts" [class]="'toast '+toast.toastType">
-    <div class="column">
-      <i [class]="'fa-solid '+toast.toastIcon"></i>
-      <span>{{ toast.text }}</span>
-    </div>
-    <i class="fa-solid fa-xmark" (click)="removeToast(toast)"></i>
-  </li>
-</ul>
