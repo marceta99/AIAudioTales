@@ -1,7 +1,5 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
-using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.DTOS;
-using AIAudioTalesServer.Models.Enums;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +21,7 @@ namespace AIAudioTalesServer.Controllers
             _booksRepository = booksRepository;
             _authRepository = authRepository;
         }
-
+        /*
         [HttpGet("Test")]
         public ActionResult<string> Test()
         {
@@ -436,6 +434,6 @@ namespace AIAudioTalesServer.Controllers
             {
                 return NotFound();
             }
-        }
+        }*/
     }
 }

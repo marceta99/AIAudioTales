@@ -10,16 +10,12 @@ namespace AIAudioTalesServer.Data
     public class AppDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public DbSet<Book> Books { get; set; }
-        public DbSet<PurchasedBooks> PurchasedBooks { get; set; }
-        public DbSet<Story> Stories { get; set; }
-        public DbSet<Part> Parts { get; set; }
-        public DbSet<Answer> Answers { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Job> Jobs { get; set; }
+        
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<SearchHistory> SearchHistories { get; set; }
-        public DbSet<Category> BookCategories { get; set; }
-        public DbSet<BasketItem> BasketItems { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
+
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -41,6 +37,47 @@ namespace AIAudioTalesServer.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasKey(u => u.Id);
+            modelBuilder.Entity<Country>().HasKey(c => c.Id);
+            modelBuilder.Entity<Company>().HasKey(c => c.Id);
+            modelBuilder.Entity<Job>().HasKey(c => c.Id);
+            modelBuilder.Entity<Category>().HasKey(c => c.Id);
+            modelBuilder.Entity<CategoryItem>().HasKey(c => c.Id);
+            modelBuilder.Entity<RefreshToken>().HasKey(t => t.UserId);
+
+            modelBuilder.Entity<User>()
+           .HasIndex(u => u.Email)
+           .IsUnique();
+
+            modelBuilder.Entity<User>()
+              .HasOne<Country>(u => u.Country)
+              .WithMany(c => c.Citizens)
+              .HasForeignKey(u => u.CountryId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+              .HasOne<Company>(u => u.Company)
+              .WithMany(c => c.Workers)
+              .HasForeignKey(u => u.CompanyId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Job>()
+              .HasOne<Company>(j => j.Company)
+              .WithMany(c => c.Jobs)
+              .HasForeignKey(j => j.CompanyId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Category>()
+              .HasOne<Job>(u => u.Job)
+              .WithMany(c => c.Categories)
+              .HasForeignKey(u => u.JobId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CategoryItem>()
+              .HasOne<Category>(u => u.Category)
+              .WithMany(c => c.CategoryItems)
+              .HasForeignKey(u => u.CategoryId)
+              .OnDelete(DeleteBehavior.Cascade);
+            /*modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Story>().HasKey(s => s.Id);
             modelBuilder.Entity<RefreshToken>().HasKey(t => t.UserId);
@@ -155,7 +192,7 @@ namespace AIAudioTalesServer.Data
                 .HasIndex(b => b.Title);
 
             modelBuilder.Entity<Book>()
-                .HasIndex(b => b.BookCategory);
+                .HasIndex(b => b.BookCategory);*/
 
         }
 

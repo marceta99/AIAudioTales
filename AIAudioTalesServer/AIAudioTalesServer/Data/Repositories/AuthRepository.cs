@@ -1,7 +1,5 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.DTOS.Outgoing;
-using AIAudioTalesServer.Models.Enums;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

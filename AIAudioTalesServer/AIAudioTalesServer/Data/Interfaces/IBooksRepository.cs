@@ -1,11 +1,9 @@
-﻿using AIAudioTalesServer.Models.DTOS;
-using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.Enums;
+﻿
 
 namespace AIAudioTalesServer.Data.Interfaces
 {
     public interface IBooksRepository
-    {
+    {   /*
         Task<Book> AddNewBook(BookCreateDTO newBook);
         Task<IList<Book>> GetAllBooks();
         Task<Book> GetBook(int id);
@@ -26,6 +24,6 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<bool> UpdatePurchaseStatus(string sessionId);
         Task<bool> RemoveCanceledPurchase(string sessionId);
         Task RemoveBasketItems(int userId);
-        Task<bool> RemoveUserPendingPurchases(User user);
+        Task<bool> RemoveUserPendingPurchases(User user);*/
     }
 }

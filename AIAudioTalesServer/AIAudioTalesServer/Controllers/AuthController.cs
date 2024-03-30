@@ -3,7 +3,6 @@ using AIAudioTalesServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
-using AIAudioTalesServer.Models.Enums;
 using AIAudioTalesServer.Data.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,7 +28,7 @@ namespace AIAudioTalesServer.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new User() { Email = model.Email, Role = Role.LISTENER_NO_SUBSCRIPTION };
+            var user = new User() { Email = model.Email };//, Role = Role.LISTENER_NO_SUBSCRIPTION };
 
             if (model.ConfirmPassword == model.Password)
             {
@@ -161,9 +160,9 @@ namespace AIAudioTalesServer.Controllers
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("email", user.Email),
-                    new Claim(ClaimTypes.Role, user.Role == Role.ADMIN ? "ADMIN":
+                    /*new Claim(ClaimTypes.Role, user.Role == Role.ADMIN ? "ADMIN":
                                                user.Role == Role.LISTENER_WITH_SUBSCRIPTION ? "LISTENER_WITH_SUBSCRIPTION":
-                                               "LISTENER_NO_SUBSCRIPTION")
+                                               "LISTENER_NO_SUBSCRIPTION")*/
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)

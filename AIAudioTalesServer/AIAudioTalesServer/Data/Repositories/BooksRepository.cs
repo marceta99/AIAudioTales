@@ -1,22 +1,15 @@
-﻿using AIAudioTalesServer.Models.DTOS.Incoming;
-using AIAudioTalesServer.Models;
-using AutoMapper;
-using AIAudioTalesServer.Models.DTOS;
-using Microsoft.EntityFrameworkCore;
+﻿
 using AIAudioTalesServer.Data.Interfaces;
-using AIAudioTalesServer.Models.Enums;
-using Microsoft.Extensions.Caching.Memory;
-using System.Net;
-using System.Security.Policy;
+
 
 namespace AIAudioTalesServer.Data.Repositories
 {
     public class BooksRepository : IBooksRepository
     {
-        private readonly AppDbContext _dbContext;
+        /*private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IMemoryCache _cache;
-
+        
         public BooksRepository(AppDbContext dbContext, IMapper mapper, IMemoryCache cache)
         {
             _dbContext = dbContext;
@@ -358,6 +351,6 @@ namespace AIAudioTalesServer.Data.Repositories
                 Console.WriteLine($"An error occurred while attempting to remove a purchase: {ex.Message}");
                 return false; // Indicate that an error occurred during the removal process
             }
-        }
+        }*/
     }
 }
