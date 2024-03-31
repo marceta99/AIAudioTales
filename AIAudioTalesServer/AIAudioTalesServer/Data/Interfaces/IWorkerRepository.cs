@@ -9,6 +9,10 @@ namespace AIAudioTalesServer.Data.Interfaces
 
         Task<IList<Category>> GetCategoriesForJob(int jobId);
 
+        Task<IEnumerable<User>> SearchWorkers(int countryId, int jobId);
+
         Task<CategoryItem> AddCategoryItem(CategoryItemCreateDTO item);
+
+        Task<Job> AddNewJob(JobCreateDTO job);
     }
 }

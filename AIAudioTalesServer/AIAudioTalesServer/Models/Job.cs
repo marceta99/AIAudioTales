@@ -7,6 +7,8 @@
         public int CompanyId { get; set; }
         public Company Company { get; set; }
         public IList<Category> Categories { get; set; }
+        public IList<User> Workers { get; set; }
+
 
     }
 }

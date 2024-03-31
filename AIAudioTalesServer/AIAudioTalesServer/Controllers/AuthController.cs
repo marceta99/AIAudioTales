@@ -30,7 +30,8 @@ namespace AIAudioTalesServer.Controllers
         {
             var user = new User() {
                 Email = model.Email, FirstName = model.FirstName,
-                LastName = model.LastName, CountryId = model.CountryId, CompanyId=1
+                LastName = model.LastName, CountryId = model.CountryId, 
+                JobId = model.JobId
                 };//, Role = Role.LISTENER_NO_SUBSCRIPTION };
 
             if (model.ConfirmPassword == model.Password)

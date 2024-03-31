@@ -54,31 +54,31 @@ namespace AIAudioTalesServer.Data
               .HasOne<Country>(u => u.Country)
               .WithMany(c => c.Citizens)
               .HasForeignKey(u => u.CountryId)
-              .OnDelete(DeleteBehavior.Cascade);
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
-              .HasOne<Company>(u => u.Company)
-              .WithMany(c => c.Workers)
-              .HasForeignKey(u => u.CompanyId)
-              .OnDelete(DeleteBehavior.Cascade);
+              .HasOne<Job>(u => u.Job)
+              .WithMany(j => j.Workers)
+              .HasForeignKey(u => u.JobId)
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Job>()
               .HasOne<Company>(j => j.Company)
               .WithMany(c => c.Jobs)
               .HasForeignKey(j => j.CompanyId)
-              .OnDelete(DeleteBehavior.Cascade);
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Category>()
               .HasOne<Job>(u => u.Job)
               .WithMany(c => c.Categories)
               .HasForeignKey(u => u.JobId)
-              .OnDelete(DeleteBehavior.Cascade);
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CategoryItem>()
               .HasOne<Category>(u => u.Category)
               .WithMany(c => c.CategoryItems)
               .HasForeignKey(u => u.CategoryId)
-              .OnDelete(DeleteBehavior.Cascade);
+              .OnDelete(DeleteBehavior.Restrict);
             /*modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<Book>().HasKey(b => b.Id);
             modelBuilder.Entity<Story>().HasKey(s => s.Id);

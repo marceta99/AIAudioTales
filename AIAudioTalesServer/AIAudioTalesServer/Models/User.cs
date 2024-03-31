@@ -9,6 +9,9 @@ namespace AIAudioTalesServer.Models
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string? Phone { get; set; }
+        public string? ImageURL { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; }
@@ -17,7 +20,7 @@ namespace AIAudioTalesServer.Models
         public int CountryId { get; set; }
         public Country Country { get; set; }
 
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public int JobId { get; set; }
+        public Job Job { get; set; }
     }
 }

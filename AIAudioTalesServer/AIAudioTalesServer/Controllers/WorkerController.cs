@@ -24,6 +24,33 @@ namespace AIAudioTalesServer.Controllers
             return Ok(users);
         }
 
+        [HttpGet("GetCategoriesForJob")]
+        public async Task<ActionResult<IList<Category>>> GetCategoriesForJob(int jobId)
+        {
+            var categories = await workerRepository.GetCategoriesForJob(jobId);
+
+            return Ok(categories);
+        }
+
+        [HttpGet("Search")]
+        public async Task<ActionResult<IList<User>>> SearchWorkers([FromQuery] int countryId = 1, [FromQuery] int jobId = 1)
+        {
+            var workers = await workerRepository.SearchWorkers(countryId, jobId);
+            return Ok(workers);
+        }
+
+        [HttpPost("AddNewJob")]
+        public async Task<ActionResult<Job>> AddNewJob([FromBody] JobCreateDTO job)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var newJob = await workerRepository.AddNewJob(job);
+                return Ok(newJob);
+            }
+            return BadRequest();
+        }
+
         [HttpPost("AddNewCategory")]
         public async Task<ActionResult<Category>> AddNewCategory([FromBody] CategoryCreateDTO category)
         {
@@ -36,13 +63,6 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest();
         }
 
-        [HttpGet("GetCategoriesForJob")]
-        public async Task<ActionResult<IList<Category>>> GetCategoriesForJob(int jobId)
-        {
-            var categories = await workerRepository.GetCategoriesForJob(jobId);
-        
-            return Ok(categories);
-        }
 
         [HttpPost("AddCategoryItem")]
         public async Task<ActionResult<Category>> AddCategoryItem([FromBody] CategoryItemCreateDTO item)

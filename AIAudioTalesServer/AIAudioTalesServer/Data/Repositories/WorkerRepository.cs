@@ -1,6 +1,7 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -16,6 +17,44 @@ namespace AIAudioTalesServer.Data.Repositories
         {
             var users = await _dbContext.Users.ToListAsync();
             return users;
+        }
+
+        public async Task<IList<Category>> GetCategoriesForJob(int jobId)
+        {
+            var categories = await _dbContext.Categories.Where(b => b.JobId == jobId)
+                .ToListAsync();
+
+            foreach (var category in categories)
+            {
+                var categoryItems =
+                    await _dbContext.CategoryItems.Where(i => i.CategoryId == category.Id).ToListAsync();
+
+                category.CategoryItems = categoryItems;
+            }
+
+            return categories;
+        }
+
+        public async Task<IEnumerable<User>> SearchWorkers(int countryId, int jobId)
+        {
+            var users = await _dbContext.Users.Where(u => u.CountryId == countryId && u.JobId == jobId)
+                .ToListAsync();
+
+            return users;
+
+        }
+
+        public async Task<Job> AddNewJob(JobCreateDTO job)
+        {
+            var newJob = new Job
+            {
+                JobName = job.JobName,
+                CompanyId = job.CompanyId
+            };
+            var createdJob = _dbContext.Jobs.Add(newJob);
+            await _dbContext.SaveChangesAsync();
+
+            return createdJob.Entity;
         }
 
         public async Task<Category> AddNewCategory(string categoryName, int jobId)
@@ -44,20 +83,6 @@ namespace AIAudioTalesServer.Data.Repositories
             return createdItem.Entity;
         }
 
-        public async Task<IList<Category>> GetCategoriesForJob(int jobId)
-        {
-            var categories = await _dbContext.Categories.Where(b => b.JobId == jobId)
-                .ToListAsync();
-
-            foreach (var category in categories)
-            {
-                var categoryItems = 
-                    await _dbContext.CategoryItems.Where(i => i.CategoryId == category.Id).ToListAsync();
-                
-                category.CategoryItems = categoryItems;
-            }
-
-            return categories;
-        }
+        
     }
 }
