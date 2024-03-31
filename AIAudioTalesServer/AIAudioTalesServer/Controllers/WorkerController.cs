@@ -35,5 +35,25 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("GetCategoriesForJob")]
+        public async Task<ActionResult<IList<Category>>> GetCategoriesForJob(int jobId)
+        {
+            var categories = await workerRepository.GetCategoriesForJob(jobId);
+        
+            return Ok(categories);
+        }
+
+        [HttpPost("AddCategoryItem")]
+        public async Task<ActionResult<Category>> AddCategoryItem([FromBody] CategoryItemCreateDTO item)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var newItem = await workerRepository.AddCategoryItem(item);
+                return Ok(newItem);
+            }
+            return BadRequest();
+        }
     }
 }

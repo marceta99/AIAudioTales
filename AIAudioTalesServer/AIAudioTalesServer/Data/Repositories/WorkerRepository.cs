@@ -30,5 +30,34 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return createdCategory.Entity;
         }
+        public async Task<CategoryItem> AddCategoryItem(CategoryItemCreateDTO item)
+        {
+            var newItem = new CategoryItem
+            {
+                Description = item.Description, 
+                ItemName = item.ItemName, 
+                CategoryId = item.CategoryId
+            };
+            var createdItem = _dbContext.CategoryItems.Add(newItem);
+            await _dbContext.SaveChangesAsync();
+
+            return createdItem.Entity;
+        }
+
+        public async Task<IList<Category>> GetCategoriesForJob(int jobId)
+        {
+            var categories = await _dbContext.Categories.Where(b => b.JobId == jobId)
+                .ToListAsync();
+
+            foreach (var category in categories)
+            {
+                var categoryItems = 
+                    await _dbContext.CategoryItems.Where(i => i.CategoryId == category.Id).ToListAsync();
+                
+                category.CategoryItems = categoryItems;
+            }
+
+            return categories;
+        }
     }
 }
