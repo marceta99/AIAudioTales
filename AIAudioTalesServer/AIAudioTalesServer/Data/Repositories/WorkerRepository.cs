@@ -17,5 +17,18 @@ namespace AIAudioTalesServer.Data.Repositories
             var users = await _dbContext.Users.ToListAsync();
             return users;
         }
+
+        public async Task<Category> AddNewCategory(string categoryName, int jobId)
+        {
+            var category = new Category
+            {
+                CategoryName = categoryName,
+                JobId = jobId
+            };
+            var createdCategory =  _dbContext.Categories.Add(category);
+            await _dbContext.SaveChangesAsync();
+
+            return createdCategory.Entity;
+        }
     }
 }

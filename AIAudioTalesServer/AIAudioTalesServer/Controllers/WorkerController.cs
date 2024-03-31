@@ -23,5 +23,17 @@ namespace AIAudioTalesServer.Controllers
             var users = await workerRepository.GetAllUsers();
             return Ok(users);
         }
+
+        [HttpPost("AddNewCategory")]
+        public async Task<ActionResult<Category>> AddNewCategory([FromBody] CategoryCreateDTO category)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var newCategory = await workerRepository.AddNewCategory(category.CategoryName, category.JobId);
+                return Ok(newCategory);
+            }
+            return BadRequest();
+        }
     }
 }

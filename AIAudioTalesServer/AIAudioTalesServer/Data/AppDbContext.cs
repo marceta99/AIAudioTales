@@ -13,6 +13,8 @@ namespace AIAudioTalesServer.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<CategoryItem> CategoryItems { get; set; }
         
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 

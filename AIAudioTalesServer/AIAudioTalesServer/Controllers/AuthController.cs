@@ -28,7 +28,10 @@ namespace AIAudioTalesServer.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new User() { Email = model.Email };//, Role = Role.LISTENER_NO_SUBSCRIPTION };
+            var user = new User() {
+                Email = model.Email, FirstName = model.FirstName,
+                LastName = model.LastName, CountryId = model.CountryId, CompanyId=1
+                };//, Role = Role.LISTENER_NO_SUBSCRIPTION };
 
             if (model.ConfirmPassword == model.Password)
             {

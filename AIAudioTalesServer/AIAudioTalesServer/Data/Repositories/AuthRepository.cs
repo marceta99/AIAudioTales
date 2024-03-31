@@ -22,12 +22,8 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<int> AddNewUser(User user)
         {
-            var isUsed = await IsEmailUsed(user.Email); 
-
-            if (isUsed)
-            {
-                return 0; //user with that user name already exists
-            }
+           // var isUsed = await IsEmailUsed(user.Email); 
+            
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
