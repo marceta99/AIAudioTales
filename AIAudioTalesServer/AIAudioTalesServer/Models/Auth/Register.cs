@@ -13,5 +13,6 @@ namespace AIAudioTalesServer.Models.Auth
         public string LastName { get; set; }
         public int CountryId { get; set; }
         public int JobId { get; set; }
+        public string? ImageURL { get; set; }
     }  
 }

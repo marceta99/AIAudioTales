@@ -14,5 +14,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<CategoryItem> AddCategoryItem(CategoryItemCreateDTO item);
 
         Task<Job> AddNewJob(JobCreateDTO job);
+        Task<IList<Job>> GetAllJobs(int companyId);
+        Task<Job> GetJob(int jobId);
     }
 }

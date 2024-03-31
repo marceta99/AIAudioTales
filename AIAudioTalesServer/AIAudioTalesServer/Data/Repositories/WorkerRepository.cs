@@ -35,6 +35,22 @@ namespace AIAudioTalesServer.Data.Repositories
             return categories;
         }
 
+        public async Task<IList<Job>> GetAllJobs(int companyId)
+        {
+            var jobs = await _dbContext.Jobs.Where(j => j.CompanyId == companyId)
+                .ToListAsync();
+
+            return jobs;
+        }
+
+        public async Task<Job> GetJob(int jobId)
+        {
+            var job = await _dbContext.Jobs.Where(j => j.Id == jobId)
+                .FirstOrDefaultAsync();
+
+            return job;
+        }
+
         public async Task<IEnumerable<User>> SearchWorkers(int countryId, int jobId)
         {
             var users = await _dbContext.Users.Where(u => u.CountryId == countryId && u.JobId == jobId)

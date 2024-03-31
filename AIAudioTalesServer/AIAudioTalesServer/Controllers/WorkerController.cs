@@ -75,5 +75,19 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("GetAllJobs")]
+        public async Task<ActionResult<IList<Job>>> GetAllJobs([FromQuery] int companyId)
+        {
+            var jobs = await workerRepository.GetAllJobs(companyId);
+            return Ok(jobs);
+        }
+
+        [HttpGet("GetJob")]
+        public async Task<ActionResult<Job>> GetJob([FromQuery] int jobId)
+        {
+            var job = await workerRepository.GetJob(jobId);
+            return Ok(job);
+        }
     }
 }
