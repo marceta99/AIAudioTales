@@ -1,6 +1,4 @@
 ﻿using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.DTOS.Incoming;
-using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models.Enums;
 
 namespace AIAudioTalesServer.Data.Interfaces

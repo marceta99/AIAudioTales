@@ -21,7 +21,7 @@ namespace AIAudioTalesServer.Data.Repositories
             this._authRepository = authRepository;
         }
 
-        public async Task<string> CheckOut(BasketDTO basket)
+        public async Task<string> CheckOut(DTOBasket basket)
         {
             try
             {

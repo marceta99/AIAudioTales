@@ -1,8 +1,8 @@
 ﻿namespace AIAudioTalesServer.Models.DTOS
 {
-    public class BasketDTO
+    public class DTOBasket
     {
-        public IList<BasketItemReturnDTO> BasketItems { get; set; }
+        public IList<DTOReturnBasketItem> BasketItems { get; set; }
         public decimal TotalPrice { get; set; }
     }
 }

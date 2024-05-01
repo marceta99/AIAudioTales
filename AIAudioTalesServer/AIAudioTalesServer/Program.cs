@@ -2,7 +2,7 @@ using AIAudioTalesServer;
 using AIAudioTalesServer.Data;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Data.Repositories;
-using AIAudioTalesServer.Data.Seed;
+using AIAudioTalesServer.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +12,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 configuration.AddJsonFile("appsettings.json");
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -23,21 +24,13 @@ builder.Services.AddSwaggerGen();
 StripeConfiguration.ApiKey = configuration["ApplicationSettings:StripeSecretKey"];
 builder.Services.AddHttpContextAccessor();
 
-var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-var dbName = Environment.GetEnvironmentVariable("DB_NAME");
-var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
-var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword}";
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    //options.UseSqlServer(builder.Configuration["ConnectionStrings__DefaultConnection"]);
-    //options.UseSqlServer(connectionString);
-
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
-//builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
@@ -80,8 +73,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddAuthorization(options => 
-{
-    
+{  
     options.AddPolicy("ListenerNoSubscription", policy => policy.RequireRole("LISTENER_NO_SUBSCRIPTION"));
 });
 
@@ -109,6 +101,7 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<UserContextMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

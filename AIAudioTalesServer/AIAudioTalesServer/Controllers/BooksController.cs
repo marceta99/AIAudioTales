@@ -1,13 +1,9 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
-using AIAudioTalesServer.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -23,6 +19,8 @@ namespace AIAudioTalesServer.Controllers
             _booksRepository = booksRepository;
             _authRepository = authRepository;
         }
+
+        #region GET
 
         [HttpGet("Test")]
         public ActionResult<string> Test()
@@ -55,32 +53,20 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBooksFromCategory")]
-        public async Task<ActionResult<IList<BookReturnDTO>>> GetBooksForCategory([FromQuery] BookCategory bookCategory, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IList<DTOReturnBook>>> GetBooksForCategory([FromQuery] int bookCategory, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var books = await _booksRepository.GetBooksForCategory(bookCategory);
             if (books == null)
             {
                 //return empty array if there is no books in that category
-                return new List<BookReturnDTO>();
+                return new List<DTOReturnBook>();
             }
 
             //skip elements until you came to that page that is specified in "page" and take only number elements from page that is specified in "pageSize"
-            var paginatedBooks = books.Skip((page - 1)*pageSize).Take(pageSize);
+            var paginatedBooks = books.Skip((page - 1) * pageSize).Take(pageSize);
             return Ok(paginatedBooks);
         }
-
-        [HttpPost("AddNewBook")]
-        public async Task<ActionResult<BookReturnDTO>> AddNewBook([FromBody] BookCreateDTO book)
-        {
-            
-            if (ModelState.IsValid)
-            {
-                var newBook = await _booksRepository.AddNewBook(book);
-                return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-            }
-            return BadRequest();
-        }
-
+        
         [HttpGet("UserHasBook/{bookId}")]
         public async Task<ActionResult<bool>> UserHasBook(int bookId)
         {
@@ -158,7 +144,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetUserBooks")]
-        public async Task<ActionResult<IList<PurchasedBookReturnDTO>>> GetUserBooks()
+        public async Task<ActionResult<IList<DTOReturnPurchasedBook>>> GetUserBooks()
         {
             // Get the JWT token cookie
             var jwtTokenCookie = Request.Cookies["X-Access-Token"];
@@ -195,7 +181,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBasket")]
-        public async Task<ActionResult<BasketDTO>> GetBasket()
+        public async Task<ActionResult<DTOBasket>> GetBasket()
         {
             // Get the JWT token cookie
             var jwtTokenCookie = Request.Cookies["X-Access-Token"];
@@ -232,7 +218,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetPurchasedBook/{bookId}")]
-        public async Task<ActionResult<PurchasedBookReturnDTO>> GetPurchasedBook(int bookId)
+        public async Task<ActionResult<DTOReturnPurchasedBook>> GetPurchasedBook(int bookId)
         {
             // Get the JWT token cookie
             var jwtTokenCookie = Request.Cookies["X-Access-Token"];
@@ -273,7 +259,7 @@ namespace AIAudioTalesServer.Controllers
 
         [HttpGet("Search")]
         public async Task<IActionResult> SearchBooks([FromQuery] string searchTerm, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
-        {   
+        {
             var books = await _booksRepository.SearchBooks(searchTerm, pageNumber, pageSize);
             return Ok(books);
         }
@@ -313,48 +299,38 @@ namespace AIAudioTalesServer.Controllers
                 return NotFound();
             }
 
-            
-        }
 
+        }
+        #endregion
+
+        #region POST
+        /*[HttpPost("AddNewBook")]
+        public async Task<ActionResult<DTOReturnBook>> AddNewBook([FromBody] DTOCreateBook book)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                var newBook = await _booksRepository.AddNewBook(book);
+                return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
+            }
+            return BadRequest();
+        }*/
+ 
         [HttpPost("SaveSearchTerm")]
         public async Task<IActionResult> SaveSearchTerm([FromQuery] string searchTerm)
         {
-
-            // Get the JWT token cookie
-            var jwtTokenCookie = Request.Cookies["X-Access-Token"];
-
-            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
             {
-                // Decode the JWT token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
-
-                // Access custom claim "email"
-                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-
-                if (emailClaim != null)
-                {
-                    var email = emailClaim.Value;
-
-                    var user = await _authRepository.GetUserWithEmail(email);
-                    if (user == null) return BadRequest();
-
-                    await _booksRepository.SaveSearchTerm(user.Id, searchTerm);
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                return Unauthorized();
             }
-            else
-            {
-                return NotFound();
-            }
+
+            await _booksRepository.SaveSearchTerm(user.Id, searchTerm);
+            return Ok();
         }
 
         [HttpPost("AddBasketItem")]
-        public async Task<ActionResult<BasketDTO>> AddBasketItem([FromQuery] int bookId)
+        public async Task<ActionResult<DTOBasket>> AddBasketItem([FromQuery] int bookId)
         {
 
             // Get the JWT token cookie
@@ -393,9 +369,11 @@ namespace AIAudioTalesServer.Controllers
                 return NotFound();
             }
         }
+        #endregion
 
+        #region DELETE
         [HttpDelete("RemoveBasketItem")]
-        public async Task<ActionResult<BasketDTO>> RemoveBasketItem([FromQuery] int itemId)
+        public async Task<ActionResult<DTOBasket>> RemoveBasketItem([FromQuery] int itemId)
         {
             
              // Get the JWT token cookie
@@ -437,5 +415,7 @@ namespace AIAudioTalesServer.Controllers
                 return NotFound();
             }
         }
+
+        #endregion
     }
 }

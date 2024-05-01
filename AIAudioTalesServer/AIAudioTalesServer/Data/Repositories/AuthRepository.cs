@@ -1,13 +1,7 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
-using AIAudioTalesServer.Models.DTOS.Outgoing;
 using AIAudioTalesServer.Models.Enums;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,7 +29,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return 1;
         }
-
         public async Task<bool> IsEmailUsed(string email)
         {
             var userExists = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
@@ -44,7 +37,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return true; //user with that email already exists 
         }
-
         public bool CheckPassword(string password, User user)
         {
             bool result;
@@ -57,14 +49,12 @@ namespace AIAudioTalesServer.Data.Repositories
             return result;
 
         }
-
         public async Task<User> GetUserWithEmail(string email)
         {
             var user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
             return user;
         }
-
         public async Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user)
         {
             var token = await _dbContext.RefreshTokens.Where(rt => rt.UserId == user.Id).FirstOrDefaultAsync();
@@ -84,7 +74,6 @@ namespace AIAudioTalesServer.Data.Repositories
             }
 
         }
-
         public async Task<RefreshToken> GetRefreshToken(string refreshToken)
         {
             var token = await _dbContext.RefreshTokens.Where(rt => rt.Token == refreshToken).FirstOrDefaultAsync();
@@ -106,7 +95,6 @@ namespace AIAudioTalesServer.Data.Repositories
             _dbContext.RefreshTokens.Remove(refreshToken);
             await _dbContext.SaveChangesAsync();
         }
-
         public async Task UpdateUserRole(Role role, int userId)
         {
             var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
@@ -117,7 +105,5 @@ namespace AIAudioTalesServer.Data.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
-
-
     }
 }

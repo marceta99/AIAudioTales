@@ -2,12 +2,13 @@
 {
     public class Answer
     {
-        public int AnswerId { get; set; }
-        public string AnswerText { get; set; }
-        public int CurrentPartId { get; set; }
-        public Part CurrentPart { get; set; }
-        public int? NextPartId { get; set; }
-        public Part NextPart { get; set; }
+        public int Id { get; set; }
+        public string Text { get; set; }
 
+        public BookPart CurrentPart { get; set; }
+        public int CurrentPartId { get; set; }
+
+        public BookPart NextPart { get; set; }
+        public int NextPartId { get; set; }
     }
 }

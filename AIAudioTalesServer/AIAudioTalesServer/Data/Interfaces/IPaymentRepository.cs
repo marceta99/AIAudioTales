@@ -5,7 +5,7 @@ namespace AIAudioTalesServer.Data.Interfaces
 {
     public interface IPaymentRepository
     {
-        Task<string> CheckOut(BasketDTO basket);
+        Task<string> CheckOut(DTOBasket basket);
         Task<string> GetSubscribeSessionId();
         Task AddPendingSubscription(int userId, string sessionId);
         Task RemoveUserPendingSubscriptions(int userId);

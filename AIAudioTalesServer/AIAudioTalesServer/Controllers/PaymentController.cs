@@ -41,7 +41,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("PlaceOrder")]
-        public async Task<IActionResult> PlaceOrder([FromBody] BasketDTO basket)
+        public async Task<IActionResult> PlaceOrder([FromBody] DTOBasket basket)
         {
             try
             {   // Get the JWT token cookie

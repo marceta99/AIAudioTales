@@ -1,13 +1,10 @@
-﻿using AIAudioTalesServer.Models.DTOS.Incoming;
-using AIAudioTalesServer.Models;
+﻿using AIAudioTalesServer.Models;
 using AutoMapper;
 using AIAudioTalesServer.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models.Enums;
 using Microsoft.Extensions.Caching.Memory;
-using System.Net;
-using System.Security.Policy;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -23,111 +20,28 @@ namespace AIAudioTalesServer.Data.Repositories
             _mapper = mapper;
             _cache = cache;
         }
-        public async Task<Book> AddNewBook(BookCreateDTO newBook)
-        {
-            var book = _mapper.Map<Book>(newBook);
-            
-            var createdBook = _dbContext.Books.Add(book);
-            await _dbContext.SaveChangesAsync();
 
-            return createdBook.Entity;
-        }
+        #region GET
         public async Task<IList<Book>> GetAllBooks()
         {
             var books = await _dbContext.Books.ToListAsync();
             return books;
         }
-
         public async Task<Book> GetBook(int id)
         {
             var book = await _dbContext.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
             return book;
         }
-
-        public async Task<IList<BookReturnDTO>> GetBooksForCategory(BookCategory bookCategory)
+        public async Task<IList<DTOReturnBook>> GetBooksForCategory(int bookCategory)
         {
-            var books = await _dbContext.Books.Where(b => b.BookCategory == bookCategory).ToListAsync();
-            var returnBooks = _mapper.Map<IList<BookReturnDTO>>(books);
+            var books = await _dbContext.Books.Where(b => b.CategoryId == bookCategory).ToListAsync();
+            var returnBooks = _mapper.Map<IList<DTOReturnBook>>(books);
 
             return returnBooks;
         }
-
-        public async Task PurchaseBooks(int userId, IList<BasketItemReturnDTO> basketItems, PurchaseType purchaseType, Language language, string sessionId)
-        {
-            List<PurchasedBooks> purchasedBooks = new List<PurchasedBooks>();
-            foreach (BasketItemReturnDTO basketItem in basketItems)
-            {
-                PurchasedBooks pb = new PurchasedBooks
-                {
-                    BookId = basketItem.BookId,
-                    UserId = userId,
-                    PurchaseType = purchaseType,
-                    Language = language,
-                    PurchaseStatus = PurchaseStatus.Pending,
-                    SessionId = sessionId
-                };
-                purchasedBooks.Add(pb);
-            }
-            
-            await _dbContext.PurchasedBooks.AddRangeAsync(purchasedBooks);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task<bool> UpdatePurchaseStatus(string sessionId)
-        {
-            try
-            {
-                var purchase = await _dbContext.PurchasedBooks.Where(pb => pb.SessionId == sessionId).FirstOrDefaultAsync();
-
-                if (purchase != null)
-                {
-                    purchase.PurchaseStatus = PurchaseStatus.Success;
-                    await _dbContext.SaveChangesAsync();
-                    return true; // Indicate success
-                }
-                return false; // No purchase found to update
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return false; // Indicate failure
-            }
-        }
-
-        public async Task<bool> RemoveCanceledPurchase(string sessionId)
-        {
-            try
-            {
-                // Find the purchase by sessionId
-                var purchases = await _dbContext.PurchasedBooks
-                                               .Where(pb => pb.SessionId == sessionId)
-                                               .ToListAsync();
-
-                if (purchases != null)
-                {
-                    // Remove the found purchase from the DbContext
-                    _dbContext.PurchasedBooks.RemoveRange(purchases);
-
-                    // Save changes to the database
-                    await _dbContext.SaveChangesAsync();
-                    return true; // Indicate that the removal was successful
-                }
-                else
-                {
-                    // No purchase found with the given sessionId
-                    return false; // Indicate that no purchase was found to remove
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while attempting to remove a purchase: {ex.Message}");
-                return false; // Indicate that an error occurred during the removal process
-            }
-        }
-
         public async Task<bool> UserHasBook(int bookId, int userId)
         {
-            var purchase = await _dbContext.PurchasedBooks.Where(pb => 
+            var purchase = await _dbContext.PurchasedBooks.Where(pb =>
                                                                  pb.BookId == bookId &&
                                                                  pb.UserId == userId &&
                                                                  pb.PurchaseStatus == PurchaseStatus.Success)
@@ -135,24 +49,22 @@ namespace AIAudioTalesServer.Data.Repositories
             if (purchase == null) return false;
             return true;
         }
-
         public async Task<bool> IsBasketItem(int bookId, int userId)
         {
             var basketItem = await _dbContext.BasketItems.Where(bi => bi.UserId == userId && bi.BookId == bookId).FirstOrDefaultAsync();
             if (basketItem == null) return false;
             return true;
         }
-
-        public async Task<IList<PurchasedBookReturnDTO>> GetUserBooks(int userId)
+        public async Task<IList<DTOReturnPurchasedBook>> GetUserBooks(int userId)
         {
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success).ToListAsync();
 
-            List<PurchasedBookReturnDTO> books = new List<PurchasedBookReturnDTO>();
+            List<DTOReturnPurchasedBook> books = new List<DTOReturnPurchasedBook>();
 
             foreach (var pb in purchasedBooks)
             {
                 var book = await GetBook(pb.BookId); //type Book
-                var purchasedBook = new PurchasedBookReturnDTO
+                var purchasedBook = new DTOReturnPurchasedBook
                 {
                     Id = book.Id,
                     Description = book.Description,
@@ -167,8 +79,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return books;
         }
-
-        public async Task<PurchasedBookReturnDTO> GetPurchasedBook(int userId, int bookId)
+        public async Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId)
         {
             var pb = await _dbContext.PurchasedBooks.Where(
                                                     pb => pb.UserId == userId &&
@@ -177,10 +88,10 @@ namespace AIAudioTalesServer.Data.Repositories
                                                     .FirstOrDefaultAsync();
 
             if (pb == null) return null;
-            
+
             var book = await GetBook(pb.BookId);
 
-            var purchasedBook = new PurchasedBookReturnDTO 
+            var purchasedBook = new DTOReturnPurchasedBook
             {
                 Id = book.Id,
                 Description = book.Description,
@@ -193,7 +104,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return purchasedBook;
         }
-
         public async Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
         {
             string cacheKey = $"Search_{searchTerm}_{pageNumber}_{pageSize}";
@@ -221,6 +131,69 @@ namespace AIAudioTalesServer.Data.Repositories
                                     .ToListAsync();
 
             return history;
+        }
+        public async Task<BasketItem?> GetItemById(int itemId)
+        {
+            return await _dbContext.BasketItems.FindAsync(itemId);
+        }
+        public async Task<IList<Category>> GetAllCategories()
+        {
+            var categories = await _dbContext.BookCategories.ToListAsync();
+            return categories;
+        }
+        public async Task<DTOBasket> GetBasket(int userId)
+        {
+            var basketItems = await _dbContext.BasketItems
+                                              .Where(bi => bi.UserId == userId)
+                                              .Include(bi => bi.Book)
+                                              .ToListAsync();
+            var itemsDto = _mapper.Map<IList<DTOReturnBasketItem>>(basketItems);
+            var totalPrice = 0m;
+
+            foreach (var item in itemsDto)
+            {
+                totalPrice += item.ItemPrice;
+            }
+
+            var basket = new DTOBasket
+            {
+                BasketItems = itemsDto,
+                TotalPrice = totalPrice
+            };
+
+            return basket;
+        }
+        #endregion
+
+        #region POST
+        /*public async Task<Book> AddNewBook(DTOCreateBook newBook)
+        {
+            var book = _mapper.Map<Book>(newBook);
+
+            var createdBook = _dbContext.Books.Add(book);
+            await _dbContext.SaveChangesAsync();
+
+            return createdBook.Entity;
+        }*/
+        public async Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId)
+        {
+            List<PurchasedBooks> purchasedBooks = new List<PurchasedBooks>();
+            foreach (DTOReturnBasketItem basketItem in basketItems)
+            {
+                PurchasedBooks pb = new PurchasedBooks
+                {
+                    BookId = basketItem.BookId,
+                    UserId = userId,
+                    PurchaseType = purchaseType,
+                    Language = language,
+                    PurchaseStatus = PurchaseStatus.Pending,
+                    SessionId = sessionId
+                };
+                purchasedBooks.Add(pb);
+            }
+            
+            await _dbContext.PurchasedBooks.AddRangeAsync(purchasedBooks);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task SaveSearchTerm(int userId, string searchTerm)
@@ -261,35 +234,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
         }
 
-        public async Task<IList<Category>> GetAllCategories()
-        {
-            var categories = await _dbContext.BookCategories.ToListAsync();
-            return categories;
-        }
-
-        public async Task<BasketDTO> GetBasket(int userId)
-        {
-            var basketItems = await _dbContext.BasketItems
-                                              .Where(bi => bi.UserId == userId)
-                                              .Include(bi => bi.Book)
-                                              .ToListAsync();
-            var itemsDto = _mapper.Map<IList<BasketItemReturnDTO>>(basketItems);
-            var totalPrice = 0m;
-
-            foreach (var item in itemsDto)
-            {
-                totalPrice += item.ItemPrice;
-            }
-
-            var basket = new BasketDTO
-            {
-                BasketItems = itemsDto,
-                TotalPrice = totalPrice
-            };
-
-            return basket;
-        }
-
         public async Task<BasketItem> AddBasketItem(int userId, int bookId)
         {
             var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
@@ -308,12 +252,64 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return item.Entity;
         }
+        #endregion
 
-        public async Task<BasketItem?> GetItemById(int itemId)
+        #region PUT
+        public async Task<bool> UpdatePurchaseStatus(string sessionId)
         {
-            return await _dbContext.BasketItems.FindAsync(itemId);            
+            try
+            {
+                var purchase = await _dbContext.PurchasedBooks.Where(pb => pb.SessionId == sessionId).FirstOrDefaultAsync();
+
+                if (purchase != null)
+                {
+                    purchase.PurchaseStatus = PurchaseStatus.Success;
+                    await _dbContext.SaveChangesAsync();
+                    return true; // Indicate success
+                }
+                return false; // No purchase found to update
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false; // Indicate failure
+            }
         }
 
+        #endregion
+
+        #region DELETE
+
+        public async Task<bool> RemoveCanceledPurchase(string sessionId)
+        {
+            try
+            {
+                // Find the purchase by sessionId
+                var purchases = await _dbContext.PurchasedBooks
+                                               .Where(pb => pb.SessionId == sessionId)
+                                               .ToListAsync();
+
+                if (purchases != null)
+                {
+                    // Remove the found purchase from the DbContext
+                    _dbContext.PurchasedBooks.RemoveRange(purchases);
+
+                    // Save changes to the database
+                    await _dbContext.SaveChangesAsync();
+                    return true; // Indicate that the removal was successful
+                }
+                else
+                {
+                    // No purchase found with the given sessionId
+                    return false; // Indicate that no purchase was found to remove
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while attempting to remove a purchase: {ex.Message}");
+                return false; // Indicate that an error occurred during the removal process
+            }
+        }
 
         public async Task RemoveBasketItem(BasketItem item)
         {
@@ -359,5 +355,7 @@ namespace AIAudioTalesServer.Data.Repositories
                 return false; // Indicate that an error occurred during the removal process
             }
         }
+
+        #endregion
     }
 }
