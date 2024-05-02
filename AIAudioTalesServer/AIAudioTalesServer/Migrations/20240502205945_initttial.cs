@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AIAudioTalesServer.Migrations
 {
-    public partial class initial : Migration
+    public partial class initttial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,7 +48,8 @@ namespace AIAudioTalesServer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    CreatorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,6 +58,11 @@ namespace AIAudioTalesServer.Migrations
                         name: "FK_Books_BookCategories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "BookCategories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Books_Users_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -258,6 +264,11 @@ namespace AIAudioTalesServer.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Books_CreatorId",
+                table: "Books",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Books_Title",
                 table: "Books",
                 column: "Title");
@@ -310,13 +321,13 @@ namespace AIAudioTalesServer.Migrations
                 name: "BookParts");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
                 name: "BookCategories");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

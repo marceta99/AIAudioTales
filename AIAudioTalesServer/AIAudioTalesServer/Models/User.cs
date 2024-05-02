@@ -10,6 +10,7 @@ namespace AIAudioTalesServer.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; }
+        public IList<Book> CreatedBooks { get; set; }
         public IList<PurchasedBooks> PurchasedBooks { get; set; }
         public IList<BasketItem> BasketItems { get; set; }
         public RefreshToken RefreshToken { get; set; }

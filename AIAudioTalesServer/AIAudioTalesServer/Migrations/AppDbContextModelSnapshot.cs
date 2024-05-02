@@ -91,6 +91,9 @@ namespace AIAudioTalesServer.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -109,6 +112,8 @@ namespace AIAudioTalesServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("Title");
 
@@ -338,7 +343,15 @@ namespace AIAudioTalesServer.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("AIAudioTalesServer.Models.User", "Creator")
+                        .WithMany("CreatedBooks")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("AIAudioTalesServer.Models.BookPart", b =>
@@ -429,6 +442,8 @@ namespace AIAudioTalesServer.Migrations
             modelBuilder.Entity("AIAudioTalesServer.Models.User", b =>
                 {
                     b.Navigation("BasketItems");
+
+                    b.Navigation("CreatedBooks");
 
                     b.Navigation("PurchasedBooks");
 

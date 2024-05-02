@@ -3,7 +3,6 @@ using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace AIAudioTalesServer.Controllers
 {

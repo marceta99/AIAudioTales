@@ -78,6 +78,12 @@ namespace AIAudioTalesServer.Data
             .HasForeignKey(b => b.CategoryId)
             .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Book>()
+            .HasOne<User>(b => b.Creator)
+            .WithMany(u => u.CreatedBooks)
+            .HasForeignKey(b => b.CreatorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
             //Indexes
             modelBuilder.Entity<Book>()
                 .HasIndex(b => b.Title); // nisam siguran da mi treba ovaj title index za books ali mogu da razmilim o tome kasnije, nzm ni sto sam ga dodao pre
