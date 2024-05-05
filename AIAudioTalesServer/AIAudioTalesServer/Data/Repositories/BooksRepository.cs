@@ -163,57 +163,29 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return basket;
         }
+
+        public async Task<BookPart?> GetRootPart(int bookId)
+        {
+            var rootPart = await _dbContext.BookParts
+                .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+
+            return rootPart;
+        }
+        public async Task<BookPart?> GetNextPart(int nextPartId)
+        {
+            var part = await _dbContext.BookParts
+                .Where(bp => bp.Id == nextPartId)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+
+            return part;
+        }
+
         #endregion
 
-        #region POST
-        /*public async Task<Book> AddNewBook(DTOCreateBook newBook)
-        {
-            var book = _mapper.Map<Book>(newBook);
-
-            var createdBook = _dbContext.Books.Add(book);
-            await _dbContext.SaveChangesAsync();
-
-            return createdBook.Entity;
-        }*/
-
-        /*public async Task AddNewBook(DTOCreateBook book, int creatorId)
-        {
-            Book newBook = _mapper.Map<Book>(book);
-            newBook.CreatorId = creatorId;
-
-            var createdBook = _dbContext.Books.Add(newBook);
-
-            IList<DTOCreatePart> parts = book.BookParts;
-
-            Answer previousAnswer = null;
-
-            foreach (var part in parts)
-            {
-                var bp = new BookPart
-                {
-                    PartAudioLink = part.PartAudioLink,
-                    BookId = createdBook.Entity.Id
-                };
-                var newPart = _dbContext.BookParts.Add(bp);  
-
-                IList<Answer> answers = new List<Answer>();
-
-                foreach (var answer in part.Answers)
-                {
-                    var a = new Answer
-                    {
-                        CurrentPartId = newPart.Entity.Id,
-                        Text = answer.Text, 
-                        NextPartCode = Guid.
-                        NewGuid().ToString()
-                    };
-                    answers.Add(a);
-                }
-          
-                _dbContext.Answers.AddRange(answers);
-            }
-        }
-        */
+        #region POST  
         public async Task<BookPart> AddBookRootPart(DTOCreateBook book, int creatorId)
         {
             Book newBook = _mapper.Map<Book>(book);
@@ -251,7 +223,6 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return createdRootPart.Entity;
         }
-
         public async Task<BookPart> AddBookPart(DTOCreatePart part)
         {
 
@@ -294,7 +265,6 @@ namespace AIAudioTalesServer.Data.Repositories
             }
 
             return null;
-
         }
         public async Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId)
         {

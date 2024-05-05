@@ -158,38 +158,35 @@ namespace AIAudioTalesServer.Controllers
             return Ok(history);
         }
 
+        [HttpGet("GetRootPart/{bookId}")]
+        public async Task<ActionResult<BookPart>> GetRootPart(int bookId)
+        {
+            var rootPart = await _booksRepository.GetRootPart(bookId);
+
+            if(rootPart != null)
+            {
+                return Ok(rootPart);
+            }
+
+            return BadRequest("There is no part of the book for that bookId");
+        }
+
+        [HttpGet("GetNextPart/{nextPartId}")]
+        public async Task<ActionResult<BookPart>> GetNextPart(int nextPartId)
+        {
+            var bookPart = await _booksRepository.GetNextPart(nextPartId);
+
+            if(bookPart != null)
+            {
+                return Ok(bookPart);
+            }
+            return BadRequest("There is no part with that id");
+        }
+
         #endregion
 
         #region POST
-        /*[HttpPost("AddNewBook")]
-        public async Task<ActionResult<DTOReturnBook>> AddNewBook([FromBody] DTOCreateBook book)
-        {
-            
-            if (ModelState.IsValid)
-            {
-                var newBook = await _booksRepository.AddNewBook(book);
-                return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-            }
-            return BadRequest();
-        }*/
-
-        [HttpPost("AddNewBook")]
-        public async Task<IActionResult> AddNewBook([FromBody] DTOCreateBook book)
-        {
-
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            if (ModelState.IsValid)
-            {
-                //var newBook = await _booksRepository.AddNewBook(book, user.Id);
-                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-            }
-            return BadRequest();
-        }
+       
         [HttpPost("AddBookRootPart")]
         public async Task<IActionResult> AddBookRootPart([FromBody] DTOCreateBook book)
         {

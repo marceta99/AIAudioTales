@@ -19,14 +19,16 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<IList<Category>> GetAllCategories();
         Task<DTOBasket> GetBasket(int userId);
         Task<BasketItem> GetItemById(int itemId);
+        Task<BookPart> GetRootPart(int bookId);
+        Task<BookPart> GetNextPart(int nextPartId);
         #endregion
 
         #region POST
         Task SaveSearchTerm(int userId, string searchTerm);
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId);
-        Task<BookPart> AddBookRootPart(DTOCreateBook book, int creatorId);
-        Task<BookPart> AddBookPart(DTOCreatePart book);
+        Task<BookPart?> AddBookRootPart(DTOCreateBook book, int creatorId);
+        Task<BookPart?> AddBookPart(DTOCreatePart book);
         #endregion
 
         #region DELETE
