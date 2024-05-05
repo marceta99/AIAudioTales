@@ -6,17 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _booksRepository;
-        private readonly IAuthRepository _authRepository;
-        public BooksController(IBooksRepository booksRepository, IAuthRepository authRepository)
+        public BooksController(IBooksRepository booksRepository)
         {
             _booksRepository = booksRepository;
-            _authRepository = authRepository;
         }
 
         #region GET
@@ -66,7 +64,7 @@ namespace AIAudioTalesServer.Controllers
             var paginatedBooks = books.Skip((page - 1) * pageSize).Take(pageSize);
             return Ok(paginatedBooks);
         }
-        
+
         [HttpGet("UserHasBook/{bookId}")]
         public async Task<ActionResult<bool>> UserHasBook(int bookId)
         {
@@ -174,6 +172,54 @@ namespace AIAudioTalesServer.Controllers
             }
             return BadRequest();
         }*/
+
+        [HttpPost("AddNewBook")]
+        public async Task<IActionResult> AddNewBook([FromBody] DTOCreateBook book)
+        {
+
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            if (ModelState.IsValid)
+            {
+                //var newBook = await _booksRepository.AddNewBook(book, user.Id);
+                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
+            }
+            return BadRequest();
+        }
+        [HttpPost("AddBookRootPart")]
+        public async Task<IActionResult> AddBookRootPart([FromBody] DTOCreateBook book)
+        {
+
+            /*var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }*/
+
+            if (ModelState.IsValid)
+            {
+                var rootPart = await _booksRepository.AddBookRootPart(book, 2);
+                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
+                return Ok(rootPart);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("AddBookPart")]
+        public async Task<IActionResult> AddBookPart([FromBody] DTOCreatePart part)
+        {
+            if (ModelState.IsValid)
+            {
+                var newPart = await _booksRepository.AddBookPart(part);
+                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
+                return Ok(newPart);
+            }
+            return BadRequest();
+        }
 
         [HttpPost("SaveSearchTerm")]
         public async Task<IActionResult> SaveSearchTerm([FromQuery] string searchTerm)

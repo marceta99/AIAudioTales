@@ -40,6 +40,12 @@ builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")
 );
 
+builder.Services.AddControllers()
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthentication(x =>

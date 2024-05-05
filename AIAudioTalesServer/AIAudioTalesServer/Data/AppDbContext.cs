@@ -192,7 +192,8 @@ namespace AIAudioTalesServer.Data
             .HasOne<BookPart>(a => a.NextPart)
             .WithOne(bp => bp.ParentAnswer)
             .HasForeignKey<Answer>(a => a.NextPartId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
 
             #endregion
 

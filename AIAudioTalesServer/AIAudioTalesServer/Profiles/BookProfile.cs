@@ -22,6 +22,14 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.Book, opt => opt.MapFrom(src => src.Book))
                 .ForMember(dest => dest.ItemPrice, opt => opt.MapFrom(src => src.ItemPrice))
                 ;
+
+            CreateMap<DTOCreateBook, Book>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+                .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId));
+
         }
     }
 }
