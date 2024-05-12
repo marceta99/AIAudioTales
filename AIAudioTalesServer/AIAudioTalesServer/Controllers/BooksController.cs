@@ -172,7 +172,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetNextPart/{nextPartId}")]
-        public async Task<ActionResult<BookPart>> GetNextPart(int nextPartId)
+        public async Task<ActionResult<BookPart>> GetNextPart(int nextPartId) 
         {
             var bookPart = await _booksRepository.GetNextPart(nextPartId);
 
@@ -188,7 +188,7 @@ namespace AIAudioTalesServer.Controllers
         #region POST
        
         [HttpPost("AddBookRootPart")]
-        public async Task<IActionResult> AddBookRootPart([FromBody] DTOCreateBook book)
+        public async Task<ActionResult<BookPart>> AddBookRootPart([FromBody] DTOCreateBook book)
         {
 
             /*var user = HttpContext.Items["CurrentUser"] as User;

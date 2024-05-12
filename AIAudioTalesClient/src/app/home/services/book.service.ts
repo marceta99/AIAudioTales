@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
-import { Basket, BasketItem, Book, Category, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { Basket, BasketItem, Book, Category, CreateBook, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -106,6 +106,10 @@ export class BookService {
   public removeBasketItem(itemId: number): Observable<Basket>{
     const params = new HttpParams().set('itemId', itemId);
     return this.httpClient.delete<Basket>(this.path+"Books/RemoveBasketItem",{ params, withCredentials : true});
+  }
+
+  public createBook(newBook: CreateBook){
+    return this.httpClient.post(this.path + "Books/AddBookRootPart", newBook, {withCredentials: true});
   }
 }
 

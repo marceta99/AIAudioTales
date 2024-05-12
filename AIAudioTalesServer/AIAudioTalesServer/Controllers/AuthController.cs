@@ -50,6 +50,30 @@ namespace AIAudioTalesServer.Controllers
             return Ok(user);
         }
 
+        [HttpPost("RegisterCreator")]
+        public async Task<IActionResult> RegisterCreator([FromBody] RegisterCreator model)
+        {
+            var user = new User() { Email = model.Email, Role = Role.CREATOR };
+
+            if (model.ConfirmPassword == model.Password)
+            {
+                using (HMACSHA512? hmac = new HMACSHA512())
+                {
+                    user.PasswordSalt = hmac.Key;
+                    user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(model.Password));
+                }
+            }
+            else
+            {
+                return BadRequest("Passwords don't match");
+            }
+            var result = await _authRepository.AddNewUser(user);
+
+            if (result == 0) return BadRequest("User with that email already exists");
+
+            return Ok(user);
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] Login model)
         {

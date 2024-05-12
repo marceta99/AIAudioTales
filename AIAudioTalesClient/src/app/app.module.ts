@@ -21,6 +21,10 @@ import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.
 import { DiscoverComponent } from './home/discover/discover.component';
 import { SearchBarComponent } from './home/discover/search-bar/search-bar.component';
 import { BasketComponent } from './home/basket/basket.component';
+import { RegisterCreatorComponent } from './auth/register-creator/register-creator.component';
+import { StatisticsComponent } from './home/statistics/statistics.component';
+import { CreateBookComponent } from './home/create-book/create-book.component';
+import { MyBooksComponent } from './home/my-books/my-books.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { BasketComponent } from './home/basket/basket.component';
     LoadingSpinnerComponent,
     DiscoverComponent,
     SearchBarComponent,
-    BasketComponent
+    BasketComponent,
+    RegisterCreatorComponent,
+    StatisticsComponent,
+    CreateBookComponent,
+    MyBooksComponent
   ],
   imports: [
     BrowserModule,

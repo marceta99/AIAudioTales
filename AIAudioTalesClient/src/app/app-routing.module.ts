@@ -11,10 +11,15 @@ import { PlayerComponent } from './home/library/player/player.component';
 import { MyProfileComponent } from './home/my-profile/my-profile.component';
 import { DiscoverComponent } from './home/discover/discover.component';
 import { BasketComponent } from './home/basket/basket.component';
+import { RegisterCreatorComponent } from './auth/register-creator/register-creator.component';
+import { StatisticsComponent } from './home/statistics/statistics.component';
+import { CreateBookComponent } from './home/create-book/create-book.component';
+import { MyBooksComponent } from './home/my-books/my-books.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
   {path:"register", component : RegisterComponent},
+  {path:"register-creator", component : RegisterCreatorComponent},
   {path:"home", component : HomeComponent, canActivate:[IsUserLoginGuard], children :
   [
     {path: "", component: BooksComponent},
@@ -26,6 +31,10 @@ const routes: Routes = [
     {path: "my-profile", component: MyProfileComponent},
     {path: "discover", component: DiscoverComponent},
     {path: "basket", component: BasketComponent},
+
+    {path: "statistics", component: StatisticsComponent},
+    {path: "create-book", component: CreateBookComponent},
+    {path: "my-books", component: MyBooksComponent}
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

@@ -1,14 +1,20 @@
 //Entities
-export interface User{
+export interface User {
   email: string,
   role: Role
 }
-export interface RegisterUser{
+export interface RegisterUser {
   email: string,
   password : string,
   confirmPassword: string
 }
-export interface Book{
+
+export interface RegisterCreator {
+  email: string,
+  password : string,
+  confirmPassword: string
+}
+export interface Book {
   id: number,
   title: string,
   description: string,
@@ -17,7 +23,7 @@ export interface Book{
   categoryId: number
 }
 
-export interface PurchasedBook{
+export interface PurchasedBook {
   id: number,
   title: string,
   description: string,
@@ -26,18 +32,18 @@ export interface PurchasedBook{
   purchaseType: PurchaseType,
   language: Language
 }
-export interface SearchedBooks{
+export interface SearchedBooks {
   searchTerm: string,
   books: Book[]
 }
-export interface BooksPaginated{
+export interface BooksPaginated {
   booksCategory: BookCategory,
   books: Book[],
   pageSize: number,
   pageNumber: number
 }
 
-export interface Story{
+export interface Story {
   id: number,
   title: string,
   text: string,
@@ -45,7 +51,7 @@ export interface Story{
   audioDataUrl: string
 }
 
-export interface Purchase{
+export interface Purchase {
   bookId: number,
   purchaseType: PurchaseType,
   language: Language
@@ -58,22 +64,41 @@ export interface Toast {
   timeoutId?: any; // Optional property to store the timeout ID
 }
 
-export interface Category{
+export interface Category {
   id: number,
   categoryName: string,
   description: string
 }
 
-export interface BasketItem{
+export interface BasketItem {
   id: number,
   itemPrice: number,
   bookId: number,
   book: Book
 }
 
-export interface Basket{
+export interface Basket {
   basketItems: BasketItem[],
   totalPrice: number
+}
+
+
+export interface CreateBook {
+  title: string,
+  description: string,
+  price: number,
+  imageURL: string,
+  categoryId: number,
+  rootPart: CreateRootPart
+}
+
+export interface CreateRootPart {
+  partAudioLink: string,
+  answers: CreateAnswer[]
+}
+
+export interface CreateAnswer {
+  text: string
 }
 
 //Enums
@@ -93,7 +118,8 @@ export enum ToastIcon{
 export enum Role{
   ADMIN="ADMIN",
   LISTENER_WITH_SUBSCRIPTION="LISTENER_WITH_SUBSCRIPTION",
-  LISTENER_NO_SUBSCRIPTION="LISTENER_NO_SUBSCRIPTION"
+  LISTENER_NO_SUBSCRIPTION="LISTENER_NO_SUBSCRIPTION",
+  CREATOR="CREATOR"
 }
 
 export enum BookCategory{

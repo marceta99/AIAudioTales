@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { Book, BookCategory, BooksPaginated } from 'src/app/entities';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-books',

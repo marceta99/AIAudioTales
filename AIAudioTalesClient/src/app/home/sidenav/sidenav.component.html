@@ -7,17 +7,26 @@
     </span>
   </div>
 
-
-
-  <span class="menu_ctg" [routerLink]="['/home']" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+  <span class="menu_ctg" [routerLink]="['/home']" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION' || currentUser?.role === 'LISTENER_WITH_SUBSCRIPTION'">
     <img src="../../../assets/icons/home.svg" alt="home"><a>Home</a>
   </span>
-  <span class="menu_ctg" [routerLink]="['/home/discover']" routerLinkActive="active-link">
+  <span class="menu_ctg" [routerLink]="['/home/discover']" routerLinkActive="active-link" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION' || currentUser?.role === 'LISTENER_WITH_SUBSCRIPTION'">
     <img src="../../../assets/icons/search.svg" alt="search"><a>Search</a>
   </span>
-  <span class="menu_ctg" [routerLink]="['/home/library']" routerLinkActive="active-link">
+  <span class="menu_ctg" [routerLink]="['/home/library']" routerLinkActive="active-link" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION' || currentUser?.role === 'LISTENER_WITH_SUBSCRIPTION'">
     <img src="../../../assets/icons/library.svg" alt="library"><a>Library</a>
   </span>
+
+  <span class="menu_ctg" [routerLink]="['/home/statistics']" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" *ngIf="currentUser?.role === 'CREATOR'">
+    <img src="../../../assets/icons/home.svg" alt="home"><a>Statistics</a>
+  </span>
+  <span class="menu_ctg" [routerLink]="['/home/create-book']" routerLinkActive="active-link" *ngIf="currentUser?.role === 'CREATOR'">
+    <img src="../../../assets/icons/library.svg" alt="library"><a>Create</a>
+  </span>
+  <span class="menu_ctg" [routerLink]="['/home/my-books']" routerLinkActive="active-link" *ngIf="currentUser?.role === 'CREATOR'">
+    <img src="../../../assets/icons/library.svg" alt="library"><a>My books</a>
+  </span>
+
   <span *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'" class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
     <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ itemsCount }}</span>
   </span>
@@ -37,7 +46,7 @@
   <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
     <img src="../../../assets/icons/settings.svg" alt="settings">
   </span>
-  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" routerLinkActive="active-link">
+  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'" routerLinkActive="active-link">
     <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ itemsCount }}</span>
   </span>
 </div>
