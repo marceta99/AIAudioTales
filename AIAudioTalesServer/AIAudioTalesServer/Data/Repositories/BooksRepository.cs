@@ -22,16 +22,19 @@ namespace AIAudioTalesServer.Data.Repositories
         }
 
         #region GET
+
         public async Task<IList<Book>> GetAllBooks()
         {
             var books = await _dbContext.Books.ToListAsync();
             return books;
         }
+
         public async Task<Book> GetBook(int id)
         {
             var book = await _dbContext.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
             return book;
         }
+
         public async Task<IList<DTOReturnBook>> GetBooksForCategory(int bookCategory)
         {
             var books = await _dbContext.Books.Where(b => b.CategoryId == bookCategory).ToListAsync();
@@ -39,6 +42,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return returnBooks;
         }
+
         public async Task<bool> UserHasBook(int bookId, int userId)
         {
             var purchase = await _dbContext.PurchasedBooks.Where(pb =>
@@ -49,12 +53,14 @@ namespace AIAudioTalesServer.Data.Repositories
             if (purchase == null) return false;
             return true;
         }
+
         public async Task<bool> IsBasketItem(int bookId, int userId)
         {
             var basketItem = await _dbContext.BasketItems.Where(bi => bi.UserId == userId && bi.BookId == bookId).FirstOrDefaultAsync();
             if (basketItem == null) return false;
             return true;
         }
+
         public async Task<IList<DTOReturnPurchasedBook>> GetUserBooks(int userId)
         {
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success).ToListAsync();
@@ -79,6 +85,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return books;
         }
+
         public async Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId)
         {
             var pb = await _dbContext.PurchasedBooks.Where(
@@ -104,6 +111,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return purchasedBook;
         }
+
         public async Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
         {
             string cacheKey = $"Search_{searchTerm}_{pageNumber}_{pageSize}";
@@ -121,6 +129,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return books;
         }
+
         public async Task<IEnumerable<string>> GetSearchHistory(int userId)
         {
             var history = await _dbContext.SearchHistories
@@ -132,15 +141,18 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return history;
         }
+
         public async Task<BasketItem?> GetItemById(int itemId)
         {
             return await _dbContext.BasketItems.FindAsync(itemId);
         }
+
         public async Task<IList<Category>> GetAllCategories()
         {
             var categories = await _dbContext.BookCategories.ToListAsync();
             return categories;
         }
+
         public async Task<DTOBasket> GetBasket(int userId)
         {
             var basketItems = await _dbContext.BasketItems
@@ -173,6 +185,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return rootPart;
         }
+
         public async Task<BookPart?> GetNextPart(int nextPartId)
         {
             var part = await _dbContext.BookParts
@@ -186,43 +199,7 @@ namespace AIAudioTalesServer.Data.Repositories
         #endregion
 
         #region POST  
-        public async Task<BookPart> AddBookRootPart(DTOCreateBook book, int creatorId)
-        {
-            Book newBook = _mapper.Map<Book>(book);
-            newBook.CreatorId = creatorId;
 
-            var createdBook = await _dbContext.Books.AddAsync(newBook);
-
-            await _dbContext.SaveChangesAsync();
-
-            var bookPart = new BookPart
-            {
-                BookId = createdBook.Entity.Id,
-                IsRoot = true,
-                PartAudioLink = book.RootPart.PartAudioLink
-            };
-
-            var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
-
-            await _dbContext.SaveChangesAsync();
-
-            IList<Answer> answers = new List<Answer>();
-            foreach(var answer in book.RootPart.Answers)
-            {
-                var a = new Answer
-                {
-                    Text = answer.Text,
-                    CurrentPartId = createdRootPart.Entity.Id
-                };
-                var createdAnswer = await _dbContext.Answers.AddAsync(a);
-                answers.Add(createdAnswer.Entity);
-            }
-            await _dbContext.SaveChangesAsync();
-
-            createdRootPart.Entity.Answers = answers;
-
-            return createdRootPart.Entity;
-        }
         public async Task<BookPart> AddBookPart(DTOCreatePart part)
         {
 
@@ -266,6 +243,54 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return null;
         }
+
+        public async Task<Book> AddBook(DTOCreateBook book, int creatorId)
+        {
+            Book newBook = _mapper.Map<Book>(book);
+            newBook.CreatorId = creatorId;
+
+            var createdBook = await _dbContext.Books.AddAsync(newBook);
+
+            await _dbContext.SaveChangesAsync();
+
+            return createdBook.Entity;
+        }
+
+        public async Task<BookPart?> AddRootPart(DTOCreateRootPart root)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == root.BookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            var bookPart = new BookPart
+            {
+                BookId = root.BookId,
+                IsRoot = true,
+                PartAudioLink = root.PartAudioLink
+            };
+
+            var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
+
+            await _dbContext.SaveChangesAsync();
+
+            IList<Answer> answers = new List<Answer>();
+            foreach (var answer in root.Answers)
+            {
+                var a = new Answer
+                {
+                    Text = answer.Text,
+                    CurrentPartId = createdRootPart.Entity.Id
+                };
+                var createdAnswer = await _dbContext.Answers.AddAsync(a);
+                answers.Add(createdAnswer.Entity);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            createdRootPart.Entity.Answers = answers;
+
+            return createdRootPart.Entity;
+        }
+
         public async Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId)
         {
             List<PurchasedBooks> purchasedBooks = new List<PurchasedBooks>();

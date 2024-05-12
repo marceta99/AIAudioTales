@@ -187,8 +187,24 @@ namespace AIAudioTalesServer.Controllers
 
         #region POST
        
-        [HttpPost("AddBookRootPart")]
-        public async Task<ActionResult<BookPart>> AddBookRootPart([FromBody] DTOCreateBook book)
+        [HttpPost("AddBookPart")]
+        public async Task<IActionResult> AddBookPart([FromBody] DTOCreatePart part)
+        {
+            if (ModelState.IsValid)
+            {
+                var newPart = await _booksRepository.AddBookPart(part);
+                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
+                if(newPart == null)
+                {
+                    return BadRequest("Parent answer does not exists");
+                }
+                return Ok(newPart);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("AddBook")]
+        public async Task<ActionResult<Book>> AddBook([FromBody] DTOCreateBook book)
         {
 
             /*var user = HttpContext.Items["CurrentUser"] as User;
@@ -199,21 +215,32 @@ namespace AIAudioTalesServer.Controllers
 
             if (ModelState.IsValid)
             {
-                var rootPart = await _booksRepository.AddBookRootPart(book, 2);
+                var newBook = await _booksRepository.AddBook(book, 2);
                 //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-                return Ok(rootPart);
+                return Ok(newBook);
             }
             return BadRequest();
         }
 
-        [HttpPost("AddBookPart")]
-        public async Task<IActionResult> AddBookPart([FromBody] DTOCreatePart part)
+        [HttpPost("AddRootPart")]
+        public async Task<ActionResult<BookPart?>> AddRootPart([FromBody] DTOCreateRootPart root)
         {
+
+            /*var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }*/
+
             if (ModelState.IsValid)
             {
-                var newPart = await _booksRepository.AddBookPart(part);
+                var newRoot = await _booksRepository.AddRootPart(root);
                 //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-                return Ok(newPart);
+                if(newRoot == null)
+                {
+                    return BadRequest("Book with that id does not exists");
+                }
+                return Ok(newRoot);
             }
             return BadRequest();
         }
@@ -247,6 +274,7 @@ namespace AIAudioTalesServer.Controllers
 
             return Ok(newBasket);
         }
+
         #endregion
 
         #region DELETE

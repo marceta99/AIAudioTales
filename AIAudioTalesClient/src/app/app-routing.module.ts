@@ -15,6 +15,7 @@ import { RegisterCreatorComponent } from './auth/register-creator/register-creat
 import { StatisticsComponent } from './home/statistics/statistics.component';
 import { CreateBookComponent } from './home/create-book/create-book.component';
 import { MyBooksComponent } from './home/my-books/my-books.component';
+import { BookTreeComponent } from './home/book-tree/book-tree.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -34,7 +35,8 @@ const routes: Routes = [
 
     {path: "statistics", component: StatisticsComponent},
     {path: "create-book", component: CreateBookComponent},
-    {path: "my-books", component: MyBooksComponent}
+    {path: "my-books", component: MyBooksComponent},
+    {path: "book-tree/:bookId", component: BookTreeComponent},
   ]
 },
   {path:"", redirectTo:"home", pathMatch:"full"},

@@ -1,6 +1,6 @@
 ﻿namespace AIAudioTalesServer.Models.DTOS
 {
-    public class DTONewRootPart
+    public class DTOCreateRootPart
     {
         public int BookId { get; set; }
         public string PartAudioLink { get; set; }
