@@ -88,8 +88,7 @@ export interface CreateBook {
   description: string,
   price: number,
   imageURL: string,
-  categoryId: number,
-  rootPart: CreateRootPart
+  categoryId: number
 }
 
 export interface CreateRootPart {

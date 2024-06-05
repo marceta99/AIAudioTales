@@ -3,6 +3,7 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category, CreateBook } from 'src/app/entities';
 import { BookService } from '../services/book.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-book',
@@ -16,7 +17,8 @@ export class CreateBookComponent implements OnInit {
   constructor(
     private spinnerService: LoadingSpinnerService,
     private bookService: BookService, 
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private router: Router) {}
 
   ngOnInit(): void {
     this.spinnerService.setLoading(false);
@@ -30,29 +32,22 @@ export class CreateBookComponent implements OnInit {
       description: ['', [Validators.required, Validators.maxLength(500)]],
       imageURL: ['', [Validators.required, Validators.maxLength(500)]],
       categoryId: [null, [Validators.required]],
-      partAudioLink: ['', [Validators.required, Validators.maxLength(500)]],
-      answers: this.formBuilder.array([])
     })
   }
 
   onSubmit(){
-    const answers = this.answers.controls.map(control => control.value);
-
     const newBook : CreateBook = {
       title : this.bookForm.controls['title'].value, 
       description : this.bookForm.controls['description'].value,
       imageURL : this.bookForm.controls['imageURL'].value, 
       categoryId : this.bookForm.controls['categoryId'].value, 
-      price: 12,
-      rootPart: {
-        partAudioLink : this.bookForm.controls['partAudioLink'].value, 
-        answers: answers
-      }
+      price: 12
     }
 
     this.bookService.createBook(newBook).subscribe({
-      next: (response) => {
-        console.log('Book created successfully', response);
+      next: (bookId: number) => {
+        console.log('Book created successfully with id : ', bookId);
+        this.router.navigate(['/home/book-tree',bookId]);
       },
       error: (error) => {
         console.error('Error creating book:', error);
@@ -60,21 +55,7 @@ export class CreateBookComponent implements OnInit {
     });
   }
 
-  get answers(): FormArray {
-    return this.bookForm.get('answers') as FormArray; // getter which returns FormArray of answers
-  }
 
-  addAnswer(){
-    if(this.answers.length < 3){
-      this.answers.push(this.formBuilder.group({
-        text: ['', Validators.maxLength(40)]
-      }))
-    }
-  }
-
-  removeAnswer(index: number){
-    this.answers.removeAt(index);
-  }
 
 }
 

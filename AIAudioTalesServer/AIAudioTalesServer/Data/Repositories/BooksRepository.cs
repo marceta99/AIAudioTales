@@ -195,6 +195,58 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return part;
         }
+        public async Task<DTOReturnTreePart> GetAllParts(int bookId)
+        {
+            var rootPart = await _dbContext.BookParts
+                .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+
+            if (rootPart == null) return null;
+
+            var rootTreePart = new DTOReturnTreePart()
+            {
+                PartId = rootPart.Id,
+                PartName = "Intro",
+            };
+
+            rootTreePart.NextParts = await PopulateRootTreeParts(rootPart.Answers);
+            
+            return rootTreePart;
+        }
+
+        private async Task<IList<DTOReturnTreePart>> PopulateRootTreeParts(IList<Answer> answerList)
+        {
+            if (answerList == null) return null;
+
+            var treeParts = new List<DTOReturnTreePart>();
+
+            foreach (var answer in answerList)
+            {
+                if(answer.NextPartId == null) continue;
+
+                var newTreePart = new DTOReturnTreePart()
+                {
+                    PartId = (int)answer.NextPartId,
+                    PartName = answer.Text
+                };
+
+                var answers = await GetPartAnswers((int)answer.NextPartId);
+
+                newTreePart.NextParts = await PopulateRootTreeParts(answers);
+
+                treeParts.Add(newTreePart);
+            }
+
+            return treeParts;
+        }
+
+        private async Task<IList<Answer>> GetPartAnswers(int partId)
+        {
+            var answers = await _dbContext.Answers.Where(a => a.CurrentPartId == partId).ToListAsync();
+
+            return answers;
+        }
 
         #endregion
 
@@ -202,46 +254,50 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<BookPart> AddBookPart(DTOCreatePart part)
         {
-
-            var bookPart = new BookPart
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
-                BookId = part.BookId,
-                PartAudioLink = part.PartAudioLink
-            };
-
-            var createdPart = await _dbContext.BookParts.AddAsync(bookPart);
-
-            await _dbContext.SaveChangesAsync();
-
-            //update the parent answer so that now references child part 
-            var parentAnswer = await _dbContext.Answers.Where(a => a.Id == part.ParentAnswerId).FirstOrDefaultAsync();
-            
-            if (parentAnswer != null)
-            {
-                parentAnswer.NextPartId = createdPart.Entity.Id;
-
-                await _dbContext.SaveChangesAsync();
-
-                // new answers for child parts
-                IList<Answer> answers = new List<Answer>();
-                foreach (var answer in part.Answers)
+                var bookPart = new BookPart
                 {
-                    var a = new Answer
-                    {
-                        Text = answer.Text,
-                        CurrentPartId = createdPart.Entity.Id
-                    };
-                    var createdAnswer = await _dbContext.Answers.AddAsync(a);
-                    answers.Add(createdAnswer.Entity);
-                }
+                    BookId = part.BookId,
+                    PartAudioLink = part.PartAudioLink
+                };
+
+                var createdPart = await _dbContext.BookParts.AddAsync(bookPart);
+
                 await _dbContext.SaveChangesAsync();
 
-                createdPart.Entity.Answers = answers;
+                //update the parent answer so that now references child part 
+                var parentAnswer = await _dbContext.Answers.Where(a => a.Id == part.ParentAnswerId).FirstOrDefaultAsync();
 
-                return createdPart.Entity;
+                if (parentAnswer != null && parentAnswer.NextPartId == null) // if answer already has nextPartId selected then that new part can not be added as next part of that answer and that is why I have additional checkok parentAnswer.nextPartId != 0 because it should be null
+                {
+                    parentAnswer.NextPartId = createdPart.Entity.Id;
+
+                    await _dbContext.SaveChangesAsync();
+
+                    // new answers for child parts
+                    IList<Answer> answers = new List<Answer>();
+                    foreach (var answer in part.Answers)
+                    {
+                        var a = new Answer
+                        {
+                            Text = answer.Text,
+                            CurrentPartId = createdPart.Entity.Id
+                        };
+                        var createdAnswer = await _dbContext.Answers.AddAsync(a);
+                        answers.Add(createdAnswer.Entity);
+                    }
+                    await _dbContext.SaveChangesAsync();
+
+                    createdPart.Entity.Answers = answers;
+
+                    await transaction.CommitAsync();
+                    return createdPart.Entity;
+                }
+
+                await transaction.RollbackAsync();
+                return null;
             }
-
-            return null;
         }
 
         public async Task<Book> AddBook(DTOCreateBook book, int creatorId)

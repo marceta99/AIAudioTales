@@ -108,8 +108,8 @@ export class BookService {
     return this.httpClient.delete<Basket>(this.path+"Books/RemoveBasketItem",{ params, withCredentials : true});
   }
 
-  public createBook(newBook: CreateBook){
-    return this.httpClient.post(this.path + "Books/AddBookRootPart", newBook, {withCredentials: true});
+  public createBook(newBook: CreateBook): Observable<number>{
+    return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
   }
 }
 

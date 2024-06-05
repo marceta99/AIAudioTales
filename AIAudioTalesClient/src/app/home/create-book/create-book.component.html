@@ -9,42 +9,6 @@
         {{ category.categoryName }}
       </option>
     </select>
-    
-    <input type="text" formControlName="partAudioLink" placeholder="Part Audio Link">
-    <div formArrayName="answers">
-        <div *ngFor="let answer of answers.controls; let i=index" [formGroupName]="i">
-          <input type="text" formControlName="text" placeholder="Answer Text">
-          <button type="button" (click)="removeAnswer(i)">Remove</button>
-        </div>
-    </div> 
 
-    <button type="button" (click)="addAnswer()" [disabled]="answers.length >= 3">Add Answer</button>
     <button type="submit" [disabled]="bookForm.invalid">Submit</button>
   </form>
-
-<div class="container">
-    <div class="row">
-        <div class="tree">
-            <ul>
-                <li><a href="#"><span>Root</span></a>
-                    <!--<ul>
-                            <li><a href="#"><span>Grand 2</span></a>
-                                <ul>
-                                    <li> <a href="#"><span>Great 3</span></a> </li>
-                                    <li> <a href="#"><span>Great 4</span></a> </li>
-                                </ul>
-                            </li>
-                            <li> <a href="#"><span>Grand 5</span></a>
-                                <ul>
-                                    <li> <a href="#"><span>Great 6</span></a> </li>
-                                    <li> <a href="#"><span>Great 7</span></a> </li>
-                                    <li> <a href="#"><span>Great 8</span></a> </li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><span>Grand 9</span></a></li>
-                    </ul>-->
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>

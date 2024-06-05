@@ -183,10 +183,18 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest("There is no part with that id");
         }
 
+        [HttpGet("GetAllParts/{bookId}")]
+        public async Task<ActionResult<DTOReturnTreePart>> GetAllParts(int bookId)
+        {
+            var treeParts = await _booksRepository.GetAllParts(bookId);
+
+            return Ok(treeParts);
+        }
+
         #endregion
 
         #region POST
-       
+
         [HttpPost("AddBookPart")]
         public async Task<IActionResult> AddBookPart([FromBody] DTOCreatePart part)
         {
@@ -196,7 +204,7 @@ namespace AIAudioTalesServer.Controllers
                 //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
                 if(newPart == null)
                 {
-                    return BadRequest("Parent answer does not exists");
+                    return BadRequest("Parent answer does not exists or already has next part");
                 }
                 return Ok(newPart);
             }
@@ -204,7 +212,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("AddBook")]
-        public async Task<ActionResult<Book>> AddBook([FromBody] DTOCreateBook book)
+        public async Task<ActionResult<int>> AddBook([FromBody] DTOCreateBook book)
         {
 
             /*var user = HttpContext.Items["CurrentUser"] as User;
@@ -217,7 +225,7 @@ namespace AIAudioTalesServer.Controllers
             {
                 var newBook = await _booksRepository.AddBook(book, 2);
                 //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-                return Ok(newBook);
+                return Ok(newBook.Id);
             }
             return BadRequest();
         }
