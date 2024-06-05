@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
-import { Basket, BasketItem, Book, Category, CreateBook, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { Basket, BasketItem, Book, Category, CreateBook, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -9,7 +9,6 @@ import { LoadingSpinnerService } from './loading-spinner.service';
   providedIn: 'root'
 })
 export class BookService {
-
   private path = environment.apiUrl;
   libraryBooks = new Subject<SearchedBooks>();
   basket = new BehaviorSubject<Basket>({
@@ -110,6 +109,10 @@ export class BookService {
 
   public createBook(newBook: CreateBook): Observable<number>{
     return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
+  }
+
+  public getBookTree(bookId: any): Observable<PartTree> {
+    return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`, {withCredentials: true});
   }
 }
 

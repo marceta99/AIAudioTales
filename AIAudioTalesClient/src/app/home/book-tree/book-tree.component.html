@@ -13,30 +13,10 @@
     <button type="submit" [disabled]="partForm.invalid">Submit</button>
   </form>
 
-
-<div class="container">
+  <div class="container" *ngIf="partTree">
     <div class="row">
-        <div class="tree">
-            <ul>
-                <li><a href="#"><span>Root</span></a>
-                    <!--<ul>
-                            <li><a href="#"><span>Grand 2</span></a>
-                                <ul>
-                                    <li> <a href="#"><span>Great 3</span></a> </li>
-                                    <li> <a href="#"><span>Great 4</span></a> </li>
-                                </ul>
-                            </li>
-                            <li> <a href="#"><span>Grand 5</span></a>
-                                <ul>
-                                    <li> <a href="#"><span>Great 6</span></a> </li>
-                                    <li> <a href="#"><span>Great 7</span></a> </li>
-                                    <li> <a href="#"><span>Great 8</span></a> </li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><span>Grand 9</span></a></li>
-                    </ul>-->
-                </li>
-            </ul>
-        </div>
+      <div class="tree">
+        <ul [innerHTML]="generateTreeHtml(partTree)"></ul>
+      </div>
     </div>
-</div>
+  </div>

@@ -183,10 +183,10 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest("There is no part with that id");
         }
 
-        [HttpGet("GetAllParts/{bookId}")]
-        public async Task<ActionResult<DTOReturnTreePart>> GetAllParts(int bookId)
+        [HttpGet("GetBookTree/{bookId}")]
+        public async Task<ActionResult<DTOReturnTreePart>> GetBookTree(int bookId)
         {
-            var treeParts = await _booksRepository.GetAllParts(bookId);
+            var treeParts = await _booksRepository.GetBookTree(bookId);
 
             return Ok(treeParts);
         }

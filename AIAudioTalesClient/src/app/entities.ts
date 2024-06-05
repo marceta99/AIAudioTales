@@ -100,6 +100,12 @@ export interface CreateAnswer {
   text: string
 }
 
+export interface PartTree {
+  partId: number,
+  partName: string,
+  nextParts: PartTree[]
+}
+
 //Enums
 export enum ToastType{
   Success = "success",

@@ -195,7 +195,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             return part;
         }
-        public async Task<DTOReturnTreePart> GetAllParts(int bookId)
+        public async Task<DTOReturnTreePart> GetBookTree(int bookId)
         {
             var rootPart = await _dbContext.BookParts
                 .Where(bp => bp.BookId == bookId && bp.IsRoot == true)

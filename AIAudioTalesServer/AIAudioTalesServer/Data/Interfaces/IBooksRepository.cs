@@ -21,7 +21,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<BasketItem> GetItemById(int itemId);
         Task<BookPart> GetRootPart(int bookId);
         Task<BookPart> GetNextPart(int nextPartId);
-        Task<DTOReturnTreePart> GetAllParts(int bookId);
+        Task<DTOReturnTreePart> GetBookTree(int bookId);
         #endregion
 
         #region POST
