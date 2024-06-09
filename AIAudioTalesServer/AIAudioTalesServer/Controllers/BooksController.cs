@@ -199,12 +199,6 @@ namespace AIAudioTalesServer.Controllers
         public async Task<ActionResult<BookPart?>> AddRootPart([FromBody] DTOCreateRootPart root)
         {
 
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
             if (ModelState.IsValid)
             {
                 var newRoot = await _booksRepository.AddRootPart(root);

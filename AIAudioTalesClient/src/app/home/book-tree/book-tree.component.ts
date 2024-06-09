@@ -53,14 +53,14 @@ export class BookTreeComponent implements OnInit{
   }
 
   generateTreeHtml(part: PartTree): string {
-    let html = `<li><a href="#"><span>${part.partName}</span></a>`;
+    let html = `<li><span><span>${part.partName}</span></span>`;
     if (part.nextParts && part.nextParts.length > 0) {
       html += '<ul>';
       
       // answers that does not have next part
       part.answers.forEach(answer => {
         if(!answer.nextPartId){
-          html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></a>`;
+          html += `<li><span class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
         }
       });
 
@@ -72,7 +72,7 @@ export class BookTreeComponent implements OnInit{
     }else if(part.answers && part.answers.length > 0){
       html += '<ul>';
       part.answers.forEach(answer => {
-        html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></a>`;
+        html += `<li><span class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
       });
       html += '</ul>';
     }
@@ -80,20 +80,10 @@ export class BookTreeComponent implements OnInit{
     return html;
   }
 
-  onSubmit(){
-    /*const answers = this.answers.controls.map(control => control.value);
-    const createAnswers: CreateAnswer[] = answers.map(answer => ({
-      text: answer
-    }));
- 
-    if(this.partTree){ // if partTree is null this means that book does not have any parts so far so root part should be created first
-      this.addRootPart(createAnswers);
-    }else{
-      this.addPart(createAnswers,parentAnswerId)
-    }*/
-  }
 
-  private addRootPart(answers : CreateAnswer[]){
+  public addRootPart(){
+    const answers = this.answers.controls.map(control => control.value);
+
     const rootPart : CreateRootPart = {
       bookId: this.bookId,
       partAudioLink : this.partForm.controls['partAudioLink'].value, 

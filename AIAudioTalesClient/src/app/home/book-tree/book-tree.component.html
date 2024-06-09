@@ -1,22 +1,41 @@
 
-<form [formGroup]="partForm" (ngSubmit)="onSubmit()">
-    
-    <input type="text" formControlName="partAudioLink" placeholder="Part Audio Link">
-    <div formArrayName="answers">
-        <div *ngFor="let answer of answers.controls; let i=index" [formGroupName]="i">
-          <input type="text" formControlName="text" placeholder="Answer Text">
-          <button type="button" (click)="removeAnswer(i)">Remove</button>
+<div class="main-container">
+  <ng-template class="root-form" #rootForm >
+    <form [formGroup]="partForm" (ngSubmit)="addRootPart()">
+        <h1>Add first part of the book</h1>
+        <input type="text" formControlName="partAudioLink" placeholder="Part Audio Link">
+        <div formArrayName="answers">
+            <div *ngFor="let answer of answers.controls; let i=index" [formGroupName]="i">
+              <input type="text" formControlName="text" placeholder="Answer Text">
+              <button type="button" (click)="removeAnswer(i)">Remove</button>
+            </div>
+        </div> 
+
+        <button type="button" (click)="addAnswer()" [disabled]="answers.length >= 3">Add Answer</button>
+        <button type="submit" [disabled]="partForm.invalid">Submit</button>
+    </form>
+  </ng-template>
+
+    <div class="container" *ngIf="partTree;else rootForm">
+      <div class="row">
+        <div class="tree">
+          <ul [innerHTML]="generateTreeHtml(partTree)"></ul>
         </div>
-    </div> 
-
-    <button type="button" (click)="addAnswer()" [disabled]="answers.length >= 3">Add Answer</button>
-    <button type="submit" [disabled]="partForm.invalid">Submit</button>
-</form>
-
-  <div class="container" *ngIf="partTree">
-    <div class="row">
-      <div class="tree">
-        <ul [innerHTML]="generateTreeHtml(partTree)"></ul>
       </div>
     </div>
-  </div>
+
+    <!--<app-modal-dialog
+      [title]="'Custo'"
+      [isActive]="isDialogActive">
+      <ng-template #content>
+        <form>
+          <label for="name">Name:</label>
+          <input id="name" type="text">
+          <label for="email">Email:</label>
+          <input id="email" type="email">
+          <button type="submit">Submit</button>
+        </form>
+      </ng-template>
+    </app-modal-dialog>
+  -->
+</div>
