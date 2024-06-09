@@ -15,6 +15,13 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.ImageURL, opt => opt.MapFrom(src => src.ImageURL))
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
                 ;
+            CreateMap<Answer, DTOReturnAnswer>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
+                .ForMember(dest => dest.CurrentPartId, opt => opt.MapFrom(src => src.CurrentPartId))
+                .ForMember(dest => dest.NextPartId, opt => opt.MapFrom(src => src.NextPartId))
+                ;
+
 
             CreateMap<BasketItem, DTOReturnBasketItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

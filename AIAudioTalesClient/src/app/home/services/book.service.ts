@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
-import { Basket, BasketItem, Book, Category, CreateBook, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { Basket, BasketItem, Book, BookPart, Category, CreateBook, CreatePart, CreateRootPart, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -18,6 +18,8 @@ export class BookService {
 
   constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
+  //#region GET
+
   public getBooksFromCategory(bookCategory: number, page: number, pageSize: number) :Observable<Book[]>{
     const params = new HttpParams()
       .set('bookCategory', bookCategory)
@@ -26,6 +28,7 @@ export class BookService {
 
     return this.httpClient.get<Book[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
+
   public getBookWithId(bookId: number): Observable<Book>{
     this.spinnerService.setLoading(true);
 
@@ -33,9 +36,6 @@ export class BookService {
     (this.path + "Books/GetBook/"+bookId, {withCredentials: true}).pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
-  }
-  public purchaseBook(purchase: Purchase){
-    return this.httpClient.post(this.path + "Books/PurchaseBook", purchase, {withCredentials: true, responseType: 'text'});
   }
 
   public userHasBook(bookId: number):Observable<boolean>{
@@ -75,19 +75,8 @@ export class BookService {
     return this.httpClient.get<string[]>(this.path+"Books/GetSearchHistory", {withCredentials: true});
   }
 
-  public saveSearchTerm(searchTerm: string){
-    const params = new HttpParams().set('searchTerm', searchTerm);
-
-    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params, withCredentials: true}).subscribe((res:any)=>console.log(res));
-  }
-
   public getAllCategories(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories", {withCredentials: true});
-  }
-
-  public addBasketItem(bookId: number): Observable<Basket>{
-    const params = new HttpParams().set('bookId', bookId);
-    return this.httpClient.post<Basket>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
   }
 
   public getBasket(): void{
@@ -102,17 +91,55 @@ export class BookService {
               }})  
   }
 
-  public removeBasketItem(itemId: number): Observable<Basket>{
-    const params = new HttpParams().set('itemId', itemId);
-    return this.httpClient.delete<Basket>(this.path+"Books/RemoveBasketItem",{ params, withCredentials : true});
+  public getBookTree(bookId: any): Observable<PartTree> {
+    return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`, {withCredentials: true});
+  }
+
+
+  //#endregion
+
+  //#region  POST
+  
+  public purchaseBook(purchase: Purchase){
+    return this.httpClient.post(this.path + "Books/PurchaseBook", purchase, {withCredentials: true, responseType: 'text'});
+  }
+  
+  public saveSearchTerm(searchTerm: string){
+    const params = new HttpParams().set('searchTerm', searchTerm);
+
+    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params, withCredentials: true}).subscribe((res:any)=>console.log(res));
+  }
+
+  public addBasketItem(bookId: number): Observable<Basket>{
+    const params = new HttpParams().set('bookId', bookId);
+    return this.httpClient.post<Basket>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
   }
 
   public createBook(newBook: CreateBook): Observable<number>{
     return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
   }
 
-  public getBookTree(bookId: any): Observable<PartTree> {
-    return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`, {withCredentials: true});
+  public addRootPart(rootPart: CreateRootPart): Observable<BookPart>{
+    return this.httpClient.post<BookPart>(this.path + "Books/AddRootPart", rootPart, {withCredentials: true});
   }
+
+  public addPart(newPart: CreatePart): Observable<BookPart>{
+    return this.httpClient.post<BookPart>(this.path + "Books/AddBookPart", newPart, {withCredentials: true});
+  }
+
+  //#endregion
+
+  //#region PUT
+
+  //#endregion
+
+  //#region DELETE
+
+  public removeBasketItem(itemId: number): Observable<Basket>{
+    const params = new HttpParams().set('itemId', itemId);
+    return this.httpClient.delete<Basket>(this.path+"Books/RemoveBasketItem",{ params, withCredentials : true});
+  }
+
+  //#endregion 
 }
 

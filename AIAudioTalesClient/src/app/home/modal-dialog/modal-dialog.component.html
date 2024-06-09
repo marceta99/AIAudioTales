@@ -1,0 +1,10 @@
+<section [ngClass]="{ 'active': isActive }">
+    <span class="overlay" (click)="closeModal()"></span>
+    <div class="modal-box">
+      <h2>{{ title }}</h2>
+      <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      <div class="buttons">
+        <button class="close-btn" (click)="closeModal()">Ok, Close</button>
+      </div>
+    </div>
+  </section>

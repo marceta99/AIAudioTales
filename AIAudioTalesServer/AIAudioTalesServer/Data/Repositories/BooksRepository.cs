@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models.Enums;
 using Microsoft.Extensions.Caching.Memory;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -208,6 +209,7 @@ namespace AIAudioTalesServer.Data.Repositories
             {
                 PartId = rootPart.Id,
                 PartName = "Intro",
+                Answers = _mapper.Map<IList<DTOReturnAnswer>>(rootPart.Answers)
             };
 
             rootTreePart.NextParts = await PopulateRootTreeParts(rootPart.Answers);
@@ -233,6 +235,8 @@ namespace AIAudioTalesServer.Data.Repositories
 
                 var answers = await GetPartAnswers((int)answer.NextPartId);
 
+                newTreePart.Answers = _mapper.Map<IList<DTOReturnAnswer>>(answers);
+
                 newTreePart.NextParts = await PopulateRootTreeParts(answers);
 
                 treeParts.Add(newTreePart);
@@ -251,6 +255,41 @@ namespace AIAudioTalesServer.Data.Repositories
         #endregion
 
         #region POST  
+
+        public async Task<BookPart?> AddRootPart(DTOCreateRootPart root)
+        {
+            var book = await _dbContext.Books.Where(b => b.Id == root.BookId).FirstOrDefaultAsync();
+
+            if (book == null) return null;
+
+            var bookPart = new BookPart
+            {
+                BookId = root.BookId,
+                IsRoot = true,
+                PartAudioLink = root.PartAudioLink
+            };
+
+            var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
+
+            await _dbContext.SaveChangesAsync();
+
+            IList<Answer> answers = new List<Answer>();
+            foreach (var answer in root.Answers)
+            {
+                var a = new Answer
+                {
+                    Text = answer.Text,
+                    CurrentPartId = createdRootPart.Entity.Id
+                };
+                var createdAnswer = await _dbContext.Answers.AddAsync(a);
+                answers.Add(createdAnswer.Entity);
+            }
+            await _dbContext.SaveChangesAsync();
+
+            createdRootPart.Entity.Answers = answers;
+
+            return createdRootPart.Entity;
+        }
 
         public async Task<BookPart> AddBookPart(DTOCreatePart part)
         {
@@ -310,41 +349,6 @@ namespace AIAudioTalesServer.Data.Repositories
             await _dbContext.SaveChangesAsync();
 
             return createdBook.Entity;
-        }
-
-        public async Task<BookPart?> AddRootPart(DTOCreateRootPart root)
-        {
-            var book = await _dbContext.Books.Where(b => b.Id == root.BookId).FirstOrDefaultAsync();
-
-            if (book == null) return null;
-
-            var bookPart = new BookPart
-            {
-                BookId = root.BookId,
-                IsRoot = true,
-                PartAudioLink = root.PartAudioLink
-            };
-
-            var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
-
-            await _dbContext.SaveChangesAsync();
-
-            IList<Answer> answers = new List<Answer>();
-            foreach (var answer in root.Answers)
-            {
-                var a = new Answer
-                {
-                    Text = answer.Text,
-                    CurrentPartId = createdRootPart.Entity.Id
-                };
-                var createdAnswer = await _dbContext.Answers.AddAsync(a);
-                answers.Add(createdAnswer.Entity);
-            }
-            await _dbContext.SaveChangesAsync();
-
-            createdRootPart.Entity.Answers = answers;
-
-            return createdRootPart.Entity;
         }
 
         public async Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId)

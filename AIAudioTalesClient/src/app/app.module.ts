@@ -26,6 +26,7 @@ import { StatisticsComponent } from './home/statistics/statistics.component';
 import { CreateBookComponent } from './home/create-book/create-book.component';
 import { MyBooksComponent } from './home/my-books/my-books.component';
 import { BookTreeComponent } from './home/book-tree/book-tree.component';
+import { ModalDialogComponent } from './home/modal-dialog/modal-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { BookTreeComponent } from './home/book-tree/book-tree.component';
     StatisticsComponent,
     CreateBookComponent,
     MyBooksComponent,
-    BookTreeComponent
+    BookTreeComponent,
+    ModalDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -92,6 +92,7 @@ export interface CreateBook {
 }
 
 export interface CreateRootPart {
+  bookId: number,
   partAudioLink: string,
   answers: CreateAnswer[]
 }
@@ -100,10 +101,32 @@ export interface CreateAnswer {
   text: string
 }
 
+export interface CreatePart {
+  bookId: number,
+  partAudioLink: string,
+  parentAnswerId: number,
+  answers: CreateAnswer[]
+}
+
+export interface BookPart {
+  id: number, 
+  partAudioLink: string,
+  isRoot: boolean,
+  bookId: number
+}
+
 export interface PartTree {
   partId: number,
   partName: string,
+  answers: ReturnAnswer[],
   nextParts: PartTree[]
+}
+
+export interface ReturnAnswer {
+  id: number,
+  text: string,
+  currentPartId: number,
+  nextPartId: number | null
 }
 
 //Enums
