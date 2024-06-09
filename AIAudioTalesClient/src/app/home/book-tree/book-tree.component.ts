@@ -60,7 +60,7 @@ export class BookTreeComponent implements OnInit{
       // answers that does not have next part
       part.answers.forEach(answer => {
         if(!answer.nextPartId){
-          html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span></a>`;
+          html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></a>`;
         }
       });
 
@@ -72,7 +72,7 @@ export class BookTreeComponent implements OnInit{
     }else if(part.answers && part.answers.length > 0){
       html += '<ul>';
       part.answers.forEach(answer => {
-        html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span></a>`;
+        html += `<li><a href="#" class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></a>`;
       });
       html += '</ul>';
     }
