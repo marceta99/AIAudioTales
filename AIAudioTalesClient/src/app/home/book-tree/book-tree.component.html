@@ -19,7 +19,7 @@
     <div class="container" *ngIf="partTree;else rootForm">
       <div class="row">
         <div class="tree">
-          <ul [innerHTML]="generateTreeHtml(partTree)"></ul>
+          <ul #treeContainer ></ul>
         </div>
       </div>
     </div>

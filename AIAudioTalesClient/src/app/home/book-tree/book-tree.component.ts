@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -11,19 +11,26 @@ import { BookService } from '../services/book.service';
   styleUrls: ['./book-tree.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class BookTreeComponent implements OnInit{
+export class BookTreeComponent implements OnInit, AfterViewInit{
   partForm!: FormGroup;
   bookId!: number;
   hasParts: boolean = false;
   partTree!: PartTree;
   isDialogActive: boolean = false;
+
+  @ViewChild('treeContainer') treeContainer!: ElementRef;
   
   constructor(
     private spinnerService: LoadingSpinnerService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private bookService: BookService
+    private bookService: BookService,
+    private cdr: ChangeDetectorRef,
+    private renderer: Renderer2
     ) {}
+  ngAfterViewInit(): void {
+    console.log("tree container",this.treeContainer)
+  }
   
   ngOnInit(): void {
     this.spinnerService.setLoading(false);
@@ -45,6 +52,11 @@ export class BookTreeComponent implements OnInit{
       next: (partTree: PartTree) => {
         console.log('BookTree', partTree);
         this.partTree = partTree;
+        this.cdr.detectChanges();
+         console.log("tree container",this.treeContainer)
+         this.treeContainer.nativeElement.innerHTML = this.generateTreeHtml(this.partTree);
+        this.addClickListeners(this.treeContainer.nativeElement);
+
       },
       error: (error: any) => {
         console.error('Error creating book:', error);
@@ -52,15 +64,25 @@ export class BookTreeComponent implements OnInit{
     });
   }
 
+  private addClickListeners(container: HTMLElement): void {
+    const spans = container.querySelectorAll('span.tree-part');
+    console.log("spans", spans)
+    spans.forEach(span => {
+      this.renderer.listen(span, 'click', (event) => {
+        console.log('Span clicked:', event);
+      });
+    });
+  }
+
   generateTreeHtml(part: PartTree): string {
-    let html = `<li><span><span>${part.partName}</span></span>`;
+    let html = `<li><span class="tree-part"><span>${part.partName}</span></span>`;
     if (part.nextParts && part.nextParts.length > 0) {
       html += '<ul>';
       
       // answers that does not have next part
       part.answers.forEach(answer => {
         if(!answer.nextPartId){
-          html += `<li><span class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
+          html += `<li><span class="tree-part not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
         }
       });
 
@@ -72,7 +94,7 @@ export class BookTreeComponent implements OnInit{
     }else if(part.answers && part.answers.length > 0){
       html += '<ul>';
       part.answers.forEach(answer => {
-        html += `<li><span class="not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
+        html += `<li><span class="tree-part not-added-part"><span>${answer.text}</span><span class="tooltip">Not Added Part Audio</span></span>`;
       });
       html += '</ul>';
     }
