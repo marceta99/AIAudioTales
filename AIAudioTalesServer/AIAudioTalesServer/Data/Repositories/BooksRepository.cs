@@ -258,9 +258,11 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<BookPart?> AddRootPart(DTOCreateRootPart root)
         {
-            var book = await _dbContext.Books.Where(b => b.Id == root.BookId).FirstOrDefaultAsync();
+            var book = await _dbContext.Books.Where(b => b.Id == root.BookId)
+                .Include(b => b.BookParts)
+                .FirstOrDefaultAsync();
 
-            if (book == null) return null;
+            if (book == null || book.BookParts.Count != 0) return null;  // return null if book already has some parts, then there is no point of adding root part 
 
             var bookPart = new BookPart
             {

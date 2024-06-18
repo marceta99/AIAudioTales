@@ -17,9 +17,10 @@ button {
   font-size: 18px;
   font-weight: 400;
   color: #fff;
-  padding: 14px 22px;
+  padding: 10px;
+  margin: 0;
   border: none;
-  background: #4070f4;
+  background: red;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -43,7 +44,6 @@ section.active .show-modal {
   width: 100%;
   background: rgba(0, 0, 0, 0.3);
   opacity: 0;
-  pointer-events: none;
 }
 section.active .overlay {
   opacity: 1;
@@ -68,23 +68,23 @@ section.active .modal-box {
   pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
 }
-.modal-box h2 {
-  margin-top: 20px;
-  font-size: 25px;
-  font-weight: 500;
-  color: #333;
-}
-.modal-box h3 {
-  font-size: 16px;
-  font-weight: 400;
-  color: #333;
-  text-align: center;
-}
 .modal-box .buttons {
-  margin-top: 25px;
+  margin: 0;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+  height: 100%;
 }
-.modal-box button {
+.buttons .close-btn{
   font-size: 14px;
-  padding: 6px 12px;
-  margin: 0 10px;
+}
+
+.title-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: start;
+  width: 100%;
+  height: auto;
 }
