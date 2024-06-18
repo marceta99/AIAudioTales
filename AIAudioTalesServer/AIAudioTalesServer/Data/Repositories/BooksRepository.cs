@@ -295,7 +295,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
             createdRootPart.Entity.Answers = answers;
 
-            var partDto = _mapper.Map<DTOReturnPart>(createdRootPart);
+            var partDto = _mapper.Map<DTOReturnPart>(createdRootPart.Entity);
 
             return partDto;
         }
@@ -341,7 +341,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
                     await transaction.CommitAsync();
 
-                    var partDto = _mapper.Map<DTOReturnPart>(createdPart);
+                    var partDto = _mapper.Map<DTOReturnPart>(createdPart.Entity);
                     return partDto;
                 }
 
