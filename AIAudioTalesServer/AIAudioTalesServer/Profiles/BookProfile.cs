@@ -22,12 +22,20 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.NextPartId, opt => opt.MapFrom(src => src.NextPartId))
                 ;
 
-
             CreateMap<BasketItem, DTOReturnBasketItem>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.BookId))
                 .ForMember(dest => dest.Book, opt => opt.MapFrom(src => src.Book))
                 .ForMember(dest => dest.ItemPrice, opt => opt.MapFrom(src => src.ItemPrice))
+                ;
+
+            CreateMap<BookPart, DTOReturnPart>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.BookId))
+                .ForMember(dest => dest.IsRoot, opt => opt.MapFrom(src => src.IsRoot))
+                .ForMember(dest => dest.ParentAnwserId, opt => opt.MapFrom(src => src.ParentAnswer.Id))
+                .ForMember(dest => dest.ParentAnswerText, opt => opt.MapFrom(src => src.ParentAnswer.Text))
+                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers))
                 ;
 
             CreateMap<DTOCreateBook, Book>()

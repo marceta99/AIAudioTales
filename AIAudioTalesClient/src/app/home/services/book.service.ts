@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
-import { Basket, BasketItem, Book, BookPart, Category, CreateBook, CreatePart, CreateRootPart, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { Basket, BasketItem, Book, ReturnPart, Category, CreateBook, CreatePart, CreateRootPart, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -91,8 +91,12 @@ export class BookService {
               }})  
   }
 
-  public getBookTree(bookId: any): Observable<PartTree> {
+  public getBookTree(bookId: number): Observable<PartTree> {
     return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`, {withCredentials: true});
+  }
+
+  public getPart(partId: number): Observable<ReturnPart> {
+    return this.httpClient.get<ReturnPart>(this.path+`Books/GetPart/${partId}`, {withCredentials: true});
   }
 
 
@@ -119,12 +123,12 @@ export class BookService {
     return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
   }
 
-  public addRootPart(rootPart: CreateRootPart): Observable<BookPart>{
-    return this.httpClient.post<BookPart>(this.path + "Books/AddRootPart", rootPart, {withCredentials: true});
+  public addRootPart(rootPart: CreateRootPart): Observable<ReturnPart>{
+    return this.httpClient.post<ReturnPart>(this.path + "Books/AddRootPart", rootPart, {withCredentials: true});
   }
 
-  public addPart(newPart: CreatePart): Observable<BookPart>{
-    return this.httpClient.post<BookPart>(this.path + "Books/AddBookPart", newPart, {withCredentials: true});
+  public addPart(newPart: CreatePart): Observable<ReturnPart>{
+    return this.httpClient.post<ReturnPart>(this.path + "Books/AddBookPart", newPart, {withCredentials: true});
   }
 
   //#endregion

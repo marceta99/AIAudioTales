@@ -6,6 +6,7 @@ using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using static System.Reflection.Metadata.BlobBuilder;
+using Google.Apis.Logging;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -187,14 +188,18 @@ namespace AIAudioTalesServer.Data.Repositories
             return rootPart;
         }
 
-        public async Task<BookPart?> GetNextPart(int nextPartId)
+        public async Task<DTOReturnPart?> GetPart(int partId)
         {
             var part = await _dbContext.BookParts
-                .Where(bp => bp.Id == nextPartId)
+                .Where(bp => bp.Id == partId)
                 .Include(bp => bp.Answers)
+                .Include(bp => bp.ParentAnswer)
                 .FirstOrDefaultAsync();
 
-            return part;
+            if (part == null) return null;
+
+            var partDto = _mapper.Map<DTOReturnPart>(part);
+            return partDto;
         }
         public async Task<DTOReturnTreePart> GetBookTree(int bookId)
         {
@@ -256,7 +261,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
         #region POST  
 
-        public async Task<BookPart?> AddRootPart(DTOCreateRootPart root)
+        public async Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root)
         {
             var book = await _dbContext.Books.Where(b => b.Id == root.BookId)
                 .Include(b => b.BookParts)
@@ -290,10 +295,12 @@ namespace AIAudioTalesServer.Data.Repositories
 
             createdRootPart.Entity.Answers = answers;
 
-            return createdRootPart.Entity;
+            var partDto = _mapper.Map<DTOReturnPart>(createdRootPart);
+
+            return partDto;
         }
 
-        public async Task<BookPart> AddBookPart(DTOCreatePart part)
+        public async Task<DTOReturnPart> AddBookPart(DTOCreatePart part)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -333,7 +340,9 @@ namespace AIAudioTalesServer.Data.Repositories
                     createdPart.Entity.Answers = answers;
 
                     await transaction.CommitAsync();
-                    return createdPart.Entity;
+
+                    var partDto = _mapper.Map<DTOReturnPart>(createdPart);
+                    return partDto;
                 }
 
                 await transaction.RollbackAsync();

@@ -108,11 +108,14 @@ export interface CreatePart {
   answers: CreateAnswer[]
 }
 
-export interface BookPart {
-  id: number, 
-  partAudioLink: string,
-  isRoot: boolean,
-  bookId: number
+export interface ReturnPart {
+  id: number;
+  partAudioLink: string;
+  isRoot: boolean;
+  bookId: number;
+  parentAnswerId: number;
+  parentAnswerText: string;
+  answers: ReturnAnswer[];
 }
 
 export interface PartTree {

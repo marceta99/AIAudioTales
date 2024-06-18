@@ -20,7 +20,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<DTOBasket> GetBasket(int userId);
         Task<BasketItem> GetItemById(int itemId);
         Task<BookPart> GetRootPart(int bookId);
-        Task<BookPart> GetNextPart(int nextPartId);
+        Task<DTOReturnPart> GetPart(int partId);
         Task<DTOReturnTreePart> GetBookTree(int bookId);
         #endregion
 
@@ -28,9 +28,9 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task SaveSearchTerm(int userId, string searchTerm);
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId);
-        Task<BookPart?> AddBookPart(DTOCreatePart part);
+        Task<DTOReturnPart?> AddBookPart(DTOCreatePart part);
         Task<Book> AddBook(DTOCreateBook book, int creatorId);
-        Task<BookPart?> AddRootPart(DTOCreateRootPart root);
+        Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root);
 
         #endregion
 

@@ -1,8 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BookPart, CreateAnswer, CreatePart, CreateRootPart, PartTree } from 'src/app/entities';
+import { ReturnPart, CreatePart, CreateRootPart, PartTree } from 'src/app/entities';
 import { BookService } from '../services/book.service';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 
@@ -16,10 +16,9 @@ export class BookTreeComponent implements OnInit {
   rootPartForm!: FormGroup;
   partForm!: FormGroup;
   bookId!: number;
-  hasParts: boolean = false;
   partTree!: PartTree;
-  isDialogActive: boolean = false;
   clickedPartId!: number;
+  clickedPart!: ReturnPart;
 
   @ViewChild('treeContainer') treeContainer!: ElementRef;
   @ViewChild('answerModal', { static: false }) answerModal!: ModalDialogComponent;
@@ -73,29 +72,34 @@ export class BookTreeComponent implements OnInit {
 
   private addClickListeners(container: HTMLElement): void {
     const spans = container.querySelectorAll('span.tree-part');
-    console.log("spans", spans)
+
     spans.forEach(span => {
       const answerId = +span.getAttribute('data-answer-id')!; // Use + to convert to number
       const partId = +span.getAttribute('data-part-id')!; 
       this.renderer.listen(span, 'click', (event) => {
-        console.log('Span clicked:', event);
+
         if(answerId){ // this means that tree part with no added part is clicked
-          console.log("answer ID ",answerId);
           this.clickedPartId = answerId;
           //here open answer modal
           this.answerModal.showModal();
         }else if(partId){ // this means that tree part with added part is added
-          console.log("part ID ",partId);
           this.clickedPartId = partId;
-          //here open part modal
-          this.partModal.showModal();
+          this.bookService.getPart(partId).subscribe({
+            next: (part: ReturnPart) => {
+              this.clickedPart = part;
+              this.partModal.showModal();
+            },
+            error: (error: any) => {
+              console.error('Error creating book:', error);
+            }
+          });
         }
         
       });
     });
   }
 
-  generateTreeHtml(part: PartTree): string {
+  private generateTreeHtml(part: PartTree): string {
     let html = `<li><span class="tree-part" data-part-id=${part.partId}><span>${part.partName}</span></span>`;
     if (part.nextParts && part.nextParts.length > 0) {
       html += '<ul>';
@@ -123,7 +127,6 @@ export class BookTreeComponent implements OnInit {
     return html;
   }
 
-
   public addRootPart(){
     const answers = this.rootPartFormAnswers.controls.map(control => control.value);
 
@@ -134,7 +137,7 @@ export class BookTreeComponent implements OnInit {
     }
 
     this.bookService.addRootPart(rootPart).subscribe({
-      next: (rootPart: BookPart) => {
+      next: (rootPart: ReturnPart) => {
         console.log('rootPart created successfully', rootPart);
         this.getBookTree();
       },
@@ -155,7 +158,7 @@ export class BookTreeComponent implements OnInit {
     }
 
     this.bookService.addPart(newPart).subscribe({
-      next: (newPart: BookPart) => {
+      next: (newPart: ReturnPart) => {
         console.log('part created successfully', newPart);
         this.answerModal.closeModal();
         this.getBookTree();
@@ -179,7 +182,7 @@ export class BookTreeComponent implements OnInit {
     return this.partForm.get('answers') as FormArray; // getter which returns FormArray of answers
   }
 
-  addAnswer(answers: FormArray){
+  public addAnswer(answers: FormArray){
     console.log("FormGroup",answers)
     if(answers.length < 3){
       answers.push(this.formBuilder.group({
@@ -188,7 +191,7 @@ export class BookTreeComponent implements OnInit {
     }
   }
 
-  removeAnswer(answers: FormArray, index: number){
+  public removeAnswer(answers: FormArray, index: number){
     answers.removeAt(index);
   }
 

@@ -1,7 +1,6 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Controllers
@@ -171,10 +170,10 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest("There is no part of the book for that bookId");
         }
 
-        [HttpGet("GetNextPart/{nextPartId}")]
-        public async Task<ActionResult<BookPart>> GetNextPart(int nextPartId) 
+        [HttpGet("GetPart/{partId}")]
+        public async Task<ActionResult<DTOReturnPart>> GetPart(int partId) 
         {
-            var bookPart = await _booksRepository.GetNextPart(nextPartId);
+            var bookPart = await _booksRepository.GetPart(partId);
 
             if(bookPart != null)
             {
@@ -196,9 +195,8 @@ namespace AIAudioTalesServer.Controllers
         #region POST
 
         [HttpPost("AddRootPart")]
-        public async Task<ActionResult<BookPart?>> AddRootPart([FromBody] DTOCreateRootPart root)
+        public async Task<ActionResult<DTOReturnPart?>> AddRootPart([FromBody] DTOCreateRootPart root)
         {
-
             if (ModelState.IsValid)
             {
                 var newRoot = await _booksRepository.AddRootPart(root);
@@ -213,7 +211,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("AddBookPart")]
-        public async Task<ActionResult<BookPart?>> AddBookPart([FromBody] DTOCreatePart part)
+        public async Task<ActionResult<DTOReturnPart?>> AddBookPart([FromBody] DTOCreatePart part)
         {
             if (ModelState.IsValid)
             {

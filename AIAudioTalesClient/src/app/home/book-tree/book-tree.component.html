@@ -43,9 +43,10 @@
   </ng-template>
 </app-modal-dialog>
 
-<app-modal-dialog #partModal [title]="'PartInfo'" [isActive]="false">
+<app-modal-dialog *ngIf="clickedPart" #partModal [title]="'PartInfo'" [isActive]="false">
   <ng-template #content>
     <!-- Content for part modal if needed -->
-    <h3>Part Information</h3>
+    <h3>{{clickedPart.isRoot ? 'Intro' : clickedPart.parentAnswerText}}</h3>
+    <p>{{clickedPart.partAudioLink}}</p>
   </ng-template>
 </app-modal-dialog>
