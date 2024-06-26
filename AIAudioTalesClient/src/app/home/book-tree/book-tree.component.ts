@@ -18,7 +18,9 @@ export class BookTreeComponent implements OnInit {
   bookId!: number;
   partTree!: PartTree;
   clickedPartId!: number;
-  clickedPart!: ReturnPart;
+  clickedPart!: ReturnPart | undefined;
+  selectedFile: File | null = null;
+  audioLink: string | null = null;
 
   @ViewChild('treeContainer') treeContainer!: ElementRef;
   @ViewChild('answerModal', { static: false }) answerModal!: ModalDialogComponent;
@@ -43,7 +45,7 @@ export class BookTreeComponent implements OnInit {
     });
 
     this.rootPartForm = this.formBuilder.group({
-      partAudioLink: ['', [Validators.required, Validators.maxLength(500)]],
+      partAudio: ['', Validators.required],
       answers: this.formBuilder.array([])
     }) 
 
@@ -51,6 +53,11 @@ export class BookTreeComponent implements OnInit {
       partAudioLink: ['', [Validators.required, Validators.maxLength(500)]],
       answers: this.formBuilder.array([])
     }) 
+  }
+
+  public onFileChange(event: any) {
+    this.selectedFile = event.target.files[0];
+    console.log("selected file", this.selectedFile)
   }
 
   private getBookTree(): void {
@@ -130,48 +137,58 @@ export class BookTreeComponent implements OnInit {
   public addRootPart(){
     const answers = this.rootPartFormAnswers.controls.map(control => control.value);
 
-    const rootPart : CreateRootPart = {
-      bookId: this.bookId,
-      partAudioLink : this.rootPartForm.controls['partAudioLink'].value, 
-      answers: answers
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('bookId', this.bookId.toString());
+      formData.append('partAudio', this.selectedFile);   
+      formData.append('answers', JSON.stringify(answers));     
+  
+      this.bookService.addRootPart(formData).subscribe({
+        next: (rootPart: ReturnPart) => {
+          console.log('rootPart created successfully', rootPart);
+          this.getBookTree();
+        },
+        error: (error) => {
+          this.answerModal.closeModal();
+          console.error('Error creating root part:', error);
+        }
+      });
+      
+      this.selectedFile = null;
     }
-
-    this.bookService.addRootPart(rootPart).subscribe({
-      next: (rootPart: ReturnPart) => {
-        console.log('rootPart created successfully', rootPart);
-        this.getBookTree();
-      },
-      error: (error) => {
-        this.answerModal.closeModal();
-        console.error('Error creating root part:', error);
-      }
-    });
   }
 
   public addPart(){
    const answers = this.partFormAnswers.controls.map(control => control.value);
-    const newPart : CreatePart = {
-      bookId: this.bookId,
-      partAudioLink : this.partForm.controls['partAudioLink'].value, 
-      answers: answers,
-      parentAnswerId: this.clickedPartId // this is clicked answer id because at this point there is no part created, just answer
+
+    if (this.selectedFile) {
+      
+      const formData = new FormData();
+      formData.append('partAudio', this.selectedFile);
+      formData.append('bookId', this.bookId.toString());
+      formData.append('parentAnswerId', this.clickedPartId.toString());
+      answers.forEach((answer, index) => {
+        formData.append(`answers[${index}].text`, answer.text);
+      });
+
+      this.bookService.addPart(formData).subscribe({
+        next: (newPart: ReturnPart) => {
+          console.log('part created successfully', newPart);
+          this.answerModal.closeModal();
+          this.getBookTree();
+          this.partForm.reset();
+          // here I want to empty answer list because previously I was getting list from last submit
+        },
+        error: (error) => {
+          this.answerModal.closeModal();
+          this.partForm.reset();
+           // here I want to empty answer list because previously I was getting list from last submit
+          console.error('Error creating new part:', error);
+        }
+      });
     }
 
-    this.bookService.addPart(newPart).subscribe({
-      next: (newPart: ReturnPart) => {
-        console.log('part created successfully', newPart);
-        this.answerModal.closeModal();
-        this.getBookTree();
-        this.partForm.reset();
-        // here I want to empty answer list because previously I was getting list from last submit
-      },
-      error: (error) => {
-        this.answerModal.closeModal();
-        this.partForm.reset();
-         // here I want to empty answer list because previously I was getting list from last submit
-        console.error('Error creating new part:', error);
-      }
-    });
+    
   }
 
   get rootPartFormAnswers(): FormArray {

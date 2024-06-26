@@ -3,7 +3,7 @@
   <ng-template class="root-form" #rootForm >
     <form [formGroup]="rootPartForm" (ngSubmit)="addRootPart()">
         <h1>Add first part of the book</h1>
-        <input type="text" formControlName="partAudioLink" placeholder="Part Audio Link">
+        <input type="file" (change)="onFileChange($event)" accept=".mp3" formControlName="partAudio">
         <div formArrayName="answers">
             <div *ngFor="let answer of rootPartFormAnswers .controls; let i=index" [formGroupName]="i">
               <input type="text" formControlName="text" placeholder="Answer Text">
@@ -29,7 +29,7 @@
   <ng-template #content>
     <form [formGroup]="partForm" (ngSubmit)="addPart()">
       <h5>Add audio part of the book</h5>
-      <input type="text" formControlName="partAudioLink" placeholder="Part Audio Link">
+      <input type="file" (change)="onFileChange($event)" accept=".mp3">
       <h5>Add answers for current part</h5>
       <div formArrayName="answers">
         <div *ngFor="let answer of partFormAnswers.controls; let i=index" [formGroupName]="i">
@@ -43,10 +43,13 @@
   </ng-template>
 </app-modal-dialog>
 
-<app-modal-dialog *ngIf="clickedPart" #partModal [title]="'PartInfo'" [isActive]="false">
+<app-modal-dialog #partModal [title]="'PartInfo'" [isActive]="false">
   <ng-template #content>
     <!-- Content for part modal if needed -->
-    <h3>{{clickedPart.isRoot ? 'Intro' : clickedPart.parentAnswerText}}</h3>
-    <p>{{clickedPart.partAudioLink}}</p>
+    <h3>{{clickedPart?.isRoot ? 'Intro' : clickedPart?.parentAnswerText}}</h3>
+    <audio *ngIf="clickedPart?.partAudioLink" controls>
+      <source [src]="clickedPart?.partAudioLink" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
   </ng-template>
 </app-modal-dialog>

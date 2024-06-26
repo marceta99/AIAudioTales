@@ -4,7 +4,9 @@ using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Data.Repositories;
 using AIAudioTalesServer.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Stripe;
 using System.Text;
@@ -16,6 +18,12 @@ configuration.AddJsonFile("appsettings.json");
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // Example limit of 100MB
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -94,6 +102,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Ensure the upload directory exists
+string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadFolder))
+{
+    Directory.CreateDirectory(uploadFolder);
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -103,8 +118,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
+
+// Serve files from "uploads" directory
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads"
+});
 
 app.UseAuthentication();
 app.UseMiddleware<UserContextMiddleware>();

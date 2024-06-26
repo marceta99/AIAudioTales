@@ -28,9 +28,10 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task SaveSearchTerm(int userId, string searchTerm);
         Task<BasketItem> AddBasketItem(int userId, int bookId);
         Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems, PurchaseType purchaseType, Language language, string sessionId);
-        Task<DTOReturnPart?> AddBookPart(DTOCreatePart part);
+        Task<DTOReturnPart?> AddBookPart(DTOCreatePart part, HttpRequest request);
         Task<Book> AddBook(DTOCreateBook book, int creatorId);
-        Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root);
+        Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root, HttpRequest request);
+        Task<string> Upload(IFormFile formFile, HttpRequest request);
 
         #endregion
 

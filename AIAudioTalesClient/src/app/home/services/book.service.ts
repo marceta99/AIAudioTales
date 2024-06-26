@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
 import { Basket, BasketItem, Book, ReturnPart, Category, CreateBook, CreatePart, CreateRootPart, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
@@ -123,12 +123,12 @@ export class BookService {
     return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
   }
 
-  public addRootPart(rootPart: CreateRootPart): Observable<ReturnPart>{
-    return this.httpClient.post<ReturnPart>(this.path + "Books/AddRootPart", rootPart, {withCredentials: true});
+  public addRootPart(formData: FormData): Observable<ReturnPart>{
+    return this.httpClient.post<ReturnPart>(this.path + "Books/AddRootPart", formData, { withCredentials: true});
   }
 
-  public addPart(newPart: CreatePart): Observable<ReturnPart>{
-    return this.httpClient.post<ReturnPart>(this.path + "Books/AddBookPart", newPart, {withCredentials: true});
+  public addPart(formData: FormData): Observable<ReturnPart>{
+    return this.httpClient.post<ReturnPart>(this.path + "Books/AddBookPart", formData, {withCredentials: true});
   }
 
   //#endregion

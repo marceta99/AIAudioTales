@@ -4,7 +4,7 @@
     {
         public int BookId { get; set; }
         public int ParentAnswerId { get; set; }
-        public string PartAudioLink { get; set; }
+        public IFormFile PartAudio { get; set; }
         public IList<DTOCreateAnswer> Answers { get; set; }
     }
 }

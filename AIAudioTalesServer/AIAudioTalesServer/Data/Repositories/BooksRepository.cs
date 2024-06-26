@@ -15,6 +15,7 @@ namespace AIAudioTalesServer.Data.Repositories
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IMemoryCache _cache;
+        private readonly string _uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 
         public BooksRepository(AppDbContext dbContext, IMapper mapper, IMemoryCache cache)
         {
@@ -261,7 +262,27 @@ namespace AIAudioTalesServer.Data.Repositories
 
         #region POST  
 
-        public async Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root)
+        public async Task<string?> Upload(IFormFile file, HttpRequest request)
+        {
+            if (file != null && file.Length > 0)
+            {
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(_uploadFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var audioLink = $"{request.Scheme}://{request.Host}/uploads/{fileName}";
+                return audioLink;
+            }
+
+            return null;
+        }
+
+        public async Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root, HttpRequest request)
         {
             var book = await _dbContext.Books.Where(b => b.Id == root.BookId)
                 .Include(b => b.BookParts)
@@ -269,11 +290,15 @@ namespace AIAudioTalesServer.Data.Repositories
 
             if (book == null || book.BookParts.Count != 0) return null;  // return null if book already has some parts, then there is no point of adding root part 
 
+            var partAudioLink = await Upload(root.PartAudio, request);
+
+            if (partAudioLink == null) return null;
+
             var bookPart = new BookPart
             {
                 BookId = root.BookId,
                 IsRoot = true,
-                PartAudioLink = root.PartAudioLink
+                PartAudioLink = partAudioLink
             };
 
             var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
@@ -300,14 +325,18 @@ namespace AIAudioTalesServer.Data.Repositories
             return partDto;
         }
 
-        public async Task<DTOReturnPart> AddBookPart(DTOCreatePart part)
+        public async Task<DTOReturnPart> AddBookPart(DTOCreatePart part, HttpRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
+                var partAudioLink = await Upload(part.PartAudio, request);
+
+                if (partAudioLink == null) return null;
+
                 var bookPart = new BookPart
                 {
                     BookId = part.BookId,
-                    PartAudioLink = part.PartAudioLink
+                    PartAudioLink = partAudioLink
                 };
 
                 var createdPart = await _dbContext.BookParts.AddAsync(bookPart);

@@ -93,7 +93,7 @@ export interface CreateBook {
 
 export interface CreateRootPart {
   bookId: number,
-  partAudioLink: string,
+  partAudio: File | null,
   answers: CreateAnswer[]
 }
 
@@ -103,7 +103,7 @@ export interface CreateAnswer {
 
 export interface CreatePart {
   bookId: number,
-  partAudioLink: string,
+  partAudio: File | null,
   parentAnswerId: number,
   answers: CreateAnswer[]
 }

@@ -12,11 +12,11 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const headers = new HttpHeaders().set('Content-type', 'application/json');
+    /*const headers = new HttpHeaders().set('Content-type', 'application/json');
     request = request.clone({
       headers: headers,
       withCredentials: true
-    });
+    });*/
     return next.handle(request).pipe(catchError(err => this.handleAuthError(err, request, next)));
   }
 

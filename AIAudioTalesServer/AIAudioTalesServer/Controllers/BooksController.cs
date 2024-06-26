@@ -2,6 +2,7 @@
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -162,7 +163,7 @@ namespace AIAudioTalesServer.Controllers
         {
             var rootPart = await _booksRepository.GetRootPart(bookId);
 
-            if(rootPart != null)
+            if (rootPart != null)
             {
                 return Ok(rootPart);
             }
@@ -171,11 +172,11 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetPart/{partId}")]
-        public async Task<ActionResult<DTOReturnPart>> GetPart(int partId) 
+        public async Task<ActionResult<DTOReturnPart>> GetPart(int partId)
         {
             var bookPart = await _booksRepository.GetPart(partId);
 
-            if(bookPart != null)
+            if (bookPart != null)
             {
                 return Ok(bookPart);
             }
@@ -194,28 +195,73 @@ namespace AIAudioTalesServer.Controllers
 
         #region POST
 
-        [HttpPost("AddRootPart")]
-        public async Task<ActionResult<DTOReturnPart?>> AddRootPart([FromBody] DTOCreateRootPart root)
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            if (ModelState.IsValid)
+            if (file != null && file.Length > 0)
             {
-                var newRoot = await _booksRepository.AddRootPart(root);
-                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-                if (newRoot == null)
-                {
-                    return BadRequest("Book with that id does not exists");
-                }
-                return Ok(newRoot);
+                var audioLink = await _booksRepository.Upload(file, Request);
+                return Ok(audioLink);
             }
-            return BadRequest();
+
+            return BadRequest("Invalid file.");
+        }
+
+        [HttpPost("AddRootPart")]
+        public async Task<ActionResult<DTOReturnPart?>> AddRootPart()
+        {
+            try
+            {
+                // Read the form data directly from the request
+                var form = await Request.ReadFormAsync();
+
+                // Read the form fields
+                var partAudio = form.Files["partAudio"];
+                var bookIdStr = form["bookId"].FirstOrDefault();
+                var answersJson = form["answers"].FirstOrDefault();
+
+                if (partAudio == null || string.IsNullOrEmpty(bookIdStr))
+                {
+                    return BadRequest("Audio file or book id is missing");
+                }
+
+                if (!int.TryParse(bookIdStr, out int bookId))
+                {
+                    return BadRequest("Invalid book id");
+                }
+
+                // Deserialize the answers
+                var answers = JsonConvert.DeserializeObject<List<DTOCreateAnswer>>(answersJson);
+
+                var newRoot = new DTOCreateRootPart
+                {
+                    PartAudio = partAudio,
+                    BookId = bookId,
+                    Answers = answers
+                };
+
+                var result = await _booksRepository.AddRootPart(newRoot, Request);
+
+                if (result == null)
+                {
+                    return BadRequest("Book with that id does not exist");
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
         }
 
         [HttpPost("AddBookPart")]
-        public async Task<ActionResult<DTOReturnPart?>> AddBookPart([FromBody] DTOCreatePart part)
+        public async Task<ActionResult<DTOReturnPart?>> AddBookPart([FromForm] DTOCreatePart part)
         {
             if (ModelState.IsValid)
             {
-                var newPart = await _booksRepository.AddBookPart(part);
+                var newPart = await _booksRepository.AddBookPart(part, Request);
                 //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
                 if(newPart == null)
                 {
