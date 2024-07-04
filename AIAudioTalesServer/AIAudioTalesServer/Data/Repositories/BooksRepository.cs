@@ -89,6 +89,14 @@ namespace AIAudioTalesServer.Data.Repositories
             return books;
         }
 
+        public async Task<IList<DTOReturnBook>> GetCreatorBooks(int userId)
+        {
+            var books = await _dbContext.Books.Where(b => b.CreatorId == userId).ToListAsync();
+            var returnBooks = _mapper.Map<IList<DTOReturnBook>>(books);
+
+            return returnBooks;
+        }
+
         public async Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId)
         {
             var pb = await _dbContext.PurchasedBooks.Where(

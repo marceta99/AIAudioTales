@@ -99,6 +99,9 @@ export class BookService {
     return this.httpClient.get<ReturnPart>(this.path+`Books/GetPart/${partId}`, {withCredentials: true});
   }
 
+  public getCreatorBooks(): Observable<Book[]> {
+    return this.httpClient.get<Book[]>(this.path+"Books/GetCreatorBooks");
+  }
 
   //#endregion
 

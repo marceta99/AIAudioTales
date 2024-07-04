@@ -13,6 +13,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<bool> UserHasBook(int bookId, int userId);
         Task<bool> IsBasketItem(int bookId, int userId);
         Task<IList<DTOReturnPurchasedBook>> GetUserBooks(int userId);
+        Task<IList<DTOReturnBook>> GetCreatorBooks(int userId);
         Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId);
         Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize);
         Task <IEnumerable<string>> GetSearchHistory(int id);

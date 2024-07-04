@@ -107,6 +107,20 @@ namespace AIAudioTalesServer.Controllers
             return Ok(books);
         }
 
+        [HttpGet("GetCreatorBooks")]
+        public async Task<ActionResult<IList<DTOReturnBook>>> GetCreatorBooks()
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var books = await _booksRepository.GetCreatorBooks(user.Id);
+
+            return Ok(books);
+        }
+
         [HttpGet("GetBasket")]
         public async Task<ActionResult<DTOBasket>> GetBasket()
         {
