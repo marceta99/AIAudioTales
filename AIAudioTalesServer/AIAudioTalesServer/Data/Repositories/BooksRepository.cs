@@ -305,30 +305,39 @@ namespace AIAudioTalesServer.Data.Repositories
 
             await _dbContext.SaveChangesAsync();
 
-            IList<Answer> answers = new List<Answer>();
-            foreach (var answer in root.Answers)
+            if(root.Answers != null)
             {
-                var a = new Answer
+                IList<Answer> answers = new List<Answer>();
+                foreach (var answer in root.Answers)
                 {
-                    Text = answer.Text,
-                    CurrentPartId = createdRootPart.Entity.Id
-                };
-                var createdAnswer = await _dbContext.Answers.AddAsync(a);
-                answers.Add(createdAnswer.Entity);
-            }
-            await _dbContext.SaveChangesAsync();
+                    var a = new Answer
+                    {
+                        Text = answer.Text,
+                        CurrentPartId = createdRootPart.Entity.Id
+                    };
+                    var createdAnswer = await _dbContext.Answers.AddAsync(a);
+                    answers.Add(createdAnswer.Entity);
+                }
+                await _dbContext.SaveChangesAsync();
 
-            createdRootPart.Entity.Answers = answers;
+                createdRootPart.Entity.Answers = answers;
+            }
 
             var partDto = _mapper.Map<DTOReturnPart>(createdRootPart.Entity);
 
             return partDto;
         }
 
-        public async Task<DTOReturnPart> AddBookPart(DTOCreatePart part, HttpRequest request)
+        public async Task<DTOReturnPart?> AddBookPart(DTOCreatePart part, HttpRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
+                var book = await _dbContext.Books.Where(b => b.Id == part.BookId)
+                .Include(b => b.BookParts)
+                .FirstOrDefaultAsync();
+
+                if (book == null) return null;
+                
                 var partAudioLink = await Upload(part.PartAudio, request);
 
                 if (partAudioLink == null) return null;
@@ -352,21 +361,24 @@ namespace AIAudioTalesServer.Data.Repositories
 
                     await _dbContext.SaveChangesAsync();
 
-                    // new answers for child parts
-                    IList<Answer> answers = new List<Answer>();
-                    foreach (var answer in part.Answers)
+                    if(part.Answers != null)
                     {
-                        var a = new Answer
+                        // new answers for child parts
+                        IList<Answer> answers = new List<Answer>();
+                        foreach (var answer in part.Answers)
                         {
-                            Text = answer.Text,
-                            CurrentPartId = createdPart.Entity.Id
-                        };
-                        var createdAnswer = await _dbContext.Answers.AddAsync(a);
-                        answers.Add(createdAnswer.Entity);
-                    }
-                    await _dbContext.SaveChangesAsync();
+                            var a = new Answer
+                            {
+                                Text = answer.Text,
+                                CurrentPartId = createdPart.Entity.Id
+                            };
+                            var createdAnswer = await _dbContext.Answers.AddAsync(a);
+                            answers.Add(createdAnswer.Entity);
+                        }
+                        await _dbContext.SaveChangesAsync();
 
-                    createdPart.Entity.Answers = answers;
+                        createdPart.Entity.Answers = answers;
+                    }
 
                     await transaction.CommitAsync();
 

@@ -50,7 +50,7 @@ export class BookTreeComponent implements OnInit {
     }) 
 
     this.partForm = this.formBuilder.group({
-      partAudioLink: ['', [Validators.required, Validators.maxLength(500)]],
+      partAudio: ['', [Validators.required, Validators.maxLength(500)]],
       answers: this.formBuilder.array([])
     }) 
   }
@@ -100,8 +100,7 @@ export class BookTreeComponent implements OnInit {
               console.error('Error creating book:', error);
             }
           });
-        }
-        
+        } 
       });
     });
   }
@@ -162,21 +161,18 @@ export class BookTreeComponent implements OnInit {
    const answers = this.partFormAnswers.controls.map(control => control.value);
 
     if (this.selectedFile) {
-      
       const formData = new FormData();
-      formData.append('partAudio', this.selectedFile);
       formData.append('bookId', this.bookId.toString());
+      formData.append('partAudio', this.selectedFile);
+      formData.append('answers', JSON.stringify(answers)); 
       formData.append('parentAnswerId', this.clickedPartId.toString());
-      answers.forEach((answer, index) => {
-        formData.append(`answers[${index}].text`, answer.text);
-      });
 
       this.bookService.addPart(formData).subscribe({
         next: (newPart: ReturnPart) => {
           console.log('part created successfully', newPart);
           this.answerModal.closeModal();
-          this.getBookTree();
           this.partForm.reset();
+          this.getBookTree();
           // here I want to empty answer list because previously I was getting list from last submit
         },
         error: (error) => {
@@ -200,7 +196,6 @@ export class BookTreeComponent implements OnInit {
   }
 
   public addAnswer(answers: FormArray){
-    console.log("FormGroup",answers)
     if(answers.length < 3){
       answers.push(this.formBuilder.group({
         text: ['', Validators.maxLength(40)]

@@ -257,19 +257,53 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("AddBookPart")]
-        public async Task<ActionResult<DTOReturnPart?>> AddBookPart([FromForm] DTOCreatePart part)
+        public async Task<ActionResult<DTOReturnPart?>> AddBookPart()
         {
-            if (ModelState.IsValid)
+            try
             {
-                var newPart = await _booksRepository.AddBookPart(part, Request);
-                //return CreatedAtAction(nameof(GetBook), new { bookId = newBook.Id }, newBook);
-                if(newPart == null)
+                // Read the form data directly from the request
+                var form = await Request.ReadFormAsync();
+
+                // Read the form fields
+                var partAudio = form.Files["partAudio"];
+                var bookIdStr = form["bookId"].FirstOrDefault();
+                var parentAnswerIdStr = form["parentAnswerId"].FirstOrDefault();
+                var answersJson = form["answers"].FirstOrDefault();
+
+                if (partAudio == null || string.IsNullOrEmpty(bookIdStr) || string.IsNullOrEmpty(parentAnswerIdStr))
                 {
-                    return BadRequest("Parent answer does not exists or already has next part");
+                    return BadRequest("Audio file or book is missing");
                 }
-                return Ok(newPart);
+
+                if (!int.TryParse(bookIdStr, out int bookId) || !int.TryParse(parentAnswerIdStr, out int parentAnswerId))
+                {
+                    return BadRequest("Invalid book or parentAnswer");
+                }
+
+                // Deserialize the answers
+                var answers = JsonConvert.DeserializeObject<List<DTOCreateAnswer>>(answersJson);
+
+                var newPart = new DTOCreatePart
+                {
+                    PartAudio = partAudio,
+                    BookId = bookId,
+                    Answers = answers,
+                    ParentAnswerId = parentAnswerId
+                };
+
+                var result = await _booksRepository.AddBookPart(newPart, Request);
+
+                if (result == null)
+                {
+                    return BadRequest("Bad input for book part creation, please try again");
+                }
+
+                return Ok(result);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost("AddBook")]
