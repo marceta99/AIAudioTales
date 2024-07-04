@@ -367,6 +367,8 @@ namespace AIAudioTalesServer.Data.Repositories
                         IList<Answer> answers = new List<Answer>();
                         foreach (var answer in part.Answers)
                         {
+                            if (string.IsNullOrEmpty(answer.Text)) continue; // don't allow empty string to be added as answer
+
                             var a = new Answer
                             {
                                 Text = answer.Text,

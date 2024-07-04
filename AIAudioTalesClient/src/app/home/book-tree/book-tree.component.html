@@ -42,11 +42,11 @@
   </ng-template>
 </app-modal-dialog>
 
-<app-modal-dialog #partModal [title]="'PartInfo'" [isActive]="false">
+<app-modal-dialog #partModal [title]="'PartInfo'" [isActive]="false" (modalClosed)="resetAudioPlayer()">
   <ng-template #content>
     <!-- Content for part modal if needed -->
     <h3>{{clickedPart?.isRoot ? 'Intro' : clickedPart?.parentAnswerText}}</h3>
-    <audio *ngIf="clickedPart?.partAudioLink" controls>
+    <audio #audioPlayer *ngIf="clickedPart?.partAudioLink" controls>
       <source [src]="clickedPart?.partAudioLink" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>

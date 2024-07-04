@@ -25,6 +25,7 @@ export class BookTreeComponent implements OnInit {
   @ViewChild('treeContainer') treeContainer!: ElementRef;
   @ViewChild('answerModal', { static: false }) answerModal!: ModalDialogComponent;
   @ViewChild('partModal', { static: false }) partModal!: ModalDialogComponent;
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   
   constructor(
     private spinnerService: LoadingSpinnerService,
@@ -94,7 +95,10 @@ export class BookTreeComponent implements OnInit {
           this.bookService.getPart(partId).subscribe({
             next: (part: ReturnPart) => {
               this.clickedPart = part;
+              this.resetAudioPlayer();
+              this.cdr.detectChanges(); 
               this.partModal.showModal();
+              console.log("clicked part", this.clickedPart)
             },
             error: (error: any) => {
               console.error('Error creating book:', error);
@@ -103,6 +107,14 @@ export class BookTreeComponent implements OnInit {
         } 
       });
     });
+  }
+
+  public resetAudioPlayer() {
+    if (this.audioPlayer) {
+      this.audioPlayer.nativeElement.pause();
+      this.audioPlayer.nativeElement.currentTime = 0;
+      this.audioPlayer.nativeElement.load(); // Reload the audio element
+    }
   }
 
   private generateTreeHtml(part: PartTree): string {
