@@ -12,7 +12,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<IList<DTOReturnBook>> GetBooksForCategory(int bookCategory);
         Task<bool> UserHasBook(int bookId, int userId);
         Task<bool> IsBasketItem(int bookId, int userId);
-        Task<IList<DTOReturnPurchasedBook>> GetUserBooks(int userId);
+        Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooks(int userId);
         Task<IList<DTOReturnBook>> GetCreatorBooks(int userId);
         Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId);
         Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize);
@@ -20,7 +20,6 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<IList<Category>> GetAllCategories();
         Task<DTOBasket> GetBasket(int userId);
         Task<BasketItem> GetItemById(int itemId);
-        Task<BookPart> GetRootPart(int bookId);
         Task<DTOReturnPart> GetPart(int partId);
         Task<DTOReturnTreePart> GetBookTree(int bookId);
         #endregion

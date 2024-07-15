@@ -30,7 +30,8 @@ export interface PurchasedBook {
   bookCategory: BookCategory,
   imageURL: string,
   purchaseType: PurchaseType,
-  language: Language
+  language: Language,
+  playingPart: ReturnPart
 }
 export interface SearchedBooks {
   searchTerm: string,
@@ -116,6 +117,7 @@ export interface ReturnPart {
   parentAnswerId: number;
   parentAnswerText: string;
   answers: ReturnAnswer[];
+  playingPosition: number
 }
 
 export interface PartTree {

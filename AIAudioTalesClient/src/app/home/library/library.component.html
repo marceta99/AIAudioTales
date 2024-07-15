@@ -1,5 +1,54 @@
-<div *ngFor="let book of books" [routerLink]="['/home/library/player',book.id]">
-  <h1>{{book.title}}</h1>
-  <img [src]="book.imageURL" alt="">
+<div *ngIf="currentBook && currentBook.playingPart">
+  <div class="wrapper">
+    <div class="top-bar">
+      <i><img src="../../../assets/icons/expand_more.svg" alt="expand"></i>
+      <span>Now Playing</span>
+      <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
+    </div>
+    <div class="img-area">
+      <img [src]="currentBook.imageURL" alt="">
+    </div>
+    <div class="song-details">
+      <p class="name">{{ currentBook.title }}</p>
+      <p class="artist">{{ "Kumadio" }}</p>
+    </div>
+    <div class="progress-area">
+      <div class="progress-bar" [style.width]="progress + '%'"></div>
+      <div class="song-timer">
+        <span class="current-time">{{ currentTime }}</span>
+        <span class="max-duration">{{ maxDuration }}</span>
+      </div>
+    </div>
+    <div class="controls">
+      <i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>
+      <i id="prev" (click)="prevSong()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
+      <div class="play-pause" (click)="togglePlayPause()">
+        <i><img [src]="isPlaying ? '../../../assets/icons/pause.svg' : '../../../assets/icons/play_arrow.svg'" alt="play pause"></i>
+      </div>
+      
+      <i id="next" (click)="nextSong()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
+      <i id="more-music" (click)="toggleMusicList()"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>
+    </div>
+    <div class="music-list" [class.show]="showMusicList">
+      <div class="header">
+        <div class="row">
+          <i class="list"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>
+          <span>Book list</span>
+        </div>
+        <i id="close" (click)="toggleMusicList()"><img src="../../../assets/icons/close.svg" alt="close"></i>
+      </div>
+      <ul>
+        <li *ngFor="let book of books; let i = index" [class.playing]="i + 1 === bookIndex" (click)="playSelectedSong(i + 1)">
+          <div class="row">
+            <span>{{ book.title }}</span>
+            <p>{{ "Kumadio" }}</p>
+          </div>
+          <span class="audio-duration">{{ "01:22" }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <audio #audioElement (timeupdate)="updateProgress()" (ended)="nextSong()">
+    <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
+  </audio>
 </div>
-<router-outlet></router-outlet>

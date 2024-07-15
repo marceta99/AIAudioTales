@@ -36,6 +36,7 @@ namespace AIAudioTalesServer.Profiles
                 .ForMember(dest => dest.ParentAnwserId, opt => opt.MapFrom(src => src.ParentAnswer.Id))
                 .ForMember(dest => dest.ParentAnswerText, opt => opt.MapFrom(src => src.ParentAnswer.Text))
                 .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers))
+                .ForMember(dest => dest.PlayingPosition, opt => opt.MapFrom(src => src.PlayingPosition))
                 ;
 
             CreateMap<DTOCreateBook, Book>()

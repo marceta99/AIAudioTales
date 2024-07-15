@@ -30,7 +30,7 @@ export class CreateBookComponent implements OnInit {
     this.bookForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(40)]],
       description: ['', [Validators.required, Validators.maxLength(500)]],
-      imageURL: ['', [Validators.required, Validators.maxLength(500)]],
+      imageURL: ['', [Validators.required]],
       categoryId: [null, [Validators.required]],
     })
   }

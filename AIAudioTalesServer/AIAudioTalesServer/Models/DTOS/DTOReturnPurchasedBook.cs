@@ -10,6 +10,7 @@ namespace AIAudioTalesServer.Models.DTOS
         public string ImageURL { get; set; }
         public Category BookCategory { get; set; }
         public int CategoryId { get; set; }
+        public DTOReturnPart PlayingPart { get; set; }
         public PurchaseType PurchaseType { get; set; }
         public Language Language { get; set; }
     }

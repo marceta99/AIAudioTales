@@ -44,53 +44,31 @@ namespace AIAudioTalesServer.Controllers
         public async Task<IActionResult> PlaceOrder([FromBody] DTOBasket basket)
         {
             try
-            {   // Get the JWT token cookie
-                var jwtTokenCookie = Request.Cookies["X-Access-Token"];
-
-                if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                var user = HttpContext.Items["CurrentUser"] as User;
+                if (user == null)
                 {
-                    // Decode the JWT token
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
-
-                    // Access custom claim "email"
-                    var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-
-                    if (emailClaim != null)
-                    {
-                        var email = emailClaim.Value;
-
-                        var user = await _authRepository.GetUserWithEmail(email);
-                        if (user == null) return BadRequest();
-
-                        var result = await _booksRepository.RemoveUserPendingPurchases(user);
-
-                        if (result)
-                        {
-                            var sessionId = await _paymentRepository.CheckOut(basket);
-
-                            await _booksRepository.PurchaseBooks(user.Id, basket.BasketItems, PurchaseType.BasicPurchase, Language.ENGLISH_USA, sessionId);
-
-                            await _booksRepository.RemoveBasketItems(user.Id);
-
-                            return Ok(new { sessionId = sessionId });
-                        }
-
-                        return BadRequest();
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
+                    return Unauthorized();
                 }
-                else
+
+                var result = await _booksRepository.RemoveUserPendingPurchases(user);
+
+                if (result)
                 {
-                    return BadRequest();
+                    var sessionId = await _paymentRepository.CheckOut(basket);
+
+                    await _booksRepository.PurchaseBooks(user.Id, basket.BasketItems, PurchaseType.BasicPurchase, Language.ENGLISH_USA, sessionId);
+
+                    await _booksRepository.RemoveBasketItems(user.Id);
+
+                    return Ok(new { sessionId = sessionId });
                 }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest("There was a problem");
             }
         }
 
@@ -200,43 +178,20 @@ namespace AIAudioTalesServer.Controllers
         public async Task<IActionResult> CreateSubscribeSession()
         {
             try
-            {   // Get the JWT token cookie
-                var jwtTokenCookie = Request.Cookies["X-Access-Token"];
-
-                if (!string.IsNullOrEmpty(jwtTokenCookie))
+            {
+                var user = HttpContext.Items["CurrentUser"] as User;
+                if (user == null)
                 {
-                    // Decode the JWT token
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
-
-                    // Access custom claim "email"
-                    var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-
-                    if (emailClaim != null)
-                    {
-                        var email = emailClaim.Value;
-
-                        var user = await _authRepository.GetUserWithEmail(email);
-                        if (user == null) return BadRequest();
-
-                        //remove users previous pending subscriptions
-                        await _paymentRepository.RemoveUserPendingSubscriptions(user.Id);
-
-                        var sessionId = await _paymentRepository.GetSubscribeSessionId();
-
-                        await _paymentRepository.AddPendingSubscription(user.Id, sessionId);
-
-                        return Ok(new { sessionId = sessionId });
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
+                    return Unauthorized();
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                //remove users previous pending subscriptions
+                await _paymentRepository.RemoveUserPendingSubscriptions(user.Id);
+
+                var sessionId = await _paymentRepository.GetSubscribeSessionId();
+
+                await _paymentRepository.AddPendingSubscription(user.Id, sessionId);
+
+                return Ok(new { sessionId = sessionId });    
             }
             catch (Exception ex)
             {

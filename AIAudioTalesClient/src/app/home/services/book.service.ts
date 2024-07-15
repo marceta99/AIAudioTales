@@ -46,10 +46,10 @@ export class BookService {
     return this.httpClient.get<boolean>(this.path + "Books/IsBasketItem/"+bookId, {withCredentials: true});
   }
 
-  public getUserBooks():Observable<PurchasedBook[]>{
+  public getPurchasedBooks():Observable<PurchasedBook[]>{
     this.spinnerService.setLoading(true);
 
-    return this.httpClient.get<PurchasedBook[]>(this.path + "Books/GetUserBooks", {withCredentials: true}).pipe(
+    return this.httpClient.get<PurchasedBook[]>(this.path + "Books/GetPurchasedBooks", {withCredentials: true}).pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }

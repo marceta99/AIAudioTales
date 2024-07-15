@@ -7,6 +7,8 @@
         public bool IsRoot { get; set; } = false; 
         public Book Book { get; set; }
         public int BookId { get; set; }
+        public bool IsPlaying { get; set; }
+        public decimal PlayingPosition { get; set; }
         public Answer ParentAnswer { get; set; }
         public IList<Answer> Answers { get; set; }
     }

@@ -64,7 +64,7 @@ namespace AIAudioTalesServer.Data.Repositories
             return true;
         }
 
-        public async Task<IList<DTOReturnPurchasedBook>> GetUserBooks(int userId)
+        public async Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooks(int userId)
         {
             var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success).ToListAsync();
 
@@ -80,13 +80,26 @@ namespace AIAudioTalesServer.Data.Repositories
                     Title = book.Title,
                     ImageURL = book.ImageURL,
                     PurchaseType = pb.PurchaseType,
-                    Language = pb.Language
+                    Language = pb.Language,
+                    PlayingPart = await GetPlayingPart(book.Id)
                 };
 
                 books.Add(purchasedBook);
             }
 
             return books;
+        }
+
+        private async Task<DTOReturnPart> GetPlayingPart(int bookId)
+        {
+            var part = await _dbContext.BookParts
+                .Where(bp => bp.BookId == bookId && bp.IsPlaying == true)
+                .Include(bp => bp.Answers)
+                .Include(bp => bp.ParentAnswer)
+                .FirstOrDefaultAsync();
+
+            var partDto = _mapper.Map<DTOReturnPart>(part);
+            return partDto;
         }
 
         public async Task<IList<DTOReturnBook>> GetCreatorBooks(int userId)
@@ -185,16 +198,6 @@ namespace AIAudioTalesServer.Data.Repositories
             };
 
             return basket;
-        }
-
-        public async Task<BookPart?> GetRootPart(int bookId)
-        {
-            var rootPart = await _dbContext.BookParts
-                .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
-                .Include(bp => bp.Answers)
-                .FirstOrDefaultAsync();
-
-            return rootPart;
         }
 
         public async Task<DTOReturnPart?> GetPart(int partId)
@@ -306,7 +309,8 @@ namespace AIAudioTalesServer.Data.Repositories
             {
                 BookId = root.BookId,
                 IsRoot = true,
-                PartAudioLink = partAudioLink
+                PartAudioLink = partAudioLink,
+                IsPlaying = true // set by default that first playing part is root part 
             };
 
             var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
