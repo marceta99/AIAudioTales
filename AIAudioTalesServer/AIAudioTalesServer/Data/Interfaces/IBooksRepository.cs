@@ -32,6 +32,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<Book> AddBook(DTOCreateBook book, int creatorId);
         Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root, HttpRequest request);
         Task<string> Upload(IFormFile formFile, HttpRequest request);
+        Task<DTOReturnPart?> NextPart(int currentPartId, int nextPartId);
 
         #endregion
 

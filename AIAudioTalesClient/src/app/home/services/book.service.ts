@@ -33,23 +33,23 @@ export class BookService {
     this.spinnerService.setLoading(true);
 
     return this.httpClient.get<Book>
-    (this.path + "Books/GetBook/"+bookId, {withCredentials: true}).pipe(
+    (this.path + "Books/GetBook/"+bookId).pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
 
   public userHasBook(bookId: number):Observable<boolean>{
-    return this.httpClient.get<boolean>(this.path + "Books/UserHasBook/"+bookId, {withCredentials: true});
+    return this.httpClient.get<boolean>(this.path + "Books/UserHasBook/"+bookId);
   }
 
   public isBasketItem(bookId: number):Observable<boolean>{
-    return this.httpClient.get<boolean>(this.path + "Books/IsBasketItem/"+bookId, {withCredentials: true});
+    return this.httpClient.get<boolean>(this.path + "Books/IsBasketItem/"+bookId);
   }
 
   public getPurchasedBooks():Observable<PurchasedBook[]>{
     this.spinnerService.setLoading(true);
 
-    return this.httpClient.get<PurchasedBook[]>(this.path + "Books/GetPurchasedBooks", {withCredentials: true}).pipe(
+    return this.httpClient.get<PurchasedBook[]>(this.path + "Books/GetPurchasedBooks").pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
@@ -57,7 +57,7 @@ export class BookService {
   public getPurchasedBook(bookId: number):Observable<PurchasedBook>{
     this.spinnerService.setLoading(true);
 
-    return this.httpClient.get<PurchasedBook>(this.path + "Books/GetPurchasedBook/"+ bookId, {withCredentials: true}).pipe(
+    return this.httpClient.get<PurchasedBook>(this.path + "Books/GetPurchasedBook/"+ bookId).pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
@@ -68,20 +68,20 @@ export class BookService {
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-    return this.httpClient.get<Book[]>(this.path+"Books/Search", { params, withCredentials : true});
+    return this.httpClient.get<Book[]>(this.path+"Books/Search", { params});
   }
 
   public getSearchHistory(): Observable<string[]> {
-    return this.httpClient.get<string[]>(this.path+"Books/GetSearchHistory", {withCredentials: true});
+    return this.httpClient.get<string[]>(this.path+"Books/GetSearchHistory");
   }
 
   public getAllCategories(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories", {withCredentials: true});
+    return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories");
   }
 
   public getBasket(): void{
     this.httpClient
-               .get<Basket>(this.path+"Books/GetBasket", {withCredentials: true})
+               .get<Basket>(this.path+"Books/GetBasket")
                .subscribe({
                 next: (basket: Basket) => {
                   this.basket.next(basket)
@@ -92,11 +92,11 @@ export class BookService {
   }
 
   public getBookTree(bookId: number): Observable<PartTree> {
-    return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`, {withCredentials: true});
+    return this.httpClient.get<PartTree>(this.path+`Books/GetBookTree/${bookId}`);
   }
 
   public getPart(partId: number): Observable<ReturnPart> {
-    return this.httpClient.get<ReturnPart>(this.path+`Books/GetPart/${partId}`, {withCredentials: true});
+    return this.httpClient.get<ReturnPart>(this.path+`Books/GetPart/${partId}`);
   }
 
   public getCreatorBooks(): Observable<Book[]> {
@@ -114,29 +114,37 @@ export class BookService {
   public saveSearchTerm(searchTerm: string){
     const params = new HttpParams().set('searchTerm', searchTerm);
 
-    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params, withCredentials: true}).subscribe((res:any)=>console.log(res));
+    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params}).subscribe((res:any)=>console.log(res));
   }
 
   public addBasketItem(bookId: number): Observable<Basket>{
     const params = new HttpParams().set('bookId', bookId);
-    return this.httpClient.post<Basket>(this.path+"Books/AddBasketItem", {},{ params, withCredentials : true});
+    return this.httpClient.post<Basket>(this.path+"Books/AddBasketItem", {},{ params });
   }
 
   public createBook(newBook: CreateBook): Observable<number>{
-    return this.httpClient.post<number>(this.path + "Books/AddBook", newBook, {withCredentials: true});
+    return this.httpClient.post<number>(this.path + "Books/AddBook", newBook);
   }
 
   public addRootPart(formData: FormData): Observable<ReturnPart>{
     return this.httpClient.post<ReturnPart>(this.path + "Books/AddRootPart", formData, { withCredentials: true});
   }
 
-  public addPart(formData: FormData): Observable<ReturnPart>{
+  public addBookPart(formData: FormData): Observable<ReturnPart>{
     return this.httpClient.post<ReturnPart>(this.path + "Books/AddBookPart", formData, {withCredentials: true});
   }
 
   //#endregion
 
   //#region PUT
+
+  public nextPart(currentPartId: number, nextPartId: number): Observable<ReturnPart>{
+    const partDto = {
+      "currentPartId": currentPartId,
+      "nextPartId": nextPartId
+    }
+    return this.httpClient.patch<ReturnPart>(this.path + "Books/NextPart", partDto);
+  }
 
   //#endregion
 

@@ -179,7 +179,7 @@ export class BookTreeComponent implements OnInit {
       formData.append('answers', JSON.stringify(answers)); 
       formData.append('parentAnswerId', this.clickedPartId.toString());
 
-      this.bookService.addPart(formData).subscribe({
+      this.bookService.addBookPart(formData).subscribe({
         next: (newPart: ReturnPart) => {
           console.log('part created successfully', newPart);
           this.answerModal.closeModal();

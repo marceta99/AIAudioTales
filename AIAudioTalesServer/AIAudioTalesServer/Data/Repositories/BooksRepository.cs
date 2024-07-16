@@ -213,6 +213,7 @@ namespace AIAudioTalesServer.Data.Repositories
             var partDto = _mapper.Map<DTOReturnPart>(part);
             return partDto;
         }
+
         public async Task<DTOReturnTreePart> GetBookTree(int bookId)
         {
             var rootPart = await _dbContext.BookParts
@@ -497,7 +498,7 @@ namespace AIAudioTalesServer.Data.Repositories
 
         #endregion
 
-        #region PUT
+        #region PATCH
         public async Task<bool> UpdatePurchaseStatus(string sessionId)
         {
             try
@@ -517,6 +518,32 @@ namespace AIAudioTalesServer.Data.Repositories
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return false; // Indicate failure
             }
+        }
+
+        public async Task<DTOReturnPart?> NextPart(int currentPartId, int nextPartId)
+        {
+
+            var currentPart = await _dbContext.BookParts
+                .Where(bp => bp.Id == currentPartId)
+                .Include(bp => bp.Answers)
+                .Include(bp => bp.ParentAnswer)
+                .FirstOrDefaultAsync();
+
+            var nextPart = await _dbContext.BookParts
+                .Where(bp => bp.Id == nextPartId)
+                .Include(bp => bp.Answers)
+                .Include(bp => bp.ParentAnswer)
+                .FirstOrDefaultAsync();
+
+            if (currentPart == null || nextPart == null) return null;
+
+            // update current playing part property isPlaying to false and set nextPart isPlaying property to true
+            currentPart.IsPlaying = false;
+            nextPart.IsPlaying = true;
+            await _dbContext.SaveChangesAsync();
+
+            var partDto = _mapper.Map<DTOReturnPart>(nextPart);
+            return partDto;
         }
 
         #endregion

@@ -12,7 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const isFormDataRequest = request.url.includes('AddRootPart') || request.url.includes('AddPart'); // do not set content-type to application/json for request where sending formData, because in that situations is automaticaly multipart/form-data
+    const isFormDataRequest = request.url.includes('AddRootPart') || request.url.includes('AddBookPart'); // do not set content-type to application/json for request where sending formData, because in that situations is automaticaly multipart/form-data
 
     if(!isFormDataRequest) {
       const headers = new HttpHeaders().set('Content-type', 'application/json');

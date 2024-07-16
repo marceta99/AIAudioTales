@@ -96,13 +96,13 @@ namespace AIAudioTalesServer.Controllers
         [HttpGet("GetPurchasedBooks")]
         public async Task<ActionResult<IList<DTOReturnPurchasedBook>>> GetPurchasedBooks()
         {
-           /* var user = HttpContext.Items["CurrentUser"] as User;
+            var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null)
             {
                 return Unauthorized();
-            }*/
+            }
 
-            var books = await _booksRepository.GetPurchasedBooks(2);
+            var books = await _booksRepository.GetPurchasedBooks(user.Id);
 
             return Ok(books);
         }
@@ -360,7 +360,19 @@ namespace AIAudioTalesServer.Controllers
         #endregion
 
         #region PATCH
+        
+        [HttpPatch("NextPart")]
+        public async Task<ActionResult<DTOReturnPart>> NextPart(DTOReturnNextPart nextPart)
+        {
+            var part = await _booksRepository.NextPart(nextPart.CurrentPartId, nextPart.NextPartId);
 
+            if (part != null)
+            {
+                return Ok(part);
+            }
+            return BadRequest("There is no part with that id");
+        }
+        
         #endregion
 
         #region DELETE

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { PurchasedBook } from 'src/app/entities';
+import { PurchasedBook, ReturnPart } from 'src/app/entities';
 
 @Component({
   selector: 'app-library',
@@ -14,6 +14,7 @@ export class LibraryComponent implements OnInit{
   currentBook!: PurchasedBook;
   bookIndex = 1;
   isPlaying = false;
+  questionsActive = false;
   showMusicList = true;
   progress = 0;
   currentTime = '0:00';
@@ -31,7 +32,7 @@ export class LibraryComponent implements OnInit{
         // Detect changes to ensure ViewChild audioElement is updated
         this.cdr.detectChanges();
 
-        this.loadMusic(this.books.length)
+        this.loadBook(this.books.length)
     },
       error: error => {
         console.error('There was an error!', error);
@@ -39,7 +40,7 @@ export class LibraryComponent implements OnInit{
     })
   }
 
-  loadMusic(index: number) {
+  loadBook(index: number) {
     this.currentBook = this.books[index - 1];
     this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
     this.updateDuration();
@@ -54,23 +55,23 @@ export class LibraryComponent implements OnInit{
     this.isPlaying = !this.isPlaying;
   }
 
-  nextSong() {
+  nextBook() {
     this.bookIndex++;
     if (this.bookIndex > this.books.length) this.bookIndex = 1;
-    this.loadMusic(this.bookIndex);
+    this.loadBook(this.bookIndex);
     if (this.isPlaying) this.audioElement.nativeElement.play();
   }
 
-  prevSong() {
+  prevBook() {
     this.bookIndex--;
     if (this.bookIndex < 1) this.bookIndex = this.books.length;
-    this.loadMusic(this.bookIndex);
+    this.loadBook(this.bookIndex);
     if (this.isPlaying) this.audioElement.nativeElement.play();
   }
 
   playSelectedSong(index: number) {
     this.bookIndex = index;
-    this.loadMusic(this.bookIndex);
+    this.loadBook(this.bookIndex);
     this.audioElement.nativeElement.play();
     this.isPlaying = true;
   }
@@ -98,5 +99,28 @@ export class LibraryComponent implements OnInit{
 
   toggleMusicList() {
     this.showMusicList = !this.showMusicList;
+  }
+
+  nextPart(nextPlayingPartId: number | null){
+    const currentPartId = this.currentBook.playingPart.id;
+    const nextPartId = nextPlayingPartId as number;
+
+    this.bookService.nextPart(currentPartId, nextPartId).subscribe((playingPart: ReturnPart)=>{
+      this.questionsActive = false;
+      this.currentBook.playingPart = playingPart;
+      this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
+      this.updateDuration();
+    })
+  }
+
+  loadQuestions(): void{
+    if(this.currentBook.playingPart.answers){
+      this.isPlaying = false;
+      this.questionsActive = true;
+    }else {
+      //if there is no more answers it means that user have reached the end of that book part and we should play next book
+      this.nextBook();
+      //this.bookService.startBookAgain()
+    }
   }
 }

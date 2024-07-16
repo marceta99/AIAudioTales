@@ -244,3 +244,16 @@ ul li.playing{
   pointer-events: none;
   color: var(--violet);
 }
+
+.question-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.question{
+  margin: 10;
+  height: 50px;
+  width: 50px;
+}
