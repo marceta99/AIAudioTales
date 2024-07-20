@@ -7,6 +7,7 @@ using AIAudioTalesServer.Models.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using static System.Reflection.Metadata.BlobBuilder;
 using Google.Apis.Logging;
+using System.Net;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -66,7 +67,10 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooks(int userId)
         {
-            var purchasedBooks = await _dbContext.PurchasedBooks.Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success).ToListAsync();
+            var purchasedBooks = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Include(pb=> pb.PlayingPart).ThenInclude(bp => bp.Answers)
+                .ToListAsync();
 
             List<DTOReturnPurchasedBook> books = new List<DTOReturnPurchasedBook>();
 
@@ -81,25 +85,16 @@ namespace AIAudioTalesServer.Data.Repositories
                     ImageURL = book.ImageURL,
                     PurchaseType = pb.PurchaseType,
                     Language = pb.Language,
-                    PlayingPart = await GetPlayingPart(book.Id)
+                    PlayingPart = _mapper.Map<DTOReturnPart>(pb.PlayingPart),
+                    PlayingPosition = pb.PlayingPosition,
+                    IsBookPlaying = pb.IsBookPlaying,
+                    QuestionsActive = pb.QuestionsActive
                 };
 
                 books.Add(purchasedBook);
             }
 
             return books;
-        }
-
-        private async Task<DTOReturnPart> GetPlayingPart(int bookId)
-        {
-            var part = await _dbContext.BookParts
-                .Where(bp => bp.BookId == bookId && bp.IsPlaying == true)
-                .Include(bp => bp.Answers)
-                .Include(bp => bp.ParentAnswer)
-                .FirstOrDefaultAsync();
-
-            var partDto = _mapper.Map<DTOReturnPart>(part);
-            return partDto;
         }
 
         public async Task<IList<DTOReturnBook>> GetCreatorBooks(int userId)
@@ -310,8 +305,7 @@ namespace AIAudioTalesServer.Data.Repositories
             {
                 BookId = root.BookId,
                 IsRoot = true,
-                PartAudioLink = partAudioLink,
-                IsPlaying = true // set by default that first playing part is root part 
+                PartAudioLink = partAudioLink
             };
 
             var createdRootPart = await _dbContext.BookParts.AddAsync(bookPart);
@@ -430,13 +424,24 @@ namespace AIAudioTalesServer.Data.Repositories
                     PurchaseType = purchaseType,
                     Language = language,
                     PurchaseStatus = PurchaseStatus.Pending,
-                    SessionId = sessionId
+                    SessionId = sessionId,
+                    PlayingPartId = await GetRootPart(basketItem.BookId),
+                    PlayingPosition = 0,
+                    IsBookPlaying = false,
+                    QuestionsActive = false
                 };
                 purchasedBooks.Add(pb);
             }
             
             await _dbContext.PurchasedBooks.AddRangeAsync(purchasedBooks);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task<int> GetRootPart(int bookId)
+        {
+            var rootPart = await _dbContext.BookParts.Where(p => p.BookId ==  bookId && p.IsRoot == true).FirstOrDefaultAsync();
+
+            return rootPart.Id;
         }
 
         public async Task SaveSearchTerm(int userId, string searchTerm)
@@ -520,31 +525,106 @@ namespace AIAudioTalesServer.Data.Repositories
             }
         }
 
-        public async Task<DTOReturnPart?> NextPart(int currentPartId, int nextPartId)
+        public async Task<DTOReturnPurchasedBook?> NextPart(DTOUpdateNextPart nextPart, int userId)
         {
-
-            var currentPart = await _dbContext.BookParts
-                .Where(bp => bp.Id == currentPartId)
-                .Include(bp => bp.Answers)
-                .Include(bp => bp.ParentAnswer)
+            var pb = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.BookId == nextPart.BookId && pb.PurchaseStatus == PurchaseStatus.Success)
                 .FirstOrDefaultAsync();
 
-            var nextPart = await _dbContext.BookParts
-                .Where(bp => bp.Id == nextPartId)
-                .Include(bp => bp.Answers)
-                .Include(bp => bp.ParentAnswer)
-                .FirstOrDefaultAsync();
+            if (pb == null) return null;
 
-            if (currentPart == null || nextPart == null) return null;
+            pb.PlayingPartId = nextPart.NextPartId;
+            pb.PlayingPosition = 0;
+            pb.QuestionsActive = false;
 
-            // update current playing part property isPlaying to false and set nextPart isPlaying property to true
-            currentPart.IsPlaying = false;
-            nextPart.IsPlaying = true;
             await _dbContext.SaveChangesAsync();
 
-            var partDto = _mapper.Map<DTOReturnPart>(nextPart);
-            return partDto;
+            var playingPart = await _dbContext.BookParts.Where(bp => bp.Id == pb.PlayingPartId).FirstOrDefaultAsync();
+            var book = await GetBook(pb.BookId); 
+            var purchasedBook = new DTOReturnPurchasedBook
+            {
+                Id = book.Id,
+                Description = book.Description,
+                Title = book.Title,
+                ImageURL = book.ImageURL,
+                PurchaseType = pb.PurchaseType,
+                Language = pb.Language,
+                PlayingPart = _mapper.Map<DTOReturnPart>(playingPart),
+                PlayingPosition = pb.PlayingPosition,
+                IsBookPlaying = pb.IsBookPlaying,
+                QuestionsActive = pb.QuestionsActive
+            };
+
+            return purchasedBook;
         }
+
+        public async Task<int> ActivateQuestions(int bookId, int userId)
+        {
+            var purchasedBook = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.BookId == bookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .FirstOrDefaultAsync();
+
+            if (purchasedBook == null) return 0;
+
+            purchasedBook.QuestionsActive = true;
+            await _dbContext.SaveChangesAsync();
+
+            return 1;
+        }
+
+        public async Task<bool> UpdateProgress(DTOUpdateProgress updateProgress, int userId)
+        {
+            var purchasedBook = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.BookId == updateProgress.BookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .FirstOrDefaultAsync();
+
+            if (purchasedBook == null) return false;
+
+            purchasedBook.PlayingPosition = updateProgress.PlayingPosition;
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<DTOReturnPurchasedBook?> StartBookAgain(int bookId, int userId)
+        {
+            var pb = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.BookId == bookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .FirstOrDefaultAsync();
+
+            if (pb == null) return null;
+
+            //set PlayingPart back to root part
+            var rootPart = await _dbContext.BookParts
+                .Where(bp => bp.BookId == pb.BookId && bp.IsRoot == true)
+                .Include(bp=>bp.Answers)
+                .FirstOrDefaultAsync();
+            if (rootPart == null) return null;
+
+            pb.PlayingPartId = rootPart.Id;
+            pb.PlayingPosition = 0;
+            pb.IsBookPlaying = false;
+            await _dbContext.SaveChangesAsync();
+
+
+            var book = await GetBook(pb.BookId);
+            var purchasedBook = new DTOReturnPurchasedBook
+            {
+                Id = book.Id,
+                Description = book.Description,
+                Title = book.Title,
+                ImageURL = book.ImageURL,
+                PurchaseType = pb.PurchaseType,
+                Language = pb.Language,
+                PlayingPart = _mapper.Map<DTOReturnPart>(rootPart),
+                PlayingPosition = pb.PlayingPosition,
+                IsBookPlaying = pb.IsBookPlaying,
+                QuestionsActive = pb.QuestionsActive
+            };
+
+            return purchasedBook;
+        }
+
 
         #endregion
 

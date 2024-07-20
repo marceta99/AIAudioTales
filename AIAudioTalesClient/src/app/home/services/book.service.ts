@@ -136,15 +136,29 @@ export class BookService {
 
   //#endregion
 
-  //#region PUT
+  //#region PATCH
 
-  public nextPart(currentPartId: number, nextPartId: number): Observable<ReturnPart>{
-    const partDto = {
-      "currentPartId": currentPartId,
+  public nextPart(bookId: number, nextPartId: number): Observable<PurchasedBook>{
+    const nextPart = {
+      "bookId": bookId,
       "nextPartId": nextPartId
     }
-    return this.httpClient.patch<ReturnPart>(this.path + "Books/NextPart", partDto);
+    return this.httpClient.patch<PurchasedBook>(this.path + "Books/NextPart", nextPart);
   }
+
+  public activateQuestions(bookId: number): Observable<void>{
+    return this.httpClient.patch<void>(this.path + "Books/ActivateQuestions/"+bookId, {});
+  }
+
+  public updateProgress(bookId: number, playingPosition: number): Observable<void> {
+    const progress = { bookId, playingPosition};
+    return this.httpClient.patch<void>(this.path + "Books/UpdateProgress", progress);
+  }
+
+  public startBookAgain(bookId: number): Observable<PurchasedBook> {
+    return this.httpClient.patch<PurchasedBook>(this.path + "Books/StartBookAgain/"+bookId, {});
+  }
+  
 
   //#endregion
 

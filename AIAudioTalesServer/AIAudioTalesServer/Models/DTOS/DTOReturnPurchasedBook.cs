@@ -11,6 +11,9 @@ namespace AIAudioTalesServer.Models.DTOS
         public Category BookCategory { get; set; }
         public int CategoryId { get; set; }
         public DTOReturnPart PlayingPart { get; set; }
+        public decimal PlayingPosition { get; set; }
+        public bool IsBookPlaying { get; set; }
+        public bool QuestionsActive { get; set; }
         public PurchaseType PurchaseType { get; set; }
         public Language Language { get; set; }
     }

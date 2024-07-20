@@ -158,6 +158,12 @@ namespace AIAudioTalesServer.Data
             .HasForeignKey(pb => pb.BookId)
             .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<PurchasedBooks>()
+            .HasOne<BookPart>(pb => pb.PlayingPart)
+            .WithMany(p => p.PurchasedBooks)
+            .HasForeignKey(pb => pb.PlayingPartId)
+            .OnDelete(DeleteBehavior.NoAction);
+
             #endregion
 
             #region RefreshToken

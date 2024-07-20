@@ -32,13 +32,25 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<Book> AddBook(DTOCreateBook book, int creatorId);
         Task<DTOReturnPart?> AddRootPart(DTOCreateRootPart root, HttpRequest request);
         Task<string> Upload(IFormFile formFile, HttpRequest request);
-        Task<DTOReturnPart?> NextPart(int currentPartId, int nextPartId);
+
+        #endregion
+
+        #region PATCH
+
+        Task<bool> UpdatePurchaseStatus(string sessionId);
+
+        Task<DTOReturnPurchasedBook?> NextPart(DTOUpdateNextPart nextPart, int userId);
+
+        Task<int> ActivateQuestions(int bookId, int userId);
+
+        Task<bool> UpdateProgress(DTOUpdateProgress updateProgress, int userId);
+
+        Task<DTOReturnPurchasedBook?> StartBookAgain(int bookId, int userId);
 
         #endregion
 
         #region DELETE
         Task RemoveBasketItem(BasketItem item);
-        Task<bool> UpdatePurchaseStatus(string sessionId);
         Task<bool> RemoveCanceledPurchase(string sessionId);
         Task RemoveBasketItems(int userId);
         Task<bool> RemoveUserPendingPurchases(User user);

@@ -360,19 +360,79 @@ namespace AIAudioTalesServer.Controllers
         #endregion
 
         #region PATCH
-        
-        [HttpPatch("NextPart")]
-        public async Task<ActionResult<DTOReturnPart>> NextPart(DTOReturnNextPart nextPart)
-        {
-            var part = await _booksRepository.NextPart(nextPart.CurrentPartId, nextPart.NextPartId);
 
-            if (part != null)
+        [HttpPatch("NextPart")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart(DTOUpdateNextPart nextPart)
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
             {
-                return Ok(part);
+                return Unauthorized();
+            }
+
+            var purchasedBook = await _booksRepository.NextPart(nextPart, user.Id);
+
+            if (purchasedBook != null)
+            {
+                return Ok(purchasedBook);
             }
             return BadRequest("There is no part with that id");
         }
-        
+
+        [HttpPatch("ActivateQuestions/{bookId}")]
+        public async Task<ActionResult> ActivateQuestions(int bookId)
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _booksRepository.ActivateQuestions(bookId, user.Id);
+
+            if (result != 0)
+            {
+                return Ok("Questions activated");
+            }
+            return BadRequest("There was a problem with activating questions");
+        }
+
+        [HttpPatch("UpdateProgress")]
+        public async Task<ActionResult> UpdateProgress(DTOUpdateProgress progress)
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _booksRepository.UpdateProgress(progress, user.Id);
+
+            if (result == false)
+            {
+                return BadRequest("There was a problem with updating progress");
+            }
+            return Ok();
+        }
+
+        [HttpPatch("StartBookAgain/{bookId}")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> StartBookAgain(int bookId)
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var result = await _booksRepository.StartBookAgain(bookId, user.Id);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("There was a problem with updating progress");
+        }
+
         #endregion
 
         #region DELETE

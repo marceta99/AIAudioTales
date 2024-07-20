@@ -8,7 +8,6 @@
         public int BookId { get; set; }
         public int ParentAnwserId { get; set; }
         public string ParentAnswerText { get; set; }
-        public decimal PlayingPosition { get; set; }
         public IList<DTOReturnAnswer> Answers { get; set; }
     }
 }
