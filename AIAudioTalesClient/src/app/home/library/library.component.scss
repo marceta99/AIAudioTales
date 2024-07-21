@@ -257,3 +257,54 @@ ul li.playing{
   height: 50px;
   width: 50px;
 }
+
+.pulse{
+  background: #FFBE0B;
+  border-radius: 50%;
+  animation: pulse 2s linear infinite;
+}
+
+.pulse:before, .pulse:after{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.pulse::before{
+  width: 35px;
+  height: 5.5px;
+}
+
+.pulse::after{
+  width: 35px;
+  height: 55px;
+}
+
+@keyframes pulse
+{
+  0%
+  {
+    box-shadow: 0 0 0 0 rgba(255, 190, 11, 0.6);
+  }
+  5%
+  {
+    transform: scale(1.40);
+  }
+  25%
+  {
+    transform: scale(1);
+  }
+  70%
+  {
+    box-shadow: 0 0 0 50px rgba(255, 190, 11, 0);
+  }
+  100%
+  {
+    box-shadow: 0 0 0 100px rgba(255, 190, 11, 0);
+  }
+}

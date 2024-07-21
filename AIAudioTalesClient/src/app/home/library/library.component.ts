@@ -189,4 +189,12 @@ export class LibraryComponent implements OnInit{
       error: (error) => console.error('Error updating progress', error)
     });
   }
+
+  getPlayPauseIcon(): string {
+    if (this.questionsActive) {
+      return '../../../assets/icons/mic.svg';
+    }
+    return this.isPlaying ? '../../../assets/icons/pause.svg' : '../../../assets/icons/play_arrow.svg';
+  }
+  
 }
