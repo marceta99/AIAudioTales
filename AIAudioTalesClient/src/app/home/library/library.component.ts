@@ -74,6 +74,7 @@ export class LibraryComponent implements OnInit{
       this.questionsActive = true;
       this.isPlaying = false;
     }else{
+      this.questionsActive = false;
       this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
       this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
       this.updateProgress();

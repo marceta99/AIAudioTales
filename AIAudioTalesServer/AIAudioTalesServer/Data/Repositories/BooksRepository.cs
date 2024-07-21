@@ -539,7 +539,13 @@ namespace AIAudioTalesServer.Data.Repositories
 
             await _dbContext.SaveChangesAsync();
 
-            var playingPart = await _dbContext.BookParts.Where(bp => bp.Id == pb.PlayingPartId).FirstOrDefaultAsync();
+            var playingPart = await _dbContext.BookParts
+                .Where(bp => bp.Id == pb.PlayingPartId)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+            
+            if (playingPart == null) return null;
+
             var book = await GetBook(pb.BookId); 
             var purchasedBook = new DTOReturnPurchasedBook
             {
