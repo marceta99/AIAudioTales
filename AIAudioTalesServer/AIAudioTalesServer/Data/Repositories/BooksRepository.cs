@@ -581,6 +581,19 @@ namespace AIAudioTalesServer.Data.Repositories
             if (purchasedBook == null) return false;
 
             purchasedBook.PlayingPosition = updateProgress.PlayingPosition;
+
+            //if there is next book to be played set isBookPlaying to false to previous book and to true to next book
+            if (updateProgress.NextBookId.HasValue)
+            {
+                purchasedBook.IsBookPlaying = false;
+
+                var nextBook = await _dbContext.PurchasedBooks
+                    .Where(pb => pb.UserId == userId && pb.BookId == updateProgress.NextBookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                    .FirstOrDefaultAsync();
+
+                if (nextBook != null) nextBook.IsBookPlaying = true;
+            }
+
             await _dbContext.SaveChangesAsync();
 
             return true;

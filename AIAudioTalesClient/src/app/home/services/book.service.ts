@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, finalize, tap } from 'rxjs';
-import { Basket, BasketItem, Book, ReturnPart, Category, CreateBook, CreatePart, CreateRootPart, PartTree, Purchase, PurchasedBook, SearchedBooks, Story } from 'src/app/entities';
+import { BehaviorSubject, Observable, Subject, finalize } from 'rxjs';
+import { Basket, Book, ReturnPart, Category, CreateBook, PartTree, Purchase, PurchasedBook, SearchedBooks } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -150,8 +150,8 @@ export class BookService {
     return this.httpClient.patch<void>(this.path + "Books/ActivateQuestions/"+bookId, {});
   }
 
-  public updateProgress(bookId: number, playingPosition: number): Observable<void> {
-    const progress = { bookId, playingPosition};
+  public updateProgress(bookId: number, playingPosition: number, nextBookId?: number): Observable<void> {
+    const progress = nextBookId ? { bookId, playingPosition, nextBookId}: {bookId, playingPosition};
     return this.httpClient.patch<void>(this.path + "Books/UpdateProgress", progress);
   }
 

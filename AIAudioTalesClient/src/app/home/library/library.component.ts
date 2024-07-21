@@ -28,15 +28,19 @@ export class LibraryComponent implements OnInit{
         this.books = books;  
         this.setCurrentBook();
          
-        // Detect changes to ensure ViewChild audioElement is updated
-        this.cdr.detectChanges();
-        this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
-        this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
-        this.updateDuration();
-    },
+        if(this.currentBook.questionsActive){
+          this.questionsActive = true;
+        }else{
+          // Detect changes to ensure ViewChild audioElement is updated
+          this.cdr.detectChanges();
+          this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
+          this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
+          this.updateProgress();
+        }
+      },
       error: error => {
-        console.error('There was an error!', error);
-    }
+          console.error('There was an error!', error);
+      }
     })
   }
 
@@ -65,9 +69,16 @@ export class LibraryComponent implements OnInit{
 
   loadBook(index: number) {
     this.currentBook = this.books[index];
-    this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
-    this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
-    this.updateDuration();
+
+    if(this.currentBook.questionsActive){
+      this.questionsActive = true;
+      this.isPlaying = false;
+    }else{
+      this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
+      this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
+      this.updateProgress();
+      if (this.isPlaying) this.audioElement.nativeElement.play();
+    }
   }
 
   togglePlayPause() {
@@ -81,33 +92,27 @@ export class LibraryComponent implements OnInit{
   }
 
   nextBook() {
-    this.saveProgress();
+    this.saveProgress(this.books[this.bookIndex + 1 > this.books.length-1 ? 0 : this.bookIndex + 1].id); // save progress of current book
 
     this.bookIndex++;
     if (this.bookIndex > this.books.length - 1) this.bookIndex = 0;
     this.loadBook(this.bookIndex);
-    this.updateProgress();
-    if (this.isPlaying) this.audioElement.nativeElement.play();
   }
 
   prevBook() {
-    this.saveProgress(); //save progress of currentBook
+    this.saveProgress(this.books[this.bookIndex - 1 < 0 ? this.books.length -1 : this.bookIndex - 1].id); //save progress of currentBook
 
     this.bookIndex--;
     if (this.bookIndex < 0) this.bookIndex = this.books.length -1;
     this.loadBook(this.bookIndex);
-    this.updateProgress();
-    if (this.isPlaying) this.audioElement.nativeElement.play();
   }
 
   playSelectedSong(index: number) {
-    this.saveProgress(); //save progress of last play
+    this.saveProgress(this.books[index].id); //save progress of last play
 
     console.log("play selected song index", index)
     this.bookIndex = index;
     this.loadBook(this.bookIndex);
-    this.audioElement.nativeElement.play();
-    this.isPlaying = true;
   }
 
   updateProgress() {
@@ -117,12 +122,6 @@ export class LibraryComponent implements OnInit{
     console.log("update progress", this.progress)
     this.currentTime = this.formatTime(current);
     this.maxDuration = this.formatTime(duration);
-  }
-
-  updateDuration() {
-    this.audioElement.nativeElement.onloadedmetadata = () => {
-      this.maxDuration = this.formatTime(this.audioElement.nativeElement.duration);
-    }
   }
 
   formatTime(seconds: number) {
@@ -171,19 +170,18 @@ export class LibraryComponent implements OnInit{
           this.bookIndex++;
           if (this.bookIndex > this.books.length - 1) this.bookIndex = 0;
           this.loadBook(this.bookIndex);
-          if (this.isPlaying) this.audioElement.nativeElement.play();
         },
         error: (error) => console.error('Error updating progress', error)
       });
     }
   }
 
-  saveProgress(): void{
+  saveProgress(nextBookId?: number): void{
     const currentTimeSec = this.audioElement.nativeElement.currentTime;
     const bookId = this.currentBook.id;
     this.currentBook.playingPosition = currentTimeSec; 
 
-    this.bookService.updateProgress(bookId, currentTimeSec).subscribe({
+    this.bookService.updateProgress(bookId, currentTimeSec, nextBookId).subscribe({
       next: () => { 
         console.log('Progress updated successfully')
       },

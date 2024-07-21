@@ -2,22 +2,22 @@
   <div class="wrapper">
   
     <div class="top-bar">
-      <i><img src="../../../assets/icons/expand_more.svg" alt="expand"></i>
+      <i><img [src]="showMusicList ? '../../../assets/icons/expand_more.svg' : '../../../assets/icons/expand_less.svg'"alt="expand"  (click)="toggleMusicList()"></i>
       <span>Now Playing</span>
       <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
+    </div>
+      
+    <div class="img-area">
+      <img [src]="currentBook.imageURL" alt="">
+    </div>
+
+    <div class="song-details">
+      <p class="name">{{ currentBook.title }}</p>
+      <p class="artist">{{ "Kumadio" }}</p>
     </div>
 
     <div class="player-container" *ngIf="!questionsActive;else questions">
       
-      <div class="img-area">
-        <img [src]="currentBook.imageURL" alt="">
-      </div>
-  
-      <div class="song-details">
-        <p class="name">{{ currentBook.title }}</p>
-        <p class="artist">{{ "Kumadio" }}</p>
-      </div>
-  
       <div class="progress-area">
         <div class="progress-bar" [style.width]="progress + '%'"></div>
         <div class="song-timer">
@@ -35,9 +35,9 @@
         <i id="next" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
         <i id="more-music" (click)="toggleMusicList()"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>
       </div>
-
+      
     </div>
-
+  
     <ng-template #questions>
       <div class="question-container">
         <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
