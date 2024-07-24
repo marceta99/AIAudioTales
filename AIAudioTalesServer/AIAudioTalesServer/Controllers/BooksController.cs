@@ -392,7 +392,7 @@ namespace AIAudioTalesServer.Controllers
 
             if (result != 0)
             {
-                return Ok("Questions activated");
+                return Ok();
             }
             return BadRequest("There was a problem with activating questions");
         }
