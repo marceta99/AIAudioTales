@@ -16,7 +16,7 @@
       <p class="artist">{{ "Kumadio" }}</p>
     </div>
     
-    <div class="progress-area" *ngIf="!questionsActive;else questions">
+    <div class="progress-area" *ngIf="!questionsActive;else questions" (click)="updatePlayingTime($event)" #progressArea>
       <div class="progress-bar" [style.width]="progress + '%'"></div>
       <div class="song-timer">
         <span class="current-time">{{ currentTime }}</span>

@@ -19,6 +19,7 @@ export class LibraryComponent implements OnInit, OnDestroy{
   maxDuration = '0:00';
   recognition: any;
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;
+  @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
 
   constructor(private bookService: BookService, private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
@@ -46,6 +47,10 @@ export class LibraryComponent implements OnInit, OnDestroy{
           console.error('There was an error!', error);
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.stopRecognition();
   }
 
   setCurrentBook(): void{
@@ -261,7 +266,13 @@ export class LibraryComponent implements OnInit, OnDestroy{
     }
   }
 
-  ngOnDestroy() {
-    this.stopRecognition();
+  updatePlayingTime(event: MouseEvent): void {
+    const progressWidth = this.progressArea.nativeElement.clientWidth;
+    const clickedOffsetX = event.offsetX;
+    const songDuration = this.audioElement.nativeElement.duration;
+
+    this.audioElement.nativeElement.currentTime = (clickedOffsetX / progressWidth) * songDuration;
+    
   }
+  
 }
