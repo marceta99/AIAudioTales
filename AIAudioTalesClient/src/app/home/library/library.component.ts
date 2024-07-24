@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { PurchasedBook } from 'src/app/entities';
 
@@ -7,7 +7,7 @@ import { PurchasedBook } from 'src/app/entities';
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss']
 })
-export class LibraryComponent implements OnInit{
+export class LibraryComponent implements OnInit, OnDestroy{
   books!: PurchasedBook[];
   currentBook!: PurchasedBook;
   bookIndex = 0;
@@ -17,11 +17,14 @@ export class LibraryComponent implements OnInit{
   progress = 0;
   currentTime = '0:00';
   maxDuration = '0:00';
+  recognition: any;
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;
 
-  constructor(private bookService: BookService, private cdr: ChangeDetectorRef) {}
+  constructor(private bookService: BookService, private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
   ngOnInit(): void {
+    this.initializeSpeechRecognition();
+
     this.bookService.getPurchasedBooks().subscribe({
       next: (books : PurchasedBook[] ) => {
         console.log(books);
@@ -30,6 +33,7 @@ export class LibraryComponent implements OnInit{
          
         if(this.currentBook.questionsActive){
           this.questionsActive = true;
+          this.startRecognition();
         }else{
           // Detect changes to ensure ViewChild audioElement is updated
           this.cdr.detectChanges();
@@ -73,6 +77,7 @@ export class LibraryComponent implements OnInit{
     if(this.currentBook.questionsActive){
       this.questionsActive = true;
       this.isPlaying = false;
+      this.startRecognition();
     }else{
       this.questionsActive = false;
       this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
@@ -83,13 +88,16 @@ export class LibraryComponent implements OnInit{
   }
 
   togglePlayPause() {
-    if (this.isPlaying) {
-      this.audioElement.nativeElement.pause();
-      this.saveProgress(); // save playing progress when pause is clicked
-    } else {
-      this.audioElement.nativeElement.play();
+    // only play something if microphone is not active
+    if(!this.questionsActive){
+      if (this.isPlaying) {
+        this.audioElement.nativeElement.pause();
+        this.saveProgress(); // save playing progress when pause is clicked
+      } else {
+        this.audioElement.nativeElement.play();
+      }
+      this.isPlaying = !this.isPlaying;
     }
-    this.isPlaying = !this.isPlaying;
   }
 
   nextBook() {
@@ -158,6 +166,7 @@ export class LibraryComponent implements OnInit{
       this.questionsActive = true;
       this.bookService.activateQuestions(this.currentBook.id).subscribe(()=>{
         console.log("questions activated")
+        this.startRecognition();
       })
     }else {
       //if there is no more answers it means that user have reached the end of that book part and we should
@@ -196,5 +205,63 @@ export class LibraryComponent implements OnInit{
     }
     return this.isPlaying ? '../../../assets/icons/pause.svg' : '../../../assets/icons/play_arrow.svg';
   }
+
+  initializeSpeechRecognition() {
+    if (!('webkitSpeechRecognition' in window)) {
+      console.error('Web Speech API not supported in this browser.');
+      return;
+    }
+
+    const SpeechRecognition = (window as any).webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = true;
+    this.recognition.interimResults = false;
+    this.recognition.lang = 'en-US';
+
+    this.recognition.onstart = () => {
+      console.log('Speech recognition started');
+    };
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[event.resultIndex][0].transcript.trim().toLowerCase();
+      console.log('Recognized: ', transcript);
+
+      this.zone.run(() => {
+        if (this.questionsActive) {
+          const matchedAnswer = this.currentBook.playingPart.answers.find(answer => transcript.includes(answer.text.toLowerCase()));
+
+          if (matchedAnswer) {
+            this.nextPart(matchedAnswer.nextPartId);
+          }
+        }
+      });
+    };
+
+    this.recognition.onerror = (event: any) => {
+      console.error('Speech recognition error: ', event.error);
+    };
+
+    this.recognition.onend = () => {
+      console.log('Speech recognition ended');
+      if (this.questionsActive) {
+        this.startRecognition(); // Restart recognition if still in question mode
+      }
+    };
+  }
   
+  startRecognition() {
+    if (this.questionsActive && this.recognition) {
+      this.recognition.start();
+    }
+  }
+
+  stopRecognition() {
+    if (this.recognition) {
+      this.recognition.stop();
+    }
+  }
+
+  ngOnDestroy() {
+    this.stopRecognition();
+  }
 }
