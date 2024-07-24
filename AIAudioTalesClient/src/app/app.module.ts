@@ -15,7 +15,6 @@ import { BookCategoryPipe } from './pipes/category.pipe';
 import { SliderComponent } from './home/slider/slider.component';
 import { LibraryComponent } from './home/library/library.component';
 import { MyProfileComponent } from './home/my-profile/my-profile.component';
-import { PlayerComponent } from './home/library/player/player.component';
 import { ToastNotificationComponent } from './home/toast-notification/toast-notification.component';
 import { LoadingSpinnerComponent } from './home/loading-spinner/loading-spinner.component';
 import { DiscoverComponent } from './home/discover/discover.component';
@@ -41,7 +40,6 @@ import { ModalDialogComponent } from './home/modal-dialog/modal-dialog.component
     SliderComponent,
     LibraryComponent,
     MyProfileComponent,
-    PlayerComponent,
     ToastNotificationComponent,
     LoadingSpinnerComponent,
     DiscoverComponent,
