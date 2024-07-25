@@ -1,3 +1,4 @@
+// sidebar styling for mobile 
 .sidenav {
   background-color: var(--main-bg-color);
   overflow: hidden;
@@ -75,7 +76,7 @@
   }
 }
 
-/* Small devices (tablets, 768px and up) */
+// sidebar styling for desktop
 @media (min-width: 768px) {
   .my-prof-mob {
     display: flex;
