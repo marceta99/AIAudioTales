@@ -172,7 +172,6 @@ namespace AIAudioTalesServer.Controllers
             return Ok(history);
         }
 
-
         [HttpGet("GetPart/{partId}")]
         public async Task<ActionResult<DTOReturnPart>> GetPart(int partId)
         {
@@ -191,6 +190,22 @@ namespace AIAudioTalesServer.Controllers
             var treeParts = await _booksRepository.GetBookTree(bookId);
 
             return Ok(treeParts);
+        }
+
+        [HttpGet("GetCurrentBook")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> GetCurrentBook()
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var currentBook = await _booksRepository.GetCurrentBook(user.Id);
+
+            if (currentBook == null) return BadRequest("Problem with returning current book");
+
+            return Ok(currentBook);
         }
 
         #endregion

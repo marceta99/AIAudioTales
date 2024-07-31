@@ -1,67 +1,14 @@
-<div *ngIf="currentBook && currentBook.playingPart;else noPurchases">
-  <div class="wrapper">
-  
-    <div class="top-bar">
-      <i><img [src]="showMusicList ? '../../../assets/icons/expand_more.svg' : '../../../assets/icons/expand_less.svg'"alt="expand"  (click)="toggleMusicList()"></i>
-      <span>Now Playing</span>
-      <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
-    </div>
-      
-    <div class="img-area">
-      <img [src]="currentBook.imageURL" alt="">
-    </div>
-
-    <div class="song-details">
-      <p class="name">{{ currentBook.title }}</p>
-      <p class="artist">{{ "Kumadio" }}</p>
-    </div>
-    
-    <div class="progress-area" *ngIf="!questionsActive;else questions" (click)="updatePlayingTime($event)" #progressArea>
-      <div class="progress-bar" [style.width]="progress + '%'"></div>
-      <div class="song-timer">
-        <span class="current-time">{{ currentTime }}</span>
-        <span class="max-duration">{{ maxDuration }}</span>
-      </div>
-    </div>
- 
-    <ng-template #questions>
-      <div class="question-container">
-        <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
-      </div>
-    </ng-template>
-
-    <div class="controls">
-      <i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>
-      <i id="prev" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
-      <div class="play-pause" [ngClass]="{'play-pause pulse': questionsActive}" (click)="togglePlayPause()">
-        <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
-      </div>
-      <i id="next" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
-      <i id="more-music" (click)="toggleMusicList()"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>
-    </div>
-
-    <div class="music-list" [class.show]="showMusicList">
-      <div class="header">
+<div *ngIf="books.length > 0;else noPurchases">
+    <ul>
+      <li *ngFor="let book of books; let i = index" [class.playing]="i + 1 === currentBookIndex" (click)="playSelectedSong(i)">
         <div class="row">
-          <i class="list"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>
-          <span>Book list</span>
+          <span>{{ book.title }}</span>
+          <p>{{ "Kumadio" }}</p>
         </div>
-        <i id="close" (click)="toggleMusicList()"><img src="../../../assets/icons/close.svg" alt="close"></i>
-      </div>
-      <ul>
-        <li *ngFor="let book of books; let i = index" [class.playing]="i + 1 === bookIndex" (click)="playSelectedSong(i)">
-          <div class="row">
-            <span>{{ book.title }}</span>
-            <p>{{ "Kumadio" }}</p>
-          </div>
-          <span class="audio-duration">{{ "01:22" }}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
-    <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
-  </audio>
+        <span class="audio-duration">{{ "01:22" }}</span>
+      </li>
+    </ul>
+  
 </div>
 
 <ng-template #noPurchases>

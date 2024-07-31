@@ -1,0 +1,159 @@
+.player-container{
+    position: fixed;
+    bottom: 50px;
+    height: 90px;
+    width: 100%;
+    background-color: green;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.player{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 40%;
+}
+
+.book-details{
+    display: flex;
+    flex-direction: row;
+}
+
+.book-cover{
+    height: 90px;
+    width: 80px;
+}
+
+.controls{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.controls i{
+    font-size: 50px;
+    user-select: none;
+    background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+}
+.controls img{
+    width: 50px;
+    height: 50px;
+}
+
+.progress-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.progress-area{
+    height: 6px;
+    width: 60%;
+    border-radius: 50px;
+    background: #f0f0f0;
+    cursor: pointer;
+  }
+  .progress-area .progress-bar{
+    height: inherit;
+    width: 0%;
+    position: relative;
+    border-radius: inherit;
+    //background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 100%);
+    background: yellow;
+  }
+  .progress-bar::before{
+    content: "";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    top: 50%;
+    right: -5px;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    background: inherit;
+    transition: opacity 0.2s ease;
+  }
+  .progress-area:hover .progress-bar::before{
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .question-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .question{
+    margin: 10;
+    height: 50px;
+    width: 50px;
+  }
+  
+  .pulse{
+    background: #FFBE0B;
+    border-radius: 50%;
+    animation: pulse 2s linear infinite;
+  }
+  
+  .pulse:before, .pulse:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 5px;
+  }
+  
+  .pulse::before{
+    width: 35px;
+    height: 5.5px;
+  }
+  
+  .pulse::after{
+    width: 35px;
+    height: 55px;
+  }
+  
+  @keyframes pulse
+  {
+    0%
+    {
+      box-shadow: 0 0 0 0 rgba(255, 190, 11, 0.6);
+    }
+    5%
+    {
+      transform: scale(1.40);
+    }
+    25%
+    {
+      transform: scale(1);
+    }
+    70%
+    {
+      box-shadow: 0 0 0 50px rgba(255, 190, 11, 0);
+    }
+    100%
+    {
+      box-shadow: 0 0 0 100px rgba(255, 190, 11, 0);
+    }
+  }
+
+// for desktop
+@media (min-width: 768px) {
+
+.player-container{
+    bottom: 0;
+}  
+}

@@ -51,3 +51,6 @@ AIAudioTalesServer/AIAudioTalesServer/obj/*
 *.userprefs
 *.csproj.user
 *.vbproj.user
+
+#exclude audio files
+AIAudioTalesServer/AIAudioTalesServer/uploads

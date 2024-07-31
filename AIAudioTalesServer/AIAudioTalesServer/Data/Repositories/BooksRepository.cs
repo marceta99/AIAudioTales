@@ -97,6 +97,31 @@ namespace AIAudioTalesServer.Data.Repositories
             return books;
         }
 
+        public async Task<DTOReturnPurchasedBook> GetCurrentBook(int userId)
+        {
+            var pb = await _dbContext.PurchasedBooks
+                .Where(pb => pb.UserId == userId && pb.IsBookPlaying == true && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Include(pb => pb.PlayingPart).ThenInclude(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+
+            var book = await GetBook(pb.BookId); 
+            var purchasedBook = new DTOReturnPurchasedBook
+            {
+                Id = book.Id,
+                Description = book.Description,
+                Title = book.Title,
+                ImageURL = book.ImageURL,
+                PurchaseType = pb.PurchaseType,
+                Language = pb.Language,
+                PlayingPart = _mapper.Map<DTOReturnPart>(pb.PlayingPart),
+                PlayingPosition = pb.PlayingPosition,
+                IsBookPlaying = pb.IsBookPlaying,
+                QuestionsActive = pb.QuestionsActive
+            };
+        
+            return purchasedBook;
+        }
+
         public async Task<IList<DTOReturnBook>> GetCreatorBooks(int userId)
         {
             var books = await _dbContext.Books.Where(b => b.CreatorId == userId).ToListAsync();

@@ -15,6 +15,8 @@ export class BookService {
     basketItems : [],
     totalPrice : 0
   });
+  purchasedBooks: BehaviorSubject<PurchasedBook[]> = new BehaviorSubject<PurchasedBook[]>([]);
+  currentBookIndex: Subject<number> = new Subject<number>();
 
   constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 

@@ -10,13 +10,6 @@ img {
 //   text-align: center;
 
 // }
-.bottom-player{
-  position: fixed;
-  bottom: 50px;
-  height: 50px;
-  width: 100%;
-  background-color: green;
-}
 .show{
   visibility: visible;
 }
@@ -29,10 +22,6 @@ img {
   #body-container {
     margin-left: 200px;
     // max-width: 1100px;
-  }
-
-  .bottom-player{
-    bottom: 0;
   }
 }
 @media screen and (max-width: 900px) {

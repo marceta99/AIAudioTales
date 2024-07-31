@@ -26,6 +26,7 @@ import { CreateBookComponent } from './home/create-book/create-book.component';
 import { MyBooksComponent } from './home/my-books/my-books.component';
 import { BookTreeComponent } from './home/book-tree/book-tree.component';
 import { ModalDialogComponent } from './home/modal-dialog/modal-dialog.component';
+import { PlayerComponent } from './home/player/player.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ModalDialogComponent } from './home/modal-dialog/modal-dialog.component
     CreateBookComponent,
     MyBooksComponent,
     BookTreeComponent,
-    ModalDialogComponent
+    ModalDialogComponent,
+    PlayerComponent
   ],
   imports: [
     BrowserModule,

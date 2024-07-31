@@ -147,7 +147,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CategoryId=4,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://images.booksense.com/images/286/402/9780316402286.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -155,7 +155,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CategoryId=5,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -330,7 +330,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CategoryId=1,
                         Title="Aetherial Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -444,18 +444,18 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Aetherial Odyssey",
+                        Title="Aetherial",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://images.booksense.com/images/286/402/9780316402286.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Aetherial Odyssey",
+                        Title="Odyssey",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -632,9 +632,9 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Aetherial Odyssey",
+                        Title="Parapolis",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -787,9 +787,9 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Aetherial Odyssey",
+                        Title="Sidnay",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -904,18 +904,18 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Aetherial Odyssey",
+                        Title="Best",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://images.booksense.com/images/286/402/9780316402286.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Aetherial Odyssey",
+                        Title="The Great",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
@@ -1093,9 +1093,9 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Aetherial Odyssey",
+                        Title="Phantom",
                         Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://www.melissaaddey.com/wp-content/uploads/2018/10/Book-2_A-String-of-Silver-Beads_eBcov-small-scaled.jpg"
+                        ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
