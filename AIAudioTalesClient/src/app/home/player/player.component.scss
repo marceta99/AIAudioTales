@@ -1,13 +1,14 @@
 .player-container{
     position: fixed;
     bottom: 50px;
-    height: 90px;
+    height: 9%;
     width: 100%;
     background-color: green;
     z-index: 1000;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .player{
@@ -15,11 +16,19 @@
     flex-direction: column;
     margin: 0;
     width: 40%;
+    height: 100%;
+    align-items: center;
 }
 
 .book-details{
     display: flex;
     flex-direction: row;
+    height: 100%;
+}
+
+.book-details img{
+  height: 100%;
+  width: 50%;
 }
 
 .book-cover{
@@ -31,16 +40,12 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
-.controls i{
-    font-size: 50px;
-    user-select: none;
-    background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
-}
 .controls img{
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
 
 .progress-container{
@@ -89,7 +94,6 @@
   .question-container{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
   }
   
@@ -100,7 +104,6 @@
   }
   
   .pulse{
-    background: #FFBE0B;
     border-radius: 50%;
     animation: pulse 2s linear infinite;
   }
@@ -117,24 +120,24 @@
   }
   
   .pulse::before{
-    width: 35px;
+    width: 15px;
     height: 5.5px;
   }
   
   .pulse::after{
-    width: 35px;
-    height: 55px;
+    width: 15px;
+    height: 35px;
   }
   
   @keyframes pulse
   {
     0%
     {
-      box-shadow: 0 0 0 0 rgba(255, 190, 11, 0.6);
+      box-shadow: 0 0 0 0 #f0f0f0;
     }
     5%
     {
-      transform: scale(1.40);
+      transform: scale(1.10);
     }
     25%
     {
@@ -142,18 +145,25 @@
     }
     70%
     {
-      box-shadow: 0 0 0 50px rgba(255, 190, 11, 0);
+      box-shadow: 0 0 0 10px rgba(255, 190, 11, 0);
     }
     100%
     {
-      box-shadow: 0 0 0 100px rgba(255, 190, 11, 0);
+      box-shadow: 0 0 0 20px rgba(255, 190, 11, 0);
     }
   }
+
+.side-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 
 // for desktop
 @media (min-width: 768px) {
 
-.player-container{
-    bottom: 0;
-}  
-}
+    .player-container{
+        bottom: 0;
+    }  
+    }

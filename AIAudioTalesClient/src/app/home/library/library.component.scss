@@ -1,0 +1,32 @@
+.book-list{
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    list-style: none;
+}
+
+.book{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.book:hover{
+    background-color: gainsboro;
+}
+
+.book-info{
+    display: flex;
+    flex-direction: row;
+}
+
+.book-info img{
+    height: 60px;
+    width: 60px;
+}
+
+.playing{
+    color: #22c1c3 ;
+}

@@ -16,32 +16,30 @@
         </div>
 
         <div class="player">
-            <div class="progress-container" *ngIf="!currentBook.questionsActive;else questions">
+            <div class="progress-container" *ngIf="!currentBook.questionsActive">
                 <span class="current-time">{{ currentTime }}</span>
                 <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
                     <div class="progress-bar" [style.width]="progress + '%'"></div>
                 </div>
                 <span class="max-duration">{{ maxDuration }}</span>
             </div>
-    
-            <ng-template #questions>
-              <div class="question-container">
-                <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
-              </div>
-            </ng-template>
-        
+
             <div class="controls">
-              <!--<i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>-->
-              <i id="prev" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
-              <div class="play-pause" [ngClass]="{'play-pause pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
-                <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
-              </div>
-              <i id="next" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
-              <!--<i id="more-music"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>-->
+                <!--<i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>-->
+                <i id="prev" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
+                <div class="play-pause" [ngClass]="{'play-pause pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                    <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
+                </div>
+                <i id="next" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
+                <!--<i id="more-music"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>-->
             </div>
         </div>
 
-        <div>
+        <div class="side-buttons">      
+            <div class="question-container" *ngIf="currentBook.questionsActive">
+            <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
+            </div>
+
             <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
         </div>
     

@@ -1,14 +1,16 @@
 <div *ngIf="books.length > 0;else noPurchases">
-    <ul>
-      <li *ngFor="let book of books; let i = index" [class.playing]="i + 1 === currentBookIndex" (click)="playSelectedSong(i)">
-        <div class="row">
-          <span>{{ book.title }}</span>
-          <p>{{ "Kumadio" }}</p>
+    <ul class="book-list">
+      <li class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedSong(i)">
+        <div class="book-info">
+          <img class="book-img" [src]="book.imageURL" alt="">
+          <div>
+            <span>{{ book.title }}</span>
+            <p>{{ "Kumadio" }}</p>
+          </div>
         </div>
         <span class="audio-duration">{{ "01:22" }}</span>
       </li>
     </ul>
-  
 </div>
 
 <ng-template #noPurchases>
