@@ -611,7 +611,10 @@ namespace AIAudioTalesServer.Data.Repositories
 
             if (purchasedBook == null) return false;
 
-            purchasedBook.PlayingPosition = updateProgress.PlayingPosition;
+            if (updateProgress.PlayingPosition.HasValue)
+            {
+                purchasedBook.PlayingPosition = (decimal)updateProgress.PlayingPosition;
+            }
 
             //if there is next book to be played set isBookPlaying to false to previous book and to true to next book
             if (updateProgress.NextBookId.HasValue)

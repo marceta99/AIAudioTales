@@ -152,8 +152,18 @@ export class BookService {
     return this.httpClient.patch<void>(this.path + "Books/ActivateQuestions/"+bookId, {});
   }
 
-  public updateProgress(bookId: number, playingPosition: number, nextBookId?: number): Observable<void> {
-    const progress = nextBookId ? { bookId, playingPosition, nextBookId}: {bookId, playingPosition};
+  public updateProgress(bookId: number, playingPosition?: number, nextBookId?: number): Observable<void> {
+    const progress: any = { bookId };
+
+    // Conditionally add optional properties if they have values
+    if (playingPosition !== undefined) {
+      progress.playingPosition = playingPosition;
+    }
+    
+    if (nextBookId !== undefined) {
+      progress.nextBookId = nextBookId;
+    }
+
     return this.httpClient.patch<void>(this.path + "Books/UpdateProgress", progress);
   }
 

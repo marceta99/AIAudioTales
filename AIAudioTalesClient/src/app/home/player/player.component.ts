@@ -17,6 +17,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   maxDuration = '0:00';
   isPlaying = false;
   fullScreen = false;
+  recognitionActive = false;
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
 
@@ -31,18 +32,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
         console.log(books);
         this.books = books;  
         this.setCurrentBook();
-         
-        /*if(this.currentBook){
-          if(this.currentBook.questionsActive){
-            this.startRecognition();
-          }else{
-            // Detect changes to ensure ViewChild audioElement is updated
-            this.cdr.detectChanges();
-            this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
-            this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
-            this.updateProgress();
-          }
-        }*/
+
       },
       error: error => {
           console.error('There was an error!', error);
@@ -50,7 +40,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     })
 
     this.bookService.currentBookIndex.subscribe((index: number)=>{
-      this.loadBook(index);
+      if(this.books){
+        this.saveProgress(this.books[index].id);
+        this.loadBook(index);
+      }
     })
   }
 
@@ -61,7 +54,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
   setCurrentBook(): void{
     for (let i = 0; i < this.books.length; i++) {
       if (this.books[i].isBookPlaying) {
-        //this.currentBook = this.books[i]; // msm da ovo mogu da obrisem ovu liniju jer se ovo svakako odradi u loadBook a loadBook se pozove svaki put kada se promeni index, a to je na sledecoj liniji
+        this.currentBook = this.books[i]; // msm da ovo mogu da obrisem ovu liniju jer se ovo svakako odradi u loadBook a loadBook se pozove svaki put kada se promeni index, a to je na sledecoj liniji
+        this.currentBookIndex  = i;
         this.bookService.currentBookIndex.next(i);
         break; // Exit loop once the book is found
       }
@@ -81,16 +75,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
       this.updateProgress();
       if (this.isPlaying) this.audioElement.nativeElement.play();
+      if (this.recognitionActive) this.stopRecognition(); // stop recognition if was active before
     }
   }
 
   updateProgress() {
     const current = this.audioElement.nativeElement.currentTime;
     const duration = this.audioElement.nativeElement.duration;
-    console.log("current ", current);
-    console.log("duration ", duration);
     this.progress = (current / duration) * 100;
-    console.log("progress updated ", this.progress)
     this.currentTime = this.formatTime(current);
     this.maxDuration = this.formatTime(duration);
   }
@@ -115,27 +107,21 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   nextBook() {
-    this.saveProgress(this.books[this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1].id); // save progress of current book
-
-    this.currentBookIndex++;
-    if (this.currentBookIndex > this.books.length - 1) this.currentBookIndex = 0;
-    this.bookService.currentBookIndex.next(this.currentBookIndex);
+    this.bookService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
   }
 
   prevBook() {
-    this.saveProgress(this.books[this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1].id); //save progress of currentBook
-
-    this.currentBookIndex--;
-    if (this.currentBookIndex < 0) this.currentBookIndex = this.books.length -1;
-    this.bookService.currentBookIndex.next(this.currentBookIndex);
+    this.bookService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
   }
 
   saveProgress(nextBookId?: number): void{
-    const currentTimeSec = this.audioElement.nativeElement.currentTime;
-    const bookId = this.currentBook.id;
-    this.currentBook.playingPosition = currentTimeSec; 
+    const bookId = this.books[this.currentBookIndex].id;
+    let currentTimeSec;
+    if(!this.currentBook.questionsActive && this.audioElement){  
+      currentTimeSec = this.audioElement.nativeElement.currentTime;
+      this.currentBook.playingPosition = currentTimeSec; 
+    }
     
-
     this.bookService.updateProgress(bookId, currentTimeSec, nextBookId).subscribe({
       next: () => { 
         console.log("progress updated successfully")
@@ -249,12 +235,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
   startRecognition() {
     if (this.currentBook.questionsActive && this.recognition) {
       this.recognition.start();
+      this.recognitionActive = true;
     }
   }
 
   stopRecognition() {
     if (this.recognition) {
       this.recognition.stop();
+      this.recognitionActive = false;
     }
   }
 
