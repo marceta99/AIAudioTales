@@ -10,8 +10,8 @@
           <img class="book-cover" [src]="currentBook.imageURL" alt="">
 
           <div class="book-info">
-            <span class="title">{{ currentBook.title }}</span>
-            <span class="artist">{{ "By Kumadio" }}</span>
+            <span #titleElement class="title"  [ngClass]="{'scrolling': isTitleOverflowing}">{{ currentBook.title }}</span>
+            <span #artistElement class="artist"  [ngClass]="{'scrolling': isArtistOverflowing}">{{ "Kumadio" }}</span>
           </div>
         </div>
 
@@ -26,11 +26,11 @@
 
             <div class="controls">
                 <!--<i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>-->
-                <i id="prev" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
-                <div class="play-pause" [ngClass]="{'play-pause pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
+                <div class="play-pause control" [ngClass]="{'play-pause pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
                     <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
                 </div>
-                <i id="next" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
+                <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
                 <!--<i id="more-music"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>-->
             </div>
         </div>

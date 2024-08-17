@@ -19,7 +19,7 @@
   justify-content: center;
   font-size: 12px;
   transition: all 0.5s ease;
-  margin: 0.5rem;
+  margin-top: 0.5rem;
   cursor: pointer;
 
   img {
@@ -29,6 +29,10 @@
 .menu_ctg:hover {
   cursor: pointer;
   opacity: 0.8;
+
+  &:hover {
+    transform: scale(1.05); /* Slightly grow the element on hover */
+  }
 }
 .topnav-mob {
   display: flex;
@@ -62,7 +66,7 @@
   display: none;
 }
  .active-link {
-   font-weight: bold;
+   font-weight: bolder;
  }
 .mob-icons {
   display: flex;

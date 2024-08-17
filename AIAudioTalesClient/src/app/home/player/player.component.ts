@@ -18,8 +18,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
   isPlaying = false;
   fullScreen = false;
   recognitionActive = false;
+  isTitleOverflowing: boolean = false;
+  isArtistOverflowing: boolean = false;
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
+  @ViewChild('titleElement') titleElement!: ElementRef;
+  @ViewChild('artistElement') artistElement!: ElementRef;
 
   
   constructor(private bookService: BookService, private cdr: ChangeDetectorRef, private zone: NgZone) {}
@@ -67,6 +71,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.currentBookIndex = index;
     this.cdr.detectChanges();
 
+    this.isTitleOverflowing = this.isOverflowing(this.titleElement.nativeElement);
+    this.isArtistOverflowing = this.isOverflowing(this.artistElement.nativeElement);
+
     if(this.currentBook.questionsActive){
       this.isPlaying = false;
       this.startRecognition();
@@ -77,6 +84,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
       if (this.isPlaying) this.audioElement.nativeElement.play();
       if (this.recognitionActive) this.stopRecognition(); // stop recognition if was active before
     }
+
+  }
+
+  private isOverflowing(element: HTMLElement): boolean {
+    return element.scrollWidth > element.clientWidth;
   }
 
   updateProgress() {

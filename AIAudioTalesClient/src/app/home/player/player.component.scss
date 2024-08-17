@@ -30,7 +30,9 @@
 
 .book-details img{
   height: 100%;
-  width: 50%;
+  width: 80%;
+  padding: 5px;
+  border-radius: 10px;
 }
 
 .book-info{
@@ -38,15 +40,31 @@
   flex-direction: column;
   justify-content: center;
   height: 100%;
+  width: 100%;
   overflow: hidden; /* Prevent overflow in case of long text */
   margin: 5px;
 }
 
-.title,
-.artist {
-  white-space: nowrap;   /* Prevent text from wrapping */
-  overflow: hidden;      /* Hide overflowed text */
-  text-overflow: ellipsis; /* Add ellipsis (…) if the text overflows */
+
+.title, .artist {
+  display: inline-block;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.scrolling {
+  animation: circular-scroll 10s linear infinite; /* Apply the scrolling animation */
+}
+
+@keyframes circular-scroll {
+  0% {
+    transform: translateX(100%); /* Start with the text just off-screen to the right */
+  }
+  50% {
+    transform: translateX(-100%); /* Move the text to the left until it has fully scrolled off-screen */
+  }
+  100% {
+    transform: translateX(100%); /* Move the text back to the starting point, ready to repeat */
+  }
 }
 
 .book-cover{
@@ -61,13 +79,17 @@
     align-items: center;
 }
 
-.controls i{
+.control{
   cursor: pointer;
 }
 
 .controls img{
-    width: 40px;
-    height: 40px;
+  width: 40px;
+  height: 40px;
+
+  &:hover {
+    transform: scale(1.10); /* Slightly grow the element on hover */
+  }
 }
 
 .progress-container{
