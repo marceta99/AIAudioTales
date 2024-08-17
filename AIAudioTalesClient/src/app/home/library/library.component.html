@@ -3,11 +3,23 @@
       <li class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedSong(i)">
         <div class="book-info">
           <img class="book-img" [src]="book.imageURL" alt="">
-          <div>
-            <span>{{ book.title }}</span>
-            <p>{{ "Kumadio" }}</p>
+          <div class="book-details">
+            <p>{{ book.title }}</p>
+            <p>{{ "By Kumadio" }}</p>
           </div>
         </div>
+        <div class="wave-animation" *ngIf="i === currentBookIndex">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+      </div>
         <span class="audio-duration">{{ "01:22" }}</span>
       </li>
     </ul>
