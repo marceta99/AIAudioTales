@@ -41,14 +41,16 @@ export class PlayerComponent implements OnInit, OnDestroy {
       error: error => {
           console.error('There was an error!', error);
       }
-    })
+    });
 
     this.bookService.currentBookIndex.subscribe((index: number)=>{
       if(this.books){
         this.saveProgress(this.books[index].id);
         this.loadBook(index);
       }
-    })
+    });
+
+    this.bookService.isPlaying.subscribe((isPlaying: boolean)=> this.isPlaying = isPlaying);
   }
 
   ngOnDestroy(): void {
@@ -75,7 +77,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.isArtistOverflowing = this.isOverflowing(this.artistElement.nativeElement);
 
     if(this.currentBook.questionsActive){
-      this.isPlaying = false;
+      this.bookService.isPlaying.next(false);
+      this.audioElement.nativeElement.pause();
       this.startRecognition();
     }else{
       this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
@@ -114,7 +117,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       } else {
         this.audioElement.nativeElement.play();
       }
-      this.isPlaying = !this.isPlaying;
+      this.bookService.isPlaying.next(!this.isPlaying);
     }
   }
 
@@ -151,7 +154,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   loadQuestions(): void{
     if(this.currentBook.playingPart.answers.length > 0){
-      this.isPlaying = false;
+      this.bookService.isPlaying.next(false);
       this.currentBook.questionsActive = true;
 
       this.bookService.activateQuestions(this.currentBook.id).subscribe(()=>{
@@ -189,7 +192,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
       this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
       this.updateProgress();
-      this.isPlaying = true;
+      this.bookService.isPlaying.next(true);
       this.audioElement.nativeElement.play();
     })
   }

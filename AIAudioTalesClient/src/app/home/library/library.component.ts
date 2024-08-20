@@ -10,6 +10,7 @@ import { PurchasedBook } from 'src/app/entities';
 export class LibraryComponent implements OnInit{
   books!: PurchasedBook[];
   currentBookIndex!: number;
+  isPlaying: boolean = false;
 
   constructor(private bookService: BookService, private cdr: ChangeDetectorRef) {}
 
@@ -33,6 +34,8 @@ export class LibraryComponent implements OnInit{
     this.bookService.currentBookIndex.subscribe((index: number)=>{
       this.currentBookIndex = index;
     })
+
+    this.bookService.isPlaying.subscribe((isPlaying: boolean)=> this.isPlaying = isPlaying);
   }
 
   setCurrentBook(): void{
@@ -47,11 +50,6 @@ export class LibraryComponent implements OnInit{
   playSelectedSong(index: number) {
     console.log("play this book", index);
     this.bookService.currentBookIndex.next(index);
-    /*this.saveProgress(this.books[index].id); //save progress of last play
-
-    console.log("play selected song index", index)
-    this.bookIndex = index;
-    this.loadBook(this.bookIndex);*/
   }
   
 }
