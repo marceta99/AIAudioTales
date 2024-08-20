@@ -13,7 +13,7 @@ import { BookService } from '../../services/book.service';
 })
 export class SearchBarComponent {
   searchControl = new FormControl();
-  filteredBooks!: Book[]; // Replace 'Book' with your book model
+  filteredBooks!: Book[]; 
   isInputActive: boolean = false;
   searchHistory: string[] = [];
   searchIsNotEmptyString: boolean = false;
@@ -38,7 +38,7 @@ export class SearchBarComponent {
         return this.bookService.searchBooks(searchTerm,1,10)
       })
     ).subscribe({
-      next: (books : Book[] ) => {
+      next: (books : Book[]) => {
         this.filteredBooks = books
       },
       error: error => {

@@ -24,14 +24,14 @@
                 <span class="max-duration">{{ maxDuration }}</span>
             </div>
 
-            <div class="controls">
-                <!--<i><img src="../../../assets/icons/repeat.svg" alt="repeat"></i>-->
+            <div class="controls" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
                 <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
-                <div class="play-pause control" [ngClass]="{'play-pause pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+
+                <div class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
                     <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
                 </div>
+
                 <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
-                <!--<i id="more-music"><img src="../../../assets/icons/queue_music.svg" alt="queue"></i>-->
             </div>
         </div>
 

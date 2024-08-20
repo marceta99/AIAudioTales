@@ -1,8 +1,4 @@
 
-body{
-  background: #644bff;
-  padding: 0 20px;
-}
 
 ::selection{
   color: #fff;
@@ -10,8 +6,10 @@ body{
 }
 
 .wrapper{
-  max-width: 450px;
-  margin: 50px;
+  max-width: 100%;
+  border: none;
+  margin: 0;
+  padding: 2%;
 }
 
 .wrapper .search-input{
@@ -37,33 +35,38 @@ body{
   border-radius: 5px 5px 0 0;
 }
 
-.search-input .autocom-box{
+.search-input .search-box{
   padding: 0;
   opacity: 0;
   pointer-events: none;
   max-height: 280px;
   overflow-y: auto;
+  background-color: var(--main-bg-color);
 }
 
-.search-input.active .autocom-box{
+.search-input.active .search-box{
   padding: 10px 8px;
   opacity: 1;
   pointer-events: auto;
 }
 
-.autocom-box li{
+.search-box li{
   list-style: none;
-  padding: 8px 12px;
+  padding: 8px 10px;
   display: none;
   width: 100%;
   cursor: default;
-  border-radius: 3px;
+  border-radius: 5px;
+  height: 100%;
 }
 
-.search-input.active .autocom-box li{
-  display: block;
+.search-input.active .search-box li{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
 }
-.autocom-box li:hover{
+.search-box li:hover{
   background: #efefef;
 }
 
@@ -78,4 +81,13 @@ body{
   font-size: 20px;
   color: #644bff;
   cursor: pointer;
+}
+
+.search-book img{
+  height: 50px;
+  width: 50px;
+}
+
+.search-box li span{
+  margin-left: 10px;
 }
