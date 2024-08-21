@@ -19,24 +19,51 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-.book img{
-  height: 100px;
-  width: 100px;
-}
-.container{
+
+.books{
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  height: calc(100vh - 100px); /* Adjust the 100px to account for other elements like headers */
-  overflow: hidden; /* Prevent the container itself from scrolling */
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+}
+
+.book {
+ display: flex;
+ flex-direction: row;
+ justify-content: flex-start;
+ align-items: center;
+ width: 100%;
+ height: 15%;
+}
+
+.book:hover{
+  background-image: linear-gradient(to right, #fad8f9, #ecc9f6, #dabaf4, #c4aef3, #aaa2f3);
+}
+
+.book img{
+  height: 70px;
+  width: 70px;
+  border-radius: 10%;
+}
+
+.book-info{
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
 }
 
 .categories{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   cursor: pointer;
+  margin-bottom: 2%;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-.categorie h1{
-
+.categorie {
+  margin-left: 5px;
+  margin-right: 5px;
 }
+
+
