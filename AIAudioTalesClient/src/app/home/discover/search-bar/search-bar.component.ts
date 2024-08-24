@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
-import { Book, SearchedBooks } from 'src/app/entities';
+import { Book, ReturnBook, SearchedBooks } from 'src/app/entities';
 import { FormControl } from '@angular/forms';
 import { LoadingSpinnerService } from '../../services/loading-spinner.service';
 import { BookService } from '../../services/book.service';
@@ -13,7 +13,7 @@ import { BookService } from '../../services/book.service';
 })
 export class SearchBarComponent {
   searchControl = new FormControl();
-  filteredBooks!: Book[]; 
+  filteredBooks!: ReturnBook[]; 
   isInputActive: boolean = false;
   searchHistory: string[] = [];
   searchIsNotEmptyString: boolean = false;
@@ -38,7 +38,7 @@ export class SearchBarComponent {
         return this.bookService.searchBooks(searchTerm,1,10)
       })
     ).subscribe({
-      next: (books : Book[]) => {
+      next: (books : ReturnBook[]) => {
         this.filteredBooks = books
       },
       error: error => {
@@ -82,7 +82,7 @@ export class SearchBarComponent {
   private fetchBooks(searchTerm: string): void{
     this.isInputActive = false;
     this.bookService.searchBooks(searchTerm,1,10).subscribe({
-      next: (books : Book[] ) => {
+      next: (books : ReturnBook[] ) => {
         console.log(books)
         const searchBooks : SearchedBooks = {
           searchTerm: searchTerm,

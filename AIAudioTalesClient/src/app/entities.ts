@@ -38,21 +38,20 @@ export interface PurchasedBook {
 }
 export interface SearchedBooks {
   searchTerm: string,
-  books: Book[]
+  books: ReturnBook[]
 }
 export interface BooksPaginated {
   booksCategory: BookCategory,
-  books: Book[],
+  books: ReturnBook[],
   pageSize: number,
   pageNumber: number
 }
-
-export interface Story {
-  id: number,
-  title: string,
-  text: string,
-  bookId: number,
-  audioDataUrl: string
+export interface ReturnBook {
+  id: number;
+  title: string;
+  description: string;
+  imageURL: string;
+  categoryId: number;
 }
 
 export interface Purchase {

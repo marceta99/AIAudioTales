@@ -9,14 +9,14 @@ namespace AIAudioTalesServer.Data.Interfaces
         #region GET
         Task<IList<Book>> GetAllBooks();
         Task<Book> GetBook(int id);
-        Task<IList<DTOReturnBook>> GetBooksForCategory(int bookCategory);
+        Task<IList<DTOReturnBook>> GetBooksFromCategory(int categoryId, int pageNumber, int pageSize);
         Task<bool> UserHasBook(int bookId, int userId);
         Task<bool> IsBasketItem(int bookId, int userId);
         Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooks(int userId);
         Task<IList<DTOReturnBook>> GetCreatorBooks(int userId);
         Task<DTOReturnPurchasedBook> GetPurchasedBook(int userId, int bookId);
-        Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize);
-        Task <IEnumerable<string>> GetSearchHistory(int id);
+        Task<IList<DTOReturnBook>> SearchBooks(string searchTerm, int pageNumber, int pageSize);
+        Task <IList<string>> GetSearchHistory(int id);
         Task<IList<Category>> GetAllCategories();
         Task<DTOBasket> GetBasket(int userId);
         Task<BasketItem> GetItemById(int itemId);

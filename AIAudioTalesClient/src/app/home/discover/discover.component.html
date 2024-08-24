@@ -1,7 +1,6 @@
 <div class="discover-container">
   <app-search-bar></app-search-bar>
 
- 
     <div class="categories">
       <div class="categorie" *ngFor="let category of bookCategories">
         <h3 (click)="getBooksFromCategory(category.id)">{{category.categoryName}}</h3>
@@ -18,7 +17,6 @@
       </div>
       <span *ngIf="noMoreBooks">There is no more books to load</span>
     </div>
-  
 
 </div>
 

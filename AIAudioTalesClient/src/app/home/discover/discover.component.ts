@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
-import { Book, Category, SearchedBooks, Toast, ToastIcon, ToastType } from 'src/app/entities';
+import { Book, Category, ReturnBook, SearchedBooks, Toast, ToastIcon, ToastType } from 'src/app/entities';
 import { BookService } from '../services/book.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { Router } from '@angular/router';
@@ -12,15 +12,15 @@ import { debounceTime, filter, fromEvent, map, switchMap, tap } from 'rxjs';
   styleUrls: ['./discover.component.scss']
 })
 export class DiscoverComponent implements OnInit, AfterViewInit{
-  books! : Book[];
+  books! : ReturnBook[];
   bookCategories!: Category[];
+  selectedCategory!: Category;
   pageSize: number = 10;
   pageNumber: number = 1;
   currentCategory: number = 1;
   searchTerm: string = "";
   isSearchFromTerm: boolean = false;
-  //there are no more books to load for that category from the server
-  noMoreBooks: boolean = false;
+  noMoreBooks: boolean = false; //there are no more books to load for that category from the server
 
   @ViewChild('booksContainer') booksContainer!: ElementRef;
 
@@ -47,10 +47,11 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
         When scrollTop + offsetHeight is greater than or equal to scrollHeight, it means the user has scrolled to the bottom.*/
       filter(({ scrollTop, scrollHeight, clientHeight }) => scrollTop + clientHeight >= scrollHeight - 50), // Near bottom, that is why is -50
       switchMap(() => {
-        if(this.isSearchFromTerm)
-        return this.bookService.searchBooks(this.searchTerm,this.pageNumber++, this.pageSize).pipe(tap(this.fetchingOperatorHelper()))
-
-        return this.bookService.getBooksFromCategory(this.currentCategory,this.pageNumber++, this.pageSize).pipe(tap(this.fetchingOperatorHelper()))
+        if(this.isSearchFromTerm) {
+          return this.bookService.searchBooks(this.searchTerm, this.pageNumber++, this.pageSize).pipe(tap(this.fetchingOperatorHelper()))
+        } else {
+          return this.bookService.getBooksFromCategory(this.currentCategory, this.pageNumber++, this.pageSize).pipe(tap(this.fetchingOperatorHelper()))
+        }
       }
       )
     )
@@ -63,7 +64,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
 
     this.getBooksFromCategory(1);
 
-    this.bookService.libraryBooks.subscribe((searchedBooks: SearchedBooks)=>{
+    this.bookService.libraryBooks.subscribe((searchedBooks: SearchedBooks) => {
       console.log("from search bar ")
       this.books = searchedBooks.books;
       this.searchTerm = searchedBooks.searchTerm;
@@ -71,7 +72,8 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
       this.pageNumber=1;
       this.noMoreBooks = false;
     })
-    this.bookService.getAllCategories().subscribe((categories: Category[])=>{
+
+    this.bookService.getAllCategories().subscribe((categories: Category[]) => {
       console.log(categories);
       this.bookCategories = categories;
     })
@@ -83,8 +85,8 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
     this.pageNumber = 1;
     this.noMoreBooks= false;
     this.bookService.getBooksFromCategory(category, this.pageNumber, this.pageSize).subscribe({
-      next: (books : Book[] ) => {
-        console.log(books)
+      next: (books : ReturnBook[] ) => {
+        console.log("books from category",books)
         this.books = books;
         this.spinnerService.setLoading(false);
     },
@@ -107,7 +109,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
 
   private fetchingOperatorHelper(){
       return {
-        next: (books : Book[]) => {
+        next: (books : ReturnBook[]) => {
           console.log(books)
           if (books.length < this.pageSize) {
             this.noMoreBooks = true;

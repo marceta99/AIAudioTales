@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using static System.Reflection.Metadata.BlobBuilder;
 using Google.Apis.Logging;
 using System.Net;
+using System.Drawing.Printing;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
@@ -39,9 +40,21 @@ namespace AIAudioTalesServer.Data.Repositories
             return book;
         }
 
-        public async Task<IList<DTOReturnBook>> GetBooksForCategory(int bookCategory)
+        public async Task<IList<DTOReturnBook>> GetBooksFromCategory(int categoryId, int pageNumber, int pageSize)
         {
-            var books = await _dbContext.Books.Where(b => b.CategoryId == bookCategory).ToListAsync();
+            string cacheKey = $"Search_{categoryId}_{pageNumber}_{pageSize}";
+            if (!_cache.TryGetValue(cacheKey, out IList<Book> books))
+            {
+                books = await _dbContext.Books
+                                       .Where(b => b.CategoryId == categoryId)
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                _cache.Set(cacheKey, books, cacheEntryOptions);
+            }
+
             var returnBooks = _mapper.Map<IList<DTOReturnBook>>(books);
 
             return returnBooks;
@@ -156,7 +169,7 @@ namespace AIAudioTalesServer.Data.Repositories
             return purchasedBook;
         }
 
-        public async Task<IEnumerable<Book>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
+        public async Task<IList<DTOReturnBook>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
         {
             string cacheKey = $"Search_{searchTerm}_{pageNumber}_{pageSize}";
             if (!_cache.TryGetValue(cacheKey, out IEnumerable<Book> books))
@@ -171,10 +184,12 @@ namespace AIAudioTalesServer.Data.Repositories
                 _cache.Set(cacheKey, books, cacheEntryOptions);
             }
 
-            return books;
+            var returnBooks = _mapper.Map<IList<DTOReturnBook>>(books);
+
+            return returnBooks;
         }
 
-        public async Task<IEnumerable<string>> GetSearchHistory(int userId)
+        public async Task<IList<string>> GetSearchHistory(int userId)
         {
             var history = await _dbContext.SearchHistories
                                     .Where(h => h.UserId == userId)

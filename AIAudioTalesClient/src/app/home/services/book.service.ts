@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, finalize } from 'rxjs';
-import { Basket, Book, ReturnPart, Category, CreateBook, PartTree, Purchase, PurchasedBook, SearchedBooks } from 'src/app/entities';
+import { Basket, Book, ReturnPart, Category, CreateBook, PartTree, Purchase, PurchasedBook, SearchedBooks, ReturnBook } from 'src/app/entities';
 import { environment } from 'src/environment/environment';
 import { LoadingSpinnerService } from './loading-spinner.service';
 
@@ -23,13 +23,13 @@ export class BookService {
 
   //#region GET
 
-  public getBooksFromCategory(bookCategory: number, page: number, pageSize: number) :Observable<Book[]>{
+  public getBooksFromCategory(categoryId: number, page: number, pageSize: number): Observable<ReturnBook[]>{
     const params = new HttpParams()
-      .set('bookCategory', bookCategory)
+      .set('categoryId', categoryId)
       .set('page', page)
       .set('pageSize', pageSize);
 
-    return this.httpClient.get<Book[]>(this.path + "Books/GetBooksFromCategory", {params});
+    return this.httpClient.get<ReturnBook[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
 
   public getBookWithId(bookId: number): Observable<Book>{
@@ -65,13 +65,13 @@ export class BookService {
     );
   }
 
-  public searchBooks(searchTerm: string, pageNumber: number, pageSize: number): Observable<Book[]> {
+  public searchBooks(searchTerm: string, pageNumber: number, pageSize: number): Observable<ReturnBook[]> {
     const params = new HttpParams()
             .set('searchTerm', searchTerm)
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-    return this.httpClient.get<Book[]>(this.path+"Books/Search", { params});
+    return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params});
   }
 
   public getSearchHistory(): Observable<string[]> {

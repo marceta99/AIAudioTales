@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, BookCategory, BooksPaginated } from 'src/app/entities';
+import { Book, BookCategory, BooksPaginated, ReturnBook } from 'src/app/entities';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class BooksComponent implements OnInit {
 
   loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void{
     this.bookService.getBooksFromCategory(bookCategory, pageNumber, pageSize).subscribe({
-      next: (books : Book[] ) => {
+      next: (books : ReturnBook[] ) => {
         console.log(books)
         const bookPaginated : BooksPaginated = {
           booksCategory: bookCategory as BookCategory,

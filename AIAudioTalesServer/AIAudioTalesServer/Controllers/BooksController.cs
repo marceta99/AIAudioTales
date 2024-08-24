@@ -51,18 +51,15 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBooksFromCategory")]
-        public async Task<ActionResult<IList<DTOReturnBook>>> GetBooksForCategory([FromQuery] int bookCategory, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IList<DTOReturnBook>>> GetBooksFromCategory([FromQuery] int categoryId, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var books = await _booksRepository.GetBooksForCategory(bookCategory);
+            var books = await _booksRepository.GetBooksFromCategory(categoryId, pageNumber, pageSize);
             if (books == null)
             {
-                //return empty array if there is no books in that category
-                return new List<DTOReturnBook>();
+                return new List<DTOReturnBook>();   //return empty array if there is no books in that category
             }
 
-            //skip elements until you came to that page that is specified in "page" and take only number elements from page that is specified in "pageSize"
-            var paginatedBooks = books.Skip((page - 1) * pageSize).Take(pageSize);
-            return Ok(paginatedBooks);
+            return Ok(books);
         }
 
         [HttpGet("UserHasBook/{bookId}")]
@@ -159,7 +156,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetSearchHistory")]
-        public async Task<IActionResult> GetSearchHistory()
+        public async Task<ActionResult<IList<string>>> GetSearchHistory()
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null)
