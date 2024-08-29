@@ -226,10 +226,10 @@ namespace AIAudioTalesServer.Controllers
                 {
                     Expires = DateTime.Now.AddMinutes(5),
                     HttpOnly = true,
-                    Secure = true,
+                    Secure = true, // Only set Secure flag in non-development environment
                     IsEssential = true,
                     SameSite = SameSiteMode.None,
-                    Domain = "localhost", 
+                    //Domain = "localhost", 
                     Path = "/"
                 });
         }
@@ -253,10 +253,10 @@ namespace AIAudioTalesServer.Controllers
                 {
                     Expires = refreshToken.Expires,
                     HttpOnly = true,
-                    Secure = true,
+                    Secure = true, // ovo kasnije da vratim na true i gore isto
                     IsEssential = true,
                     SameSite = SameSiteMode.None,
-                    Domain = "localhost",
+                    //Domain = "localhost",
                     Path = "/"
                 });
 
