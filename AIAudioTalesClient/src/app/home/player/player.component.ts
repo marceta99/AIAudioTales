@@ -45,7 +45,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
     this.bookService.currentBookIndex.subscribe((index: number)=>{
       if(this.books){
-        this.saveProgress(this.books[index].id);
+        if(this.currentBook) this.saveProgress(this.books[index].id); //do not save progress on initial load when currentBook is not yet loaded
         this.loadBook(index);
       }
     });
@@ -97,12 +97,17 @@ export class PlayerComponent implements OnInit, OnDestroy {
   updateProgress() {
     const current = this.audioElement.nativeElement.currentTime;
     const duration = this.audioElement.nativeElement.duration;
-    this.progress = (current / duration) * 100;
-    this.currentTime = this.formatTime(current);
-    this.maxDuration = this.formatTime(duration);
+    if(!isNaN(duration)) {
+      this.progress = (current / duration) * 100;
+      this.currentTime = this.formatTime(current);
+      this.maxDuration = this.formatTime(duration);
+    }else {
+      this.currentTime = "00:00"
+      this.maxDuration = "00:00"
+    }
   }
 
-  formatTime(seconds: number) {
+  formatTime(seconds: number) :string {
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;

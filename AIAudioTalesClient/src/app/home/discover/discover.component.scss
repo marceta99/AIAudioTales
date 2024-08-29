@@ -2,13 +2,27 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
+
+.content-container{
+  z-index: 1;
+  top: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+}
+
 .books{
   display: flex;
   flex-direction: column;
   overflow-y: auto; /* Enables vertical scrolling */
   height: 100%; /* Ensures .books takes up the remaining height of .container */
   height: calc(100vh - 150px); /* Adjust the 100px to account for other elements like headers */
+  width: 100%;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
@@ -25,6 +39,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: left;
+  margin-left: 2%;
 }
 
 .book {
@@ -35,6 +50,7 @@
  width: 100%;
  height: 15%;
  cursor: pointer;
+ margin-bottom: 5px;
 }
 
 .book:hover{
@@ -60,6 +76,7 @@
   margin-bottom: 2%;
   align-items: flex-end;
   justify-content: center;
+  width: 100%;
 }
 
 .categorie {
@@ -67,4 +84,9 @@
   margin-right: 5px;
 }
 
-
+//mobile view
+@media (max-width: 768px) {
+  .content-container{
+    top: 15%;
+  }
+}

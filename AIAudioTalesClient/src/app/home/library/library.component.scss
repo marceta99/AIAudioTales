@@ -3,6 +3,7 @@
     flex-direction: column;
     margin: 5px;
     list-style: none;
+    margin-left: 2%;
 }
 
 .book{
@@ -17,20 +18,25 @@
 }
 
 .book:hover{
-    background-color: gainsboro;
+    background-image: linear-gradient(to right, #fad8f9, #ecc9f6, #dabaf4, #c4aef3, #aaa2f3);
 }
+
 .book-info{
     display: flex;
     flex-direction: row;
 }
 
 .book-details{
-    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 2%;
+    white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .book-info img{
-    height: 60px;
-    width: 60px;
+    height: 70px;
+    width: 70px;
+    border-radius: 10%;
 }
 
 .playing{

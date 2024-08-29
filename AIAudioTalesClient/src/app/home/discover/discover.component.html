@@ -1,6 +1,7 @@
 <div class="discover-container">
   <app-search-bar></app-search-bar>
 
+  <div class="content-container">
     <div class="categories">
       <div class="categorie" *ngFor="let category of bookCategories">
         <h3 (click)="getBooksFromCategory(category.id)">{{category.categoryName}}</h3>
@@ -11,12 +12,13 @@
       <div class="book" *ngFor="let book of books" (click)="navigateToBook(book.id)">
         <img [src]="book.imageURL" alt="">
         <div class="book-info">
-          <h3>{{book.title}}</h3>
+          <h4>{{book.title}}</h4>
           <span>By Kumadio</span>
         </div>
       </div>
       <span *ngIf="noMoreBooks">There is no more books to load</span>
     </div>
+  </div>
 
 </div>
 

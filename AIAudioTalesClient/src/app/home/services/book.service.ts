@@ -71,7 +71,7 @@ export class BookService {
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-    return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params});
+    return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params , withCredentials: true});
   }
 
   public getSearchHistory(): Observable<string[]> {
