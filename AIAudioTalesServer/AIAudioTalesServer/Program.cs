@@ -110,6 +110,12 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+    options.HttpsPort = 5001; // Adjust according to your setup
+});
+
 // Ensure the upload directory exists
 string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 if (!Directory.Exists(uploadFolder))
@@ -152,6 +158,7 @@ app.Use(async (context, next) =>
 
 app.UseHttpsRedirection();
 
+app.UseHttpsRedirection(); // Add this line to enable HTTPS redirection
 // Serve files from "uploads" directory
 app.UseStaticFiles(new StaticFileOptions
 {

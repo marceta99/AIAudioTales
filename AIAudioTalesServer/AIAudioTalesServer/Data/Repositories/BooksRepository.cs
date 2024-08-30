@@ -325,7 +325,7 @@ namespace AIAudioTalesServer.Data.Repositories
                     await file.CopyToAsync(stream);
                 }
 
-                var audioLink = $"{request.Scheme}://{request.Host}/uploads/{fileName}";
+                var audioLink = $"https://34b910nm-44320.euw.devtunnels.ms/uploads/{fileName}";
                 return audioLink;
             }
 
