@@ -16,11 +16,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
   currentTime = '0:00';
   maxDuration = '0:00';
   isPlaying: boolean = false;
-  fullScreen: boolean = false;
   recognitionActive: boolean = false;
   isTitleOverflowing: boolean = false;
   isArtistOverflowing: boolean = false;
-  isDesktop: boolean = false;
   isFullScreen: boolean = false;
 
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
@@ -33,9 +31,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeSpeechRecognition();
-
-    this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize);
 
     this.bookService.getPurchasedBooks().subscribe({
       next: (books : PurchasedBook[] ) => {
@@ -61,11 +56,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopRecognition();
-  }
-
-  private checkScreenSize(): void {
-    console.log("check screen size", window.innerWidth);
-    this.isDesktop = window.innerWidth >= 768;
   }
 
   setCurrentBook(): void{

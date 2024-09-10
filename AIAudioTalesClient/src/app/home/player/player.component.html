@@ -1,10 +1,6 @@
-<div class="player-container" *ngIf="currentBook">
+<div>
+    <div *ngIf="!isFullScreen && currentBook;else fullscreen" class="minimized-player-container">
       <div class="top-container">
-            <!--<div class="top-bar">
-            <i><img src="../../../assets/icons/expand_more.svg"alt="expand" ></i>
-            <span>Now Playing</span>
-            <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
-            </div>-->
             
           <div class="book-details">
             <img class="book-cover" [src]="currentBook.imageURL" alt="">
@@ -16,7 +12,7 @@
           </div>
 
           <div class="player">
-              <div class="progress-container" *ngIf="isDesktop || isFullScreen">
+              <div class="progress-container" >
                   <span class="current-time">{{ currentTime }}</span>
                   <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
                       <div class="progress-bar" [style.width]="progress + '%'"></div>
@@ -35,22 +31,28 @@
               </div>
           </div>
 
-          <!--<div class="side-buttons" *ngIf="isDesktop || isFullScreen">      
-              <div class="question-container" *ngIf="currentBook.questionsActive">
+          <div class="side-buttons" >      
+              <!--<div class="question-container" *ngIf="currentBook.questionsActive">
                 <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
               </div>
-
+              -->
               <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
-          </div>-->
-      
-        <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
-          <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
-        </audio>
+          </div>
+
+          <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
+            <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
+          </audio>
       </div>
         
-      <div class="bottom-container" *ngIf="!isDesktop && !isFullScreen">
         <div class="bottom-progress-area" (click)="updatePlayingTime($event)" #progressArea>
           <div class="bottom-progress-bar" [style.width]="progress + '%'"></div>
         </div>
+     
+    </div>
+
+    <ng-template #fullscreen>
+      <div class="fullscreen-player-container">
+
       </div>
+    </ng-template>
 </div>

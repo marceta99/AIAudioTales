@@ -1,7 +1,7 @@
-.player-container{
+.minimized-player-container{
     position: fixed;
     bottom: 50px;
-    height: 75px;
+    height: 70px;
     width: 100%;
     background-image: radial-gradient(circle, #d400cf, #aa23c3, #812cb3, #5a2ea0, #352b8a);
     z-index: 1000;
@@ -16,18 +16,13 @@
   align-items: center;
 }
 
-.bottom-container {
-    display: flex;
-    width: 100%;
-}
-
 .player{
     display: flex;
     flex-direction: column;
     margin: 0;
-    width: 40%;
+    width: 100%;
     height: 100%;
-    align-items: center;
+    align-items: end;
     justify-content: center;
 }
 
@@ -35,13 +30,14 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    width: 100%;
+    width: 180px;
     font-weight: 500;
     color: white;
+    margin: 0;
 }
 
 .book-details .book-cover{
-  height: 70px;
+  height: 65px;
   width: 120px;
   padding: 5px;
   border-radius: 10px;
@@ -81,18 +77,18 @@
   }
 }
 
-.controls{
+.controls {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.control{
+.control {
   cursor: pointer;
 }
 
-.controls img{
+.controls img {
   width: 40px;
   height: 40px;
 
@@ -101,35 +97,37 @@
   }
 }
 
-.progress-container{
-    display: flex;
+.progress-container {
+    display: none;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 80%;
 }
 
-.progress-container span{
+.progress-container span {
   margin: 5px;
   color: white;
 }
 
-.progress-area{
+.progress-area {
     height: 6px;
     width: 60%;
     border-radius: 50px;
     background: #f0f0f0;
     cursor: pointer;
-  }
-  .progress-area .progress-bar{
+}
+
+.progress-area .progress-bar {
     height: inherit;
     width: 0%;
     position: relative;
     border-radius: inherit;
     //background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 100%);
     background-image: linear-gradient(to right, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
-  }
-  .progress-bar::before{
+}
+
+.progress-bar::before {
     content: "";
     position: absolute;
     height: 12px;
@@ -143,34 +141,35 @@
     transform: translateY(-50%);
     background: inherit;
     transition: opacity 0.2s ease;
-  }
-  .progress-area:hover .progress-bar::before{
+}
+
+.progress-area:hover .progress-bar::before {
     opacity: 1;
     pointer-events: auto;
-  }
-  
-  .question-container{
+}
+
+.question-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-  }
+}
   
-  .question{
+.question {
     margin: 10;
     height: 50px;
     width: 50px;
-  }
+}
 
-  .mic-active {
+.mic-active {
     margin-top: 3%;
-  }
+}
   
-  .pulse{
+.pulse {
     border-radius: 50%;
     animation: pulse 2s linear infinite;
-  }
+}
   
-  .pulse:before, .pulse:after{
+.pulse:before, .pulse:after {
     content: '';
     position: absolute;
     top: 0;
@@ -181,62 +180,64 @@
     border-radius: 5px;
   }
   
-  .pulse::before{
+.pulse::before {
     width: 15px;
     height: 5.5px;
-  }
+}
   
-  .pulse::after{
+.pulse::after {
     width: 15px;
     height: 35px;
-  }
+}
   
-  @keyframes pulse
+@keyframes pulse
+{
+  0%
   {
-    0%
-    {
-      box-shadow: 0 0 0 0 #f0f0f0;
-    }
-    5%
-    {
-      transform: scale(1.10);
-    }
-    25%
-    {
-      transform: scale(1);
-    }
-    70%
-    {
-      box-shadow: 0 0 0 10px rgba(255, 190, 11, 0);
-    }
-    100%
-    {
-      box-shadow: 0 0 0 20px rgba(255, 190, 11, 0);
-    }
+    box-shadow: 0 0 0 0 #f0f0f0;
   }
+  5%
+  {
+    transform: scale(1.10);
+  }
+  25%
+  {
+    transform: scale(1);
+  }
+  70%
+  {
+    box-shadow: 0 0 0 10px rgba(255, 190, 11, 0);
+  }
+  100%
+  {
+    box-shadow: 0 0 0 20px rgba(255, 190, 11, 0);
+  }
+}
 
-.side-buttons{
-    display: flex;
+.side-buttons {
+    display: none;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.bottom-progress-area{
+.bottom-progress-area {
   height: 6px;
   width: 100%;
   border-radius: 50px;
   background: #f0f0f0;
   cursor: pointer;
 }
-.bottom-progress-area .bottom-progress-bar{
+
+.bottom-progress-area .bottom-progress-bar {
   height: inherit;
   width: 0%;
   position: relative;
   border-radius: inherit;
   background-color: #7AFFF7;
 }
-.bottom-progress-bar::before{
+
+.bottom-progress-bar::before {
   content: "";
   position: absolute;
   height: 12px;
@@ -254,8 +255,28 @@
 
 // for desktop
 @media (min-width: 768px) {
-    .player-container {
+    .minimized-player-container {
         bottom: 0;
-        height: 130px;
-    }  
+        height: 90px;
+    }
+
+    .book-details .book-cover {
+      height: 85px;
+    }
+
+    .progress-container{
+      display: flex;
+    }
+
+    .side-buttons{
+      display: flex;
+    }
+
+    .bottom-progress-area {
+      display: none;
+    }
+
+    .player {
+      align-items: center;
+    }
 }
