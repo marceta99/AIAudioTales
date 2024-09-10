@@ -10,16 +10,19 @@ import { PurchasedBook } from 'src/app/entities';
 export class PlayerComponent implements OnInit, OnDestroy {
   books!: PurchasedBook[];
   currentBook!: PurchasedBook;
-  currentBookIndex = 0;
+  currentBookIndex: number = 0;
   recognition: any;
-  progress = 0;
+  progress: number = 0;
   currentTime = '0:00';
   maxDuration = '0:00';
-  isPlaying = false;
-  fullScreen = false;
-  recognitionActive = false;
+  isPlaying: boolean = false;
+  fullScreen: boolean = false;
+  recognitionActive: boolean = false;
   isTitleOverflowing: boolean = false;
   isArtistOverflowing: boolean = false;
+  isDesktop: boolean = false;
+  isFullScreen: boolean = false;
+
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
   @ViewChild('titleElement') titleElement!: ElementRef;
@@ -30,6 +33,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeSpeechRecognition();
+
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
 
     this.bookService.getPurchasedBooks().subscribe({
       next: (books : PurchasedBook[] ) => {
@@ -57,6 +63,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.stopRecognition();
   }
 
+  private checkScreenSize(): void {
+    console.log("check screen size", window.innerWidth);
+    this.isDesktop = window.innerWidth >= 768;
+  }
+
   setCurrentBook(): void{
     for (let i = 0; i < this.books.length; i++) {
       if (this.books[i].isBookPlaying) {
@@ -80,6 +91,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.bookService.isPlaying.next(false);
       this.audioElement.nativeElement.pause();
       this.startRecognition();
+      this.progress = 100; //set progress bar width to 100% when questions are active, because that means that previous part is finished
     }else{
       this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
       this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
@@ -104,6 +116,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }else {
       this.currentTime = "00:00"
       this.maxDuration = "00:00"
+      this.progress = 0;
     }
   }
 

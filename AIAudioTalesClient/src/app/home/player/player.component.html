@@ -1,49 +1,56 @@
 <div class="player-container" *ngIf="currentBook">
-  
-        <!--<div class="top-bar">
-          <i><img src="../../../assets/icons/expand_more.svg"alt="expand" ></i>
-          <span>Now Playing</span>
-          <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
-        </div>-->
-          
-        <div class="book-details">
-          <img class="book-cover" [src]="currentBook.imageURL" alt="">
+      <div class="top-container">
+            <!--<div class="top-bar">
+            <i><img src="../../../assets/icons/expand_more.svg"alt="expand" ></i>
+            <span>Now Playing</span>
+            <i><img src="../../../assets/icons/more_horiz.svg" alt="more"></i>
+            </div>-->
+            
+          <div class="book-details">
+            <img class="book-cover" [src]="currentBook.imageURL" alt="">
 
-          <div class="book-info">
-            <span #titleElement class="title"  [ngClass]="{'scrolling': isTitleOverflowing}">{{ currentBook.title }}</span>
-            <span #artistElement class="artist"  [ngClass]="{'scrolling': isArtistOverflowing}">{{ "Kumadio" }}</span>
+            <div class="book-info">
+              <span #titleElement class="title"  [ngClass]="{'scrolling': isTitleOverflowing}">{{ currentBook.title }}</span>
+              <span #artistElement class="artist"  [ngClass]="{'scrolling': isArtistOverflowing}">{{ "Kumadio" }}</span>
+            </div>
           </div>
+
+          <div class="player">
+              <div class="progress-container" *ngIf="isDesktop || isFullScreen">
+                  <span class="current-time">{{ currentTime }}</span>
+                  <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
+                      <div class="progress-bar" [style.width]="progress + '%'"></div>
+                  </div>
+                  <span class="max-duration">{{ maxDuration }}</span>
+              </div>
+
+              <div class="controls" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
+                  <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
+
+                  <div class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                      <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
+                  </div>
+
+                  <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
+              </div>
+          </div>
+
+          <!--<div class="side-buttons" *ngIf="isDesktop || isFullScreen">      
+              <div class="question-container" *ngIf="currentBook.questionsActive">
+                <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
+              </div>
+
+              <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
+          </div>-->
+      
+        <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
+          <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
+        </audio>
+      </div>
+        
+      <div class="bottom-container" *ngIf="!isDesktop && !isFullScreen">
+        <div class="bottom-progress-area" (click)="updatePlayingTime($event)" #progressArea>
+          <div class="bottom-progress-bar" [style.width]="progress + '%'"></div>
         </div>
-
-        <div class="player">
-            <div class="progress-container" *ngIf="!currentBook.questionsActive">
-                <span class="current-time">{{ currentTime }}</span>
-                <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
-                    <div class="progress-bar" [style.width]="progress + '%'"></div>
-                </div>
-                <span class="max-duration">{{ maxDuration }}</span>
-            </div>
-
-            <div class="controls" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
-                <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
-
-                <div class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
-                    <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
-                </div>
-
-                <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
-            </div>
-        </div>
-
-        <div class="side-buttons">      
-            <div class="question-container" *ngIf="currentBook.questionsActive">
-            <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
-            </div>
-
-            <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
-        </div>
-    
-      <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
-        <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
-      </audio>
+      </div>
 </div>

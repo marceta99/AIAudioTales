@@ -1,14 +1,24 @@
 .player-container{
     position: fixed;
     bottom: 50px;
-    height: 9%;
+    height: 75px;
     width: 100%;
     background-image: radial-gradient(circle, #d400cf, #aa23c3, #812cb3, #5a2ea0, #352b8a);
     z-index: 1000;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+}
+
+.top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bottom-container {
+    display: flex;
+    width: 100%;
 }
 
 .player{
@@ -18,21 +28,25 @@
     width: 40%;
     height: 100%;
     align-items: center;
+    justify-content: center;
 }
 
 .book-details{
     display: flex;
     flex-direction: row;
     height: 100%;
+    width: 100%;
     font-weight: 500;
     color: white;
 }
 
-.book-details img{
-  height: 100%;
-  width: 80%;
+.book-details .book-cover{
+  height: 70px;
+  width: 120px;
   padding: 5px;
   border-radius: 10px;
+  object-fit: cover; /* This ensures the image fills the entire space */
+  overflow: hidden;  /* Hides any part of the image that overflows */
 }
 
 .book-info{
@@ -65,11 +79,6 @@
   100% {
     transform: translateX(100%); /* Move the text back to the starting point, ready to repeat */
   }
-}
-
-.book-cover{
-    height: 90px;
-    width: 80px;
 }
 
 .controls{
@@ -213,10 +222,40 @@
     align-items: center;
 }
 
+.bottom-progress-area{
+  height: 6px;
+  width: 100%;
+  border-radius: 50px;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+.bottom-progress-area .bottom-progress-bar{
+  height: inherit;
+  width: 0%;
+  position: relative;
+  border-radius: inherit;
+  background-color: #7AFFF7;
+}
+.bottom-progress-bar::before{
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  top: 50%;
+  right: -5px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  background: inherit;
+  transition: opacity 0.2s ease;
+}
+
 // for desktop
 @media (min-width: 768px) {
-
-    .player-container{
+    .player-container {
         bottom: 0;
+        height: 130px;
     }  
-    }
+}
