@@ -160,10 +160,6 @@
     width: 50px;
 }
 
-.mic-active {
-    margin-top: 3%;
-}
-  
 .pulse {
     border-radius: 50%;
     animation: pulse 2s linear infinite;
@@ -260,8 +256,18 @@
         height: 90px;
     }
 
+    .book-details{
+      width: 200px;
+    }
+
+    .book-info {
+      width: 100px;
+    }
+
     .book-details .book-cover {
       height: 85px;
+      width: 100px;
+      padding: 8px;
     }
 
     .progress-container{
