@@ -604,31 +604,54 @@ namespace AIAudioTalesServer.Data.Repositories
             return purchasedBook;
         }
 
-        public async Task<int> ActivateQuestions(int bookId, int userId)
+        public async Task<DTOReturnPurchasedBook?> ActivateQuestions(int bookId, int userId, decimal playingPosition)
         {
             var purchasedBook = await _dbContext.PurchasedBooks
                 .Where(pb => pb.UserId == userId && pb.BookId == bookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Include(pb => pb.PlayingPart).ThenInclude(bp => bp.Answers)
                 .FirstOrDefaultAsync();
 
-            if (purchasedBook == null) return 0;
+            if (purchasedBook == null) return null;
 
             purchasedBook.QuestionsActive = true;
+            purchasedBook.PlayingPosition = playingPosition;
             await _dbContext.SaveChangesAsync();
 
-            return 1;
+            var book = await GetBook(purchasedBook.BookId);
+            var returnPurchasedBook = new DTOReturnPurchasedBook
+            {
+                Id = book.Id,
+                Description = book.Description,
+                Title = book.Title,
+                ImageURL = book.ImageURL,
+                PurchaseType = purchasedBook.PurchaseType,
+                Language = purchasedBook.Language,
+                PlayingPart = _mapper.Map<DTOReturnPart>(purchasedBook.PlayingPart),
+                PlayingPosition = purchasedBook.PlayingPosition,
+                IsBookPlaying = purchasedBook.IsBookPlaying,
+                QuestionsActive = purchasedBook.QuestionsActive
+            };
+
+            return returnPurchasedBook;
         }
 
-        public async Task<bool> UpdateProgress(DTOUpdateProgress updateProgress, int userId)
+        public async Task<DTOReturnPurchasedBook?> UpdateProgress(DTOUpdateProgress updateProgress, int userId)
         {
             var purchasedBook = await _dbContext.PurchasedBooks
                 .Where(pb => pb.UserId == userId && pb.BookId == updateProgress.BookId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Include(pb => pb.PlayingPart).ThenInclude(bp => bp.Answers)
                 .FirstOrDefaultAsync();
 
-            if (purchasedBook == null) return false;
+            if (purchasedBook == null) return null;
 
             if (updateProgress.PlayingPosition.HasValue)
             {
                 purchasedBook.PlayingPosition = (decimal)updateProgress.PlayingPosition;
+            }
+
+            if (updateProgress.QuestionsActive.HasValue)
+            {
+                purchasedBook.QuestionsActive = (bool)updateProgress.QuestionsActive;
             }
 
             //if there is next book to be played set isBookPlaying to false to previous book and to true to next book
@@ -645,7 +668,22 @@ namespace AIAudioTalesServer.Data.Repositories
 
             await _dbContext.SaveChangesAsync();
 
-            return true;
+            var book = await GetBook(purchasedBook.BookId);
+            var returnPurchasedBook = new DTOReturnPurchasedBook
+            {
+                Id = book.Id,
+                Description = book.Description,
+                Title = book.Title,
+                ImageURL = book.ImageURL,
+                PurchaseType = purchasedBook.PurchaseType,
+                Language = purchasedBook.Language,
+                PlayingPart = _mapper.Map<DTOReturnPart>(purchasedBook.PlayingPart),
+                PlayingPosition = purchasedBook.PlayingPosition,
+                IsBookPlaying = purchasedBook.IsBookPlaying,
+                QuestionsActive = purchasedBook.QuestionsActive
+            };
+
+            return returnPurchasedBook;
         }
 
         public async Task<DTOReturnPurchasedBook?> StartBookAgain(int bookId, int userId)

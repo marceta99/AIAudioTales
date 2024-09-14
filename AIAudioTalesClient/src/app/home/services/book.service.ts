@@ -143,17 +143,23 @@ export class BookService {
 
   public nextPart(bookId: number, nextPartId: number): Observable<PurchasedBook>{
     const nextPart = {
-      "bookId": bookId,
-      "nextPartId": nextPartId
-    }
+       bookId,
+       nextPartId
+    };
+
     return this.httpClient.patch<PurchasedBook>(this.path + "Books/NextPart", nextPart);
   }
 
-  public activateQuestions(bookId: number): Observable<void>{
-    return this.httpClient.patch<void>(this.path + "Books/ActivateQuestions/"+bookId, {});
+  public activateQuestions(bookId: number, playingPosition: number): Observable<PurchasedBook> {
+    const activateQuestions = {
+      bookId,
+      playingPosition
+    };
+
+    return this.httpClient.patch<PurchasedBook>(this.path + "Books/ActivateQuestions", activateQuestions);
   }
 
-  public updateProgress(bookId: number, playingPosition?: number, nextBookId?: number): Observable<void> {
+  public updateProgress(bookId: number, playingPosition?: number, nextBookId?: number, questionsActive?: boolean): Observable<PurchasedBook> {
     const progress: any = { bookId };
 
     // Conditionally add optional properties if they have values
@@ -165,7 +171,11 @@ export class BookService {
       progress.nextBookId = nextBookId;
     }
 
-    return this.httpClient.patch<void>(this.path + "Books/UpdateProgress", progress);
+    if(questionsActive !== undefined) {
+      progress.questionsActive = questionsActive;
+    }
+
+    return this.httpClient.patch<PurchasedBook>(this.path + "Books/UpdateProgress", progress);
   }
 
   public startBookAgain(bookId: number): Observable<PurchasedBook> {

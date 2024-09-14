@@ -21,6 +21,7 @@
               </div>
 
               <div class="controls" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
+                  <i id="rewind" class="control" (click)="rewind()"><img src="../../../assets/icons/rewind-10.svg" alt="skip"></i>
                   <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
                   <div class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
@@ -39,7 +40,7 @@
               <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
           </div>
 
-          <audio #audioElement (timeupdate)="updateProgress()" (ended)="loadQuestions()">
+          <audio #audioElement (timeupdate)="progressBarUpdate()" (ended)="activateQuestions()">
             <source  [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg">
           </audio>
       </div>

@@ -47,7 +47,7 @@ export class LibraryComponent implements OnInit{
     }
   }
 
-  playSelectedSong(index: number) {
+  playSelectedBook(index: number) {
     console.log("play this book", index);
     this.bookService.currentBookIndex.next(index);
   }

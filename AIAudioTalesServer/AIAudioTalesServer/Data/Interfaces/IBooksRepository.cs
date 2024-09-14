@@ -42,9 +42,9 @@ namespace AIAudioTalesServer.Data.Interfaces
 
         Task<DTOReturnPurchasedBook?> NextPart(DTOUpdateNextPart nextPart, int userId);
 
-        Task<int> ActivateQuestions(int bookId, int userId);
+        Task<DTOReturnPurchasedBook?> ActivateQuestions(int bookId, int userId, decimal playingPosition);
 
-        Task<bool> UpdateProgress(DTOUpdateProgress updateProgress, int userId);
+        Task<DTOReturnPurchasedBook?> UpdateProgress(DTOUpdateProgress updateProgress, int userId);
 
         Task<DTOReturnPurchasedBook?> StartBookAgain(int bookId, int userId);
 

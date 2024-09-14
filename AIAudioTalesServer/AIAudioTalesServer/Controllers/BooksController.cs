@@ -374,7 +374,7 @@ namespace AIAudioTalesServer.Controllers
         #region PATCH
 
         [HttpPatch("NextPart")]
-        public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart(DTOUpdateNextPart nextPart)
+        public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart([FromBody] DTOUpdateNextPart nextPart)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null)
@@ -391,8 +391,8 @@ namespace AIAudioTalesServer.Controllers
             return BadRequest("There is no part with that id");
         }
 
-        [HttpPatch("ActivateQuestions/{bookId}")]
-        public async Task<ActionResult> ActivateQuestions(int bookId)
+        [HttpPatch("ActivateQuestions")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> ActivateQuestions([FromBody] DTOUpdateActivateQuestions activateQuestions)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null)
@@ -400,17 +400,18 @@ namespace AIAudioTalesServer.Controllers
                 return Unauthorized();
             }
 
-            var result = await _booksRepository.ActivateQuestions(bookId, user.Id);
+            var result = await _booksRepository.ActivateQuestions(activateQuestions.BookId, user.Id, activateQuestions.PlayingPosition);
 
-            if (result != 0)
+            if (result == null)
             {
-                return Ok();
+                return BadRequest("There was a problem with activating questions");
             }
-            return BadRequest("There was a problem with activating questions");
+            
+            return Ok(result);
         }
 
         [HttpPatch("UpdateProgress")]
-        public async Task<ActionResult> UpdateProgress(DTOUpdateProgress progress)
+        public async Task<ActionResult<DTOReturnPurchasedBook>> UpdateProgress(DTOUpdateProgress progress)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null)
@@ -420,11 +421,11 @@ namespace AIAudioTalesServer.Controllers
 
             var result = await _booksRepository.UpdateProgress(progress, user.Id);
 
-            if (result == false)
+            if (result == null)
             {
                 return BadRequest("There was a problem with updating progress");
             }
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPatch("StartBookAgain/{bookId}")]
