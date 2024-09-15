@@ -125,10 +125,17 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   public nextBook(): void {
+    console.log("next ", this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1)
     this.bookService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
   }
 
   public prevBook(): void {
+    if(this.currentBookIndex -1 < 0){
+      const test = this.books.length - 1;
+    }else{
+      const ts = this.currentBookIndex - 1;
+    }
+    console.log("prev ", this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1)
     this.bookService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
   }
 
@@ -141,7 +148,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       next: (purchasedBook: PurchasedBook) => { 
         this.currentBook = purchasedBook;
         this.updateBookList();
-        if(nextBookIndex) this.loadBook(nextBookIndex); // only if there is need for next book, call loadbook() to load next book
+        if(nextBookIndex !== undefined) this.loadBook(nextBookIndex); // only if there is need for next book, call loadbook() to load next book
       },
       error: (error) => console.error('Error updating progress', error)
     });
