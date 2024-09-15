@@ -144,6 +144,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
     this.bookService.updateProgress(bookId, currentTimeSec, nextBookId, questionsActive).subscribe({
       next: (purchasedBook: PurchasedBook) => { 
+        console.log("progress updated")
         this.currentBook = purchasedBook;
         this.updateBookList();
         if(nextBookIndex !== undefined) this.loadBook(nextBookIndex); // only if there is need for next book, call loadbook() to load next book
@@ -272,10 +273,18 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public updatePlayingTime(event: MouseEvent): void {
     const progressWidth = this.progressArea.nativeElement.clientWidth;
     const clickedOffsetX = event.offsetX;
-    const songDuration = this.audioElement.nativeElement.duration;
+    const duration = this.audioElement.nativeElement.duration;
 
-    this.audioElement.nativeElement.currentTime = (clickedOffsetX / progressWidth) * songDuration;
-    
+    const playingPosition = (clickedOffsetX / progressWidth) * duration; 
+    this.audioElement.nativeElement.currentTime  = playingPosition;
+
+    if(playingPosition < duration){
+      if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions acitve to false because now it is rewined 10sec and questions are not active
+        this.saveProgress(playingPosition, undefined, false);
+      } else {
+        this.saveProgress(playingPosition, undefined, undefined);
+      }
+    }
   }
 
   public rewind(): void {
@@ -285,9 +294,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
     audio.currentTime = playingPosition;
     this.progressBarUpdate(); // update the progress bar after rewinding
 
-    if(this.currentBook.questionsActive) { // if questions(mic) are active, set questions acitve to false because now it is rewined 10sec and questions are not active
+    if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions acitve to false because now it is rewined 10sec and questions are not active
       this.saveProgress(playingPosition, undefined, false);
-    }else {
+    } else {
       this.saveProgress(playingPosition, undefined, undefined);
     }
   }
