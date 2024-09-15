@@ -20,13 +20,13 @@
                   <span class="max-duration">{{ maxDuration }}</span>
               </div>
 
-              <div class="controls" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
+              <div class="controls"  [class.disabled]="isLoading" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
                   <i id="rewind" class="control" (click)="rewind()"><img src="../../../assets/icons/rewind-10.svg" alt="skip"></i>
                   <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
-                  <div class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
-                      <i><img [src]="getPlayPauseIcon()" alt="play pause"></i>
-                  </div>
+                  <i class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                    <img [src]="getPlayPauseIcon()" alt="play pause">
+                  </i>
 
                   <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
               </div>

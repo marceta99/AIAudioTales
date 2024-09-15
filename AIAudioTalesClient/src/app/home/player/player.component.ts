@@ -20,6 +20,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   isTitleOverflowing: boolean = false;
   isArtistOverflowing: boolean = false;
   isFullScreen: boolean = false;
+  isLoading: boolean = false;
 
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
@@ -85,6 +86,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
        if (this.isPlaying) this.audioElement.nativeElement.play();
        if (this.recognitionActive) this.stopRecognition(); // stop recognition if was active before
     }
+
+    this.isLoading = false;
   }
 
   private isOverflowing(element: HTMLElement): boolean {
@@ -125,17 +128,12 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   public nextBook(): void {
-    console.log("next ", this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1)
+    this.isLoading = true;
     this.bookService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
   }
 
   public prevBook(): void {
-    if(this.currentBookIndex -1 < 0){
-      const test = this.books.length - 1;
-    }else{
-      const ts = this.currentBookIndex - 1;
-    }
-    console.log("prev ", this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1)
+    this.isLoading = true;
     this.bookService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
   }
 
@@ -210,7 +208,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     if (this.currentBook.questionsActive) {
       return '../../../assets/icons/microphone-extra-small.svg';
     }
-    return this.isPlaying ? '../../../assets/icons/pause.svg' : '../../../assets/icons/play_arrow.svg';
+    return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
 
   private initializeSpeechRecognition(): void {

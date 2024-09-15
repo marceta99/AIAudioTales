@@ -252,6 +252,11 @@
   display: flex;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* or any styling to show the button is disabled */
+}
+
 // for desktop
 @media (min-width: 768px) {
     .minimized-player-container {
