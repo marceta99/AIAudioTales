@@ -284,6 +284,10 @@
 
     .side-buttons{
       display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-right: 10px;
+      margin-top: 25px;
     }
 
     .bottom-progress-area {

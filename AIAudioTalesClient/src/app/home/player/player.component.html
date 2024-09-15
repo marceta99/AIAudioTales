@@ -37,7 +37,7 @@
                 <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
               </div>
               -->
-              <i><img src="../../../assets/icons/fullscreen.svg" alt="skip"></i>
+              <i><img src="../../../assets/icons/full.svg" alt="skip"></i>
           </div>
 
           <audio #audioElement (timeupdate)="progressBarUpdate()" (ended)="activateQuestions()">
