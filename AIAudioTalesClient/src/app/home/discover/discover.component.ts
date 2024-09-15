@@ -14,7 +14,6 @@ import { debounceTime, filter, fromEvent, map, switchMap, tap } from 'rxjs';
 export class DiscoverComponent implements OnInit, AfterViewInit{
   books! : ReturnBook[];
   bookCategories!: Category[];
-  selectedCategory!: Category;
   pageSize: number = 10;
   pageNumber: number = 1;
   currentCategory: number = 1;

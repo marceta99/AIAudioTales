@@ -3,8 +3,8 @@
 
   <div class="content-container">
     <div class="categories">
-      <div class="categorie" *ngFor="let category of bookCategories">
-        <h3 (click)="getBooksFromCategory(category.id)">{{category.categoryName}}</h3>
+      <div class="categorie" [ngClass]="category.id === currentCategory ? 'categorie active-categorie': 'categorie'" *ngFor="let category of bookCategories;">
+        <p (click)="getBooksFromCategory(category.id)">{{category.categoryName}}</p>
       </div>
     </div>
 
