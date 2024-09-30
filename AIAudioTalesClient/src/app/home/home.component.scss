@@ -17,11 +17,17 @@ img {
   visibility: hidden;
 }
 
+#body-container {
+  position: relative;
+  top: 50px;
+}
+
 // for desktop
 @media (min-width: 768px) {
   #body-container {
     margin-left: 200px;
     // max-width: 1100px;
+    top: 0;
   }
 }
 @media screen and (max-width: 900px) {
