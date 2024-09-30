@@ -37,7 +37,16 @@
 .topnav-mob {
   display: flex;
   justify-content: space-between;
-  margin: 0 1rem;
+  align-items: center;
+  margin: 0;
+  top: 0;
+  background-color: var(--main-bg-color);
+  overflow: hidden;
+  position: fixed;
+  height: 50px;
+  width: 100%;
+  padding: 5px;
+
 
   .logo-img {
     max-width: 50px;

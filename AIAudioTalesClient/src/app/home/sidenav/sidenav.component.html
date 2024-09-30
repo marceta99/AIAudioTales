@@ -42,12 +42,12 @@
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
     <p class="logo-text">Kumadio</p>
   </span>
-<div class="mob-icons">
-  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
-    <img src="../../../assets/icons/settings.svg" alt="settings">
-  </span>
-  <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'" routerLinkActive="active-link">
-    <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ itemsCount }}</span>
-  </span>
-</div>
+  <div class="mob-icons">
+    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
+      <img src="../../../assets/icons/settings.svg" alt="settings">
+    </span>
+    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'" routerLinkActive="active-link">
+      <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ itemsCount }}</span>
+    </span>
+  </div>
 </div>

@@ -11,7 +11,8 @@
   margin: 0;
   padding: 1%;
   z-index: 999;
-  position: relative;
+  position: fixed;
+  top: 0;
 }
 
 .wrapper .search-input{
@@ -98,5 +99,10 @@
 @media (max-width: 768px) {
   .search-box{
     max-height: 100%;
+  }
+
+  .wrapper {
+    overflow-y: hidden; /* This disables vertical scrolling */
+    top: 50px;
   }
 }

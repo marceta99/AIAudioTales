@@ -44,7 +44,7 @@
 }
 
 .wave-animation {
-    width: 100px;
+    width: 60px;
     height: 50px;
     position: relative;
     display: inline-flex;
@@ -127,4 +127,12 @@
     background-image: linear-gradient(to bottom, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
     //background: purple;
     animation-delay: 1s;
+}
+
+
+// for desktop
+@media (min-width: 768px) {
+    .wave-animation {
+        width: 100px;
+    }
 }
