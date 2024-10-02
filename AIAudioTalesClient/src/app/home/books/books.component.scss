@@ -1,16 +1,21 @@
 .main-container {
   margin-left: 0.5rem;
-  }
+
+}
+
 .cat-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0 2rem;
+
 }
+
 .main-book-div {
   max-width: 1100px;
   margin: 0 auto;
 }
+
 .banner-div {
   display: flex;
   flex-direction: column;
@@ -21,20 +26,10 @@
 
 }
   
-// .scrolable-banner {
-//   min-height: 100px;
-//   background-attachment: fixed;
-//   background-position: center;
-//   background-repeat: no-repeat;
-//   background-size: cover;
-//   margin: 0 1rem;
-//   background-image: url(../../../assets/banner.png);
-//  } 
-
-
-
 @media (min-width: 768px) {
   .main-container {
-  margin-left: 1rem;
+    margin-left: 1rem;
   }
+
+
 }

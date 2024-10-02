@@ -13,12 +13,12 @@ export class SliderComponent implements OnInit, AfterViewInit{
   firstCardWidth!: any;
   arrowBtns!: any;
   carouselChildrens : any[] = [];
-
-  isDragging = false;
-  isAutoPlay = true;
+  isDragging: boolean = false;
+  isAutoPlay: boolean = true;
   startX! : any;
   startScrollLeft: any;
   timeoutId: any;
+  
   @Input() bookPaginated!: BooksPaginated;
 
   constructor(private elRef: ElementRef, private router: Router) {}
