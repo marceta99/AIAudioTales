@@ -1,0 +1,49 @@
+:host {
+    display: block;
+    width: 100%;
+}
+  
+.books {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Enables vertical scrolling */
+    height: calc(100vh - 200px); /* Adjust the 100px to account for other elements like headers */
+    width: 100%;
+    justify-content: flex-start; /* Aligns items at the top vertically */
+    align-items: stretch; /* Makes items stretch horizontally to fill the container */
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+  
+.book {
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   align-items: center;
+   width: 100%;
+   height: auto;
+   cursor: pointer;
+   margin-bottom: 5px;
+}
+  
+.book:hover{
+    background-image: linear-gradient(to right, #fad8f9, #ecc9f6, #dabaf4, #c4aef3, #aaa2f3);
+}
+  
+.book img{
+    height: 70px;
+    width: 70px;
+    border-radius: 10%;
+}
+  
+.book-info{
+    display: flex;
+    flex-direction: column;
+    margin-left: 2%;
+}

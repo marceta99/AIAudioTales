@@ -102,10 +102,6 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
     })
   }
 
-  navigateToBook(bookId: number){
-    this.router.navigate(['/home/books',bookId])
-  }
-
   private fetchingOperatorHelper(){
       return {
         next: (books : ReturnBook[]) => {

@@ -8,16 +8,7 @@
       </div>
     </div>
 
-    <div class="books" #booksContainer>
-      <div class="book" *ngFor="let book of books" (click)="navigateToBook(book.id)">
-        <img [src]="book.imageURL" alt="">
-        <div class="book-info">
-          <h4>{{book.title}}</h4>
-          <span>By Kumadio</span>
-        </div>
-      </div>
-      <span *ngIf="noMoreBooks">There is no more books to load</span>
-    </div>
+    <app-book-list [books]="books" [noMoreBooks]="noMoreBooks"></app-book-list>
   </div>
 
 </div>

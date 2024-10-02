@@ -6,7 +6,7 @@
 }
 
 .wrapper{
-  width: 100%;
+  width: 85%;
   border: none;
   margin: 0;
   padding: 1%;
@@ -24,13 +24,13 @@
 }
 
 .search-input input{
-  height: 55px;
+  height: 40px;
   width: 100%;
   outline: none;
   border: none;
   border-radius: 5px;
   padding: 0 60px 0 20px;
-  font-size: 18px;
+  font-size: 14px;
   box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
 }
 
@@ -77,11 +77,11 @@
   position: absolute;
   right: 0px;
   top: 0px;
-  height: 55px;
-  width: 55px;
+  height: 45px;
+  width: 45px;
   text-align: center;
-  line-height: 55px;
-  font-size: 20px;
+  line-height: 45px;
+  font-size: 17px;
   color: #644bff;
   cursor: pointer;
 }
@@ -104,5 +104,6 @@
   .wrapper {
     overflow-y: hidden; /* This disables vertical scrolling */
     top: 50px;
+    width: 100%;
   }
 }
