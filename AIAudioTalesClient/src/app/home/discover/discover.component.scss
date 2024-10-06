@@ -57,9 +57,9 @@
 .categorie {
   flex: 0 0 auto; /* Prevents items from shrinking or growing */
   margin: 0 5px; /* Simplified margin */
-  padding: 6px;
+  padding: 1px;
   border-radius: 25px;
-  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+  box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.12);
   background: #fff;
   color: black;
   font-weight: 200;
@@ -72,4 +72,11 @@
 
 //mobile view
 @media (max-width: 768px) {
+  .categories .categorie:first-child {
+    margin-left: 0; /* Ensure the first category has no left margin */
+  }
+
+  .categories {
+    justify-content: flex-start; /* Ensure left alignment on mobile */
+  }
 }
