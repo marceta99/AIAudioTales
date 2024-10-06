@@ -3,32 +3,38 @@
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  overflow: hidden;
+  overflow-y: hidden; /* Prevents the entire content from scrolling */
 }
 
-.content-container{
-  z-index: 1;
-  position: relative;
-  top: 65px; /* Adjust the value to match the height of your search bar */
+.content-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  flex: 1; /* Fills the remaining space */
+  overflow: hidden; /* Prevents scrolling of the entire content */
+  padding-top: 65px; /* Adds space equal to the search bar's height */
 }
 
-.categories{
+.book-list-container {
+  overflow-y: auto; /* Enables vertical scrolling */
+  width: 100%;
+  flex: 1; /* Fills the remaining space */
+  
+}
+
+.categories {
   display: flex;
   flex-direction: row;
-  cursor: pointer;
+  flex-wrap: nowrap; /* Prevents wrapping to the next line */
+  overflow-x: auto;  /* Enables horizontal scrolling */
+  overflow-y: hidden;
   margin-bottom: 2%;
-  margin-left: 0;
-  margin-top: 0;
-  padding: 3px;
+  padding: 0 4px; /* Adjusted to prevent overflow caused by padding */
+  width: 100%;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  overflow-x: scroll; /* Enable horizontal scrolling */
-  overflow-y: hidden;
+  height: 25px;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
 }
 
@@ -46,15 +52,17 @@
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
 }
 
+
+
 .categorie {
-  margin-left: 5px;
-  margin-right: 5px;
+  flex: 0 0 auto; /* Prevents items from shrinking or growing */
+  margin: 0 5px; /* Simplified margin */
+  padding: 6px;
   border-radius: 25px;
   box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
   background: #fff;
   color: black;
   font-weight: 200;
-  padding: 6px;
   font-size: small;
 }
 
@@ -64,11 +72,4 @@
 
 //mobile view
 @media (max-width: 768px) {
-  .content-container{
-    top: 65px;
-  }
-
-  .categories {
-    padding-left: 50%;
-  }
 }
