@@ -46,6 +46,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
     this.bookService.currentBookIndex.subscribe((index: number) => {
         if(this.currentBook) this.saveProgress(undefined, index); //do not save progress on initial load when currentBook is not yet loaded
+        else this.loadBook(index)
     });
 
     this.bookService.isPlaying.subscribe((isPlaying: boolean)=> this.isPlaying = isPlaying);
