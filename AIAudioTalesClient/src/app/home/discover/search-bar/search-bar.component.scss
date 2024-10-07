@@ -13,6 +13,7 @@
   z-index: 999;
   position: fixed;
   top: 0;
+
 }
 
 .wrapper .search-input{
@@ -97,13 +98,19 @@
 
 //mobile view
 @media (max-width: 768px) {
-  .search-box{
-    max-height: 100%;
+   /* Modify the .search-box to take full height when active on mobile */
+   .search-input.active .search-box {
+    height: calc(100vh - 55px); /* Full height of the viewport minus the search bar height */
+    max-height: none; /* Remove the max-height restriction */
+    z-index: 1000; /* Ensure it appears above other elements */
+    overflow-y: auto; /* Allow scrolling within the search box */
   }
 
   .wrapper {
     overflow-y: hidden; /* This disables vertical scrolling */
     top: 50px;
     width: 100%;
+    margin: 0;
+    padding: 0;
   }
 }

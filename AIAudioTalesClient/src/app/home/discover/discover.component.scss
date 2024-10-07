@@ -28,7 +28,7 @@
   flex-wrap: nowrap; /* Prevents wrapping to the next line */
   overflow-x: auto;  /* Enables horizontal scrolling */
   overflow-y: hidden;
-  margin-bottom: 2%;
+  margin-bottom: 5px;
   padding: 0 4px; /* Adjusted to prevent overflow caused by padding */
   width: 100%;
   flex-shrink: 0;
@@ -52,18 +52,17 @@
   -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
 }
 
-
-
 .categorie {
   flex: 0 0 auto; /* Prevents items from shrinking or growing */
   margin: 0 5px; /* Simplified margin */
-  padding: 1px;
+  padding: 2px;
   border-radius: 25px;
   box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.12);
   background: #fff;
   color: black;
   font-weight: 200;
   font-size: small;
+  cursor: pointer;
 }
 
 .active-categorie {
@@ -78,5 +77,13 @@
 
   .categories {
     justify-content: flex-start; /* Ensure left alignment on mobile */
+  }
+
+  .categorie {
+    padding: 1px;
+  }
+
+  .content-container {
+    padding-top: 55px; /* Adds space equal to the search bar's height */
   }
 }
