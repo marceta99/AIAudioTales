@@ -1,29 +1,31 @@
-<div *ngIf="books.length > 0;else noPurchases">
-    <ul class="book-list">
-      <li class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedBook(i)">
-        <div class="book-info">
-          <img class="book-img" [src]="book.imageURL" alt="">
-          <div class="book-details">
-            <h4>{{book.title}}</h4>
-            <p>{{ "By Kumadio" }}</p>
-          </div>
-        </div>
-        <div class="wave-animation" *ngIf="i === currentBookIndex && isPlaying">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+<div class="books" #booksContainer *ngIf="books.length > 0;else noPurchases">
+  <div class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedBook(i)">
+    <div class="book-details">
+      <img [src]="book.imageURL" alt="">
+      <div class="book-info">
+        <h4>{{book.title}}</h4>
+        <span>Kumadio</span>
       </div>
-        <span class="audio-duration">{{ "01:22" }}</span>
-      </li>
-    </ul>
+    </div>
+
+    <!--<div class="wave-animation" *ngIf="i === currentBookIndex && isPlaying">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>-->
+
+    <span class="audio-duration">{{ "01:22" }}</span>
+
+  </div>
 </div>
+
 
 <ng-template #noPurchases>
   <h2>You don't have any books</h2>

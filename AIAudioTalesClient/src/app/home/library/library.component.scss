@@ -1,55 +1,90 @@
-.book-list{
+.books {
     display: flex;
     flex-direction: column;
-    margin: 5px;
-    list-style: none;
-    margin-left: 2%;
-}
-
-.book{
-    height: 100%;
+    overflow-y: auto; /* Enables vertical scrolling */
+    height: calc(100vh - 185px); /* Adjust the 100px to account for other elements like headers */
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 500;
-}
+    justify-content: flex-start; /* Aligns items at the top vertically */
+    align-items: stretch; /* Makes items stretch horizontally to fill the container */
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+  
+.book {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+   width: 100%;
+   height: auto;
+   cursor: pointer;
+   box-shadow: 0 1px 0 rgba(128, 128, 128, 0.5); /* Creates a thin line */
+}
+  
 .book:hover{
     background-image: linear-gradient(to right, #fad8f9, #ecc9f6, #dabaf4, #c4aef3, #aaa2f3);
 }
 
-.book-info{
+.book-details {
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 2;
+    overflow: hidden; /* Prevent overflow */
 }
-
-.book-details{
-    display: flex;
-    flex-direction: column;
-    margin-left: 2%;
-    white-space: nowrap; /* Prevent text from wrapping */
-}
-
-.book-info img{
+  
+.book-details img{
     height: 70px;
     width: 70px;
     border-radius: 10%;
+    padding: 5px;
+    border-radius: 10px;
+    flex-shrink: 0; /* Prevents the image from shrinking */
+}
+  
+.book-details .book-info{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px; /* Adds some space between the image and text */
+    overflow: hidden; /* Prevents text overflow */
+
+}
+
+.book-info span{
+    font-size: 14px;
+}
+
+.book-info h4 {
+    white-space: nowrap;      /* Prevents the text from wrapping */
+    overflow: hidden;         /* Hides the overflowed text */
+    text-overflow: ellipsis;  /* Adds an ellipsis (...) if the text is too long */          
+}
+
+.audio-duration {
+    flex: 1;
+    text-align: right;
+    margin-right: 5px;
 }
 
 .playing{
     color: #8f77c3;      
 }
 
-.wave-animation {
-    width: 60px;
-    height: 50px;
+/*.wave-animation {
+    //width: 60px;
+    //height: 50px;
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
+    flex: 1;
 }
 
 .wave-animation .bar {
@@ -127,12 +162,15 @@
     background-image: linear-gradient(to bottom, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
     //background: purple;
     animation-delay: 1s;
-}
-
+}*/
 
 // for desktop
 @media (min-width: 768px) {
     .wave-animation {
         width: 100px;
+    }
+
+    .books {
+        height: calc(100vh - 170px);
     }
 }
