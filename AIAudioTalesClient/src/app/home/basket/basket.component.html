@@ -1,8 +1,8 @@
 <div class="basket">
   <h3>Basket</h3>
   <div class="books" *ngIf="basket && basket.basketItems.length > 0;else noPurchases">
-    <div class="book"*ngFor="let item of basket.basketItems" (click)="navigateToBook(item.book.id)">
-      <div class="book-details">
+    <div class="book"*ngFor="let item of basket.basketItems" >
+      <div class="book-details" (click)="navigateToBook(item.book.id)">
         <img [src]="item.book.imageURL" alt="">
         <div class="book-info">
           <h4>{{item.book.title}}</h4>
@@ -19,6 +19,6 @@
   </div>
 
   <ng-template #noPurchases>
-    <h2>No books in basket</h2>
+    <h3>0 books in basket</h3>
   </ng-template>
 </div>
