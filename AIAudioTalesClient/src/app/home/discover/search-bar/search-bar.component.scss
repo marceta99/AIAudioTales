@@ -6,10 +6,9 @@
 }
 
 .wrapper{
-  width: 85%;
+  width: calc(100% - 220px);
   border: none;
-  margin: 0;
-  padding: 1%;
+  margin: 10px;
   z-index: 999;
   position: fixed;
   top: 0;
@@ -52,11 +51,16 @@
   padding: 10px 8px;
   opacity: 1;
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  height: auto;
 }
 
 .search-box li{
   list-style: none;
-  padding: 8px 10px;
+  //padding: 8px 10px;
   display: none;
   width: 100%;
   cursor: default;
@@ -68,7 +72,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  margin: 5px;
+  padding: 0;
+  //border: 2px solid black;
+  height: auto;
 }
 .search-box li:hover{
   background: #efefef;
@@ -100,9 +107,9 @@
 @media (max-width: 768px) {
    /* Modify the .search-box to take full height when active on mobile */
    .search-input.active .search-box {
-    height: calc(100vh - 55px); /* Full height of the viewport minus the search bar height */
+    height: calc(100vh - 120px); /* Full height of the viewport minus the search bar height */
     max-height: none; /* Remove the max-height restriction */
-    z-index: 1000; /* Ensure it appears above other elements */
+    z-index: 999; /* Ensure it appears above other elements */
     overflow-y: auto; /* Allow scrolling within the search box */
   }
 

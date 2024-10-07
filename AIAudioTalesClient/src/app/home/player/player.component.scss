@@ -7,6 +7,7 @@
     z-index: 1000;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .top-container {
@@ -124,8 +125,9 @@
     position: relative;
     border-radius: inherit;
     //background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 100%);
-    background-image: linear-gradient(to right, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
-}
+   // background-image: linear-gradient(to right, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+   background-color: #1b1919;
+  }
 
 .progress-bar::before {
     content: "";
@@ -213,19 +215,23 @@
 }
 
 .bottom-progress-area {
-  height: 6px;
+  height: 2px;
   width: 100%;
   border-radius: 50px;
   background: #f0f0f0;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
 }
 
 .bottom-progress-area .bottom-progress-bar {
-  height: inherit;
+  height: 2px;
   width: 0%;
   position: relative;
   border-radius: inherit;
-  background-color: #7AFFF7;
+  background-color: #1b1919;
+  margin: 0;
+  padding: 0;
 }
 
 .bottom-progress-bar::before {
