@@ -5,7 +5,7 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { environment } from 'src/environment/environment';
 import { StripeService } from '../services/stripe.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
@@ -22,7 +22,8 @@ export class BasketComponent implements OnInit{
      private spinnerService: LoadingSpinnerService,
      private stripeService: StripeService, 
      private activatedRoute: ActivatedRoute,
-     private notificationService: ToastNotificationService
+     private notificationService: ToastNotificationService,
+     private router: Router
      ) {}
 
   ngOnInit(): void {
@@ -81,5 +82,9 @@ export class BasketComponent implements OnInit{
     },
 
     })
+  }
+
+  navigateToBook(bookId: number){
+    this.router.navigate(['/home/books',bookId])
   }
 }
