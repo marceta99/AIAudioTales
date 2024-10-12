@@ -54,3 +54,6 @@ AIAudioTalesServer/AIAudioTalesServer/obj/*
 
 #exclude audio files
 AIAudioTalesServer/AIAudioTalesServer/uploads
+
+#exclude migrations
+AIAudioTalesServer/AIAudioTalesServer/Migrations

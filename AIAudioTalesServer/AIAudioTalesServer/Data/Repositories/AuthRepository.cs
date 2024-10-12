@@ -18,6 +18,11 @@ namespace AIAudioTalesServer.Data.Repositories
 
         public async Task<int> AddNewUser(User user)
         {
+            if (string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.LastName))
+            {
+                return 0;
+            }
+
             var isUsed = await IsEmailUsed(user.Email); 
 
             if (isUsed)

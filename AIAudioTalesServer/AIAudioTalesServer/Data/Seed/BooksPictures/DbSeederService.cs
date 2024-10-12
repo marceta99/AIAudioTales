@@ -26,7 +26,9 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                        Email = "kumadio@gmail.com",
                        PasswordHash = new byte[]{},
                        PasswordSalt = new byte[] {},
-                       Role = Role.CREATOR
+                       Role = Role.CREATOR,
+                       FirstName = "Kumadio",
+                       LastName = "Kumadic"
                     }
                 };
                 _dbContext.Users.AddRange(usersInitialData);

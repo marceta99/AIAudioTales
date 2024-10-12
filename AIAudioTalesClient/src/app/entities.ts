@@ -4,12 +4,16 @@ export interface User {
   role: Role
 }
 export interface RegisterUser {
+  firstName: string, 
+  lastName: string,
   email: string,
   password : string,
   confirmPassword: string
 }
 
 export interface RegisterCreator {
+  firstName: string, 
+  lastName: string,
   email: string,
   password : string,
   confirmPassword: string

@@ -29,7 +29,13 @@ namespace AIAudioTalesServer.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] Register model)
         {
-            var user = new User() { Email = model.Email, Role = Role.LISTENER_NO_SUBSCRIPTION };
+            var user = new User()
+            {   
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Role = Role.LISTENER_NO_SUBSCRIPTION 
+            };
 
             if (model.ConfirmPassword == model.Password)
             {
@@ -45,15 +51,21 @@ namespace AIAudioTalesServer.Controllers
             }
             var result = await _authRepository.AddNewUser(user);
 
-            if (result == 0) return BadRequest("User with that user name already exists");
+            if (result == 0) return BadRequest("Problem with registering user");
 
-            return Ok(user);
+            return Ok();
         }
 
         [HttpPost("RegisterCreator")]
         public async Task<IActionResult> RegisterCreator([FromBody] RegisterCreator model)
         {
-            var user = new User() { Email = model.Email, Role = Role.CREATOR };
+            var user = new User() 
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Role = Role.CREATOR 
+            };
 
             if (model.ConfirmPassword == model.Password)
             {
@@ -71,7 +83,7 @@ namespace AIAudioTalesServer.Controllers
 
             if (result == 0) return BadRequest("User with that email already exists");
 
-            return Ok(user);
+            return Ok();
         }
 
         [HttpPost("Login")]

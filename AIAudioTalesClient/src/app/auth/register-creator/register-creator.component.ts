@@ -18,6 +18,8 @@ export class RegisterCreatorComponent {
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
+      firstName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+      lastName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
       confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(6)])
@@ -26,6 +28,8 @@ export class RegisterCreatorComponent {
 
   onSubmit() {
     this.creator = {
+      firstName: this.registerForm.controls['firstName'].value,
+      lastName: this.registerForm.controls['lastName'].value,
       email: this.registerForm.controls['email'].value,
       password: this.registerForm.controls['password'].value,
       confirmPassword: this.registerForm.controls['confirmPassword'].value

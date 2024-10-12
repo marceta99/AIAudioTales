@@ -203,6 +203,22 @@ namespace AIAudioTalesServer.Data
 
             #endregion
 
+            #region Fixed precision for decimal types
+
+            modelBuilder.Entity<BasketItem>()
+                .Property(b => b.ItemPrice)
+                .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Price)
+                .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<PurchasedBooks>()
+                .Property(p => p.PlayingPosition)
+                .HasColumnType("decimal(18, 2)");
+
+            #endregion
+
         }
 
     }
