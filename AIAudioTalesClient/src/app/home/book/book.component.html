@@ -14,9 +14,9 @@
     <li>categ</li>
   </ul>
   <div class="btn-div">
-    <button *ngIf="!userHasBook && currentUser?.role === 'LISTENER_WITH_SUBSCRIPTION'" (click)="purchaseBook(2)" [disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
+    <button *ngIf="!userHasBook && currentUser?.role === 1" (click)="purchaseBook(2)" [disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
       Enroll</button>
-    <button *ngIf="!userHasBook && currentUser?.role === 'LISTENER_NO_SUBSCRIPTION' && !isBasketItem" (click)="addBasketItem(book.id)"[disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
+    <button *ngIf="!userHasBook && currentUser?.role === 2 && !isBasketItem" (click)="addBasketItem(book.id)"[disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
       Add to basket</button>
 
     <a *ngIf="isBasketItem" class="btn_prim" [routerLink]="['/home/basket']"><img src="../../../assets/icons/enroll.svg" alt="play">

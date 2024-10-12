@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Identity;
+using AIAudioTalesServer.Models.DTOS;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -20,6 +20,7 @@ namespace AIAudioTalesServer.Controllers
     {
         private readonly IAuthRepository _authRepository;
         private readonly AppSettings _applicationSettings;
+
         public AuthController(IAuthRepository authRepository, IOptions<AppSettings> applicationSettings)
         {
             _authRepository = authRepository;
@@ -87,7 +88,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] Login model)
+        public async Task<ActionResult<DTOReturnUser>> Login([FromBody] Login model)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +108,8 @@ namespace AIAudioTalesServer.Controllers
                 return BadRequest("User name or password was invalid");
             }
             await JwtGenerator(user);
-            return Ok(new { email = user.Email, role = user.Role.ToString() });
+            var dtoUser = _authRepository.GetDTOUser(user);
+            return Ok(dtoUser);
         }
 
         //this metod will generate new jwt token, when current jwt token expires
@@ -166,7 +168,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpPost("LoginWithGoogle")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody] string credentials)
+        public async Task<ActionResult<DTOReturnUser>> LoginWithGoogle([FromBody] string credentials)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
@@ -180,7 +182,8 @@ namespace AIAudioTalesServer.Controllers
             if (user != null)
             {
                 await JwtGenerator(user);
-                return Ok(new {email = user.Email, role = user.Role.ToString() });
+                var dtoUser = _authRepository.GetDTOUser(user);
+                return Ok(dtoUser);
             }
             else
             {

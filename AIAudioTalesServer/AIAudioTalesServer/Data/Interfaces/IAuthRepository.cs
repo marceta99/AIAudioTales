@@ -1,4 +1,5 @@
 ﻿using AIAudioTalesServer.Models;
+using AIAudioTalesServer.Models.DTOS;
 using AIAudioTalesServer.Models.Enums;
 
 namespace AIAudioTalesServer.Data.Interfaces
@@ -8,6 +9,7 @@ namespace AIAudioTalesServer.Data.Interfaces
         Task<int> AddNewUser(User user);
         Task<bool> IsEmailUsed(string userName);
         bool CheckPassword(string password, User user);
+        DTOReturnUser GetDTOUser(User user);
         Task<User> GetUserWithEmail(string email);
         Task<RefreshToken> GetRefreshToken(string refreshToken);
         Task<User> GetUserWithRefreshToken(RefreshToken refreshToken);

@@ -1,19 +1,25 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
+using AIAudioTalesServer.Models.DTOS;
 using AIAudioTalesServer.Models.Enums;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace AIAudioTalesServer.Data.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public AuthRepository(AppDbContext dbContext)
+
+        public AuthRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<int> AddNewUser(User user)
@@ -59,6 +65,10 @@ namespace AIAudioTalesServer.Data.Repositories
             var user = await _dbContext.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
 
             return user;
+        }
+        public DTOReturnUser GetDTOUser(User user)
+        {
+            return _mapper.Map<DTOReturnUser>(user);
         }
         public async Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user)
         {

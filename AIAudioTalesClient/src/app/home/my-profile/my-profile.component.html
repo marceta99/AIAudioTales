@@ -1,6 +1,6 @@
 <div class="profile-container">
     <div class="user-info"></div>
 
-    <button (click)="createSubscribeSession()" *ngIf="currentUser?.role === 'LISTENER_NO_SUBSCRIPTION'">Subscribe</button>
-    <h1 *ngIf="currentUser?.role === 'LISTENER_WITH_SUBSCRIPTION'">Live Subscription</h1>
+    <button (click)="createSubscribeSession()" *ngIf="currentUser?.role === 1">Subscribe</button>
+    <h1 *ngIf="currentUser?.role === 1">Live Subscription</h1>
 </div>

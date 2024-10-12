@@ -1,5 +1,7 @@
 //Entities
 export interface User {
+  firstName: string,
+  lastName: string,
   email: string,
   role: Role
 }
@@ -154,10 +156,10 @@ export enum ToastIcon{
 }
 
 export enum Role{
-  ADMIN="ADMIN",
-  LISTENER_WITH_SUBSCRIPTION="LISTENER_WITH_SUBSCRIPTION",
-  LISTENER_NO_SUBSCRIPTION="LISTENER_NO_SUBSCRIPTION",
-  CREATOR="CREATOR"
+  ADMIN = 0,
+  LISTENER_WITH_SUBSCRIPTION = 1,
+  LISTENER_NO_SUBSCRIPTION = 2,
+  CREATOR = 3
 }
 
 export enum BookCategory{
