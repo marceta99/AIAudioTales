@@ -2,10 +2,10 @@
     <!-- Upper part with user info -->
     <div class="user-info" *ngIf="currentUser">
       <div class="profile-circle">
-        <span>{{ currentUser?.firstName?.[0] || '' }}{{ currentUser?.lastName?.[0] || '' }}</span>
+        <span>{{ currentUser.firstName[0] || '' }}{{ currentUser.lastName[0] || '' }}</span>
       </div>
       <div class="profile-details">
-        <h2>{{ currentUser?.firstName || 'Unknown' }} {{ currentUser?.lastName || 'User' }}</h2>
+        <h2>{{ currentUser.firstName || 'Unknown' }} {{ currentUser.lastName || 'User' }}</h2>
         <div class="stats">
           <div class="stat">
             <h3>6</h3>
@@ -32,7 +32,7 @@
           <router-outlet></router-outlet>
         </div>
       </div>
-      
+
     <!-- Subscribe button -->
     <button (click)="createSubscribeSession()" *ngIf="currentUser?.role === 1">Subscribe</button>
     <h1 *ngIf="currentUser?.role === 1">Live Subscription</h1>
