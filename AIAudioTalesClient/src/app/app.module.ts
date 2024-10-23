@@ -28,6 +28,11 @@ import { BookTreeComponent } from './home/book-tree/book-tree.component';
 import { ModalDialogComponent } from './home/modal-dialog/modal-dialog.component';
 import { PlayerComponent } from './home/player/player.component';
 import { BookListComponent } from './home/discover/book-list/book-list.component';
+import { AccountComponent } from './home/my-profile/settings/account/account.component';
+import { LanguageComponent } from './home/my-profile/settings/language/language.component';
+import { ListenHistoryComponent } from './home/my-profile/settings/listen-history/listen-history.component';
+import { SupportComponent } from './home/my-profile/settings/support/support.component';
+import { AchievementsComponent } from './home/my-profile/settings/achievements/achievements.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,12 @@ import { BookListComponent } from './home/discover/book-list/book-list.component
     BookTreeComponent,
     ModalDialogComponent,
     PlayerComponent,
-    BookListComponent
+    BookListComponent,
+    AccountComponent,
+    LanguageComponent,
+    ListenHistoryComponent,
+    SupportComponent,
+    AchievementsComponent
   ],
   imports: [
     BrowserModule,

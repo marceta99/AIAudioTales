@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { StripeService } from '../services/stripe.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { environment } from 'src/environment/environment';
@@ -16,6 +16,8 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
 export class MyProfileComponent implements OnInit{
   private stripePromise!: Promise<Stripe | null>;
   currentUser!: User | null;
+
+  @ViewChild('tabsContainer') tabsContainer!: ElementRef;
   
   constructor(
     private stripeService: StripeService,
@@ -72,4 +74,6 @@ export class MyProfileComponent implements OnInit{
         error: (error) => console.error('Error creating checkout session', error),
       });
   }
+
+  
 }

@@ -1,6 +1,41 @@
 <div class="profile-container">
-    <div class="user-info"></div>
-
+    <!-- Upper part with user info -->
+    <div class="user-info" *ngIf="currentUser">
+      <div class="profile-circle">
+        <span>{{ currentUser?.firstName?.[0] || '' }}{{ currentUser?.lastName?.[0] || '' }}</span>
+      </div>
+      <div class="profile-details">
+        <h2>{{ currentUser?.firstName || 'Unknown' }} {{ currentUser?.lastName || 'User' }}</h2>
+        <div class="stats">
+          <div class="stat">
+            <h3>6</h3>
+            <p>Books Read</p>
+          </div>
+          <div class="stat">
+            <h3>2</h3>
+            <p>Listening Hours</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tabs section -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button routerLink="account" routerLinkActive="active" class="tab">Account</button>
+        <button routerLink="language" routerLinkActive="active" class="tab">Language</button>
+        <button routerLink="achievements" routerLinkActive="active" class="tab">Achievements</button>
+        <button routerLink="listen-history" routerLinkActive="active" class="tab">Listen History</button>
+        <button routerLink="support" routerLinkActive="active" class="tab">Support</button>
+      </div>
+      <div class="tab-content">
+        <!-- This is where the component content will be loaded -->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  
+    <!-- Subscribe button -->
     <button (click)="createSubscribeSession()" *ngIf="currentUser?.role === 1">Subscribe</button>
     <h1 *ngIf="currentUser?.role === 1">Live Subscription</h1>
-</div>
+  </div>
+  

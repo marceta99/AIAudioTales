@@ -15,6 +15,11 @@ import { StatisticsComponent } from './home/statistics/statistics.component';
 import { CreateBookComponent } from './home/create-book/create-book.component';
 import { MyBooksComponent } from './home/my-books/my-books.component';
 import { BookTreeComponent } from './home/book-tree/book-tree.component';
+import { AccountComponent } from './home/my-profile/settings/account/account.component';
+import { LanguageComponent } from './home/my-profile/settings/language/language.component';
+import { ListenHistoryComponent } from './home/my-profile/settings/listen-history/listen-history.component';
+import { SupportComponent } from './home/my-profile/settings/support/support.component';
+import { AchievementsComponent } from './home/my-profile/settings/achievements/achievements.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -27,7 +32,14 @@ const routes: Routes = [
 
     {path: "library", component: LibraryComponent},
 
-    {path: "my-profile", component: MyProfileComponent},
+    { path: 'my-profile', component: MyProfileComponent, children: [
+      { path: 'account', component: AccountComponent },
+      { path: 'language', component: LanguageComponent },
+      { path: 'listen-history', component: ListenHistoryComponent },
+      { path: 'support', component: SupportComponent },
+      { path: 'achievements', component: AchievementsComponent },
+      { path: '', redirectTo: 'account', pathMatch: 'full' } // Default tab
+    ]},
     {path: "discover", component: DiscoverComponent},
     {path: "basket", component: BasketComponent},
 
