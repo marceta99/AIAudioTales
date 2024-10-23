@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { StripeService } from '../services/stripe.service';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { environment } from 'src/environment/environment';
@@ -13,11 +13,12 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
   templateUrl: './my-profile.component.html',
   styleUrls: ['./my-profile.component.scss']
 })
-export class MyProfileComponent implements OnInit{
+export class MyProfileComponent implements OnInit, AfterViewInit {
   private stripePromise!: Promise<Stripe | null>;
   currentUser!: User | null;
 
-  @ViewChild('tabsContainer') tabsContainer!: ElementRef;
+  @ViewChild('tabsContainer', { static: true }) tabsContainer!: ElementRef; // Reference to the tabs container
+  @ViewChildren('tab') tabs!: QueryList<ElementRef>; // References to all tabs
   
   constructor(
     private stripeService: StripeService,
@@ -60,6 +61,29 @@ export class MyProfileComponent implements OnInit{
       this.notificationService.show(toast);
     }
    });
+  }
+
+  
+  ngAfterViewInit(): void {
+    this.scrollToActiveTab();
+  }
+
+  scrollToActiveTab(): void {
+    const currentRoute = this.router.url.split('/').pop(); // Get the current route (e.g., 'account', 'language')
+    let activeTabElement: ElementRef | undefined;
+
+    // Find the corresponding tab for the active route
+    this.tabs.forEach((tab) => {
+      const tabRoute = tab.nativeElement.getAttribute('routerLink'); // Get the router link from the tab
+      if (tabRoute === currentRoute) {
+        activeTabElement = tab; // Match the tab to the current route
+      }
+    });
+
+    // Scroll to the active tab if found
+    if (activeTabElement) {
+      activeTabElement.nativeElement.scrollIntoView({ inline: 'center', behavior: 'smooth' });
+    }
   }
 
   async createSubscribeSession(){

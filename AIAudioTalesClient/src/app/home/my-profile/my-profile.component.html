@@ -21,19 +21,18 @@
   
     <!-- Tabs section -->
     <div class="tabs-container">
-      <div class="tabs">
-        <button routerLink="account" routerLinkActive="active" class="tab">Account</button>
-        <button routerLink="language" routerLinkActive="active" class="tab">Language</button>
-        <button routerLink="achievements" routerLinkActive="active" class="tab">Achievements</button>
-        <button routerLink="listen-history" routerLinkActive="active" class="tab">Listen History</button>
-        <button routerLink="support" routerLinkActive="active" class="tab">Support</button>
+        <div class="tabs" #tabsContainer>
+          <button routerLink="account" routerLinkActive="active" #tab class="tab">Account</button>
+          <button routerLink="language" routerLinkActive="active" #tab class="tab">Language</button>
+          <button routerLink="achievements" routerLinkActive="active" #tab class="tab">Achievements</button>
+          <button routerLink="listen-history" routerLinkActive="active" #tab class="tab">Listen History</button>
+          <button routerLink="support" routerLinkActive="active" #tab class="tab">Support</button>
+        </div>
+        <div class="tab-content">
+          <router-outlet></router-outlet>
+        </div>
       </div>
-      <div class="tab-content">
-        <!-- This is where the component content will be loaded -->
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  
+      
     <!-- Subscribe button -->
     <button (click)="createSubscribeSession()" *ngIf="currentUser?.role === 1">Subscribe</button>
     <h1 *ngIf="currentUser?.role === 1">Live Subscription</h1>
