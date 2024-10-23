@@ -223,7 +223,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.recognition = new SpeechRecognition();
     this.recognition.continuous = true;
     this.recognition.interimResults = false;
-    this.recognition.lang = 'en-US';
+    //this.recognition.lang = 'en-US';
+    this.recognition.lang = 'sr';
 
     this.recognition.onstart = () => {
       console.log('Speech recognition started');
