@@ -10,7 +10,7 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
 })
 export class BooksComponent implements OnInit {
   booksPaginated: BooksPaginated[] = [];
-  homePageCategories : number[] = [5, 6, 4];
+  homePageCategories : number[] = [5, 6];
 
   constructor(private bookService: BookService, private spinnerService: LoadingSpinnerService) {}
 

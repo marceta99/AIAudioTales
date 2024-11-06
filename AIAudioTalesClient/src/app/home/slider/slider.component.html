@@ -5,11 +5,10 @@
 
       <li [ngClass]="'card '+'card'+bookPaginated.booksCategory" *ngFor="let book of bookPaginated.books" (click)="navigateToBook(book.id)">
         <div class="img"><img [src]="book.imageURL" alt="img" draggable="false"></div>
-        <h4>{{book.title}}</h4>
+        <span class="book-title">{{book.title}}</span>
+        <span class="book-author">Author name</span>
       </li>
-
     </ul>
-
     <i [id]="'right'+bookPaginated.booksCategory" class="fa-solid fa-angle-right" (click)="arrowButtonsClick(rightButton)" #rightButton></i>
   </div>
 </div>

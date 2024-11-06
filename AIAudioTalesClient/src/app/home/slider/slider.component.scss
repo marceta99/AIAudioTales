@@ -81,8 +81,8 @@
   cursor: pointer;
   flex-direction: column;
   overflow: hidden;
-
-
+  text-align: left; 
+  align-items: flex-start;
 }
 .carousel .card .img {
   height: 200px;
@@ -103,33 +103,88 @@
 .carousel .card span {
   color: #6A6D78;
   font-size: 1.31rem;
+  /* Add the following properties */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+
+.carousel .card .book-title {
+  color: #6A6D78;
+  font-size: 0.9rem; /* Adjust font size as desired */
+  font-weight: bold; /* Makes text bold */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis when text doesn't fit */
+  margin-top: 5px; /* Optionally adjust spacing */
+  min-width: 0; /* Allows flex item to shrink */
+}
+
+.carousel .card .book-author {
+  color: #6A6D78;
+  font-size: 0.8rem; /* Smaller font size for author */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis when text doesn't fit */
+  margin-top: 2px; /* Optionally adjust spacing */
+  min-width: 0; /* Allows flex item to shrink */
+}
+
+.carousel .card .book-title,
+.carousel .card .book-author {
+  max-width: 100%;
+}
+
+/* At max-width: 1250px, show 4 cards */
 @media screen and (max-width: 1250px) {
   .wrapper .carousel {
-    grid-auto-columns: calc((100% / 4) - 9px);
+    grid-auto-columns: calc((100% / 4) - 12px);
   }
 }
-@media screen and (max-width: 1250px) {
-  .wrapper .carousel {
-    grid-auto-columns: calc((100% / 3) - 9px);
-  }
-}
+
+/* At max-width: 900px, show 3 cards */
 @media screen and (max-width: 900px) {
   .wrapper .carousel {
-    grid-auto-columns: calc((100% / 2) - 9px);
+    grid-auto-columns: calc((100% / 3) - 12px);
   }
 }
 
+/* Optional: At max-width: 450px, still show 3 cards */
 @media screen and (max-width: 450px) {
   .wrapper .carousel {
-    grid-auto-columns: 100%;
+    grid-auto-columns: calc((100% / 3) - 12px);
   }
+}
 
+/* Optional: At very small widths, show 1 card */
+@media screen and (max-width: 350px) {
+  .wrapper .carousel {
+    grid-auto-columns: calc(100% - 12px);
+  }
+}
+
+/* Hide arrow buttons on screens smaller than 768px */
+@media screen and (max-width: 768px) {
+  .wrapper i {
+    display: none;
+  }
 }
 
 /* Hide the left and right arrow buttons on screens smaller than 768px */
 @media screen and (max-width: 768px) {
   .wrapper i {
     display: none;
+  }
+
+  .carousel .card .img {
+    height: 100px;
+    width: 100px;
+  
+  }
+  .card .img img {
+    width: 100px;
+    height: 100px;
+  
   }
 }
