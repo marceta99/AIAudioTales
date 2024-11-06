@@ -126,3 +126,10 @@
   }
 
 }
+
+/* Hide the left and right arrow buttons on screens smaller than 768px */
+@media screen and (max-width: 768px) {
+  .wrapper i {
+    display: none;
+  }
+}
