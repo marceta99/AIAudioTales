@@ -20,6 +20,7 @@ export class SliderComponent implements OnInit, AfterViewInit{
   timeoutId: any;
   
   @Input() bookPaginated!: BooksPaginated;
+  @Input() size: 'small' | 'big' = 'small'; 
 
   constructor(private elRef: ElementRef, private router: Router) {}
 
