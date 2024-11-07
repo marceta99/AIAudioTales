@@ -177,14 +177,17 @@
     display: none;
   }
 
-  .carousel .card .img {
-    height: 100px;
-    width: 100px;
-  
-  }
-  .card .img img {
-    width: 100px;
-    height: 100px;
-  
-  }
+   /* Styles when size is 'small' */
+   .slider-box.small .carousel .card .img,
+   .slider-box.small .card .img img {
+     height: 100px;
+     width: 100px;
+   }
+ 
+   /* Styles when size is 'big' */
+   .slider-box.big .carousel .card .img,
+   .slider-box.big .card .img img {
+     height: 150px;
+     width: 150px;
+   }
 }

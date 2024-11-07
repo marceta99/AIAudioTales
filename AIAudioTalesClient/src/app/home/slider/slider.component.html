@@ -1,4 +1,4 @@
-<div (mouseup)="dragStop()" class="slider-box">
+<div (mouseup)="dragStop()" [ngClass]="['slider-box', size]">
   <div [ngClass]="'wrapper '+'wrapper'+bookPaginated.booksCategory" ><!--(mouseenter)="clearTimeout()">-->
     <i [id]="'left'+bookPaginated.booksCategory" class="fa-solid fa-angle-left" (click)="arrowButtonsClick(leftButton)" #leftButton></i>
     <ul [ngClass]="'carousel '+'carousel'+bookPaginated.booksCategory" (mousedown)="dragStart($event)" (mousemove)="dragging($event)" > <!--(scroll)="infiniteScroll()">-->
