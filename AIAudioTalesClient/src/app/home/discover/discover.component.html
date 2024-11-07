@@ -1,17 +1,23 @@
 <div class="discover-container">
+  <!-- Search bar remains at the top -->
   <app-search-bar></app-search-bar>
 
+  <!-- Content container holds categories and book list -->
   <div class="content-container">
+    <!-- Categories remain fixed below the search bar -->
     <div class="categories">
-      <div class="categorie" [ngClass]="category.id === currentCategory ? 'categorie active-categorie': 'categorie'" *ngFor="let category of bookCategories;">
-        <p (click)="getBooksFromCategory(category.id)">{{category.categoryName}}</p>
+      <div
+        class="categorie"
+        [ngClass]="category.id === currentCategory ? 'categorie active-categorie' : 'categorie'"
+        *ngFor="let category of bookCategories;"
+      >
+        <p (click)="getBooksFromCategory(category.id)">{{ category.categoryName }}</p>
       </div>
     </div>
 
-    <div class="book-list-container">
+    <!-- Book list container is the scrollable area -->
+    <div class="book-list-container" #bookListContainer>
       <app-book-list [books]="books" [noMoreBooks]="noMoreBooks"></app-book-list>
     </div>
   </div>
-
 </div>
-

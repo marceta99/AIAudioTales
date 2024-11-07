@@ -21,7 +21,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   isSearchFromTerm: boolean = false;
   noMoreBooks: boolean = false; //there are no more books to load for that category from the server
 
-  @ViewChild('booksContainer') booksContainer!: ElementRef;
+  @ViewChild('bookListContainer') booksContainer!: ElementRef;
 
   constructor(
     private bookService : BookService,
@@ -33,6 +33,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
     //don't send GET request if already all books are loaded
     fromEvent(this.booksContainer.nativeElement, 'scroll')
     .pipe(
+      tap(() => console.log("scrollll")),
       filter(()=> !this.noMoreBooks),
       debounceTime(300), // Wait for 200 ms of inactivity
       map((event: any) => ({
@@ -44,7 +45,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
         event.target.clientHight viewable height of an element in pixels, including vertical padding, but not including borders, margins, or horizontal scrollbars (if present).
         event.target.scrollHeight is the total scrollable height of .books, including content not visible on the screen.
         When scrollTop + offsetHeight is greater than or equal to scrollHeight, it means the user has scrolled to the bottom.*/
-      filter(({ scrollTop, scrollHeight, clientHeight }) => scrollTop + clientHeight >= scrollHeight - 50), // Near bottom, that is why is -50
+      filter(({ scrollTop, scrollHeight, clientHeight }) => scrollTop + clientHeight >= scrollHeight - 100), // Near bottom, that is why is -50
       switchMap(() => {
         if(this.isSearchFromTerm) {
           return this.bookService.searchBooks(this.searchTerm, this.pageNumber++, this.pageSize).pipe(tap(this.fetchingOperatorHelper()))

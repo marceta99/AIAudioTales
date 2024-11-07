@@ -1,26 +1,32 @@
-.discover-container{
+.discover-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
-  overflow-y: hidden; /* Prevents the entire content from scrolling */
+  
+  overflow: hidden; /* Prevents the entire content from scrolling */
+  height: calc(100vh - 130px);
 }
 
+/* Content container takes the remaining space */
 .content-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  flex: 1; /* Fills the remaining space */
+  flex: 1; /* Fills the remaining space after the search bar */
   overflow: hidden; /* Prevents scrolling of the entire content */
-  padding-top: 65px; /* Adds space equal to the search bar's height */
+  min-height: 0; /* Allows flex item to shrink */
 }
 
 .book-list-container {
   overflow-y: auto; /* Enables vertical scrolling */
   width: 100%;
-  flex: 1; /* Fills the remaining space */
-  
+  flex: 1;
 }
+
+/* Optional: Hide scrollbar if desired */
+.book-list-container::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
 
 .categories {
   display: flex;
