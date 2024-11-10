@@ -1,10 +1,9 @@
 <div class="discover-container">
-  <!-- Search bar remains at the top -->
+  <!-- Search bar remains at the top 
   <app-search-bar></app-search-bar>
 
-  <!-- Content container holds categories and book list -->
   <div class="content-container">
-    <!-- Categories remain fixed below the search bar -->
+  
     <div class="categories">
       <div
         class="categorie"
@@ -15,9 +14,16 @@
       </div>
     </div>
 
-    <!-- Book list container is the scrollable area -->
     <div class="book-list-container" #bookListContainer>
       <app-book-list [books]="books" [noMoreBooks]="noMoreBooks"></app-book-list>
     </div>
   </div>
+-->
+
+<div class="grid-container">
+  <div class="grid-item" *ngFor="let item of items">
+    <img [src]="item.imageUrl" alt="Image" class="item-image" />
+    <div class="item-text">{{ item.title }}</div>
+  </div>
+</div>
 </div>

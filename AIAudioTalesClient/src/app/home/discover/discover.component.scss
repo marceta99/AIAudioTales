@@ -93,3 +93,64 @@
     padding-top: 55px; /* Adds space equal to the search bar's height */
   }
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// grid styling 
+.grid-container {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: #a481ff; /* Dark background similar to your example */
+  border-radius: 8px;
+  color:#fff; /* Text color */
+}
+
+.item-image {
+  width: 50px;
+  height: 100%;
+  object-fit: cover;
+  margin-right: 12px;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.item-text {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Responsive Grid for Different Screen Sizes */
+@media (max-width: 768px) {
+  /* 4 rows with 2 columns on mobile screens */
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
+  }
+
+  .item-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .item-text {
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+}
+
+@media (min-width: 769px) {
+  /* 2 rows with 4 columns on desktop screens */
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+}

@@ -23,6 +23,18 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
 
   @ViewChild('bookListContainer') booksContainer!: ElementRef;
 
+  items = [
+    { imageUrl: 'https://picsum.photos/100', title: 'Daily Mix 1' },
+    { imageUrl: 'https://picsum.photos/440', title: 'Release Radar' },
+    { imageUrl: 'https://picsum.photos/670', title: 'Jack Harlow Mix' },
+    { imageUrl: 'https://picsum.photos/732', title: 'VVS - Voyage, BakaPrase' },
+    { imageUrl: 'https://picsum.photos/255', title: 'Top Songs USA' },
+    { imageUrl: 'https://picsum.photos/222', title: 'Serbia 2024 | TOP 50' },
+    { imageUrl: 'https://picsum.photos/226', title: 'Serbian Music 2024' },
+    { imageUrl: 'https://picsum.photos/623', title: 'Books 2024' },
+    // Add more items as needed
+  ];
+
   constructor(
     private bookService : BookService,
     private spinnerService: LoadingSpinnerService,
