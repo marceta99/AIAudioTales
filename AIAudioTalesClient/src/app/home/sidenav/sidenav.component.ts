@@ -38,10 +38,20 @@ export interface SideNavToggle{
     ]),
     trigger('slideInIcons', [
       transition(':enter', [
-        style({ transform: 'translateX(-80%)', opacity: 0 }), // Start position: off-screen to the right
-        animate('400ms ease-in-out', style({ transform: 'translateX(0)', opacity: 1 })), // Slide in
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate('500ms ease-in-out', style({ transform: 'translateX(0)', opacity: 1 })), // Slide in
       ])
-    ])
+    ]),
+    trigger('slideDownUp', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-in-out', style({ transform: 'translateY(-40%)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'translateY(-100%)', opacity: 0 })) // Slide up
+      ])
+    ]),
+
   ], 
 })
 export class SidenavComponent implements OnInit {

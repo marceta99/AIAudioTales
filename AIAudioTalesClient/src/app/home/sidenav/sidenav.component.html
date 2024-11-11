@@ -50,7 +50,7 @@
     </span>
   </div>
 
-  <span *ngIf="isSearchActive" class="back-arrow" (click)="toggleSearch()">
+  <span *ngIf="isSearchActive" class="back-arrow" (click)="toggleSearch()" @slideDownUp>
     <img src="../../../assets/icons/back-arrow.svg" alt="back">
   </span>
 
