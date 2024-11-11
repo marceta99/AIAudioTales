@@ -21,11 +21,12 @@ export class SliderComponent implements OnInit, AfterViewInit{
   
   @Input() bookPaginated!: BooksPaginated;
   @Input() size: 'small' | 'big' = 'small'; 
+  @Input() sliderId!: string; // Unique identifier for each slider instance
 
   constructor(private elRef: ElementRef, private router: Router) {}
 
   ngAfterViewInit(): void {
-    this.helperFunction(this.bookPaginated.booksCategory);
+    this.initializeElements();
   }
 
   ngOnInit(): void {}
@@ -34,13 +35,13 @@ export class SliderComponent implements OnInit, AfterViewInit{
     this.router.navigate(['/home/books',bookId])
   }
 
-  helperFunction(booksCategory: number){
-    this.wrapper = this.elRef.nativeElement.querySelector(".wrapper"+booksCategory);
-    this.carousel = this.elRef.nativeElement.querySelector(".carousel"+booksCategory);
-    this.firstCardWidth = this.elRef.nativeElement.querySelector(".card"+booksCategory)?.offsetWidth;
-    this.arrowBtns = this.elRef.nativeElement.querySelectorAll("#i"+booksCategory);
-
+  initializeElements(){
+    this.wrapper = this.elRef.nativeElement.querySelector(".wrapper" + this.sliderId);
+    this.carousel = this.elRef.nativeElement.querySelector(".carousel" + this.sliderId);
+    this.firstCardWidth = this.elRef.nativeElement.querySelector(".card" + this.sliderId)?.offsetWidth;
+    this.arrowBtns = this.elRef.nativeElement.querySelectorAll("#i" + this.sliderId);
   }
+
   // Add event listeners for the arrow buttons to scroll the this.carousel left and right
   arrowButtonsClick(button :HTMLElement){
     const id = button.id;

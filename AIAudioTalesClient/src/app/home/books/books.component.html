@@ -10,6 +10,6 @@
       <h5>View All</h5>
     </div>
 
-    <app-slider  [size]="(index % 2 === 0) ? 'small' : 'big'" [bookPaginated]="bookPaginated"></app-slider>
+    <app-slider  [size]="(index % 2 === 0) ? 'small' : 'big'" [bookPaginated]="bookPaginated" [sliderId]="index.toString()"></app-slider>
   </div>
 </div>
