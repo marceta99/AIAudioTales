@@ -40,25 +40,6 @@ export class SliderComponent implements OnInit, AfterViewInit{
     this.firstCardWidth = this.elRef.nativeElement.querySelector(".card"+booksCategory)?.offsetWidth;
     this.arrowBtns = this.elRef.nativeElement.querySelectorAll("#i"+booksCategory);
 
-    //this.carouselChildrens = [...this.carousel?.children] as any;
-    // Get the number of cards that can fit in the this.carousel at once
-    //let cardPerView = Math.round(this.carousel.offsetWidth / this.firstCardWidth);
-
-    // Insert copies of the last few cards to beginning of this.carousel for infinite scrolling
-    /*this.carouselChildrens.slice(-cardPerView).reverse().forEach(card => {
-      this.carousel.insertAdjacentHTML("afterbegin", card.outerHTML);
-    });
-
-    // Insert copies of the first few cards to end of this.carousel for infinite scrolling
-    this.carouselChildrens.slice(0, cardPerView).forEach(card => {
-      this.carousel.insertAdjacentHTML("beforeend", card.outerHTML);
-    });
-
-    // Scroll the this.carousel at appropriate postition to hide first few duplicate cards on Firefox
-    this.carousel.classList.add("no-transition");
-    this.carousel.scrollLeft = this.carousel.offsetWidth;
-    this.carousel.classList.remove("no-transition");*/
-
   }
   // Add event listeners for the arrow buttons to scroll the this.carousel left and right
   arrowButtonsClick(button :HTMLElement){
@@ -86,33 +67,4 @@ export class SliderComponent implements OnInit, AfterViewInit{
       this.carousel.classList.remove("dragging");
   }
 
-  infiniteScroll(){
-      // If the this.carousel is at the beginning, scroll to the end
-      if(this.carousel.scrollLeft === 0) {
-          console.log("levo")
-          this.carousel.classList.add("no-transition");
-          this.carousel.scrollLeft = this.carousel.scrollWidth - (2 * this.carousel.offsetWidth);
-          this.carousel.classList.remove("no-transition");
-      }
-      // If the this.carousel is at the end, scroll to the beginning
-      else if(Math.ceil(this.carousel.scrollLeft) === this.carousel.scrollWidth - this.carousel.offsetWidth) {
-          console.log("desno")
-          this.carousel.classList.add("no-transition");
-          this.carousel.scrollLeft = this.carousel.offsetWidth;
-          this.carousel.classList.remove("no-transition");
-      }
-
-      // Clear existing timeout & start autoplay if mouse is not hovering over this.carousel
-      //clearTimeout(this.timeoutId);
-      //if(!this.wrapper.matches(":hover")) this.autoPlay();
-  }
-
-  autoPlay(){
-      if(window.innerWidth < 800 || !this.isAutoPlay) return; // Return if window is smaller than 800 or isAutoPlay is false
-      // Autoplay the this.carousel after every 2500 ms
-      this.timeoutId = setTimeout(() => this.carousel.scrollLeft += this.firstCardWidth, 2500);
-  }
-  clearTimeout(){
-    clearTimeout(this.timeoutId);
-  }
 }

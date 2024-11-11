@@ -1,7 +1,7 @@
 <div (mouseup)="dragStop()" [ngClass]="['slider-box', size]">
-  <div [ngClass]="'wrapper '+'wrapper'+bookPaginated.booksCategory" ><!--(mouseenter)="clearTimeout()">-->
+  <div [ngClass]="'wrapper '+'wrapper'+bookPaginated.booksCategory" >
     <i [id]="'left'+bookPaginated.booksCategory" class="fa-solid fa-angle-left" (click)="arrowButtonsClick(leftButton)" #leftButton></i>
-    <ul [ngClass]="'carousel '+'carousel'+bookPaginated.booksCategory" (mousedown)="dragStart($event)" (mousemove)="dragging($event)" > <!--(scroll)="infiniteScroll()">-->
+    <ul [ngClass]="'carousel '+'carousel'+bookPaginated.booksCategory" (mousedown)="dragStart($event)" (mousemove)="dragging($event)" >
 
       <li [ngClass]="'card '+'card'+bookPaginated.booksCategory" *ngFor="let book of bookPaginated.books" (click)="navigateToBook(book.id)">
         <div class="img"><img [src]="book.imageURL" alt="img" draggable="false"></div>
