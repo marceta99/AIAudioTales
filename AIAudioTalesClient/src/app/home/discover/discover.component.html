@@ -20,10 +20,23 @@
   </div>
 -->
 
-<div class="grid-container">
-  <div class="grid-item" *ngFor="let item of items">
-    <img [src]="item.imageUrl" alt="Image" class="item-image" />
-    <div class="item-text">{{ item.title }}</div>
+  <div class="grid-container">
+    <div class="grid-item" *ngFor="let item of items">
+      <img [src]="item.imageUrl" alt="Image" class="item-image" />
+      <div class="item-text">{{ item.title }}</div>
+    </div>
   </div>
+
+  <div class="main-book-div" *ngFor="let category of categories;let index = index;">
+    <div class="cat-head">
+
+      <h2>{{category.category | bookCategoryPipe}}</h2>
+      <h5>View All</h5>
+    </div>
+
+    <app-slider  [size]="(index % 2 === 0) ? 'big' : 'small'" [books]="category.books" [sliderId]="index.toString()"></app-slider>
+  </div>
+
 </div>
-</div>
+
+

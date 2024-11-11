@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
-import { Book, Category, ReturnBook, SearchedBooks, Toast, ToastIcon, ToastType } from 'src/app/entities';
+import { Book, BookCategory, Category, ReturnBook, SearchedBooks, Toast, ToastIcon, ToastType } from 'src/app/entities';
 import { BookService } from '../services/book.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { Router } from '@angular/router';
@@ -21,6 +21,8 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   isSearchFromTerm: boolean = false;
   noMoreBooks: boolean = false; //there are no more books to load for that category from the server
 
+  disvocerPageCategories : number[] = [5, 6];
+  categories: { books: ReturnBook[], category: BookCategory }[] = [];
   @ViewChild('bookListContainer') booksContainer!: ElementRef;
 
   items = [
@@ -72,6 +74,10 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
+    this.disvocerPageCategories.forEach(category =>{
+      this.loadBooksFromCategory(category, 1, 15)
+   })
+
     this.spinnerService.setLoading(true);
 
     this.getBooksFromCategory(1);
@@ -136,6 +142,23 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
         }
       }
 
+  }
+
+  loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void {
+    this.bookService.getBooksFromCategory(bookCategory, pageNumber, pageSize).subscribe({
+      next: (books : ReturnBook[] ) => {
+        console.log(books)
+        const category = { 
+          books : books,
+          category: bookCategory as BookCategory
+        } ;
+        this.categories.push(category);
+    },
+      error: error => {
+        console.error('There was an error!', error);
+        this.spinnerService.setLoading(false);
+    }
+    })
   }
 
 }

@@ -24,7 +24,7 @@ export class BooksComponent implements OnInit {
    this.spinnerService.setLoading(false);
   }
 
-  loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void{
+  loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void {
     this.bookService.getBooksFromCategory(bookCategory, pageNumber, pageSize).subscribe({
       next: (books : ReturnBook[] ) => {
         console.log(books)
