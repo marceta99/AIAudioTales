@@ -25,6 +25,7 @@ export class SidenavComponent implements OnInit {
   navData = navbarData;
   itemsCount: number = 0;
   currentUser!: User | null;
+  isSearchActive: boolean = false;
 
   constructor(private bookService: BookService, private authService: AuthService) {}
 
@@ -43,6 +44,10 @@ export class SidenavComponent implements OnInit {
   closesSidenav(): void{
     this.collapsed = false;
     this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth})
+  }
+
+  toggleSearch(): void {
+    this.isSearchActive = !this.isSearchActive;
   }
   
 }

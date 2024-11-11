@@ -47,6 +47,7 @@
   width: 100%;
   padding: 5px;
   z-index: 999;
+  transition: opacity 0.3s ease;
 
   .logo-img {
     max-width: 50px;
@@ -56,6 +57,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    transition: opacity 0.3s ease;
   }
   .logo-text {
     color: linear-gradient(180deg, #33406D 0%, #061630 100%);
@@ -80,11 +82,81 @@
 .mob-icons {
   display: flex;
   gap: 1rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
   span {
     display: flex;
     flex-direction: row;
     gap: 0.4rem;
   }
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  width: calc(100% - 50px); /* Full width minus space for back arrow */
+  height: 90%;
+  margin-left: 50px;
+  background-color: #bbb; /* Set background color */
+  position: relative;
+}
+
+.back-arrow {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
+}
+
+.back-arrow, .close-icon, .search-icon {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; /* Inside the search input */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  padding: 8px 40px 8px 40px; /* Space for search and close icons */
+  font-size: 1rem;
+  border-radius: 25px;
+}
+
+.search-area {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.search-input::placeholder {
+  color: #bbb;
+}
+
+.back-arrow img, .close-icon img, .search-icon img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Align close icon to the right inside the search container */
+.close-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
 // sidebar styling for desktop

@@ -38,16 +38,32 @@
 
 
 <div class="topnav-mob">
-  <span class="logo-span">
+  <span class="logo-span" *ngIf="!isSearchActive">
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
-    <p class="logo-text">Kumadio</p>
   </span>
-  <div class="mob-icons">
-    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
-      <img src="../../../assets/icons/settings.svg" alt="settings">
+  <div class="mob-icons" *ngIf="!isSearchActive">
+    <span class="menu_ctg my-prof-mob" (click)="toggleSearch()">
+      <img src="../../../assets/icons/search.svg" alt="search">
     </span>
-    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/basket']" *ngIf="currentUser?.role === 2" routerLinkActive="active-link">
-      <img src="../../../assets/icons/cart.svg" alt="settings"><span>{{ itemsCount }}</span>
+    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
+      <img src="../../../assets/icons/settings.svg" alt="profile">
+    </span>
+  </div>
+
+  <span *ngIf="isSearchActive" class="back-arrow" (click)="toggleSearch()">
+    <img src="../../../assets/icons/back-arrow.svg" alt="back">
+  </span>
+
+  <!-- Search Input -->
+  <div *ngIf="isSearchActive" class="search-container">
+    <div class="search-area">
+      <span class="search-icon">
+        <img src="../../../assets/icons/search.svg" alt="search">
+      </span>
+      <input type="text" placeholder="Search..." class="search-input" />
+    </div>
+    <span class="close-icon" (click)="toggleSearch()">
+      <img src="../../../assets/icons/close-icon.svg" alt="close">
     </span>
   </div>
 </div>
