@@ -5,6 +5,7 @@ import { BookService } from '../services/book.service';
 import { Observable } from 'rxjs';
 import { Basket, BasketItem, Book, User } from 'src/app/entities';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 
 export interface SideNavToggle{
@@ -15,7 +16,33 @@ export interface SideNavToggle{
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss']
+  styleUrls: ['./sidenav.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }), // Start position: off-screen to the right
+        animate('300ms ease-in-out', style({ transform: 'translateX(0)', opacity: 1 })), // Slide in
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'translateX(100%)', opacity: 0 })) // Slide out
+      ])
+    ]), 
+    trigger('slideUpDownLogo', [
+      transition(':enter', [
+        style({ transform: 'translateY(-100%)', opacity: 0 }), // Start above the screen
+        animate('300ms ease-in-out', style({ transform: 'translateY(0)', opacity: 1 })) // Slide down
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'translateY(-100%)', opacity: 0 })) // Slide up
+      ])
+    ]),
+    trigger('slideInIcons', [
+      transition(':enter', [
+        style({ transform: 'translateX(-80%)', opacity: 0 }), // Start position: off-screen to the right
+        animate('400ms ease-in-out', style({ transform: 'translateX(0)', opacity: 1 })), // Slide in
+      ])
+    ])
+  ], 
 })
 export class SidenavComponent implements OnInit {
   

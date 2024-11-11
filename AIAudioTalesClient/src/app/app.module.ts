@@ -33,7 +33,7 @@ import { LanguageComponent } from './home/my-profile/settings/language/language.
 import { ListenHistoryComponent } from './home/my-profile/settings/listen-history/listen-history.component';
 import { SupportComponent } from './home/my-profile/settings/support/support.component';
 import { AchievementsComponent } from './home/my-profile/settings/achievements/achievements.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +71,8 @@ import { AchievementsComponent } from './home/my-profile/settings/achievements/a
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
