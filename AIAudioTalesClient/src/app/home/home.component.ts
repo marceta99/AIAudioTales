@@ -12,6 +12,7 @@ import { BookService } from './services/book.service';
 })
 export class HomeComponent implements OnInit{
   isLoading!: Observable<boolean>;
+  playerActive$!: Observable<boolean>;
 
   constructor(private spinnerService: LoadingSpinnerService, private bookService: BookService) { }
 
@@ -19,6 +20,8 @@ export class HomeComponent implements OnInit{
   screenWidth = 0;
 
   ngOnInit():void {
+    this.playerActive$ = this.bookService.playerActive$;
+    
     this.isLoading = this.spinnerService.loading$;
     this.bookService.getBasket();
   }

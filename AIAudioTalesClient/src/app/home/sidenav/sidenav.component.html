@@ -1,7 +1,7 @@
 <div class="sidenav">
 
   <div class="topnav-lg">
-    <span class="logo-span">
+    <span class="logo-span" [routerLink]="['/home']" >
       <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
       <p class="logo-text">Kumadio</p>
     </span>
@@ -38,7 +38,7 @@
 
 
 <div class="topnav-mob">
-  <span class="logo-span" *ngIf="!isSearchActive"  @slideUpDownLogo>
+  <span class="logo-span" *ngIf="!isSearchActive"  @slideUpDownLogo [routerLink]="['/home']" >
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
   </span>
   <div class="mob-icons" *ngIf="!isSearchActive"  @slideInIcons>

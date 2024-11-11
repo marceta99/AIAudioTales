@@ -18,6 +18,8 @@ export class BookService {
   purchasedBooks: BehaviorSubject<PurchasedBook[]> = new BehaviorSubject<PurchasedBook[]>([]);
   currentBookIndex: Subject<number> = new Subject<number>();
   isPlaying: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  playerActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  playerActive$: Observable<boolean> = this.playerActive.asObservable();
 
   constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
 

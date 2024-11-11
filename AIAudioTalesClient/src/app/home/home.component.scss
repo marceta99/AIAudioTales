@@ -20,6 +20,22 @@ img {
 #body-container {
   position: relative;
   top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  flex: 1;
+  overflow: auto; /* Prevents content from overflowing */
+  display: flex;
+  flex-direction: column;
+}
+
+router-outlet + * {
+  flex: 1;
+  overflow: auto; /* Adds scroll if content overflows */
+  display: flex;
+  flex-direction: column;
 }
 
 // for desktop
