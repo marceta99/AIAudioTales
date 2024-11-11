@@ -67,6 +67,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private loadBook(index: number): void {
+    if (!this.currentBook) {
+      this.bookService.playerActive.next(true); // set playerActive to true if previously there was not activePlayer
+    }
+
     this.currentBook = this.books[index];
     this.currentBookIndex = index;
     this.cdr.detectChanges();
