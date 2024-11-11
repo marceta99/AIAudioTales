@@ -42,10 +42,10 @@
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
   </span>
   <div class="mob-icons" *ngIf="!isSearchActive">
-    <span class="menu_ctg my-prof-mob" (click)="toggleSearch()">
+    <span class="menu_ctg" (click)="toggleSearch()">
       <img src="../../../assets/icons/search.svg" alt="search">
     </span>
-    <span class="menu_ctg my-prof-mob" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
+    <span class="menu_ctg" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
       <img src="../../../assets/icons/settings.svg" alt="profile">
     </span>
   </div>
@@ -56,12 +56,10 @@
 
   <!-- Search Input -->
   <div *ngIf="isSearchActive" class="search-container">
-    <div class="search-area">
-      <span class="search-icon">
-        <img src="../../../assets/icons/search.svg" alt="search">
-      </span>
-      <input type="text" placeholder="Search..." class="search-input" />
-    </div>
+    <span class="search-icon " >
+      <img src="../../../assets/icons/search24gray.svg" alt="search">
+    </span>
+    <input type="text" placeholder="Search..." class="search-input" />
     <span class="close-icon" (click)="toggleSearch()">
       <img src="../../../assets/icons/close-icon.svg" alt="close">
     </span>
