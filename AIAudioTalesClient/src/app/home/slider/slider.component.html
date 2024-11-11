@@ -3,7 +3,7 @@
     <i [id]="'left'+ sliderId" class="fa-solid fa-angle-left" (click)="arrowButtonsClick(leftButton)" #leftButton></i>
     <ul [ngClass]="'carousel '+'carousel'++ sliderId" (mousedown)="dragStart($event)" (mousemove)="dragging($event)" >
 
-      <li [ngClass]="'card '+'card'+ sliderId" *ngFor="let book of bookPaginated.books" (click)="navigateToBook(book.id)">
+      <li [ngClass]="'card '+'card'+ sliderId" *ngFor="let book of books" (click)="navigateToBook(book.id)">
         <div class="img"><img [src]="book.imageURL" alt="img" draggable="false"></div>
         <span class="book-title">{{book.title}}</span>
         <span class="book-author">Author name</span>

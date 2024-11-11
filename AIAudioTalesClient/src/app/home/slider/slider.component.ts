@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BooksPaginated } from 'src/app/entities';
+import { ReturnBook } from 'src/app/entities';
 
 @Component({
   selector: 'app-slider',
@@ -19,7 +19,7 @@ export class SliderComponent implements OnInit, AfterViewInit{
   startScrollLeft: any;
   timeoutId: any;
   
-  @Input() bookPaginated!: BooksPaginated;
+  @Input() books!: ReturnBook[];
   @Input() size: 'small' | 'big' = 'small'; 
   @Input() sliderId!: string; // Unique identifier for each slider instance
 

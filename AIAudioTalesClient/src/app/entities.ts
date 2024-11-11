@@ -46,12 +46,7 @@ export interface SearchedBooks {
   searchTerm: string,
   books: ReturnBook[]
 }
-export interface BooksPaginated {
-  booksCategory: BookCategory,
-  books: ReturnBook[],
-  pageSize: number,
-  pageNumber: number
-}
+
 export interface ReturnBook {
   id: number;
   title: string;
@@ -171,8 +166,6 @@ export enum BookCategory{
   Trending = 5,
   Recommended = 6
 }
-
-export enum HomePageCategories{}
 
 export enum PurchaseType{
   BasicPurchase = 0,

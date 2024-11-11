@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Book, BookCategory, BooksPaginated, ReturnBook } from 'src/app/entities';
+import { BookCategory, ReturnBook } from 'src/app/entities';
 import { LoadingSpinnerService } from '../services/loading-spinner.service';
 
 @Component({
@@ -9,8 +9,8 @@ import { LoadingSpinnerService } from '../services/loading-spinner.service';
   styleUrls: ['./books.component.scss']
 })
 export class BooksComponent implements OnInit {
-  booksPaginated: BooksPaginated[] = [];
   homePageCategories : number[] = [5, 6];
+  categories: { books: ReturnBook[], category: BookCategory }[] = [];
 
   constructor(private bookService: BookService, private spinnerService: LoadingSpinnerService) {}
 
@@ -20,21 +20,19 @@ export class BooksComponent implements OnInit {
     this.homePageCategories.forEach(category =>{
       this.loadBooksFromCategory(category, 1, 15)
    })
+   
+   this.spinnerService.setLoading(false);
   }
 
   loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void{
     this.bookService.getBooksFromCategory(bookCategory, pageNumber, pageSize).subscribe({
       next: (books : ReturnBook[] ) => {
         console.log(books)
-        const bookPaginated : BooksPaginated = {
-          booksCategory: bookCategory as BookCategory,
-          books: books,
-          pageSize: pageSize,
-          pageNumber: pageNumber
-        }
-        this.booksPaginated.push(bookPaginated);
-
-        this.spinnerService.setLoading(false);
+        const category = { 
+          books : books,
+          category: bookCategory as BookCategory
+        } ;
+        this.categories.push(category);
     },
       error: error => {
         console.error('There was an error!', error);
