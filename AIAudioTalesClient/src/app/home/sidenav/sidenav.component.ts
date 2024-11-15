@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Basket, BasketItem, Book, User } from 'src/app/entities';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { Location } from '@angular/common';
 
 
 export interface SideNavToggle{
@@ -64,7 +65,11 @@ export class SidenavComponent implements OnInit {
   currentUser!: User | null;
   isSearchActive: boolean = false;
 
-  constructor(private bookService: BookService, private authService: AuthService) {}
+  constructor(
+    private bookService: BookService,
+    private authService: AuthService,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
     this.bookService.basket.subscribe((basket: Basket)=>{
@@ -84,7 +89,13 @@ export class SidenavComponent implements OnInit {
   }
 
   toggleSearch(): void {
-    this.isSearchActive = !this.isSearchActive;
+    if (this.isSearchActive) {
+      this.isSearchActive = false;
+      this.location.back();
+    } else {
+  
+      this.isSearchActive = true;
+    }
   }
   
 }

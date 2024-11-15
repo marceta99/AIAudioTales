@@ -20,6 +20,7 @@ import { LanguageComponent } from './home/my-profile/settings/language/language.
 import { ListenHistoryComponent } from './home/my-profile/settings/listen-history/listen-history.component';
 import { SupportComponent } from './home/my-profile/settings/support/support.component';
 import { AchievementsComponent } from './home/my-profile/settings/achievements/achievements.component';
+import { SearchComponent } from './home/search/search.component';
 
 const routes: Routes = [
   {path:"login", component : LoginComponent},
@@ -42,6 +43,7 @@ const routes: Routes = [
     ]},
     {path: "discover", component: DiscoverComponent},
     {path: "basket", component: BasketComponent},
+    {path: "search", component: SearchComponent},
 
     {path: "statistics", component: StatisticsComponent},
     {path: "create-book", component: CreateBookComponent},

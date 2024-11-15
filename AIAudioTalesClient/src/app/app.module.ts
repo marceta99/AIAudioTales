@@ -34,6 +34,7 @@ import { ListenHistoryComponent } from './home/my-profile/settings/listen-histor
 import { SupportComponent } from './home/my-profile/settings/support/support.component';
 import { AchievementsComponent } from './home/my-profile/settings/achievements/achievements.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SearchComponent } from './home/search/search.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,7 +65,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LanguageComponent,
     ListenHistoryComponent,
     SupportComponent,
-    AchievementsComponent
+    AchievementsComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

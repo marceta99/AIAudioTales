@@ -42,7 +42,7 @@
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
   </span>
   <div class="mob-icons" *ngIf="!isSearchActive"  @slideInIcons>
-    <span class="menu_ctg" (click)="toggleSearch()">
+    <span class="menu_ctg" (click)="toggleSearch()" [routerLink]="['/home/search']">
       <img src="../../../assets/icons/search.svg" alt="search">
     </span>
     <span class="menu_ctg" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
