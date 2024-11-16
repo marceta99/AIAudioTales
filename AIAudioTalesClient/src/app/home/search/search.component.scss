@@ -49,4 +49,25 @@
       border-bottom: none; // Remove the border for the last item
     }
   }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; // Ensures full height for centering
+    text-align: center;
+  
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #000; // Black text color for white background
+      margin-bottom: 8px;
+    }
+  
+    p {
+      font-size: 16px;
+      color: #555; // Dark gray text for subtitle
+    }
+  }
   

@@ -1,6 +1,7 @@
 <div class="search-history-container">
+  <ng-container *ngIf="searchHistory.length > 0; else emptyState">
     <div class="search-history">
-      <div class="history-item" *ngFor="let search of previousSearches">
+      <div class="history-item" *ngFor="let search of searchHistory">
         <span class="history-icon">
           <img src="../../../assets/icons/prev_searched.svg" alt="Search Icon">
         </span>
@@ -10,5 +11,12 @@
         </span>
       </div>
     </div>
-  </div>
-  
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <h1>Listen what you love</h1>
+      <p>Search for books, authors and more.</p>
+    </div>
+  </ng-template>
+</div>
