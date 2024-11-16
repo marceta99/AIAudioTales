@@ -6,7 +6,7 @@
       <li [ngClass]="'card '+'card'+ sliderId" *ngFor="let book of books" (click)="navigateToBook(book.id)">
         <div class="img"><img [src]="book.imageURL" alt="img" draggable="false"></div>
         <span class="book-title">{{book.title}}</span>
-        <span class="book-author">Author name</span>
+        <span class="book-author">Kumadio</span>
       </li>
     </ul>
     <i [id]="'right'+ sliderId" class="fa-solid fa-angle-right" (click)="arrowButtonsClick(rightButton)" #rightButton></i>

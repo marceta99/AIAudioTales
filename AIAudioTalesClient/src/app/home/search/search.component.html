@@ -1,1 +1,14 @@
-<p>search works!</p>
+<div class="search-history-container">
+    <div class="search-history">
+      <div class="history-item" *ngFor="let search of previousSearches">
+        <span class="history-icon">
+          <img src="../../../assets/icons/prev_searched.svg" alt="Search Icon">
+        </span>
+        <p class="history-text">{{ search }}</p>
+        <span class="arrow-icon">
+          <img src="../../../assets/icons/rightArrow24Gray.svg" alt="Right Arrow">
+        </span>
+      </div>
+    </div>
+  </div>
+  
