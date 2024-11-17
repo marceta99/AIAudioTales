@@ -1,18 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { navbarData } from './nav-data';
-import { RouterLinkActive } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Observable } from 'rxjs';
-import { Basket, BasketItem, Book, User } from 'src/app/entities';
+import { Basket, ReturnBook, User } from 'src/app/entities';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-
-
-export interface SideNavToggle{
-  screenWidth: number;
-  collapsed: boolean;
-}
+import { FormControl } from '@angular/forms';
+import { SearchService } from '../services/search.service';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-sidenav',
@@ -56,17 +50,15 @@ export interface SideNavToggle{
   ], 
 })
 export class SidenavComponent implements OnInit {
-  
-  @Output() onToggleSideNav: EventEmitter<SideNavToggle> = new EventEmitter();
-  screenWidth = 0;
-  collapsed = false;
-  navData = navbarData;
+
   itemsCount: number = 0;
   currentUser!: User | null;
   isSearchActive: boolean = false;
+  searchControl = new FormControl();
 
   constructor(
     private bookService: BookService,
+    private searchService: SearchService,
     private authService: AuthService,
     private location: Location
   ) {}
@@ -77,15 +69,33 @@ export class SidenavComponent implements OnInit {
     })
 
     this.authService.currentUser.subscribe(user=> {this.currentUser = user});
-  }
 
-  toggleCollapse(): void{
-    this.collapsed = !this.collapsed;
-    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth})
-  }
-  closesSidenav(): void{
-    this.collapsed = false;
-    this.onToggleSideNav.emit({collapsed: this.collapsed, screenWidth: this.screenWidth})
+    this.searchControl.valueChanges
+    .pipe(
+      debounceTime(300),                                                                            // Wait for 300ms pause in events
+      distinctUntilChanged(),                                                                       // Only emit if value is different from previous value
+      filter((searchTerm: string) => {                                                              // search term is empty then show search history and if search term is empty string or just empty white space return false so that http request to the backend is not send
+        const searchIsEmpty = searchTerm.trim().length === 0;
+        if (searchIsEmpty) {
+          return false;
+        } else {
+          this.searchService.searchHistory.next([]);
+          return true;
+        }                                         
+      }),
+      switchMap((searchTerm : string) => {                                                          // we use switch map because If a new term is entered while a previous search request is still in progress, that HTTP request is cancelled, and only the latest search is processed.
+        return this.searchService.searchBooks(searchTerm,1,10)
+      })
+    )
+    .subscribe({
+      next: (books : ReturnBook[]) => {
+        console.log("searched books", books)
+        this.searchService.searchedBooks.next(books);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    })
   }
 
   toggleSearch(): void {
@@ -93,7 +103,6 @@ export class SidenavComponent implements OnInit {
       this.isSearchActive = false;
       this.location.back();
     } else {
-  
       this.isSearchActive = true;
     }
   }

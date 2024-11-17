@@ -26,7 +26,7 @@ export class SearchBarComponent {
 
     this.fetchSearchHistory();
 
-    this.searchControl.valueChanges.pipe(
+    /*this.searchControl.valueChanges.pipe(
       debounceTime(300),                                                                            // Wait for 300ms pause in events
       distinctUntilChanged(),                                                                       // Only emit if value is different from previous value
       filter((searchTerm: string) => {
@@ -44,11 +44,11 @@ export class SearchBarComponent {
       error: error => {
         console.error('There was an error!', error);
       }
-    })
+    })*/
   }
 
   private fetchSearchHistory(): void{
-    this.bookService.getSearchHistory().subscribe({
+   /* this.bookService.getSearchHistory().subscribe({
       next: (searchHistory : string[] ) => {
         console.log("searchHistory",searchHistory);
         this.searchHistory = searchHistory;
@@ -57,7 +57,7 @@ export class SearchBarComponent {
       error: error => {
         console.error('There was an error!', error);
       }
-    })
+    })*/
   }
 
   public searchSubmit(): void{
@@ -80,7 +80,7 @@ export class SearchBarComponent {
   }
 
   private fetchBooks(searchTerm: string): void{
-    this.isInputActive = false;
+    /*this.isInputActive = false;
     this.bookService.searchBooks(searchTerm,1,10).subscribe({
       next: (books : ReturnBook[] ) => {
         console.log(books)
@@ -93,7 +93,7 @@ export class SearchBarComponent {
       error: error => {
         console.error('There was an error!', error);
       }
-    })
+    })*/
   }
 
   focus(){

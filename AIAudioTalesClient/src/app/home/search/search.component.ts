@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
+import { SearchService } from '../services/search.service';
+import { ReturnBook } from 'src/app/entities';
 
 @Component({
   selector: 'app-search',
@@ -8,17 +10,23 @@ import { BookService } from '../services/book.service';
 })
 export class SearchComponent implements OnInit {
   searchHistory: string[] = [];
+  searchedBooks: ReturnBook[] = [];
+  categories: string[] = ['Artists', 'Songs', 'Playlists', 'Albums', 'Podcasts', 'Shows', 'Representers'];
 
-  constructor(private bookService: BookService) { }
+  constructor(private searchService: SearchService) { }
 
   ngOnInit(): void {
-    this.fetchSearchHistory();
+    this.getSearchHistory();
+
+    this.searchService.searchedBooks$.subscribe((searchedBooks: ReturnBook[]) => {
+      console.log("subject event ", searchedBooks)
+      this.searchedBooks = searchedBooks
+    })
   }
 
-  private fetchSearchHistory(): void{
-    this.bookService.getSearchHistory().subscribe({
+  private getSearchHistory(): void{
+    this.searchService.getSearchHistory().subscribe({
       next: (searchHistory : string[] ) => {
-        console.log("searchHistory",searchHistory);
         this.searchHistory = searchHistory;
       },
       error: error => {

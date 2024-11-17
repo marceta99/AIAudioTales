@@ -70,4 +70,98 @@
       color: #555; // Dark gray text for subtitle
     }
   }
+
+  .categories {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+
+    /* Hide the scrollbar */
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer 10+ */
+
+    .categories::-webkit-scrollbar {
+      display: none; /* For Chrome, Safari, and Opera */
+    }    
+  
+    .category {
+      padding: 8px 16px;
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .category:hover {
+      background-color: #dcdcdc;
+    }
+  }
+  
+  .searched-books {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 16px;
+  
+    .searched-book {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  
+      .book-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+  
+      .book-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+  
+        .title {
+          font-size: 16px;
+          font-weight: bold;
+          color: #000;
+        }
+  
+        .author {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+  
+      .arrow-icon {
+        img {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  
+    .searched-book:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .categories {
+      justify-content: center;
+      overflow-x: hidden;
+    }
+  
+    .searched-books {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+  
   

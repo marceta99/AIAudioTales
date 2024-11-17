@@ -41,13 +41,17 @@
   margin: 0;
   top: 0;
   background-color: var(--main-bg-color);
-  overflow: hidden;
+  /* Remove or comment out overflow: hidden; */
+  /* overflow: hidden; */
+  overflow: visible; /* Allow content to overflow if necessary */
   position: fixed;
-  height: 50px;
+  /* Replace height: 50px; with min-height: 50px; */
+  min-height: 50px;
   width: 100%;
   padding: 5px;
   z-index: 999;
   transition: opacity 0.3s ease;
+  box-sizing: border-box; /* Ensure consistent sizing */
 
   .logo-img {
     max-width: 50px;
@@ -132,6 +136,7 @@
   padding: 8px 40px 8px 40px; /* Space for search and close icons */
   font-size: 1rem;
   border-radius: 25px;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {

@@ -59,7 +59,7 @@
     <span class="search-icon " >
       <img src="../../../assets/icons/search24gray.svg" alt="search">
     </span>
-    <input type="text" placeholder="Search..." class="search-input" />
+    <input [formControl]="searchControl" type="text" placeholder="Search..." class="search-input" />
     <span class="close-icon" (click)="toggleSearch()">
       <img src="../../../assets/icons/close-icon.svg" alt="close">
     </span>

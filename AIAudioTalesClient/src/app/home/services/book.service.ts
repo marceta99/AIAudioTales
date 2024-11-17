@@ -67,19 +67,6 @@ export class BookService {
     );
   }
 
-  public searchBooks(searchTerm: string, pageNumber: number, pageSize: number): Observable<ReturnBook[]> {
-    const params = new HttpParams()
-            .set('searchTerm', searchTerm)
-            .set('pageNumber', pageNumber.toString())
-            .set('pageSize', pageSize.toString());
-
-    return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params , withCredentials: true});
-  }
-
-  public getSearchHistory(): Observable<string[]> {
-    return this.httpClient.get<string[]>(this.path+"Books/GetSearchHistory");
-  }
-
   public getAllCategories(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(this.path+"Books/GetAllCategories");
   }

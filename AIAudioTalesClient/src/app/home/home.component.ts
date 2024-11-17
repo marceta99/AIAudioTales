@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SideNavToggle } from './sidenav/sidenav.component';
 import { LoadingSpinnerService } from './services/loading-spinner.service';
 import { Observable } from 'rxjs';
 import { BookService } from './services/book.service';
@@ -16,19 +14,11 @@ export class HomeComponent implements OnInit{
 
   constructor(private spinnerService: LoadingSpinnerService, private bookService: BookService) { }
 
-  isSideNavCollapsed = false;
-  screenWidth = 0;
-
   ngOnInit():void {
     this.playerActive$ = this.bookService.playerActive$;
     
     this.isLoading = this.spinnerService.loading$;
     this.bookService.getBasket();
-  }
-
-  onToggleSideNav(data: SideNavToggle): void{
-    this.screenWidth = data.screenWidth;
-    this.isSideNavCollapsed = data.collapsed;
   }
 
 }

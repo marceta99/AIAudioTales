@@ -1,4 +1,4 @@
-<div class="search-history-container">
+<div class="search-history-container" *ngIf="searchedBooks.length === 0">
   <ng-container *ngIf="searchHistory.length > 0; else emptyState">
     <div class="search-history">
       <div class="history-item" *ngFor="let search of searchHistory">
@@ -19,4 +19,23 @@
       <p>Search for books, authors and more.</p>
     </div>
   </ng-template>
+</div>
+
+<div class="categories" *ngIf="searchedBooks.length > 0">
+  <div class="category" *ngFor="let category of categories">
+    {{ category }}
+  </div>
+</div>
+
+<div class="searched-books">
+  <div class="searched-book" *ngFor="let book of searchedBooks">
+    <img [src]="book.imageURL" alt="{{ book.title }}" class="book-image" />
+    <div class="book-details">
+      <span class="title">{{ book.title }}</span>
+      <span class="author">By Kumadio</span>
+    </div>
+    <span class="arrow-icon">
+      <img src="../../../assets/icons/rightArrow24Gray.svg" alt="Right Arrow">
+    </span>
+  </div>
 </div>

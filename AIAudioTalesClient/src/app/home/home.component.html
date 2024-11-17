@@ -1,5 +1,5 @@
 
-<app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+<app-sidenav ></app-sidenav>
 <div id="body-container" [style.height]="(playerActive$ | async) ? 'calc(100vh - 130px)' : '100vh'">
     <app-loading-spinner *ngIf="isLoading | async"></app-loading-spinner>
     <div [ngClass]="(isLoading | async) ? 'hide':'show'" class="content-container">
