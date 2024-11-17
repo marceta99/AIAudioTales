@@ -22,8 +22,8 @@
 </div>
 
 <div class="categories" *ngIf="searchedBooks.length > 0">
-  <div class="category" *ngFor="let category of categories">
-    {{ category }}
+  <div class="category" *ngFor="let category of categories" (click)="getBooksFromCategory(category.id)">
+    {{ category.categoryName }}
   </div>
 </div>
 

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { SearchService } from '../services/search.service';
-import { ReturnBook } from 'src/app/entities';
+import { Category, ReturnBook, Toast, ToastIcon, ToastType } from 'src/app/entities';
+import { LoadingSpinnerService } from '../services/loading-spinner.service';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
   selector: 'app-search',
@@ -11,15 +13,22 @@ import { ReturnBook } from 'src/app/entities';
 export class SearchComponent implements OnInit {
   searchHistory: string[] = [];
   searchedBooks: ReturnBook[] = [];
-  categories: string[] = ['Artists', 'Songs', 'Playlists', 'Albums', 'Podcasts', 'Shows', 'Representers'];
+  categories!: Category[];
+  pageSize: number = 10;
+  pageNumber: number = 1;
 
-  constructor(private searchService: SearchService) { }
+  constructor(
+    private searchService: SearchService,
+    private bookService: BookService,
+    private spinnerService: LoadingSpinnerService,
+    private toasterService: ToastNotificationService
+  ) { }
 
   ngOnInit(): void {
     this.getSearchHistory();
+    this.getCategories();
 
     this.searchService.searchedBooks$.subscribe((searchedBooks: ReturnBook[]) => {
-      console.log("subject event ", searchedBooks)
       this.searchedBooks = searchedBooks
     })
   }
@@ -31,6 +40,32 @@ export class SearchComponent implements OnInit {
       },
       error: error => {
         console.error('There was an error!', error);
+      }
+    })
+  }
+
+  private getCategories(): void {
+    this.bookService.getAllCategories().subscribe((categories: Category[]) => {
+      this.categories = categories;
+    })
+  }
+
+  getBooksFromCategory(category: number){
+    this.spinnerService.setLoading(false);
+    this.bookService.getBooksFromCategory(category, this.pageNumber, this.pageSize).subscribe({
+      next: (books : ReturnBook[] ) => {
+        this.searchedBooks = books;
+        this.spinnerService.setLoading(false);
+    },
+      error: error => {
+        console.error('There was an error!', error);
+        const toast: Toast = {
+          text: "We're sorry! An error occurred. Please try again later.",
+          toastIcon: ToastIcon.Error,
+          toastType: ToastType.Error
+        }
+        this.spinnerService.setLoading(false);
+        this.toasterService.show(toast);
       }
     })
   }

@@ -13,7 +13,6 @@ import { debounceTime, filter, fromEvent, map, switchMap, tap } from 'rxjs';
 })
 export class DiscoverComponent implements OnInit, AfterViewInit{
   books! : ReturnBook[];
-  bookCategories!: Category[];
   pageSize: number = 10;
   pageNumber: number = 1;
   currentCategory: number = 1;
@@ -89,11 +88,6 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
       this.isSearchFromTerm = true;
       this.pageNumber=1;
       this.noMoreBooks = false;
-    })
-
-    this.bookService.getAllCategories().subscribe((categories: Category[]) => {
-      console.log(categories);
-      this.bookCategories = categories;
     })
   }
 
