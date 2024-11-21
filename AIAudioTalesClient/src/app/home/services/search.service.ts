@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { ReturnBook } from "src/app/entities";
 import { environment } from "src/environment/environment";
 
@@ -9,10 +9,14 @@ import { environment } from "src/environment/environment";
 })
 export class SearchService {
   private path = environment.apiUrl;
+
+  searchTerm: string = "";
     
+  isSearchActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isSearchActive$: Observable<boolean> = this.isSearchActive.asObservable();
   searchHistory: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   searchHistory$: Observable<string[]> = this.searchHistory.asObservable();
-  searchedBooks: BehaviorSubject<ReturnBook[]> = new BehaviorSubject<ReturnBook[]>([]);
+  searchedBooks: Subject<ReturnBook[]> = new Subject<ReturnBook[]>();
   searchedBooks$: Observable<ReturnBook[]> = this.searchedBooks.asObservable();
 
   constructor(private httpClient: HttpClient) {}
@@ -28,6 +32,12 @@ export class SearchService {
             .set('pageSize', pageSize.toString());
 
     return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params , withCredentials: true});
+  }
+
+  public saveSearchTerm(searchTerm: string){
+    const params = new HttpParams().set('searchTerm', searchTerm);
+
+    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params}).subscribe((res:any)=>console.log(res));
   }
 
 }

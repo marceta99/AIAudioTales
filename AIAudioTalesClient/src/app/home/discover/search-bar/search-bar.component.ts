@@ -61,17 +61,17 @@ export class SearchBarComponent {
   }
 
   public searchSubmit(): void{
-    if(this.searchIsNotEmptyString){
+    /*if(this.searchIsNotEmptyString){
       const searchTerm = this.searchControl.value;
       this.bookService.saveSearchTerm(searchTerm);
       this.fetchBooks(searchTerm);
-    }
+    }*/
   }
 
   public searchFromInputList(searchTerm: string): void{
-    console.log("search happend");
+    /*console.log("search happend");
     this.bookService.saveSearchTerm(searchTerm);
-    this.fetchBooks(searchTerm);
+    this.fetchBooks(searchTerm);*/
   }
 
   public searchFromSearchHistory(searchTerm: string): void{

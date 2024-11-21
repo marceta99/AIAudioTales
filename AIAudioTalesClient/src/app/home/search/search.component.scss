@@ -1,4 +1,11 @@
-.search-history-container {
+.main-search-container {
+  height: 100vh; /* Allow it to grow and fill the parent */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+  
+  .search-history-container {
     background-color: white;
     padding: 16px;
     width: 100%;

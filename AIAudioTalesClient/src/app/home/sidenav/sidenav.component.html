@@ -38,10 +38,10 @@
 
 
 <div class="topnav-mob">
-  <span class="logo-span" *ngIf="!isSearchActive"  @slideUpDownLogo [routerLink]="['/home']" >
+  <span class="logo-span" *ngIf="!(isSearchActive$ | async)"  @slideUpDownLogo [routerLink]="['/home']" >
     <img class="logo-img" src="../../../assets/logo_no_t.png" alt="logo">
   </span>
-  <div class="mob-icons" *ngIf="!isSearchActive"  @slideInIcons>
+  <div class="mob-icons" *ngIf="!(isSearchActive$ | async)"  @slideInIcons>
     <span class="menu_ctg" (click)="toggleSearch()" [routerLink]="['/home/search']">
       <img src="../../../assets/icons/search.svg" alt="search">
     </span>
@@ -50,12 +50,12 @@
     </span>
   </div>
 
-  <span *ngIf="isSearchActive" class="back-arrow" (click)="toggleSearch()" @slideDownUp>
+  <span *ngIf="(isSearchActive$ | async)" class="back-arrow" (click)="toggleSearch()" @slideDownUp>
     <img src="../../../assets/icons/back-arrow.svg" alt="back">
   </span>
 
   <!-- Search Input -->
-  <div *ngIf="isSearchActive" class="search-container" @slideInOut>
+  <div *ngIf="(isSearchActive$ | async)" class="search-container" @slideInOut>
     <span class="search-icon " >
       <img src="../../../assets/icons/search24gray.svg" alt="search">
     </span>

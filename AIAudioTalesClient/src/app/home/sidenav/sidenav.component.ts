@@ -6,7 +6,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { SearchService } from '../services/search.service';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-sidenav',
@@ -53,8 +53,8 @@ export class SidenavComponent implements OnInit {
 
   itemsCount: number = 0;
   currentUser!: User | null;
-  isSearchActive: boolean = false;
   searchControl = new FormControl();
+  isSearchActive$!: Observable<boolean>;
 
   constructor(
     private bookService: BookService,
@@ -70,6 +70,8 @@ export class SidenavComponent implements OnInit {
 
     this.authService.currentUser.subscribe(user=> {this.currentUser = user});
 
+    this.isSearchActive$ = this.searchService.isSearchActive$;
+
     this.searchControl.valueChanges
     .pipe(
       debounceTime(300),                                                                            // Wait for 300ms pause in events
@@ -83,8 +85,9 @@ export class SidenavComponent implements OnInit {
           return true;
         }                                         
       }),
-      switchMap((searchTerm : string) => {                                                          // we use switch map because If a new term is entered while a previous search request is still in progress, that HTTP request is cancelled, and only the latest search is processed.
-        return this.searchService.searchBooks(searchTerm,1,10)
+      switchMap((searchTerm : string) => {
+        this.searchService.searchTerm = searchTerm;                                                          
+        return this.searchService.searchBooks(searchTerm,1,10)   // we use switch map because If a new term is entered while a previous search request is still in progress, that HTTP request is cancelled, and only the latest search is processed.
       })
     )
     .subscribe({
@@ -99,11 +102,11 @@ export class SidenavComponent implements OnInit {
   }
 
   toggleSearch(): void {
-    if (this.isSearchActive) {
-      this.isSearchActive = false;
+    if (this.searchService.isSearchActive.value) {
+      this.searchService.isSearchActive.next(false);
       this.location.back();
     } else {
-      this.isSearchActive = true;
+      this.searchService.isSearchActive.next(true);
     }
   }
   

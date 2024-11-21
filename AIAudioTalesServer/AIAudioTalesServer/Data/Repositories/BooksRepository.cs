@@ -495,8 +495,8 @@ namespace AIAudioTalesServer.Data.Repositories
                 // Get the count of search terms for this user
                 var count = await _dbContext.SearchHistories.CountAsync(sh => sh.UserId == userId);
 
-                // If there are already 10 search terms, remove the oldest one
-                if (count >= 10)
+                // If there are already 15 search terms, remove the oldest one
+                if (count >= 15)
                 {
                     var oldestSearchTerm = await _dbContext.SearchHistories
                                                          .Where(sh => sh.UserId == userId)

@@ -102,12 +102,6 @@ export class BookService {
   public purchaseBook(purchase: Purchase){
     return this.httpClient.post(this.path + "Books/PurchaseBook", purchase, {withCredentials: true, responseType: 'text'});
   }
-  
-  public saveSearchTerm(searchTerm: string){
-    const params = new HttpParams().set('searchTerm', searchTerm);
-
-    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params}).subscribe((res:any)=>console.log(res));
-  }
 
   public addBasketItem(bookId: number): Observable<Basket>{
     const params = new HttpParams().set('bookId', bookId);

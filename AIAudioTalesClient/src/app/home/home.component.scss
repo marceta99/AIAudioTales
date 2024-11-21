@@ -3,13 +3,7 @@ img {
   height: 200px; /* Set the height to 50 pixels */
   object-fit: cover; /* Maintain aspect ratio and cover the 50x50 box */
 }
-// #body-container {
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   text-align: center;
 
-// }
 .show{
   visibility: visible;
 }
@@ -22,14 +16,16 @@ img {
   top: 50px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .content-container {
-  flex: 1;
-  overflow: auto; /* Prevents content from overflowing */
+  position: relative; /* Add this */
+  overflow-y: auto; /* Keep this */
   display: flex;
   flex-direction: column;
 }
+
 
 router-outlet + * {
   flex: 1;
