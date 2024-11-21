@@ -34,10 +34,10 @@ export class BookService {
     return this.httpClient.get<ReturnBook[]>(this.path + "Books/GetBooksFromCategory", {params});
   }
 
-  public getBookWithId(bookId: number): Observable<Book>{
+  public getBookWithId(bookId: number): Observable<ReturnBook>{
     this.spinnerService.setLoading(true);
 
-    return this.httpClient.get<Book>
+    return this.httpClient.get<ReturnBook>
     (this.path + "Books/GetBook/"+bookId).pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );

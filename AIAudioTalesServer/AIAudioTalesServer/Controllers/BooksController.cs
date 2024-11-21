@@ -40,7 +40,7 @@ namespace AIAudioTalesServer.Controllers
         }
 
         [HttpGet("GetBook/{bookId}")]
-        public async Task<ActionResult<Book>> GetBook(int bookId)
+        public async Task<ActionResult<DTOReturnBook>> GetBook(int bookId)
         {
             var book = await _booksRepository.GetBook(bookId);
             if (book == null)

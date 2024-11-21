@@ -34,10 +34,13 @@ namespace AIAudioTalesServer.Data.Repositories
             return books;
         }
 
-        public async Task<Book> GetBook(int id)
+        public async Task<DTOReturnBook> GetBook(int id)
         {
             var book = await _dbContext.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
-            return book;
+
+            var returnBook = _mapper.Map<DTOReturnBook>(book);
+
+            return returnBook;
         }
 
         public async Task<IList<DTOReturnBook>> GetBooksFromCategory(int categoryId, int pageNumber, int pageSize)

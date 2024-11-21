@@ -8,7 +8,7 @@ namespace AIAudioTalesServer.Data.Interfaces
     {
         #region GET
         Task<IList<Book>> GetAllBooks();
-        Task<Book> GetBook(int id);
+        Task<DTOReturnBook> GetBook(int id);
         Task<IList<DTOReturnBook>> GetBooksFromCategory(int categoryId, int pageNumber, int pageSize);
         Task<bool> UserHasBook(int bookId, int userId);
         Task<bool> IsBasketItem(int bookId, int userId);

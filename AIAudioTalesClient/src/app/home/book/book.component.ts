@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
-import { Basket, Book, Language, Purchase, PurchaseType, Toast, ToastIcon, ToastType, User } from 'src/app/entities';
+import { Basket, Book, Language, Purchase, PurchaseType, ReturnBook, Toast, ToastIcon, ToastType, User } from 'src/app/entities';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-book',
@@ -11,15 +12,18 @@ import { ToastNotificationService } from '../services/toast-notification.service
   styleUrls: ['./book.component.scss']
 })
 export class BookComponent implements OnInit{
-  book! : Book;
+  book! : ReturnBook;
   currentUser!: User | null;
   userHasBook: boolean = false;
   isBasketItem: boolean = false;
   disableButton: boolean = false;
+  freeBook: boolean = true;
+
   constructor(
     private bookService: BookService,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private location: Location,
     private notificationService: ToastNotificationService) {}
 
   ngOnInit():void{
@@ -27,7 +31,7 @@ export class BookComponent implements OnInit{
       const id = +params['bookId'];
 
       this.bookService.getBookWithId(id).subscribe({
-        next: (book: Book) => {
+        next: (book: ReturnBook) => {
           console.log(book);
           this.book = book;
 
@@ -113,5 +117,13 @@ export class BookComponent implements OnInit{
         this.notificationService.show(toast);
     }
     })
+  }
+
+  goBack(): void {
+    this.location.back(); // Go back to the previous route
+  }
+
+  hasPreviousRoute(): boolean {
+    return !!window.history.state.navigationId; // Check if there is a previous route
   }
 }

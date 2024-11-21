@@ -1,6 +1,6 @@
 <div class="book-route" *ngIf="book">
   <div class="book-head">
-    <img src="../../../assets/icons/left.svg" alt="back" class="back">
+    <img *ngIf="hasPreviousRoute()" (click)="goBack()" src="../../../assets/icons/left.svg" alt="back" class="back">
     <h3 class="book-title">{{book.title}}</h3>
   </div>
   <img class="book-img" [src]="book.imageURL" alt="">
@@ -9,23 +9,17 @@
     <h4>By: Kumadio</h4>
   </div>
   <ul class="list-categories">
-    <li>categor</li>
-    <li>categories</li>
-    <li>categ</li>
+    <li>{{book.categoryId | bookCategoryPipe}}</li>
   </ul>
   <div class="btn-div">
-    <button *ngIf="!userHasBook && currentUser?.role === 1" (click)="purchaseBook(2)" [disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
-      Enroll</button>
-    <button *ngIf="!userHasBook && currentUser?.role === 2 && !isBasketItem" (click)="addBasketItem(book.id)"[disabled]="disableButton" [ngClass]="disableButton? 'disable btn_prim':'btn_prim'"><img src="../../../assets/icons/enroll.svg" alt="play">
-      Add to basket</button>
+    <button *ngIf="!userHasBook && (currentUser?.role === 1 || freeBook)" 
+    (click)="purchaseBook(2)" class="btn_prim">Add to library</button>
 
-    <a *ngIf="isBasketItem" class="btn_prim" [routerLink]="['/home/basket']"><img src="../../../assets/icons/enroll.svg" alt="play">
-      My basket</a>
-    <a  *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library/player',book.id]"><img src="../../../assets/icons/enroll.svg" alt="play">
-      Listen</a>
+    <a *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library/player',book.id]">
+      <img src="../../../assets/icons/enroll.svg" alt="play">Listen</a>
 
-    <button class="btn_ghost btn-g"><img src="../../../assets/icons/story-list.svg" alt="story-list">
-      Story List</button>
+    <button class="btn_ghost btn-g"><img src="../../../assets/icons/preview-sound.svg" alt="story-list">
+      Preview</button>
   </div>
   <p class="book-desc">{{book.description}}</p>
 </div>

@@ -5,7 +5,10 @@ import { BookCategory } from '../entities';
   name: 'bookCategoryPipe',
 })
 export class BookCategoryPipe implements PipeTransform {
-  transform(category: BookCategory): string {
+  transform(category: BookCategory | number): string {
+    if(typeof category === "number") {
+      category = category as BookCategory
+    }
     switch (category) {
       case BookCategory.BedTime:
         return 'BedTime';

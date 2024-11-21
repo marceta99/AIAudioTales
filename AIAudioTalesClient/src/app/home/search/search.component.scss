@@ -1,8 +1,7 @@
 .main-search-container {
-  height: 100vh; /* Allow it to grow and fill the parent */
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
   
   .search-history-container {
