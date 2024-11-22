@@ -27,6 +27,10 @@
           font-size: 16px;
           font-weight: bold;
           color: #000;
+
+          &.playing {
+            color: #a481ff; /* Highlight the playing title */
+          }
         }
   
         .author {
@@ -44,10 +48,6 @@
       border-bottom: none;
     }
   }
-
-.playing{
-    color: #8f77c3;      
-}
 
 .empty-state {
     display: flex;

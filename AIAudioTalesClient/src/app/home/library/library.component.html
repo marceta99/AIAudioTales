@@ -1,8 +1,8 @@
 <div class="books" #booksContainer *ngIf="books.length > 0;else noPurchases">
-  <div class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedBook(i)">
+  <div class="book" *ngFor="let book of books; let i = index" (click)="playSelectedBook(i)">
     <img [src]="book.imageURL" alt="{{ book.title }}" class="book-image"/>
     <div class="book-details">
-      <span class="title">{{ book.title }}</span>
+      <span class="title" [class.playing]="i === currentBookIndex">{{ book.title }}</span>
       <span class="author">By Kumadio</span>
     </div>
     <span class="audio-duration">{{ "01:22" }}</span>
