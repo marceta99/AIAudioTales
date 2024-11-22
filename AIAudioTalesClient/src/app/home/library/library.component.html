@@ -1,32 +1,17 @@
 <div class="books" #booksContainer *ngIf="books.length > 0;else noPurchases">
   <div class="book" *ngFor="let book of books; let i = index" [class.playing]="i === currentBookIndex" (click)="playSelectedBook(i)">
+    <img [src]="book.imageURL" alt="{{ book.title }}" class="book-image"/>
     <div class="book-details">
-      <img [src]="book.imageURL" alt="">
-      <div class="book-info">
-        <h4>{{book.title}}</h4>
-        <span>Kumadio</span>
-      </div>
+      <span class="title">{{ book.title }}</span>
+      <span class="author">By Kumadio</span>
     </div>
-
-    <!--<div class="wave-animation" *ngIf="i === currentBookIndex && isPlaying">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-    </div>-->
-
     <span class="audio-duration">{{ "01:22" }}</span>
-
   </div>
 </div>
-
-
+ 
 <ng-template #noPurchases>
-  <h2>You don't have any books</h2>
+  <div class="empty-state">
+    <h1>Listen what you love</h1>
+    <p>You don't have any books. Go get some!</p>
+  </div>
 </ng-template>

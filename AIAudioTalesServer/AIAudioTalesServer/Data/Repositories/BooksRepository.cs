@@ -547,6 +547,33 @@ namespace AIAudioTalesServer.Data.Repositories
         #endregion
 
         #region PATCH
+        public async Task<bool> AddToLibrary(User user, int bookId)
+        {
+            if (user.Role != Role.LISTENER_WITH_SUBSCRIPTION) return false;
+
+            var book = await _dbContext.Books.Where(b => b.Id == bookId).FirstOrDefaultAsync();
+
+            if (book == null) return false;
+
+            PurchasedBooks pb = new PurchasedBooks
+            {
+                BookId = bookId,
+                UserId = user.Id,
+                PurchaseType = PurchaseType.Enroled,
+                Language = Language.ENGLISH_UK,
+                PurchaseStatus = PurchaseStatus.Success,
+                SessionId = "",
+                PlayingPartId = await GetRootPart(bookId),
+                PlayingPosition = 0,
+                IsBookPlaying = false,
+                QuestionsActive = false
+            };
+
+            await _dbContext.PurchasedBooks.AddAsync(pb);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
         public async Task<bool> UpdatePurchaseStatus(string sessionId)
         {
             try

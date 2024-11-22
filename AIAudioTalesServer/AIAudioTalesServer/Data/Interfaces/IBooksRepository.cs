@@ -37,9 +37,9 @@ namespace AIAudioTalesServer.Data.Interfaces
         #endregion
 
         #region PATCH
+        Task<bool> AddToLibrary(User user, int bookId);
 
         Task<bool> UpdatePurchaseStatus(string sessionId);
-
         Task<DTOReturnPurchasedBook?> NextPart(DTOUpdateNextPart nextPart, int userId);
 
         Task<DTOReturnPurchasedBook?> ActivateQuestions(int bookId, int userId, decimal playingPosition);

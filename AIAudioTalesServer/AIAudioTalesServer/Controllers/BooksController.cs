@@ -3,6 +3,7 @@ using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -372,6 +373,22 @@ namespace AIAudioTalesServer.Controllers
         #endregion
 
         #region PATCH
+
+        [HttpPost("AddToLibrary/{bookId}")]
+        public async Task<IActionResult> AddToLibrary(int bookId)
+        {
+            var user = HttpContext.Items["CurrentUser"] as User;
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var reusult = await _booksRepository.AddToLibrary(user, bookId);
+
+            if (reusult) return Ok();
+
+            return BadRequest("Problem with adding book to library");
+        }
 
         [HttpPatch("NextPart")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart([FromBody] DTOUpdateNextPart nextPart)

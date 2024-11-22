@@ -13,10 +13,9 @@
   </ul>
   <div class="btn-div">
     <button *ngIf="!userHasBook && (currentUser?.role === 1 || freeBook)" 
-    (click)="purchaseBook(2)" class="btn_prim">Add to library</button>
+    (click)="addToLibrary()" class="btn_prim">Add to library</button>
 
-    <a *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library/player',book.id]">
-      <img src="../../../assets/icons/enroll.svg" alt="play">Listen</a>
+    <button *ngIf="userHasBook" class="btn_prim" ><img src="../../../assets/icons/enroll.svg" alt="play">Listen</button>
 
     <button class="btn_ghost btn-g"><img src="../../../assets/icons/preview-sound.svg" alt="story-list">
       Preview</button>

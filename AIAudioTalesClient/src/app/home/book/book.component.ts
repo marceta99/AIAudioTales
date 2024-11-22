@@ -126,4 +126,28 @@ export class BookComponent implements OnInit{
   hasPreviousRoute(): boolean {
     return !!window.history.state.navigationId; // Check if there is a previous route
   }
+
+  addToLibrary(): void { 
+    this.bookService.addToLibrary(this.book.id).subscribe({
+      next: () => {
+        this.userHasBook = true;
+        const toast: Toast = {
+          text: "Added to basket",
+          toastIcon: ToastIcon.Success,
+          toastType: ToastType.Success
+        }
+        this.notificationService.show(toast);
+
+    },
+      error: (error : Error) => {
+        console.log(error)
+        const toast: Toast = {
+          text: "We're sorry! An error occurred. Please try again later.",
+          toastIcon: ToastIcon.Error,
+          toastType: ToastType.Error
+        }
+        this.notificationService.show(toast);
+    }
+    })
+  }
 }

@@ -162,10 +162,11 @@ export class BookService {
   }
 
   public startBookAgain(bookId: number): Observable<PurchasedBook> {
-    return this.httpClient.patch<PurchasedBook>(this.path + "Books/StartBookAgain/"+bookId, {});
+    return this.httpClient.patch<PurchasedBook>(this.path + "Books/StartBookAgain/"+ bookId, {});
   }
-  
-
+  public addToLibrary(bookId: number): Observable<void> {
+    return this.httpClient.post<void>(`${this.path}Books/AddToLibrary/${bookId}`, {});
+  }
   //#endregion
 
   //#region DELETE
