@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { PurchasedBook } from 'src/app/entities';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'app-library',
@@ -12,7 +13,10 @@ export class LibraryComponent implements OnInit{
   currentBookIndex!: number;
   isPlaying: boolean = false;
 
-  constructor(private bookService: BookService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private bookService: BookService,
+    private playerService: PlayerService,
+    private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
 
@@ -28,14 +32,26 @@ export class LibraryComponent implements OnInit{
     })
 
     this.bookService.purchasedBooks.subscribe((books: PurchasedBook[])=>{
+      console.log("purchased books observable")
       this.books = books;
     })
 
     this.bookService.currentBookIndex.subscribe((index: number)=>{
+      console.log("current book index updated")
       this.currentBookIndex = index;
     })
 
     this.bookService.isPlaying.subscribe((isPlaying: boolean)=> this.isPlaying = isPlaying);
+
+      // Subscribe to remaining time and update the displayed time for the current book
+    this.playerService.remainingTime.subscribe((timeLeft: number) => {
+      console.log("remainning time ", timeLeft)
+      if (this.books && this.books[this.currentBookIndex]) {
+        this.books[this.currentBookIndex].remainingTime = timeLeft;
+        this.cdr.detectChanges(); // Trigger change detection to update the view
+        console.log("curent book ", this.books[this.currentBookIndex])
+      }
+    });
   }
 
   setCurrentBook(): void{

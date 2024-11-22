@@ -40,7 +40,8 @@ export interface PurchasedBook {
   playingPart: ReturnPart,
   playingPosition: number,
   isBookPlaying: boolean,
-  questionsActive: boolean
+  questionsActive: boolean,
+  remainingTime?: number;
 }
 export interface SearchedBooks {
   searchTerm: string,

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BookService } from '../services/book.service';
 import { PurchasedBook } from 'src/app/entities';
+import { PlayerService } from '../services/player.service';
 
 @Component({
   selector: 'app-player',
@@ -28,7 +29,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
   @ViewChild('artistElement') artistElement!: ElementRef;
 
   
-  constructor(private bookService: BookService, private cdr: ChangeDetectorRef, private zone: NgZone) {}
+  constructor(
+    private bookService: BookService,
+    private playerService: PlayerService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone) {}
 
   ngOnInit(): void {
     this.initializeSpeechRecognition();
@@ -102,16 +107,23 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public progressBarUpdate(): void {
     const current = this.audioElement.nativeElement.currentTime;
     const duration = this.audioElement.nativeElement.duration;
-    if(!isNaN(duration)) {
+  
+    if (!isNaN(duration)) {
       this.progress = (current / duration) * 100;
       this.currentTime = this.formatTime(current);
       this.maxDuration = this.formatTime(duration);
-    }else {
-      this.currentTime = "00:00"
-      this.maxDuration = "00:00"
+  
+      const remainingTime = duration - current;
+      this.playerService.remainingTime.next(Math.max(0, Math.floor(remainingTime))); // Emit remaining time
+    } else {
+      this.currentTime = '00:00';
+      this.maxDuration = '00:00';
       this.progress = 0;
+  
+      this.playerService.remainingTime.next(0); // Emit 0 if duration is not valid
     }
   }
+  
 
   private formatTime(seconds: number): string {
     const min = Math.floor(seconds / 60);
@@ -159,8 +171,15 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private updateBookList(): void {
-    //update book list with changes of current book object
-    this.books[this.currentBookIndex] = this.currentBook;
+    // Preserve the remainingTime for the currently playing book
+    if (this.books[this.currentBookIndex]) {
+      const remainingTime = this.books[this.currentBookIndex].remainingTime;
+      this.books[this.currentBookIndex] = { ...this.currentBook, remainingTime };
+    } else {
+      this.books[this.currentBookIndex] = this.currentBook;
+    }
+  
+    // Update the purchasedBooks observable
     this.bookService.purchasedBooks.next(this.books);
   }
 

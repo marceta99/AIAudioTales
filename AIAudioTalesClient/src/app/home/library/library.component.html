@@ -5,7 +5,9 @@
       <span class="title" [class.playing]="i === currentBookIndex">{{ book.title }}</span>
       <span class="author">By Kumadio</span>
     </div>
-    <span class="audio-duration">{{ "01:22" }}</span>
+    <span class="audio-duration" *ngIf="i === currentBookIndex">
+      {{ books[i].remainingTime !== undefined ? books[i].remainingTime + 's' : '...' }}
+    </span>
   </div>
 </div>
  
