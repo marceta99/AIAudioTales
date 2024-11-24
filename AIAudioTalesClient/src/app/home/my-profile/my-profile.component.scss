@@ -15,7 +15,7 @@ $primary-color: #003a70; // Darker shade of blue for the profile circle and acti
     .profile-circle {
       width: 100px;
       height: 100px;
-      background-color: $primary-color; // Apply the darker color here
+      background-color: #a481ff; // Apply the darker color here
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -97,7 +97,7 @@ $primary-color: #003a70; // Darker shade of blue for the profile circle and acti
             right: 0;
             bottom: 0;
             height: 2px;
-            background-color: $primary-color; // The blue underline color
+            background-color: #a481ff; // The blue underline color
             width: 100%;
             opacity: 1; // Always visible
           }

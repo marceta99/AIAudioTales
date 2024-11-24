@@ -15,16 +15,13 @@ export class BooksComponent implements OnInit {
   constructor(private bookService: BookService, private spinnerService: LoadingSpinnerService) {}
 
   ngOnInit(): void {
-    this.spinnerService.setLoading(true);
-
     this.homePageCategories.forEach(category =>{
       this.loadBooksFromCategory(category, 1, 15)
    })
-   
-   this.spinnerService.setLoading(false);
   }
 
   loadBooksFromCategory(bookCategory: number, pageNumber: number, pageSize: number): void {
+    this.spinnerService.setLoading(true);
     this.bookService.getBooksFromCategory(bookCategory, pageNumber, pageSize).subscribe({
       next: (books : ReturnBook[] ) => {
         console.log(books)
@@ -33,7 +30,8 @@ export class BooksComponent implements OnInit {
           category: bookCategory as BookCategory
         } ;
         this.categories.push(category);
-    },
+      },
+      complete: ()=> this.spinnerService.setLoading(false),
       error: error => {
         console.error('There was an error!', error);
         this.spinnerService.setLoading(false);
