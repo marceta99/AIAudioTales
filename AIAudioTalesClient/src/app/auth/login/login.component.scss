@@ -4,9 +4,12 @@
 .login {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
     gap: 1rem;
+    height: 100vh; /* Full height of the viewport */
+    padding: 0 1rem; /* Add some padding for smaller screens */
+    box-sizing: border-box; /* Ensure padding does not affect width */
 }
 .login form {
     display: flex;
@@ -14,10 +17,19 @@
     gap: 1rem;
     justify-content: center;
     align-items: center;
+    width: 100%; /* Ensures it doesn't exceed parent width */
+    max-width: 400px; /* Limit the width for better appearance */
 }
+
+.logo-login {
+    max-width: 150px;
+    margin-bottom: 1rem; /* Space between logo and form */
+}
+
 .goToRegistration {
     display: flex;
     gap: 0.5rem;
+    justify-content: center; /* Center content */
 }
 
 input.ng-invalid.ng-touched{
@@ -50,5 +62,9 @@ button:disabled{
 @media (min-width: 1200px) {
     .logo-login {
         max-width: 230px;
+    }
+
+    .login {
+        padding: 0 2rem; /* Add more padding for larger screens */
     }
 }
