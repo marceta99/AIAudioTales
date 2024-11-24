@@ -86,7 +86,13 @@
 }
 
 .control {
-  cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Ensure all controls have the same width */
+    height: 50px; /* Ensure all controls have the same height */
+    cursor: pointer;
+    border-radius: 50%; /* Make buttons circular */
 }
 
 .controls img {

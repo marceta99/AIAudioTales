@@ -21,7 +21,7 @@
               </div>
 
               <div class="controls"  [class.disabled]="isLoading" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
-                  <i id="rewind" class="control" (click)="rewind()"><img src="../../../assets/icons/rewind-10.svg" alt="skip"></i>
+                  <i id="rewind" class="control" (click)="rewind()"><img src="../../../assets/icons/replay10.svg" alt="skip"></i>
                   <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
                   <i class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
