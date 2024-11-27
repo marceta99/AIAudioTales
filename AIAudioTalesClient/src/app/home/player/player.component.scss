@@ -350,3 +350,134 @@
     transition: width 0.3s ease; /* Smooth transition for updates */
   }
 }
+
+// Fullscreen Player Styling
+.fullscreen-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #b297f8, #895bff);
+  z-index: 1000;
+
+  .top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    font-size: 18px;
+    color: white;
+
+    .close-icon {
+      cursor: pointer;
+    }
+
+    .three-dots {
+      cursor: pointer;
+      margin-right: 15px;
+    }
+  }
+
+  .album-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    .album-cover {
+      width: 80%;
+      max-width: 350px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .details {
+    margin: 20px;
+    text-align: center;
+    color: white;
+
+    .title,
+    .artist {
+      display: block;
+      font-size: 22px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.scrolling {
+        animation: scroll-text 8s linear infinite;
+      }
+    }
+
+    .artist {
+      font-size: 18px;
+      color: #dedede;
+    }
+  }
+
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(100%);
+    }
+    50% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .progress-container {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin-top: 20px;
+
+    .progress-area {
+      flex: 1;
+      height: 5px;
+      background: #e0e0e0;
+      margin: 0 10px;
+      border-radius: 50px;
+      position: relative;
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(to right, #625f5f, #302b2b); /* Vibrant gradient for progress */
+        border-radius: 50px;
+        transition: width 0.3s ease;
+      }
+    }
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    padding: 10px;
+
+    .control {
+      cursor: pointer;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}
+

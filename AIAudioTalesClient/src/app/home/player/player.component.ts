@@ -325,4 +325,17 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.saveProgress(playingPosition, undefined, undefined);
     }
   }
+
+  public fastForward(): void {
+    const audio = this.audioElement.nativeElement;
+    const forwardTime = 10; // 10 seconds forward
+    const playingPosition = Math.min(audio.duration, audio.currentTime + forwardTime);
+    audio.currentTime = playingPosition;
+    this.progressBarUpdate();
+  }
+  
+  public toggleFullScreen(): void {
+    this.isFullScreen = !this.isFullScreen;
+  }
+  
 }

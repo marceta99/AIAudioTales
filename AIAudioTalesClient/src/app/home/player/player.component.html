@@ -2,7 +2,7 @@
     <div *ngIf="!isFullScreen && currentBook;else fullscreen" class="minimized-player-container">
       <div class="top-container">
             
-          <div class="book-details">
+          <div class="book-details" (click)="toggleFullScreen()">
             <img class="book-cover" [src]="currentBook.imageURL" alt="">
 
             <div class="book-info">
@@ -51,9 +51,54 @@
      
     </div>
 
+    <!-- Fullscreen Template -->
     <ng-template #fullscreen>
-      <div class="fullscreen-player-container">
-
+      <div class="fullscreen-player">
+        <div class="top-bar">
+          <i class="close-icon" (click)="toggleFullScreen()">
+            <img src="../../../assets/icons/down-arrow.svg" alt="Minimize">
+          </i>
+          <span>Play what you love!</span>
+          <i class="three-dots">
+            <img src="../../../assets/icons/three-horizontal-dots.svg" alt="Options">
+          </i>
+        </div>
+    
+        <div class="album-info">
+          <img [src]="currentBook.imageURL" class="album-cover" alt="Album Cover">
+        </div>
+    
+        <div class="details">
+          <span #titleElement class="title" [ngClass]="{'scrolling': isTitleOverflowing}">{{ currentBook.title }}</span>
+          <span #artistElement class="artist" [ngClass]="{'scrolling': isArtistOverflowing}">{{ "Kumadio" }}</span>
+        </div>
+    
+        <div class="progress-container">
+          <span class="current-time">{{ currentTime }}</span>
+          <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
+            <div class="progress-bar" [style.width]="progress + '%'"></div>
+          </div>
+          <span class="max-duration">{{ maxDuration }}</span>
+        </div>
+    
+        <div class="controls">
+          <i class="control" (click)="rewind()">
+            <img src="../../../assets/icons/replay10.svg" alt="Rewind 10">
+          </i>
+          <i class="control" (click)="prevBook()">
+            <img src="../../../assets/icons/skip_previous.svg" alt="Previous">
+          </i>
+          <i class="control" (click)="togglePlayPause()">
+            <img [src]="getPlayPauseIcon()" alt="Play/Pause">
+          </i>
+          <i class="control" (click)="nextBook()">
+            <img src="../../../assets/icons/skip_next.svg" alt="Next">
+          </i>
+          <i class="control" (click)="fastForward()">
+            <img src="../../../assets/icons/forward_10.svg" alt="Fast Forward 10">
+          </i>
+        </div>
       </div>
     </ng-template>
+    
 </div>
