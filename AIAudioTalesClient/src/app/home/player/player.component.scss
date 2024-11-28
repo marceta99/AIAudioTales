@@ -356,7 +356,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start; /* Align elements closer to the top */
+  padding: 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -366,39 +367,57 @@
   z-index: 1000;
 
   .top-bar {
+    margin: 0; /* Remove extra margins */
+    padding: 20px 20px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    font-size: 18px;
+    align-items: center; /* Center items vertically */
+    font-size: 16px;
     color: white;
-
-    .close-icon {
-      cursor: pointer;
-    }
-
+  
+    .close-icon,
     .three-dots {
+      display: flex; /* Ensure icons are flex items */
+      align-items: center; /* Center icons vertically */
       cursor: pointer;
+  
+      img {
+        width: 30px;
+        height: 30px;
+      }
     }
   }
+  
+  
 
   .album-info {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 10px;
+    width: 100%;
 
     .album-cover {
-      width: 80%;
-      max-width: 350px;
+      width: 90%; /* Increase the width for a larger image */
+  max-width: 400px; /* Ensure it doesn't grow excessively on larger screens */;
       border-radius: 20px;
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
   }
 
+  .play-container {
+    width: 95%;
+    flex: 2; /* Take 2 units of vertical space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
   .details {
-    margin: 20px;
+    margin-top: 15px;
     text-align: center;
     color: white;
 
@@ -438,8 +457,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%; /* Adjust width to fit nicely */
+    width: 100%; /* Adjust width to fit nicely */
     margin: 0 auto; /* Center the container */
+    margin-top: 15px;
   }
   
   .progress-area {

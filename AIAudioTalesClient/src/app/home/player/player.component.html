@@ -67,39 +67,43 @@
         <div class="album-info">
           <img [src]="currentBook.imageURL" class="album-cover" alt="Album Cover">
         </div>
-    
-        <div class="details">
-          <span #titleElement class="title" >{{ currentBook.title }}</span>
-          <span #artistElement class="artist">{{ "Kumadio" }}</span>
-        </div>
-    
-        <div class="progress-container">
-          <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
-            <div class="progress-bar" [style.width]="progress + '%'"></div>
+
+        <div class="play-container">
+          <div class="details">
+            <span #titleElement class="title" >{{ currentBook.title }}</span>
+            <span #artistElement class="artist">{{ "Kumadio" }}</span>
           </div>
-          <div class="time-container">
-            <span class="current-time">{{ currentTime }}</span>
-            <span class="max-duration">{{ maxDuration }}</span>
+      
+          <div class="progress-container">
+            <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
+              <div class="progress-bar" [style.width]="progress + '%'"></div>
+            </div>
+            <div class="time-container">
+              <span class="current-time">{{ currentTime }}</span>
+              <span class="max-duration">{{ maxDuration }}</span>
+            </div>
+          </div>
+      
+          <div class="controls">
+            <i class="control small" (click)="rewind()">
+              <img src="../../../assets/icons/replay10.svg" alt="Rewind 10">
+            </i>
+            <i class="control" (click)="prevBook()">
+              <img src="../../../assets/icons/skip_previous.svg" alt="Previous">
+            </i>
+            <i class="control" (click)="togglePlayPause()">
+              <img [src]="getPlayPauseIcon()" alt="Play/Pause">
+            </i>
+            <i class="control" (click)="nextBook()">
+              <img src="../../../assets/icons/skip_next.svg" alt="Next">
+            </i>
+            <i class="control small" (click)="fastForward()">
+              <img src="../../../assets/icons/forward_10.svg" alt="Fast Forward 10">
+            </i>
           </div>
         </div>
     
-        <div class="controls">
-          <i class="control small" (click)="rewind()">
-            <img src="../../../assets/icons/replay10.svg" alt="Rewind 10">
-          </i>
-          <i class="control" (click)="prevBook()">
-            <img src="../../../assets/icons/skip_previous.svg" alt="Previous">
-          </i>
-          <i class="control" (click)="togglePlayPause()">
-            <img [src]="getPlayPauseIcon()" alt="Play/Pause">
-          </i>
-          <i class="control" (click)="nextBook()">
-            <img src="../../../assets/icons/skip_next.svg" alt="Next">
-          </i>
-          <i class="control small" (click)="fastForward()">
-            <img src="../../../assets/icons/forward_10.svg" alt="Fast Forward 10">
-          </i>
-        </div>
+        
       </div>
     </ng-template>
     
