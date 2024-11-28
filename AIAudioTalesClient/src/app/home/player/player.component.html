@@ -69,8 +69,8 @@
         </div>
     
         <div class="details">
-          <span #titleElement class="title" [ngClass]="{'scrolling': isTitleOverflowing}">{{ currentBook.title }}</span>
-          <span #artistElement class="artist" [ngClass]="{'scrolling': isArtistOverflowing}">{{ "Kumadio" }}</span>
+          <span #titleElement class="title" >{{ currentBook.title }}</span>
+          <span #artistElement class="artist">{{ "Kumadio" }}</span>
         </div>
     
         <div class="progress-container">
@@ -82,7 +82,7 @@
         </div>
     
         <div class="controls">
-          <i class="control" (click)="rewind()">
+          <i class="control small" (click)="rewind()">
             <img src="../../../assets/icons/replay10.svg" alt="Rewind 10">
           </i>
           <i class="control" (click)="prevBook()">
@@ -94,7 +94,7 @@
           <i class="control" (click)="nextBook()">
             <img src="../../../assets/icons/skip_next.svg" alt="Next">
           </i>
-          <i class="control" (click)="fastForward()">
+          <i class="control small" (click)="fastForward()">
             <img src="../../../assets/icons/forward_10.svg" alt="Fast Forward 10">
           </i>
         </div>

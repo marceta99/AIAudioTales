@@ -380,7 +380,6 @@
 
     .three-dots {
       cursor: pointer;
-      margin-right: 15px;
     }
   }
 
@@ -477,6 +476,16 @@
         width: 60px;
         height: 60px;
       }
+    }
+
+    .control.small {
+      width: 45px; /* Smaller size for rewind and forward buttons */
+      height: 45px;
+    }
+    
+    .control.small img {
+      width: 35px;
+      height: 35px;
     }
   }
 }
