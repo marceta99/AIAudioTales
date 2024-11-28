@@ -436,26 +436,37 @@
 
   .progress-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    width: 90%;
-    margin-top: 20px;
-
-    .progress-area {
-      flex: 1;
-      height: 5px;
-      background: #e0e0e0;
-      margin: 0 10px;
-      border-radius: 50px;
-      position: relative;
-
-      .progress-bar {
-        height: 100%;
-        background: linear-gradient(to right, #625f5f, #302b2b); /* Vibrant gradient for progress */
-        border-radius: 50px;
-        transition: width 0.3s ease;
-      }
-    }
+    width: 90%; /* Adjust width to fit nicely */
+    margin: 0 auto; /* Center the container */
   }
+  
+  .progress-area {
+    width: 100%; /* Full width */
+    height: 6px; /* Thickness of the bar */
+    border-radius: 50px;
+    background: #e0e0e0;
+    position: relative;
+    margin-bottom: 8px; /* Space below the progress bar */
+  }
+  
+  .progress-bar {
+    height: 100%;
+    width: 0%; /* This will be dynamically updated */
+    background: linear-gradient(to right, #625f5f, #302b2b);
+    border-radius: 50px;
+    transition: width 0.3s ease;
+  }
+  
+  .time-container {
+    display: flex;
+    justify-content: space-between; /* Align times at both ends */
+    width: 100%; /* Match the width of the progress bar */
+    font-size: 12px; /* Small font for subtle appearance */
+    color: white; /* Ensure readability */
+  }
+  
 
   .controls {
     display: flex;

@@ -74,11 +74,13 @@
         </div>
     
         <div class="progress-container">
-          <span class="current-time">{{ currentTime }}</span>
           <div class="progress-area" (click)="updatePlayingTime($event)" #progressArea>
             <div class="progress-bar" [style.width]="progress + '%'"></div>
           </div>
-          <span class="max-duration">{{ maxDuration }}</span>
+          <div class="time-container">
+            <span class="current-time">{{ currentTime }}</span>
+            <span class="max-duration">{{ maxDuration }}</span>
+          </div>
         </div>
     
         <div class="controls">
