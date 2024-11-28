@@ -21,14 +21,14 @@
               </div>
 
               <div class="controls"  [class.disabled]="isLoading" [ngClass]="{'mic-active': this.currentBook.questionsActive}">
-                  <i id="rewind" class="control" (click)="rewind()"><img src="../../../assets/icons/replay10.svg" alt="skip"></i>
-                  <i id="prev" class="control" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
+                  <i id="rewind" class="control small" (click)="rewind()"><img src="../../../assets/icons/replay10.svg" alt="skip"></i>
+                  <i id="prev" class="control medium" (click)="prevBook()"><img src="../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
-                  <i class="control" [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                  <i class="control large" #play [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
                     <img [src]="getPlayPauseIcon()" alt="play pause">
                   </i>
 
-                  <i id="next" class="control" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
+                  <i id="next" class="control medium" (click)="nextBook()"><img src="../../../assets/icons/skip_next.svg" alt="skip"></i>
               </div>
           </div>
 
@@ -37,7 +37,7 @@
                 <button class="question" *ngFor="let question of currentBook.playingPart.answers" (click)="nextPart(question.nextPartId)">{{question.text}}</button>
               </div>
               -->
-              <i><img src="../../../assets/icons/full.svg" alt="skip"></i>
+              <i><img src="../../../assets/icons/full.svg" alt="skip" (click)="toggleFullScreen()"></i>
           </div>
 
           <audio #audioElement (timeupdate)="progressBarUpdate()" (ended)="activateQuestions()">
