@@ -16,7 +16,7 @@
   margin: 0 auto;
 }
 
-.banner-div {
+/*.banner-div {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -24,7 +24,7 @@
   max-width: 1500px;
   margin: 0 auto;
 
-}
+}*/
   
 @media (min-width: 768px) {
   .main-container {
@@ -33,3 +33,65 @@
 
 
 }
+
+.banner-slider {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%; /* Ensures it doesn't exceed the screen width */
+  margin: 0 auto;
+  border-radius: 16px; /* Add rounded corners to the entire slider */
+  padding: 16px; /* Add padding around the slider container */
+  background-color: #f9f9f9; /* Optional background for a better appearance */
+
+  .slider-container {
+    display: flex;
+    scroll-behavior: smooth;
+    overflow-x: scroll;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    width: 100%;
+    border-radius: 16px; /* Ensure inner items inherit rounded corners */
+  }
+
+  .slider-container::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+  }
+
+  .banner-item {
+    flex: 0 0 100%; /* Each slide takes up 100% of the slider width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px; /* Round the edges of individual banner items */
+    overflow: hidden; /* Ensure content does not overflow the rounded corners */
+  }
+
+  img {
+    width: 100%; /* Scale image to fit within the container */
+    height: 180px; /* Set a fixed height for the banner slider */
+    object-fit: cover; /* Ensure the image covers the banner area properly */
+    border-radius: 16px; /* Apply rounded corners to the images */
+  }
+
+  .dots-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      margin: 0 5px;
+      border-radius: 50%;
+      background-color: #ccc;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .dot.active {
+      background-color: #0078ff; /* Active dot color */
+    }
+  }
+}
+
