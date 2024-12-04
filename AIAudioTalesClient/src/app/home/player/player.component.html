@@ -1,5 +1,5 @@
-<div>
-    <div *ngIf="!isFullScreen && currentBook;else fullscreen" class="minimized-player-container">
+<div *ngIf="currentBook">
+    <div *ngIf="!isFullScreen;else fullscreen" class="minimized-player-container">
       <div class="top-container">
             
           <div class="book-details" (click)="toggleFullScreen()">

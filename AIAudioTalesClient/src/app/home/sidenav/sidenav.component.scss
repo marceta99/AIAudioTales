@@ -24,6 +24,17 @@
 
   img {
     height: 25px;
+    transition: filter 0.3s ease; /* Smooth transition for color change */
+  }
+
+  &.active-link {
+    font-weight: bolder;
+    color: #a481ff;
+
+    img {
+      filter: brightness(0) saturate(100%) invert(69%) sepia(34%) saturate(476%) hue-rotate(243deg) brightness(89%) contrast(99%);
+      /* Changes the color of the SVG to match #a481ff */
+    }
   }
 }
 .menu_ctg:hover {
@@ -80,9 +91,7 @@
 .my-prof {
   display: none;
 }
- .active-link {
-   font-weight: bolder;
- }
+
 .mob-icons {
   display: flex;
   gap: 1rem;
