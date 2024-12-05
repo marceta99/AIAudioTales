@@ -1,4 +1,4 @@
-﻿namespace AIAudioTalesServer
+﻿namespace AIAudioTalesServer.Settings
 {
     public class AppSettings
     {
@@ -7,5 +7,5 @@
         public string StripeSecretKey { get; set; }
         public string ClientUrl { get; set; }
     }
-    
+
 }

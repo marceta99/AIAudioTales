@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
 using AIAudioTalesServer.Models.DTOS;
+using AIAudioTalesServer.Settings;
 
 namespace AIAudioTalesServer.Controllers
 {

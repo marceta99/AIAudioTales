@@ -1,9 +1,13 @@
 ﻿using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Models;
 using AIAudioTalesServer.Models.DTOS;
+using AIAudioTalesServer.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace AIAudioTalesServer.Controllers
 {
@@ -13,9 +17,12 @@ namespace AIAudioTalesServer.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBooksRepository _booksRepository;
-        public BooksController(IBooksRepository booksRepository)
+        private readonly OpenAISettings _openAISettings;
+
+        public BooksController(IBooksRepository booksRepository, IOptions<OpenAISettings> openAISettings)
         {
             _booksRepository = booksRepository;
+            _openAISettings = openAISettings.Value;
         }
 
         #region GET
@@ -368,6 +375,53 @@ namespace AIAudioTalesServer.Controllers
             var newBasket = await _booksRepository.GetBasket(user.Id);
 
             return Ok(newBasket);
+        }
+
+        [HttpPost("ProcessChildResponse")]
+        public async Task<IActionResult> ProcessChildResponse([FromBody] DTOChildResponse dto)
+        {
+            var apiKey = _openAISettings.ApiKey;
+            var apiUrl = _openAISettings.ApiUrl;
+            var model = _openAISettings.Model;
+
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+                var requestBody = new
+                {
+                    model,
+                    messages = new[]
+                    {
+                    new { role = "user", content = dto.Prompt }
+                },
+                    max_tokens = 10,
+                    temperature = 0.3
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync(apiUrl, content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var data = JsonConvert.DeserializeObject<dynamic>(responseString);
+                        var assistantReply = data.choices[0].message.content.ToString().Trim();
+                        return Ok(new { reply = assistantReply });
+                    }
+                    else
+                    {
+                        return StatusCode((int)response.StatusCode, responseString);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Error calling OpenAI API: {ex.Message}");
+                }
+            }
         }
 
         #endregion

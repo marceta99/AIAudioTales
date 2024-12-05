@@ -28,7 +28,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
   @ViewChild('titleElement') titleElement!: ElementRef;
   @ViewChild('artistElement') artistElement!: ElementRef;
 
-  
   constructor(
     private bookService: BookService,
     private playerService: PlayerService,
@@ -199,7 +198,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       // set current book back to start and play the next book
       this.bookService.startBookAgain(this.currentBook.id).subscribe({
         next: (updatedPurchasedBook: PurchasedBook) => {
-          console.log("start again resposne ", updatedPurchasedBook)
+          console.log("start again response ", updatedPurchasedBook)
           this.currentBook = updatedPurchasedBook;
           this.updateBookList();
 
@@ -231,7 +230,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   public getPlayPauseIcon(): string {
     if (this.currentBook.questionsActive) {
-      return '../../../assets/icons/microphone-extra-small.svg';
+      return '../../../assets/icons/mic_24_white.svg';
     }
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
@@ -244,9 +243,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
     const SpeechRecognition = (window as any).webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
-    this.recognition.continuous = true;
+    this.recognition.continuous = true; // Keep continuous recognition
     this.recognition.interimResults = false;
-    //this.recognition.lang = 'en-US';
     this.recognition.lang = 'sr';
 
     this.recognition.onstart = () => {
@@ -259,26 +257,111 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
       this.zone.run(() => {
         if (this.currentBook.questionsActive) {
-          const matchedAnswer = this.currentBook.playingPart.answers.find(answer => transcript.includes(answer.text.toLowerCase()));
-
-          if (matchedAnswer) {
-            this.nextPart(matchedAnswer.nextPartId);
+          if (this.isTranscriptValid(transcript)) {
+            this.processChildResponse(transcript);
+          } else {
+            console.log('Ignored transcript:', transcript);
           }
         }
       });
     };
 
     this.recognition.onerror = (event: any) => {
-      console.error('Speech recognition error: ', event.error);
+      console.error('Speech recognition error:', event.error);
+      // Handle network errors or no-speech errors
+      if (event.error === 'no-speech') {
+        // Optionally, restart recognition or prompt the user
+        console.log('No speech detected, continuing to listen...');
+      }
     };
 
     this.recognition.onend = () => {
       console.log('Speech recognition ended');
       if (this.currentBook.questionsActive) {
-        console.log("restart recognition")
+        console.log("Restarting recognition");
         this.startRecognition(); // Restart recognition if still in question mode
       }
     };
+  }
+
+  private isTranscriptValid(transcript: string): boolean {
+    // Filter out empty or irrelevant transcripts
+    if (!transcript || transcript.length < 2) {
+      // Ignore very short or empty transcripts
+      return false;
+    }
+
+    // Optionally, implement more advanced filtering
+    // For example, check if transcript contains at least one valid word character
+    const validWordPattern = /[a-zA-Zčćžđš]/; // Adjust pattern for your language
+    if (!validWordPattern.test(transcript)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private processChildResponse(transcript: string): void {
+    const possibleAnswers = this.currentBook.playingPart.answers.map(answer => answer.text.toLowerCase());
+
+    // First, attempt to match on the frontend
+    const matchedAnswer = possibleAnswers.find(answerText => {
+      return this.stringSimilarity(transcript, answerText) > 0.6; // Adjust threshold as needed
+    });
+
+    if (matchedAnswer) {
+      // Find the corresponding answer object
+      const answerObj = this.currentBook.playingPart.answers.find(answer => 
+        answer.text.toLowerCase() === matchedAnswer
+      );
+      if (answerObj) {
+        this.nextPart(answerObj.nextPartId);
+      }
+    } else {
+      // If no match, send to backend for further processing
+      this.sendToBackendForProcessing(transcript);
+    }
+  }
+
+  private sendToBackendForProcessing(transcript: string): void {
+    const possibleAnswers = this.currentBook.playingPart.answers.map(answer => answer.text);
+    const prompt = `
+    You are an assistant helping to interpret a child's response in an interactive audiobook. The child was asked a question with the following possible answers: ${possibleAnswers.join(', ')}.
+
+    Given the child's response: "${transcript}"
+
+    Determine which of the possible answers the child intended. If the response is unclear or doesn't match any options, reply "unclear".
+
+    Respond with only the chosen answer or "unclear".
+    `;
+
+    this.playerService.processChildResponse(prompt).subscribe(
+    {
+      next: (response: { reply: string }) => {
+        const chosenAnswer = response.reply;
+        if (chosenAnswer && chosenAnswer.toLowerCase() !== 'unclear') {
+          const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
+            answer.text.toLowerCase() === chosenAnswer.toLowerCase()
+          );
+          if (matchedAnswer) {
+            this.nextPart(matchedAnswer.nextPartId);
+          }
+        } else {
+          // Prompt the child to repeat
+          this.promptChildToRepeat();
+        }
+      },
+      error: error => {
+          console.error('There was an error!', error);
+          this.promptChildToRepeat();
+      }
+    });
+  }
+
+  private promptChildToRepeat(): void {
+    // Play an audio message prompting the child to repeat their answer
+    const audio = new Audio('assets/audio/repeat_audio.mp3');
+    audio.play();
   }
 
   private startRecognition(): void {
@@ -304,7 +387,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.audioElement.nativeElement.currentTime  = playingPosition;
 
     if(playingPosition < duration){
-      if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions acitve to false because now it is rewined 10sec and questions are not active
+      if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions active to false because now it is rewound 10sec and questions are not active
         this.saveProgress(playingPosition, undefined, false);
       } else {
         this.saveProgress(playingPosition, undefined, undefined);
@@ -319,7 +402,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     audio.currentTime = playingPosition;
     this.progressBarUpdate(); // update the progress bar after rewinding
 
-    if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions acitve to false because now it is rewined 10sec and questions are not active
+    if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions active to false because now it is rewound 10sec and questions are not active
       this.saveProgress(playingPosition, undefined, false);
     } else {
       this.saveProgress(playingPosition, undefined, undefined);
@@ -337,5 +420,40 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public toggleFullScreen(): void {
     this.isFullScreen = !this.isFullScreen;
   }
-  
+
+  // Utility function for string similarity
+  private stringSimilarity(str1: string, str2: string): number {
+    // Implement a simple similarity check (e.g., Levenshtein distance)
+    // For simplicity, let's use a basic approach here
+    if (str1 === str2) return 1;
+    const longer = str1.length > str2.length ? str1 : str2;
+    const shorter = str1.length > str2.length ? str2 : str1;
+    const longerLength = longer.length;
+    if (longerLength === 0) return 0;
+    const similarity = (longerLength - this.editDistance(longer, shorter)) / longerLength;
+    return similarity;
+  }
+
+  private editDistance(s1: string, s2: string): number {
+    const costs = [];
+    for (let i = 0; i <= s1.length; i++) {
+      let lastValue = i;
+      for (let j = 0; j <= s2.length; j++) {
+        if (i === 0)
+          costs[j] = j;
+        else {
+          if (j > 0) {
+            let newValue = costs[j - 1];
+            if (s1.charAt(i - 1) !== s2.charAt(j - 1))
+              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+            costs[j - 1] = lastValue;
+            lastValue = newValue;
+          }
+        }
+      }
+      if (i > 0)
+        costs[s2.length] = lastValue;
+    }
+    return costs[s2.length];
+  }
 }

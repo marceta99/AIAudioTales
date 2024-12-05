@@ -1,8 +1,8 @@
-using AIAudioTalesServer;
 using AIAudioTalesServer.Data;
 using AIAudioTalesServer.Data.Interfaces;
 using AIAudioTalesServer.Data.Repositories;
 using AIAudioTalesServer.Middlewares;
+using AIAudioTalesServer.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +46,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")
+);
+builder.Services.Configure<OpenAISettings>(
+        builder.Configuration.GetSection("OpenAI")
 );
 
 builder.Services.AddControllers()
