@@ -27,9 +27,6 @@
     <img src="../../../assets/icons/library.svg" alt="library"><a>My books</a>
   </span>
 
-  <span *ngIf="currentUser?.role === 2" class="menu_ctg my-prof" [routerLink]="['/home/basket']" routerLinkActive="active-link">
-    <img src="../../../assets/icons/cart.svg" alt="settings"><a>My cart</a><span>{{ itemsCount }}</span>
-  </span>
   <span class="menu_ctg my-prof" [routerLink]="['/home/my-profile']" routerLinkActive="active-link">
     <img src="../../../assets/icons/settings.svg" alt="settings"><a>My Profile</a>
   </span>

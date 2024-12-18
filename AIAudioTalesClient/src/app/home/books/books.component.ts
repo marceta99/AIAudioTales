@@ -15,8 +15,8 @@ export class BooksComponent implements OnInit {
   categories: { books: ReturnBook[], category: BookCategory }[] = [];
 
   ads = [
-    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXICWl6tskBwvFowpPtfNagBJCQSZVj4hDtA&s', alt: 'Banner 1' },
     { image: 'https://www.catholicmom.com/hubfs/20240104%20CRangel%201.png', alt: 'Banner 2' },
+    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXICWl6tskBwvFowpPtfNagBJCQSZVj4hDtA&s', alt: 'Banner 1' },
     { image: 'https://www.thebookwarehouse.com.au/wp-content/uploads/2021/09/image-30.png', alt: 'Banner 3' }
   ];
 

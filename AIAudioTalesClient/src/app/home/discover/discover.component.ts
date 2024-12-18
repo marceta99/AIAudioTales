@@ -25,16 +25,16 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   @ViewChild('bookListContainer') booksContainer!: ElementRef;
 
   items = [
-    { imageUrl: 'https://picsum.photos/100', title: 'Daily Mix 1' },
-    { imageUrl: 'https://picsum.photos/440', title: 'Release Radar' },
-    { imageUrl: 'https://picsum.photos/670', title: 'Jack Harlow Mix' },
-    { imageUrl: 'https://picsum.photos/732', title: 'VVS - Voyage, BakaPrase' },
-    { imageUrl: 'https://picsum.photos/255', title: 'Top Songs USA' },
-    { imageUrl: 'https://picsum.photos/222', title: 'Serbia 2024 | TOP 50' },
-    { imageUrl: 'https://picsum.photos/226', title: 'Serbian Music 2024' },
-    { imageUrl: 'https://picsum.photos/623', title: 'Books 2024' },
-    // Add more items as needed
+    { imageUrl: 'https://picsum.photos/101', title: 'Priče za laku noć' },
+    { imageUrl: 'https://picsum.photos/202', title: 'Čarobne bajke i basne' },
+    { imageUrl: 'https://picsum.photos/303', title: 'Istorijske priče za radoznalu decu' },
+    { imageUrl: 'https://picsum.photos/404', title: 'Matematičke pustolovine' },
+    { imageUrl: 'https://picsum.photos/505', title: 'Geografski svet iz slikovnica' },
+    { imageUrl: 'https://picsum.photos/606', title: 'Prirodna čudesa za najmlađe' },
+    { imageUrl: 'https://picsum.photos/707', title: 'Trendovi dečijih knjiga 2024' },
+    { imageUrl: 'https://picsum.photos/808', title: 'Preporučene priče za male čitaoce' }
   ];
+  
 
   constructor(
     private bookService : BookService,

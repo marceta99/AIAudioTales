@@ -13,6 +13,7 @@
   --info: #3498DB;
 }
 .notifications {
+  z-index: 1100;
   position: fixed;
   top: 30px;
   right: 20px;

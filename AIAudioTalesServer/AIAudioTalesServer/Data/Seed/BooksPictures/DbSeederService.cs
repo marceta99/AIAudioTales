@@ -41,7 +41,7 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                 var categoryInitialData = new List<Category>
                 {
                     new Category
-                    {   
+                    {
                         Id = 1,
                         CategoryName = "BedTime",
                         Description = "This category provides kids with best bed time books"
@@ -85,16 +85,16 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
 
             if (creator != null && !_dbContext.Books.Any())
             {
-                // Seed the database with initial data
+                // Seed the database with initial data, only changing Title and Description to Serbian
                 var initialData = new List<Book>
                 {
                     new Book
-                    {   
+                    {
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="The Little Farm Tales",
-                        Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
+                        Title="Priče sa Male Farme",
+                        Description="Mala farma ispunjena je mudrim životinjama koje decu vode kroz pustolovine prirode i prijateljstva.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781782493617/string-craft-9781782493617_hr.jpg"
                     },
                     new Book
@@ -102,8 +102,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Chronicles of Celestial Harmony",
-                        Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
+                        Title="Harmonija Nebeskih Polja",
+                        Description="U visinama zvezdanog neba, ptice pevaju o jedinstvu prirode i zvucima vetra koji grle nepregledne predele.",
                         ImageURL= "https://i.pinimg.com/736x/07/d4/8e/07d48e4f76e56efe05377eabc22da671.jpg"
                     },
                     new Book
@@ -111,8 +111,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Ephemeral Echoes",
-                        Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
+                        Title="Odjek Zelenih Planina",
+                        Description="U podnožju visokih planina, devojčica otkriva skrivena sela dok je žubor potoka prati na putu znanja.",
                         ImageURL= "https://covers.bookcoverzone.com/slir/w450/png24-front/bookcover0028822.jpg"
                     },
                     new Book
@@ -120,8 +120,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="The Alchemist's Legacy",
-                        Description="A gripping adventure that follows an alchemist's apprentice in pursuit of a mythical artifact, rumored to hold the power to transmute the ordinary into the extraordinary.",
+                        Title="Nasleđe Malog Matematičara",
+                        Description="Dečak pronalazi magičnu tablicu množenja koja otkriva tajne brojeva, pretvarajući svaki zadatak u igru.",
                         ImageURL= "https://s3.amazonaws.com/ASIDigitalAssets/00/00/84/94/09/Cover_l.gif"
                     },
                     new Book
@@ -129,8 +129,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Serenade of Shadows",
-                        Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
+                        Title="Skrivene Priče Starih Dvoraca",
+                        Description="U senci drevnih zamkova, hrabri mali istoričar otkriva legende o vitezovima i kraljevima prošlih vremena.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781781085677/string-city-9781781085677_hr.jpg"
                     },
                     new Book
@@ -138,8 +138,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Cogs of Destiny",
-                        Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
+                        Title="Uspavanka Zlatnih Zvezda",
+                        Description="Dok noć pada, zvezde tkaju nežnu mrežu snova, donoseći miran san svakom detetu.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS48AmLhLGzaASe7UQdxHyjSbJRTtc0DakFiw&usqp=CAU"
                     },
                     new Book
@@ -147,16 +147,16 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Aetherial Odyssey",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mape Skrivenih Kontinenata",
+                        Description="Listajući stare karte, devojčica uči o pustinjama, morima i polarnim predelima dalekih krajeva.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
                         CategoryId=5,
-                        Title="Aetherial Odyssey",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Tajna Šumske Čistine",
+                        Description="Usred guste šume nalazi se čistina gde se životinje okupljaju i govore o lepotama prirode.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -164,8 +164,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Cvetna Reka",
+                        Description="Potok kroz livade nosi latice cveća, raznoseći priče od jedne obale do druge.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -173,8 +173,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Vetrovita Dolina",
+                        Description="U dolini gde vetar pevuši, deca otkrivaju tajne drveća dok mesec nad njima sija.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -182,8 +182,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Ptičji Hor",
+                        Description="U svitanje se čuje hor ptica, svaka pesma priča o prijateljstvu i novom početku.",
                         ImageURL= "https://artprojectsforkids.org/wp-content/uploads/2021/04/How-to-Draw-a-Book-.jpg.webp"
                     },
                     new Book
@@ -191,8 +191,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mali Brojevi, Velike Tajne",
+                        Description="Dečak otkriva da sabiranje nije samo račun, već put kroz svet ideja i oblika.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -200,8 +200,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Geometrijski Vitezovi",
+                        Description="U magičnoj knjizi oblici oživljavaju kao vitezovi što čuvaju harmoniju brojeva.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -209,8 +209,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Priča o Deljenju",
+                        Description="Dve sestre dele jabuku i shvataju da deljenje donosi slast i radost zajedništva.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
                     new Book
@@ -218,48 +218,53 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zagonetka Kruga",
+                        Description="Jedan krug krije savršenstvo, učeći devojčicu o beskrajnoj liniji bez početka i kraja.",
                         ImageURL= "https://i.harperapps.com/hcanz/covers/9781911622260/y648.jpg"
                     },
                     new Book
-                    {CreatorId = creator.Id,
+                    {
+                        CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Most Preko Sveta",
+                        Description="Zamišljeni most spaja različite zemlje i kulture, uvodeći dete u čudesni svet geografije.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfElIsHjYZ_7IktDAzoc2U_Ke9tTmRhD4Ig&usqp=CAU"
                     },
                     new Book
-                    {CreatorId = creator.Id,
+                    {
+                        CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zemlja Pet Jezera",
+                        Description="U zemlji pet jezera, dečak uči o ribarima, pticama i oblacima koji plove nad vodom.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpOuIrRtyB5TQFmCgt_oSvN3SYinGSR5uH5g&usqp=CAU"
                     },
                     new Book
-                    {CreatorId = creator.Id,
+                    {
+                        CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Planinski Putnici",
+                        Description="Na strmim stazama planine, deca sreću nomade i uče imena dalekih vrhova.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQxr1wVDs8H60Ry-MhWJwByaTzlePkjbi5dg&usqp=CAU"
                     },
                     new Book
-                    {CreatorId = creator.Id,
+                    {
+                        CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Morska Kapija",
+                        Description="Stara luka je kapija u svet, gde brodovi donose začine i priče udaljenih naroda.",
                         ImageURL= "https://g.christianbook.com/g/slideshow/0/0735070/main/0735070_1_ftc.jpg"
                     },
                     new Book
-                    {CreatorId = creator.Id,
+                    {
+                        CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Drevni Zapisi Hroničara",
+                        Description="Mali istoričar otkriva prašnjave svitke što čuvaju priče o kraljevima i bitkama prošlih vekova.",
                         ImageURL= "https://fictionophile.files.wordpress.com/2019/09/cl79.jpg"
                     },
                     new Book
@@ -267,8 +272,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Štit Od Legendi",
+                        Description="Iza starih zidina, legende o herojima i vitezovima sjaje poput dragulja istorije.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIFs7sAg6GHTGbL1bZbpTX_E09xI8vtGG0sg&usqp=CAU"
                     },
                     new Book
@@ -276,8 +281,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Senke Prošlosti",
+                        Description="Na starom trgu, glas guslara čuva uspomene na davne bitke i zaboravljena blaga.",
                         ImageURL= "https://www.jewishbookcouncil.org/sites/default/files/styles/book_cover_teal/public/images/length-of-a-string.jpg"
                     },
                     new Book
@@ -285,8 +290,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Kraljičin Dar",
+                        Description="Kraljica je ostavila dragoceni dar narodu, a deca vekovima kasnije otkrivaju njegovu tajnu.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXF6uULhSCTrUkXaycgDZbmFLY95eBTNQBcg&usqp=CAU"
                     },
                     new Book
@@ -294,8 +299,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zvezdani San",
+                        Description="Dok se zvezde skupljaju iznad krova, dete tone u san ispunjen nežnim melodijama.",
                         ImageURL= "https://www.psdcovers.com/wp-content/uploads/2022/12/HARDBOUND-BOOK-COVER-1419_1671469361188.jpg?x81780"
                     },
                     new Book
@@ -303,8 +308,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mjesečeva Ljuljaška",
+                        Description="Mesec postaje ljuljaška koja njiše dete kroz polja mirnih snova.",
                         ImageURL= "https://cardinalrulepress.com/cdn/shop/products/9781733035989_1600x.jpg?v=1645197367"
                     },
                     new Book
@@ -312,8 +317,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Uspavanka Žubora",
+                        Description="Žubor potoka pretvara se u uspavanku koja šapuće o lepoti noći.",
                         ImageURL= "https://i.ebayimg.com/images/g/8p0AAOSwoCdgz86N/s-l1600.jpg"
                     },
                     new Book
@@ -321,8 +326,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Tišina Lanenih Polja",
+                        Description="Lanenih polja tiho plešu na vetru, darujući deci mir i blag san.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_8hf-iCs_E-2QUKRll8AtUPTpYzrvQZKa5U6uUwkMouQVyNRmuTwaiXxMwxJ6QQfWfHU&usqp=CAU"
                     },
                     new Book
@@ -330,8 +335,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Aetherial Odyssey",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Noćni Fenjer",
+                        Description="Mali fenjer na prozoru čuva topli sjaj koji prati dete do lepih snova.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -339,8 +344,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Miris Meda",
+                        Description="U bašti lipa pčele stvaraju med, a noćni vazduh ispunjen je slatkim mirom.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -348,8 +353,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Beli Lotos",
+                        Description="Na mirnoj vodi cveta beli lotos, dok zrikavci tiho pevaju uspavanku.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -357,8 +362,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Gnezdo Tišine",
+                        Description="Ptica gradi gnezdo na starom hrastu, čuvajući tišinu pred svitanje.",
                         ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
                     },
                     new Book
@@ -366,8 +371,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Cifre Na Mesecu",
+                        Description="Mesec skriva cifre u svojim senkama, podučavajući dete čaroliji brojeva.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -375,8 +380,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Skakutavi Sabirač",
+                        Description="Zec koji sabira mrkve pokazuje da je matematika vesela i puna igre.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -384,8 +389,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zvezdana Jednačina",
+                        Description="Zvezde na nebu tvore savršenu jednačinu, darujući miran san i tišinu.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
                     new Book
@@ -393,8 +398,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="The Little Farm Tales",
-                        Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
+                        Title="Šapat Livade",
+                        Description="Livada šapuće o leptirima i povetarcima, darujući mir svima koji slušaju.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781782493617/string-craft-9781782493617_hr.jpg"
                     },
                     new Book
@@ -402,8 +407,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Chronicles of Celestial Harmony",
-                        Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
+                        Title="Ogledalo Planinskog Jezerca",
+                        Description="U bistroj vodi jezera planine se ogledaju, dok ribe pričaju o skladnom životu.",
                         ImageURL= "https://i.pinimg.com/736x/07/d4/8e/07d48e4f76e56efe05377eabc22da671.jpg"
                     },
                     new Book
@@ -411,16 +416,16 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Ephemeral Echoes",
-                        Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
+                        Title="Put Soli",
+                        Description="Karavan preko slanih ravnica nosi priče dalekih naroda i običaja.",
                         ImageURL= "https://covers.bookcoverzone.com/slir/w450/png24-front/bookcover0028822.jpg"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
                         CategoryId=3,
-                        Title="The Alchemist's Legacy",
-                        Description="A gripping adventure that follows an alchemist's apprentice in pursuit of a mythical artifact, rumored to hold the power to transmute the ordinary into the extraordinary.",
+                        Title="Magični Sabirak",
+                        Description="Dečak nalazi magični prah koji, posut po brojevima, pretvara zadatke u igru.",
                         ImageURL= "https://s3.amazonaws.com/ASIDigitalAssets/00/00/84/94/09/Cover_l.gif"
                     },
                     new Book
@@ -428,8 +433,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Serenade of Shadows",
-                        Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
+                        Title="Oružje Zaboravljenih Junaka",
+                        Description="Stari mač u muzeju pripoveda legende o hrabrim junacima i njihovim pobedama.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781781085677/string-city-9781781085677_hr.jpg"
                     },
                     new Book
@@ -437,8 +442,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Cogs of Destiny",
-                        Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
+                        Title="Pospana Čaršija",
+                        Description="U tihoj čaršiji lampe se gase, a mesečina daruje san svima koji traže mir.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS48AmLhLGzaASe7UQdxHyjSbJRTtc0DakFiw&usqp=CAU"
                     },
                     new Book
@@ -446,8 +451,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Aetherial",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Horizont Ljubičastih Polja",
+                        Description="Lavandina polja na horizontu pričaju o mirisu i miru dalekih krajeva.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -455,8 +460,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Odyssey",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Izvor Šumskih Vila",
+                        Description="Vile se okupljaju oko izvora, pripovedajući o suncu, kiši i večnom krugu života.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -464,8 +469,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Kapi Jutarnje Rose",
+                        Description="Rosa na listovima čuva priče noći koje ptice prepevavaju u zoru.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -473,8 +478,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Šum Breza",
+                        Description="Brezik tiho šapuće dok vetar nosi listove kao stranice stare priče.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -482,8 +487,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=5,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Tihi Proplanak",
+                        Description="Na tihom proplanku srne i zečevi dele priče o poverenju i prijateljstvu.",
                         ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
                     },
                     new Book
@@ -491,8 +496,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Brojčani Labirint",
+                        Description="Dečak traži izlaz iz lavirinta gde zidovi nose brojeve umesto kamenja.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -500,8 +505,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Magija Sabiranja",
+                        Description="Kada se dva broja zagrle, postaju veći i srećniji, stvarajući čuda sabiranja.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -509,8 +514,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mistični Delilac",
+                        Description="Čarobnjak deli jabuke svima jednako, učeći nas pravdi i ravnoteži.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
                     new Book
@@ -518,8 +523,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=3,
-                        Title="Math 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zvezdani Niz",
+                        Description="Zvezde na nebu tvore niz brojeva koji čuva tajnu beskraja.",
                         ImageURL= "https://i.harperapps.com/hcanz/covers/9781911622260/y648.jpg"
                     },
                     new Book
@@ -527,8 +532,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Obale Tišine",
+                        Description="More izbacuje školjke koje šapuću o zemljama iza dalekog horizonta.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfElIsHjYZ_7IktDAzoc2U_Ke9tTmRhD4Ig&usqp=CAU"
                     },
                     new Book
@@ -536,8 +541,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zemlja Dalekih Kula",
+                        Description="Na brdima stoje kule koje pamte priče o plemićima i starim običajima.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpOuIrRtyB5TQFmCgt_oSvN3SYinGSR5uH5g&usqp=CAU"
                     },
                     new Book
@@ -545,8 +550,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Pesak i Vetar",
+                        Description="U pustinji pesak i vetar crtaju mape sveta bez granica.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQxr1wVDs8H60Ry-MhWJwByaTzlePkjbi5dg&usqp=CAU"
                     },
                     new Book
@@ -554,8 +559,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=4,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Ledena Čarolija",
+                        Description="Na dalekom severu led priča o medvedima, fokama i hrabrosti opstanka.",
                         ImageURL= "https://g.christianbook.com/g/slideshow/0/0735070/main/0735070_1_ftc.jpg"
                     },
                     new Book
@@ -563,8 +568,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Tragovi Minulih Dana",
+                        Description="Na starom kaldrmisanom putu čuju se koraci istorije koja nikad ne spava.",
                         ImageURL= "https://fictionophile.files.wordpress.com/2019/09/cl79.jpg"
                     },
                     new Book
@@ -572,8 +577,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Đerdan Herbarijuma",
+                        Description="Stare knjige čuvaju suvo cveće, uspomene na prohujala proleća.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIFs7sAg6GHTGbL1bZbpTX_E09xI8vtGG0sg&usqp=CAU"
                     },
                     new Book
@@ -581,8 +586,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Sećanja Urezana U Stenu",
+                        Description="Stene na liticama pamte zvuke truba i pesme starih ratnika.",
                         ImageURL= "https://www.jewishbookcouncil.org/sites/default/files/styles/book_cover_teal/public/images/length-of-a-string.jpg"
                     },
                     new Book
@@ -590,16 +595,17 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=2,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Pečat Vremena",
+                        Description="Spomenici na trgu pečate epohe, sećajući se minulih heroja.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXF6uULhSCTrUkXaycgDZbmFLY95eBTNQBcg&usqp=CAU"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
+                        Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zlatni Ugaonik",
+                        Description="U ćošku sobe zlatni ugao čuva priče sanjara pretvarajući ih u uspavanke.",
                         ImageURL= "https://www.psdcovers.com/wp-content/uploads/2022/12/HARDBOUND-BOOK-COVER-1419_1671469361188.jpg?x81780"
                     },
                     new Book
@@ -607,8 +613,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Noćni Ćup",
+                        Description="Ćup kraj kreveta puni se mesečinom i snovima toplim poput meda.",
                         ImageURL= "https://cardinalrulepress.com/cdn/shop/products/9781733035989_1600x.jpg?v=1645197367"
                     },
                     new Book
@@ -616,8 +622,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mehuri Sna",
+                        Description="Mehuri od sapunice lebde sobom, noseći dete ka nežnim snovima.",
                         ImageURL= "https://i.ebayimg.com/images/g/8p0AAOSwoCdgz86N/s-l1600.jpg"
                     },
                     new Book
@@ -625,8 +631,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Bedtime 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Svileni Prekrivač",
+                        Description="Svileni prekrivač štiti dete od briga, vodeći ga u topao i tih san.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_8hf-iCs_E-2QUKRll8AtUPTpYzrvQZKa5U6uUwkMouQVyNRmuTwaiXxMwxJ6QQfWfHU&usqp=CAU"
                     },
                     new Book
@@ -634,8 +640,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Parapolis",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mesečev Grad",
+                        Description="Grad obasjan mesečinom priča tihe priče o dobroti i snovima.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -643,8 +649,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Rasadnik Zvezda",
+                        Description="Noćni vrt u kome zvezde niču kao seme nade i mira.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -652,8 +658,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Miris Šumskog Sna",
+                        Description="Miris šume ulazi kroz prozor, grleći dete nežnim zagrljajem tišine.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -661,8 +667,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Tiha Luka",
+                        Description="Brodovi ćute u luci, a mesec uspavljuje more mirnim tonovima.",
                         ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
                     },
                     new Book
@@ -670,8 +676,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Brojčana Uspavanka",
+                        Description="Svaka cifra šapuće priču, pretvarajući zadatke u nežne pesme sna.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -679,8 +685,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Skok Preko Brojeva",
+                        Description="Kao žaba na listu, dete skače preko brojeva u svet mirnog sna.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -688,19 +694,19 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=1,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Cvet Jednačine",
+                        Description="Jednačina cveta u bašti brojeva, darujući mudrost i mir.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
-                    //////////////////////////////////////////////////////////////////////
-                    ///
-                     new Book
+
+                    // Recommended (7) and others below, same logic: just change Title and Description
+                    new Book
                     {
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Krug Planeta",
+                        Description="Preporučena priča o detetu koje crta planete u krug, otkrivajući beskraj svemira.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQxr1wVDs8H60Ry-MhWJwByaTzlePkjbi5dg&usqp=CAU"
                     },
                     new Book
@@ -708,8 +714,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Most Između Kultura",
+                        Description="Knjiga preporučuje putovanje preko mosta koji spaja pesnike i slikare sveta.",
                         ImageURL= "https://g.christianbook.com/g/slideshow/0/0735070/main/0735070_1_ftc.jpg"
                     },
                     new Book
@@ -717,8 +723,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Peščana Uspomena",
+                        Description="Preporučena priča o nomadu i pesku koji pamte svaki korak kroz vreme.",
                         ImageURL= "https://fictionophile.files.wordpress.com/2019/09/cl79.jpg"
                     },
                     new Book
@@ -726,8 +732,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Dolina Šapata",
+                        Description="Glas vetra u dolini preporučuje da upoznamo daleke predele i jezike.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIFs7sAg6GHTGbL1bZbpTX_E09xI8vtGG0sg&usqp=CAU"
                     },
                     new Book
@@ -735,8 +741,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Izvor Izgubljene Reke",
+                        Description="Preporuka da pronađemo izvor reke koja je nestala s drevnih mapa.",
                         ImageURL= "https://www.jewishbookcouncil.org/sites/default/files/styles/book_cover_teal/public/images/length-of-a-string.jpg"
                     },
                     new Book
@@ -744,8 +750,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Trag Preko Okeana",
+                        Description="Preporučena avantura brodom koji spaja kontinente pesmom i mirom.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXF6uULhSCTrUkXaycgDZbmFLY95eBTNQBcg&usqp=CAU"
                     },
                     new Book
@@ -753,8 +759,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Bedtime 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporučena Uspavanka",
+                        Description="Sanjari kažu da ova priča donosi miran san i nežne note noći.",
                         ImageURL= "https://www.psdcovers.com/wp-content/uploads/2022/12/HARDBOUND-BOOK-COVER-1419_1671469361188.jpg?x81780"
                     },
                     new Book
@@ -762,8 +768,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Bedtime 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Mesečeve Merdevine",
+                        Description="Preporučuje se priča o merdevinama do meseca, gde snovi plešu.",
                         ImageURL= "https://cardinalrulepress.com/cdn/shop/products/9781733035989_1600x.jpg?v=1645197367"
                     },
                     new Book
@@ -771,8 +777,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Bedtime 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Zamak Od Snoviđenja",
+                        Description="Preporučena priča o zamku od snova gde deca nalaze spokoj i tišinu.",
                         ImageURL= "https://i.ebayimg.com/images/g/8p0AAOSwoCdgz86N/s-l1600.jpg"
                     },
                     new Book
@@ -780,8 +786,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Bedtime 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Oblak Jastuka",
+                        Description="Mekani oblak se preporučuje kao najudobniji jastuk za nežan počinak.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_8hf-iCs_E-2QUKRll8AtUPTpYzrvQZKa5U6uUwkMouQVyNRmuTwaiXxMwxJ6QQfWfHU&usqp=CAU"
                     },
                     new Book
@@ -789,8 +795,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Sidnay",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Sidnejev Izvor",
+                        Description="Preporučena priča o Sidneju koji otkriva skriveni izvor radosti u srcu šume.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -798,8 +804,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporuka Latičnog Bala",
+                        Description="Cveće se okuplja na plesu, preporučujući sklad i lepotu prirode.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -807,8 +813,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Šuma Preporuka",
+                        Description="Svaki list u šumi preporučuje mir, svaka grana priča o skladu sa svetom.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -816,8 +822,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Bele Breze",
+                        Description="Breze preporučuju čistu tišinu i šapat vetra kao najlepšu muziku.",
                         ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
                     },
                     new Book
@@ -825,8 +831,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporučena Cifra",
+                        Description="Jedna cifra preporučuje da zavolimo učenje brojeva i igru.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -834,8 +840,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Savršeni Par Brojeva",
+                        Description="Dva broja se spajaju, preporučujući radost zajedničkog rešavanja zadataka.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -843,8 +849,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Most Preko Jednačina",
+                        Description="Preporučuje se priča o mostu koji povezivanjem brojeva donosi razumevanje.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
                     new Book
@@ -852,8 +858,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="The Little Farm Tales",
-                        Description="A tale of lost magic and ancient secrets, where a young hero embarks on a quest to rediscover the forgotten powers that can reshape the fate of the world",
+                        Title="Preporuka Poljskog Puta",
+                        Description="Poljski put predlaže skromnost i zahvalnost za plodove zemlje.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781782493617/string-craft-9781782493617_hr.jpg"
                     },
                     new Book
@@ -861,8 +867,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Chronicles of Celestial Harmony",
-                        Description="In a realm where music is magic, follow the journey of a gifted musician who must harness the celestial melodies to thwart an impending darkness",
+                        Title="Zvuci Nebeskog Hoda",
+                        Description="Melodije vetra i zvezda usklađuju srce i misli, preporučujući unutrašnji mir.",
                         ImageURL= "https://i.pinimg.com/736x/07/d4/8e/07d48e4f76e56efe05377eabc22da671.jpg"
                     },
                     new Book
@@ -870,8 +876,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Ephemeral Echoes",
-                        Description="Unravel the mystery of a parallel dimension where echoes of past decisions create ripples in the fabric of reality. A mind-bending exploration of time and consequence.",
+                        Title="Odjek Preporuke",
+                        Description="Reči odzvanjaju u planinama, prenoseći mudrost predaka kao preporuku.",
                         ImageURL= "https://covers.bookcoverzone.com/slir/w450/png24-front/bookcover0028822.jpg"
                     },
                     new Book
@@ -879,8 +885,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="The Alchemist's Legacy",
-                        Description="A gripping adventure that follows an alchemist's apprentice in pursuit of a mythical artifact, rumored to hold the power to transmute the ordinary into the extraordinary.",
+                        Title="Nasleđe Preporuke",
+                        Description="Alhemičar ostavlja preporuku da mudrost pronađemo i u zrncu peska.",
                         ImageURL= "https://s3.amazonaws.com/ASIDigitalAssets/00/00/84/94/09/Cover_l.gif"
                     },
                     new Book
@@ -888,8 +894,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Serenade of Shadows",
-                        Description="Dive into the shadowy underworld of espionage and deceit, as a master spy navigates a web of intrigue to uncover a conspiracy threatening the stability of nations..",
+                        Title="Preporuka Starih Zidina",
+                        Description="Zidine starog grada šapuću da slušamo istoriju i učimo iz nje.",
                         ImageURL= "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781781085677/string-city-9781781085677_hr.jpg"
                     },
                     new Book
@@ -897,8 +903,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Cogs of Destiny",
-                        Description="Set in a steampunk universe, this epic follows a group of unlikely heroes whose destinies intertwine as they race against time to prevent the activation of an ancient, world-altering machine.",
+                        Title="Preporuka Tajnog Mehanizma",
+                        Description="U staroj kuli mehanizam savetuje strpljenje i potragu za smislom.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS48AmLhLGzaASe7UQdxHyjSbJRTtc0DakFiw&usqp=CAU"
                     },
                     new Book
@@ -906,8 +912,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Best",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporuka Najboljeg",
+                        Description="Knjiga savetuje da biramo dobrotu i ljubav kao najjaču snagu.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -915,8 +921,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="The Great",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporuka Veličanstvenog",
+                        Description="Priča predlaže da veličinu tražimo u skromnim delima svakodnevice.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -924,8 +930,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporuka Šumskog Gaja",
+                        Description="Gaj šapuće da slušamo lišće i nalazimo mir u tišini.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -933,8 +939,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=7,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Preporučena Lepa Trava",
+                        Description="Svaka vlas trave savetuje blagost i mekoću naših koraka.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -942,17 +948,17 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
-                        ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
+                        Title="Tehnološko Proleće",
+                        Description="U vremenu trendova priroda i tehnika plešu zajedno, spajajući stara i nova čuda.",
+                        ImageURL= "https://itknowledgezone.com/wp-content/uploads/2021/01/1_oeWLo61LItXIA5AY-Wmgiw-1.jpeg"
                     },
                     new Book
                     {
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Digitalni Brojevi",
+                        Description="Brojevi na ekranima postaju prijatelji dece, učeći ih matematici kroz igru.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -960,8 +966,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Aplikacija za Sabiranje",
+                        Description="Trend je koristiti aplikacije da sabiranjem gradimo mostove među brojevima.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -969,8 +975,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Kodirani Brojevi",
+                        Description="Elektronski uređaji šapuću brojevne kodove, pretvarajući učenje u igru.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
                     new Book
@@ -978,8 +984,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Vreme i Brojčanik",
+                        Description="Sat deli dan na jednake delove, učeći decu važnosti svakog trenutka.",
                         ImageURL= "https://i.harperapps.com/hcanz/covers/9781911622260/y648.jpg"
                     },
                     new Book
@@ -987,8 +993,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Virtuelne Granice",
+                        Description="Mape na ekranu vode decu kroz gradove i reke, trend modernog putovanja.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAfElIsHjYZ_7IktDAzoc2U_Ke9tTmRhD4Ig&usqp=CAU"
                     },
                     new Book
@@ -996,8 +1002,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Interaktivni Globus",
+                        Description="Deca vrte digitalni globus, učeći o kontinentima dodirom prsta.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpOuIrRtyB5TQFmCgt_oSvN3SYinGSR5uH5g&usqp=CAU"
                     },
                     new Book
@@ -1005,8 +1011,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Online Putnik",
+                        Description="Putovati svetom kroz ekran postaje trend, spajajući blizinu i daljinu.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQxr1wVDs8H60Ry-MhWJwByaTzlePkjbi5dg&usqp=CAU"
                     },
                     new Book
@@ -1014,8 +1020,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Snimci iz Vazduha",
+                        Description="Dronovi slikaju svet odozgo, trend je videti planetu iz ptičje perspektive.",
                         ImageURL= "https://g.christianbook.com/g/slideshow/0/0735070/main/0735070_1_ftc.jpg"
                     },
                     new Book
@@ -1023,8 +1029,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Pametne Mape",
+                        Description="Mape govore imena gradova, trend je upoznati svet klikom.",
                         ImageURL= "https://fictionophile.files.wordpress.com/2019/09/cl79.jpg"
                     },
                     new Book
@@ -1032,8 +1038,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Digitalni Čarobnjak",
+                        Description="Aplikacija vodi preko planina i dolina, trend interaktivnog učenja.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIFs7sAg6GHTGbL1bZbpTX_E09xI8vtGG0sg&usqp=CAU"
                     },
                     new Book
@@ -1041,8 +1047,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Virtuelna Sahara",
+                        Description="VR naočare oživljavaju pustinju, trend osećanja dalekih predela iz sobe.",
                         ImageURL= "https://www.jewishbookcouncil.org/sites/default/files/styles/book_cover_teal/public/images/length-of-a-string.jpg"
                     },
                     new Book
@@ -1050,8 +1056,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Geography 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Elektronski Kompas",
+                        Description="Trend je pratiti sever elektronski, šireći znanje o geografiji.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXF6uULhSCTrUkXaycgDZbmFLY95eBTNQBcg&usqp=CAU"
                     },
                     new Book
@@ -1059,8 +1065,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Bedtime 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="E-Uspavanka",
+                        Description="Trend je slušati uspavanku preko zvučnika, nalazeći mir u novim tehnologijama.",
                         ImageURL= "https://www.psdcovers.com/wp-content/uploads/2022/12/HARDBOUND-BOOK-COVER-1419_1671469361188.jpg?x81780"
                     },
                     new Book
@@ -1068,8 +1074,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Bedtime 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="LED Zvezdice",
+                        Description="Na zidu sijaju LED zvezdice, moderan trend koji donosi spokoj noći.",
                         ImageURL= "https://cardinalrulepress.com/cdn/shop/products/9781733035989_1600x.jpg?v=1645197367"
                     },
                     new Book
@@ -1077,8 +1083,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Bedtime 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Aplikacija za San",
+                        Description="Trend je pratiti san kroz aplikaciju, tražeći savršen odmor.",
                         ImageURL= "https://i.ebayimg.com/images/g/8p0AAOSwoCdgz86N/s-l1600.jpg"
                     },
                     new Book
@@ -1086,8 +1092,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Bedtime 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Digitalna Harfa",
+                        Description="Harfa svira tiho preko tableta, trend mirnog tona pred spavanje.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_8hf-iCs_E-2QUKRll8AtUPTpYzrvQZKa5U6uUwkMouQVyNRmuTwaiXxMwxJ6QQfWfHU&usqp=CAU"
                     },
                     new Book
@@ -1095,8 +1101,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Phantom",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Hologramski Prijatelj",
+                        Description="Trend je stvoriti hologramskog prijatelja koji priča pred san.",
                         ImageURL= "https://res.cloudinary.com/bloomsbury-atlas/image/upload/w_568,c_scale/jackets/9781526626585.jpg"
                     },
                     new Book
@@ -1104,8 +1110,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Nature 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Eko-Senzori",
+                        Description="Trend su senzori u bašti koji govore kada cveće žedni, čuvajući prirodu.",
                         ImageURL= "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481162831i/28696598.jpg"
                     },
                     new Book
@@ -1113,8 +1119,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Nature 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Solarny Pašnjak",
+                        Description="Trend održivosti: solarna energija čuva zeleni pašnjak za životinje.",
                         ImageURL= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjPHr1W_CB1WXjqxBdu9aci2ANW5_BKw-Rw&usqp=CAU"
                     },
                     new Book
@@ -1122,8 +1128,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Nature 4",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Digitalni Čvorci",
+                        Description="Trend je slušati čvorke preko aplikacije, spajajući grad i prirodu.",
                         ImageURL= "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/A1n8-0-wgYL._AC_UF350,350_QL80_.jpg"
                     },
                     new Book
@@ -1131,8 +1137,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 1",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Interaktivni Broj",
+                        Description="Trend: dodirni ekran, broj propeva priču o sebi.",
                         ImageURL= "https://multiculturalchildrensbookday.com/wp-content/uploads/2018/07/thelengthofastring-mockup-1-325x500.png"
                     },
                     new Book
@@ -1140,8 +1146,8 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 2",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Algoritamska Igra",
+                        Description="Trend je rešavati zadatke kroz aplikacije koje računaju umesto nas.",
                         ImageURL= "https://dalemayer.com/cdn/shop/products/psych_0011_PV-StringOfTears_1800x1800.png?v=1692741054"
                     },
                     new Book
@@ -1149,19 +1155,17 @@ namespace AIAudioTalesServer.Data.Seed.BooksPictures
                         CreatorId = creator.Id,
                         Price = 6,
                         CategoryId=6,
-                        Title="Math 3",
-                        Description="Embark on a fantastical journey through realms governed by elemental forces. A young elemental adept discovers their true potential while facing mythical creatures and ancient guardians.",
+                        Title="Virtualna Tabla",
+                        Description="Trend je pisati cifre na virtuelnoj tabli, bez granica i krede.",
                         ImageURL= "https://images.squarespace-cdn.com/content/v1/63f648525c89981265aa8dbd/1677099626852-1CMNFX0GYDPR0UCAO15M/the-mitten-string-front-cover-lg.jpg"
                     },
-
-
-            };
+                };
 
                 _dbContext.Books.AddRange(initialData);
                 _dbContext.SaveChanges();
             }
         }
 
-       
+
     }
 }

@@ -48,6 +48,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.bookService.purchasedBooks.subscribe((books: PurchasedBook[])=>{
+      console.log("purchased books observable")
+      this.books = books;
+    })
+
     this.bookService.currentBookIndex.subscribe((index: number) => {
         if(this.currentBook) this.saveProgress(undefined, index); //do not save progress on initial load when currentBook is not yet loaded
         else this.loadBook(index)
@@ -257,11 +262,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
       this.zone.run(() => {
         if (this.currentBook.questionsActive) {
-          if (this.isTranscriptValid(transcript)) {
+
             this.processChildResponse(transcript);
-          } else {
-            console.log('Ignored transcript:', transcript);
-          }
+         
         }
       });
     };
@@ -302,21 +305,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private processChildResponse(transcript: string): void {
-    const possibleAnswers = this.currentBook.playingPart.answers.map(answer => answer.text.toLowerCase());
-
     // First, attempt to match on the frontend
-    const matchedAnswer = possibleAnswers.find(answerText => {
-      return this.stringSimilarity(transcript, answerText) > 0.6; // Adjust threshold as needed
-    });
+    const matchedAnswer = this.currentBook.playingPart.answers.find(answer => transcript.includes(answer.text.toLowerCase()));
 
     if (matchedAnswer) {
-      // Find the corresponding answer object
-      const answerObj = this.currentBook.playingPart.answers.find(answer => 
-        answer.text.toLowerCase() === matchedAnswer
-      );
-      if (answerObj) {
-        this.nextPart(answerObj.nextPartId);
-      }
+        this.nextPart(matchedAnswer.nextPartId);
     } else {
       // If no match, send to backend for further processing
       this.sendToBackendForProcessing(transcript);
