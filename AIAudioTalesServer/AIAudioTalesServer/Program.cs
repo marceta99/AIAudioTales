@@ -1,13 +1,15 @@
-using AIAudioTalesServer.Data;
-using AIAudioTalesServer.Data.Interfaces;
-using AIAudioTalesServer.Data.Repositories;
-using AIAudioTalesServer.Middlewares;
+using AIAudioTalesServer.Application.Services;
+using AIAudioTalesServer.Core.Interfaces;
+using AIAudioTalesServer.Core.Services;
+using AIAudioTalesServer.Infrastructure.Data;
+using AIAudioTalesServer.Infrastructure.Interfaces;
+using AIAudioTalesServer.Infrastructure.Repositories;
 using AIAudioTalesServer.Settings;
+using AIAudioTalesServer.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Stripe;
 using System.Text;
@@ -42,6 +44,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+builder.Services.AddScoped<IBooksService, BooksService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
