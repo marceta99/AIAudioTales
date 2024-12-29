@@ -1,5 +1,4 @@
-﻿// FILE: BooksRepository.cs
-using AIAudioTalesServer.Domain.Entities;
+﻿using AIAudioTalesServer.Domain.Entities;
 using AIAudioTalesServer.Domain.Enums;
 using AIAudioTalesServer.Infrastructure.Data;
 using AIAudioTalesServer.Infrastructure.Interfaces;
@@ -8,35 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AIAudioTalesServer.Infrastructure.Repositories
 {
-    public class BooksRepository : IBooksRepository
+    public class LibraryRepository : ILibraryRepository
     {
         private readonly AppDbContext _dbContext;
 
-        public BooksRepository(AppDbContext dbContext)
+        public LibraryRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
         // GET
-        public async Task<IList<Book>> GetAllBooksAsync()
-        {
-            return await _dbContext.Books.ToListAsync();
-        }
-
-        public async Task<Book?> GetBookByIdAsync(int bookId)
-        {
-            return await _dbContext.Books
-                .FirstOrDefaultAsync(b => b.Id == bookId);
-        }
-
-        public async Task<IList<Book>> GetBooksByCategoryAsync(int categoryId, int skip, int take)
-        {
-            return await _dbContext.Books
-                .Where(b => b.CategoryId == categoryId)
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync();
-        }
 
         public async Task<bool> UserHasBookAsync(int bookId, int userId)
         {
@@ -87,15 +67,6 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
                                         && pb.PurchaseStatus == PurchaseStatus.Success);
         }
 
-        public async Task<IList<Book>> SearchBooksAsync(string searchTerm, int skip, int take)
-        {
-            return await _dbContext.Books
-                .Where(b => b.Title.Contains(searchTerm))
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync();
-        }
-
         public async Task<IList<string>> GetSearchHistoryAsync(int userId)
         {
             return await _dbContext.SearchHistories
@@ -106,11 +77,6 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IList<Category>> GetAllCategoriesAsync()
-        {
-            return await _dbContext.BookCategories.ToListAsync();
-        }
-
         public async Task<IList<BasketItem>> GetBasketItemsAsync(int userId)
         {
             return await _dbContext.BasketItems
@@ -119,33 +85,6 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<BasketItem?> GetBasketItemByIdAsync(int itemId)
-        {
-            return await _dbContext.BasketItems.FindAsync(itemId);
-        }
-
-        public async Task<BookPart?> GetBookPartAsync(int partId)
-        {
-            return await _dbContext.BookParts
-                .Include(bp => bp.Answers)
-                .Include(bp => bp.ParentAnswer)
-                .FirstOrDefaultAsync(bp => bp.Id == partId);
-        }
-
-        public async Task<IList<Answer>> GetAnswersForPartAsync(int partId)
-        {
-            return await _dbContext.Answers
-                .Where(a => a.CurrentPartId == partId)
-                .ToListAsync();
-        }
-
-        public async Task<BookPart?> GetRootPartAsync(int bookId)
-        {
-            return await _dbContext.BookParts
-                .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
-                .Include(bp => bp.Answers)
-                .FirstOrDefaultAsync();
-        }
 
         // POST
         public async Task AddNewSearchTermAsync(int userId, string searchTerm)
@@ -182,29 +121,8 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Book> AddBookAsync(Book book)
-        {
-            await _dbContext.Books.AddAsync(book);
-            await _dbContext.SaveChangesAsync();
-            return book;
-        }
-
-        public async Task<BookPart> AddBookPartAsync(BookPart bookPart)
-        {
-            await _dbContext.BookParts.AddAsync(bookPart);
-            await _dbContext.SaveChangesAsync();
-            return bookPart;
-        }
-
-        public async Task<IList<Answer>> AddAnswersAsync(IList<Answer> answers)
-        {
-            await _dbContext.Answers.AddRangeAsync(answers);
-            await _dbContext.SaveChangesAsync();
-            return answers;
-        }
-
         // PATCH
-        public async Task<bool> AddToLibraryAsync(User user, Book book)
+        public async Task<bool> AddToLibraryAsync(User user, DTOReturnBook book)
         {
             // Basic check
             if (user.Role != Role.LISTENER_WITH_SUBSCRIPTION) return false;
@@ -232,6 +150,14 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
             return true;
         }
 
+        private async Task<BookPart?> GetRootPartAsync(int bookId)
+        {
+            return await _dbContext.BookParts
+                .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<PurchasedBooks?> GetPurchaseBySessionIdAsync(string sessionId)
         {
             return await _dbContext.PurchasedBooks
@@ -249,13 +175,6 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
             _dbContext.PurchasedBooks.UpdateRange(purchases);
             await _dbContext.SaveChangesAsync();
         }
-
-        public async Task UpdateAnswerAsync(Answer answer)
-        {
-            _dbContext.Answers.Update(answer);
-            await _dbContext.SaveChangesAsync();
-        }
-
 
         // DELETE
         public async Task RemoveBasketItemAsync(BasketItem item)
@@ -407,6 +326,11 @@ namespace AIAudioTalesServer.Infrastructure.Repositories
                 Console.WriteLine($"An error occurred while attempting to remove canceled purchase: {ex.Message}");
                 return false;
             }
+        }
+
+        public async Task<BasketItem?> GetBasketItemByIdAsync(int itemId)
+        {
+            return await _dbContext.BasketItems.FindAsync(itemId);
         }
     }
 }

@@ -1,4 +1,3 @@
-using AIAudioTalesServer.Application.Services;
 using AIAudioTalesServer.Core.Interfaces;
 using AIAudioTalesServer.Core.Services;
 using AIAudioTalesServer.Infrastructure.Data;
@@ -41,13 +40,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<IEditorRepository, EditorRepository>();
+builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
 
-builder.Services.AddScoped<IBooksService, BooksService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<IEditorService, EditorService>();
+builder.Services.AddScoped<ILibraryService, LibraryService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

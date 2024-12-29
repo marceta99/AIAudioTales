@@ -1,36 +1,22 @@
-﻿// FILE: IBooksService.cs
-using AIAudioTalesServer.Domain.Entities;
+﻿using AIAudioTalesServer.Domain.Entities;
 using AIAudioTalesServer.Domain.Enums;
 using AIAudioTalesServer.Web.DTOS;
 
-namespace AIAudioTalesServer.Application.Services
+namespace AIAudioTalesServer.Core.Interfaces
 {
-    public interface IBooksService
+    public interface ILibraryService
     {
         // GET
-        Task<IList<Book>> GetAllBooksAsync();
-        Task<IList<Category>> GetAllCategoriesAsync();
-        Task<DTOReturnBook?> GetBookAsync(int bookId);
-        Task<IList<DTOReturnBook>> GetBooksFromCategoryAsync(int categoryId, int pageNumber, int pageSize);
         Task<bool> UserHasBookAsync(int bookId, int userId);
         Task<bool> IsBasketItemAsync(int bookId, int userId);
         Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooksAsync(int userId);
         Task<IList<DTOReturnBook>> GetCreatorBooksAsync(int userId);
         Task<DTOReturnPurchasedBook?> GetPurchasedBookAsync(int userId, int bookId);
-        Task<IList<DTOReturnBook>> SearchBooksAsync(string searchTerm, int pageNumber, int pageSize);
         Task<IList<string>> GetSearchHistoryAsync(int userId);
         Task<DTOBasket> GetBasketAsync(int userId);
         Task<DTOReturnPurchasedBook?> GetCurrentBookAsync(int userId);
 
-        // Book Parts / Tree
-        Task<DTOReturnPart?> GetPartAsync(int partId);
-        Task<DTOReturnTreePart?> GetBookTreeAsync(int bookId);
-
         // POST
-        Task<string?> UploadAsync(IFormFile file, HttpRequest request);
-        Task<DTOReturnPart?> AddRootPartAsync(DTOCreateRootPart root, HttpRequest request);
-        Task<DTOReturnPart?> AddBookPartAsync(DTOCreatePart part, HttpRequest request);
-        Task<int> AddBookAsync(DTOCreateBook dto, int creatorId);
         Task<DTOBasket> AddBasketItemAsync(int userId, int bookId);
         Task SaveSearchTermAsync(int userId, string searchTerm);
 

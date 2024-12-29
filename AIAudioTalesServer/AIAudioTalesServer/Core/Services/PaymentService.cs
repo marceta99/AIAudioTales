@@ -1,5 +1,4 @@
-﻿using AIAudioTalesServer.Application.Services;
-using AIAudioTalesServer.Core.Interfaces;
+﻿using AIAudioTalesServer.Core.Interfaces;
 using AIAudioTalesServer.Domain.Entities;
 using AIAudioTalesServer.Domain.Enums;
 using AIAudioTalesServer.Infrastructure.Interfaces;
@@ -8,31 +7,26 @@ using AIAudioTalesServer.Web.DTOS;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace AIAudioTalesServer.Core.Services
 {
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
-        private readonly IBooksService _booksService;        // <-- Replaced IBooksRepository with IBooksService
-        private readonly IAuthRepository _authRepository;
         private readonly AppSettings _appSettings;
+        private readonly ILibraryService _libraryService;
 
         private readonly string _frontendSuccessUrl;
         private readonly string _frontendCanceledUrl;
 
         public PaymentService(
-            IPaymentRepository paymentRepository,
-            IBooksService booksService,                    // <-- Inject IBooksService here
-            IAuthRepository authRepository,
+            IPaymentRepository paymentRepository,  
+            ILibraryService libraryService,
             IOptions<AppSettings> appSettings)
         {
             _paymentRepository = paymentRepository;
-            _booksService = booksService;                  // <-- Store injected IBooksService
-            _authRepository = authRepository;
             _appSettings = appSettings.Value;
+            _libraryService = libraryService;
 
             _frontendSuccessUrl = _appSettings.ClientUrl + "/home/library";
             _frontendCanceledUrl = _appSettings.ClientUrl + "/home/basket#error";
@@ -41,7 +35,7 @@ namespace AIAudioTalesServer.Core.Services
         public async Task<string?> PlaceOrderAsync(DTOBasket basket, User user)
         {
             // 1) Remove any pending purchases for that user (now via IBooksService)
-            var result = await _booksService.RemoveUserPendingPurchases(user);
+            var result = await _libraryService.RemoveUserPendingPurchases(user);
             if (!result)
             {
                 // Could throw an exception or just return null
@@ -52,7 +46,7 @@ namespace AIAudioTalesServer.Core.Services
             var sessionId = await _paymentRepository.CheckOut(basket);
 
             // 3) Mark books as "purchase pending" (now via IBooksService)
-            await _booksService.PurchaseBooks(
+            await _libraryService.PurchaseBooks(
                 user.Id,
                 basket.BasketItems,
                 PurchaseType.BasicPurchase,
@@ -61,7 +55,7 @@ namespace AIAudioTalesServer.Core.Services
             );
 
             // 4) Clear basket (now via IBooksService)
-            await _booksService.RemoveBasketItems(user.Id);
+            await _libraryService.RemoveBasketItems(user.Id);
 
             return sessionId; // Return sessionId to the controller
         }
@@ -69,14 +63,14 @@ namespace AIAudioTalesServer.Core.Services
         public async Task<bool> CheckoutSuccessAsync(string sessionId)
         {
             // Mark purchase as success in DB (now via IBooksService)
-            bool result = await _booksService.UpdatePurchaseStatus(sessionId);
+            bool result = await _libraryService.UpdatePurchaseStatus(sessionId);
             return result;
         }
 
         public async Task<bool> CheckoutCanceledAsync(string sessionId)
         {
             // Remove canceled purchase (now via IBooksService)
-            bool result = await _booksService.RemoveCanceledPurchase(sessionId);
+            bool result = await _libraryService.RemoveCanceledPurchase(sessionId);
             return result;
         }
 
