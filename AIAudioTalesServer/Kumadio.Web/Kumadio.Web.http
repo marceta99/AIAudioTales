@@ -1,0 +1,6 @@
+@Kumadio.Web_HostAddress = http://localhost:5135
+
+GET {{Kumadio.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
