@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Stripe.net" Version="47.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kumadio.Domain\Kumadio.Domain.csproj" />
+    <ProjectReference Include="..\Kumadio.Infrastructure\Kumadio.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
