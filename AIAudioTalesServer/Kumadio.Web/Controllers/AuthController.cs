@@ -6,13 +6,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
-using AIAudioTalesServer.Settings;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Domain.Enums;
-using AIAudioTalesServer.Web.DTOS;
-using AIAudioTalesServer.Web.DTOS.Auth;
-using AIAudioTalesServer.Infrastructure.Interfaces;
-using AIAudioTalesServer.Core.Interfaces;
+using Kumadio.Core.Interfaces;
+using Kumadio.Web.DTOS.Auth;
+using AutoMapper;
+using Kumadio.Domain.Entities;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
@@ -21,30 +18,33 @@ namespace AIAudioTalesServer.Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IMapper mapper)
         {
-            // We no longer need IAuthRepository here
+            _mapper = mapper;
             _authService = authService;
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] Register model)
+        public async Task<IActionResult> Register([FromBody] DTORegister model)
         {
-            var result = await _authService.RegisterAsync(model);
+            var user = _mapper.Map<User>(model);
+            var result = await _authService.RegisterAsync(user, model.Password);
 
-            if (result == 0)
-                return BadRequest("Problem with registering user");
-            return Ok();
+            if (result == 0) return BadRequest("Problem with registering user");
+
+            return Ok("User successfully registered");
         }
 
         [HttpPost("RegisterCreator")]
-        public async Task<IActionResult> RegisterCreator([FromBody] RegisterCreator model)
+        public async Task<IActionResult> RegisterCreator([FromBody] DTORegisterCreator model)
         {
-            var result = await _authService.RegisterCreatorAsync(model);
+            var user = _mapper.Map<User>(model);
+            var result = await _authService.RegisterCreatorAsync(user, model.Password);
 
-            if (result == 0)
-                return BadRequest("User with that email already exists");
+            if (result == 0) return BadRequest("User with that email already exists");
+            
             return Ok();
         }
 

@@ -24,64 +24,35 @@ namespace Kumadio.Core.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<int> RegisterAsync(Register model)
+        public async Task<int> RegisterAsync(User user, string password)
         {
-            // 1) Basic validation
-            if (model.Password != model.ConfirmPassword)
-                return 0; // or throw an exception / return error code
-
-            if (string.IsNullOrWhiteSpace(model.FirstName) ||
-                string.IsNullOrWhiteSpace(model.LastName))
-                return 0;
-
-            // 2) Create user entity
-            var user = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Role = Role.LISTENER_NO_SUBSCRIPTION
-            };
-
-            // 3) Hash password
+            // Hash password
             using (HMACSHA512 hmac = new HMACSHA512())
             {
                 user.PasswordSalt = hmac.Key;
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(model.Password));
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            // 4) Store in DB
+            // Store in DB
             var result = await _authRepository.AddNewUser(user);
+            
             // This returns 1 if success, 0 if email was in use, etc.
-
             return result;
         }
 
-        public async Task<int> RegisterCreatorAsync(RegisterCreator model)
+        public async Task<int> RegisterCreatorAsync(User user, string password)
         {
-            // Similar logic, but role = CREATOR
-            if (model.Password != model.ConfirmPassword)
-                return 0;
-
-            var user = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Role = Role.CREATOR
-            };
-
             using (HMACSHA512 hmac = new HMACSHA512())
             {
                 user.PasswordSalt = hmac.Key;
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(model.Password));
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
             var result = await _authRepository.AddNewUser(user);
             return result;
         }
 
-        public async Task<DTOReturnUser?> LoginAsync(Login model)
+        public async Task<DTOReturnUser?> LoginAsync(DTOLogin model)
         {
             // Basic checks
             if (string.IsNullOrWhiteSpace(model.Email) ||

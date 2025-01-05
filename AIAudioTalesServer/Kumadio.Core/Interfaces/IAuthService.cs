@@ -5,8 +5,8 @@ namespace Kumadio.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<int> RegisterAsync(Register model);
-        Task<int> RegisterCreatorAsync(RegisterCreator model);
+        Task<int> RegisterAsync(User user, string password);
+        Task<int> RegisterCreatorAsync(User user, string password);
         Task<DTOReturnUser?> LoginAsync(Login model);
         Task RefreshTokenAsync();
         Task RevokeTokenAsync();

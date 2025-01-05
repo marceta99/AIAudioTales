@@ -1,6 +1,6 @@
 ﻿namespace Kumadio.Web.DTOS.Auth
 {
-    public class Login
+    public class DTOLogin
     {
         public string Email { get; set; }
         public string Password { get; set; }
