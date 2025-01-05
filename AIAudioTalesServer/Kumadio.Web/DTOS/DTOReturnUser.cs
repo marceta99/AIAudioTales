@@ -1,4 +1,6 @@
-﻿namespace Kumadio.Web.DTOS
+﻿using Kumadio.Domain.Enums;
+
+namespace Kumadio.Web.DTOS
 {
     public class DTOReturnUser
     {

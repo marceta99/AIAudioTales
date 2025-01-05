@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Kumadio.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69eebe10deb40accf505e6f4d3fa8e3b9a7da1f1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fc1fcdaddb065ba777a23e16de6160e24407a81")]
 [assembly: System.Reflection.AssemblyProductAttribute("Kumadio.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Kumadio.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

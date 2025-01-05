@@ -47,10 +47,6 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Google.Apis.Auth": {
-              "target": "Package",
-              "version": "[1.68.0, )"
-            },
             "Stripe.net": {
               "target": "Package",
               "version": "[47.2.0, )"

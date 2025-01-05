@@ -1,8 +1,14 @@
-﻿namespace Kumadio.Web.DTOS.Auth
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Kumadio.Web.DTOS.Auth
 {
     public class DTOLogin
     {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        
+        [Required]
         public string Password { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using Kumadio.Domain.Entities;
+﻿using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Interfaces
 {
@@ -7,11 +6,12 @@ namespace Kumadio.Core.Interfaces
     {
         Task<int> RegisterAsync(User user, string password);
         Task<int> RegisterCreatorAsync(User user, string password);
-        Task<DTOReturnUser?> LoginAsync(Login model);
-        Task RefreshTokenAsync();
-        Task RevokeTokenAsync();
-        Task<DTOReturnUser?> LoginWithGoogleAsync(string googleCredentials);
-        Task<object?> GetCurrentUserAsync();
+        Task<User?> ValidateLogin(string email, string password);
         Task<User?> GetUserWithEmail(string email);
+        Task<RefreshToken> GetRefreshToken(string refreshToken);
+        Task<User> GetUserWithRefreshToken(RefreshToken refreshToken);
+        Task DeleteRefreshTokenForUser(string email);
+        Task SaveRefreshToken(RefreshToken refreshToken, User user);
+     
     }
 }

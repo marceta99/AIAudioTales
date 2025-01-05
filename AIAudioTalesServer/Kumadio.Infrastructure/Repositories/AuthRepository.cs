@@ -43,7 +43,7 @@ namespace Kumadio.Infrastructure.Repositories
                                    .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user)
+        public async Task SaveRefreshToken(RefreshToken refreshToken, User user)
         {
             var existingToken = await _dbContext.RefreshTokens
                                                 .FirstOrDefaultAsync(rt => rt.UserId == user.Id);

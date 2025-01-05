@@ -10,7 +10,7 @@ namespace Kumadio.Infrastructure.Interfaces
         Task<User?> GetUserWithEmail(string email);
         Task<RefreshToken?> GetRefreshToken(string refreshToken);
         Task<User?> GetUserWithRefreshToken(RefreshToken refreshToken);
-        Task SaveRefreshTokenInDb(RefreshToken refreshToken, User user);
+        Task SaveRefreshToken(RefreshToken refreshToken, User user);
         Task DeleteRefreshTokenForUser(string email);
         Task UpdateUserRole(Role role, int userId);
     }
