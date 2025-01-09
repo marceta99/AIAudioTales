@@ -2,6 +2,7 @@ using Kumadio.Core.Interfaces;
 using Kumadio.Core.Services;
 using Kumadio.Infrastructure.Interfaces;
 using Kumadio.Infrastructure.Repositories;
+using Kumadio.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -130,6 +131,8 @@ if (!Directory.Exists(uploadFolder))
 }
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

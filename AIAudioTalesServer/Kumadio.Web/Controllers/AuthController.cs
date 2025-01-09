@@ -229,6 +229,7 @@ namespace AIAudioTalesServer.Web.Controllers
 
             await _authService.SaveRefreshToken(refreshToken, user);
         }
+        
         #endregion
     }
 
