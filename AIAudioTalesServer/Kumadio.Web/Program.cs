@@ -1,8 +1,10 @@
 using Kumadio.Core.Interfaces;
 using Kumadio.Core.Services;
+using Kumadio.Infrastructure.Data;
 using Kumadio.Infrastructure.Interfaces;
 using Kumadio.Infrastructure.Repositories;
 using Kumadio.Web.Middlewares;
+using Kumadio.Web.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +52,8 @@ builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<IEditorService, EditorService>();
 builder.Services.AddScoped<ILibraryService, LibraryService>();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//mapper
 
 builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")
