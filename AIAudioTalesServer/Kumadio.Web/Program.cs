@@ -1,9 +1,16 @@
 using Kumadio.Core.Interfaces;
 using Kumadio.Core.Services;
+using Kumadio.Domain.Entities;
 using Kumadio.Infrastructure.Data;
 using Kumadio.Infrastructure.Interfaces;
 using Kumadio.Infrastructure.Repositories;
+using Kumadio.Web.DTOS;
+using Kumadio.Web.DTOS.Auth;
+using Kumadio.Web.Mappers.Base;
+using Kumadio.Web.Mappers.BookMappers;
+using Kumadio.Web.Mappers.UserMappers;
 using Kumadio.Web.Middlewares;
+using Kumadio.Web.ServiceRegistrations;
 using Kumadio.Web.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -40,20 +47,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
-builder.Services.AddScoped<IEditorRepository, EditorRepository>();
-builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<ICatalogService, CatalogService>();
-builder.Services.AddScoped<IEditorService, EditorService>();
-builder.Services.AddScoped<ILibraryService, LibraryService>();
-
-
-//mapper
+builder.Services
+    .AddKumadioRepositories()
+    .AddKumadioServices()
+    .AddKumadioMappers();
 
 builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")
