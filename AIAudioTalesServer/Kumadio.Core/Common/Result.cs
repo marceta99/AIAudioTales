@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kumadio.Core.Common
+﻿namespace Kumadio.Core.Common
 {
     public class Result<T>
     {
