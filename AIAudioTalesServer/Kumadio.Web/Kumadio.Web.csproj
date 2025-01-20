@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Kumadio.Infrastructure\Kumadio.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Profiles\" />
-  </ItemGroup>
-
 </Project>

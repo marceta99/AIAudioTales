@@ -1,7 +1,7 @@
-﻿using Kumadio.Domain.Entities;
-using Kumadio.Infrastructure.Interfaces.Base;
+﻿using Kumadio.Core.Common.Interfaces.Base;
+using Kumadio.Domain.Entities;
 
-namespace Kumadio.Infrastructure.Interfaces.Domain
+namespace Kumadio.Core.Common.Interfaces
 {
     public interface IRefreshTokenRepository : IRepository<RefreshToken>
     {

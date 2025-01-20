@@ -1,28 +1,33 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Kumadio.Infrastructure.Interfaces;
 using Kumadio.Core.Interfaces;
 using Kumadio.Domain.Entities;
-using Kumadio.Infrastructure.Interfaces.Domain;
+using Kumadio.Core.Common;
+using Kumadio.Core.Common.Interfaces;
+using Kumadio.Core.Common.Interfaces.Base;
 
 namespace Kumadio.Core.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IAuthRepository _authRepository;
         private readonly IBookRepository _bookRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AuthService(IAuthRepository authRepository, IBookRepository bookRepository, IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository)
+        public AuthService(
+            IBookRepository bookRepository,
+            IRefreshTokenRepository refreshTokenRepository,
+            IUserRepository userRepository,
+            IUnitOfWork unitOfWork)
         {
-            _authRepository = authRepository;
             _bookRepository = bookRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> RegisterAsync(User user, string password)
+        public async Task<Result> RegisterAsync(User user, string password)
         {
             // Hash password
             using (HMACSHA512 hmac = new HMACSHA512())
@@ -31,20 +36,22 @@ namespace Kumadio.Core.Services
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            var userWithEmail = _userRepository.GetFirstWhereAsync(u => u.Email == user.Email);
+            var userExists = await _userRepository.AnyAsync(u => u.Email == user.Email);
 
-            if(userWithEmail == null)
+            if(!userExists)
             {
-                return 0;
+                return DomainErrors.Auth.EmailAlreadyExists;
             }
 
-            await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();
+            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            {
+                await _userRepository.AddAsync(user);
 
-            return 1;
+                return Result.Success();
+            });
         }
 
-        public async Task<int> RegisterCreatorAsync(User user, string password)
+        public async Task<Result> RegisterCreatorAsync(User user, string password)
         {
             using (HMACSHA512 hmac = new HMACSHA512())
             {
@@ -52,49 +59,84 @@ namespace Kumadio.Core.Services
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            var result = await _authRepository.AddNewUser(user);
-            return result;
+            var userExists = await _userRepository.AnyAsync(u => u.Email == user.Email);
+
+            if (userExists)
+            {
+                return DomainErrors.Auth.EmailAlreadyExists;
+            }
+
+            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            {
+                await _userRepository.AddAsync(user);
+
+                return Result.Success();
+            });
         }
 
-        public async Task<User?> ValidateLogin(string email, string password)
+        public async Task<Result<User?>> Login(string email, string password)
         {
-            var emailUsed = await _authRepository.IsEmailUsed(email);
-            if (!emailUsed) return null;
+            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+            if(user == null)
+            {
+                return DomainErrors.Auth.UserEmailNotFound;
+            }
 
-            var user = await _authRepository.GetUserWithEmail(email);
-            if (user == null) return null;
-
-            var passwordIsCorrect = CheckPassword(password, user);
-            if (!passwordIsCorrect) return null;
+            var passwordMatch = PasswordMatch(password, user);
+            if (!passwordMatch)
+            {
+                return DomainErrors.Auth.WrongPassword;
+            }
 
             return user;
         }
 
-        public async Task<RefreshToken> GetRefreshToken(string refreshToken)
+        public async Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash)
         {
-            var tokenInDb = await _authRepository.GetRefreshToken(refreshToken);
-            if (tokenInDb == null) throw new Exception("Refresh token not found in DB");
+            var token = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.Token == refreshTokenHash);
+            
+            if (token == null) return DomainErrors.Auth.RefreshTokenNotFound;
 
-            return tokenInDb;
+            return token;
         }
 
-        public async Task<User> GetUserWithRefreshToken(RefreshToken refreshToken)
+        public async Task<Result<User?>> GetUserWithRefreshToken(RefreshToken refreshToken)
         {
-            var user = await _authRepository.GetUserWithRefreshToken(refreshToken);
+            var user = await _userRepository.GetFirstWhereAsync(u => u.Id == refreshToken.UserId);
+
+            if (user == null) return DomainErrors.Auth.UserWithTokenNotFound;
+
+            return user;
+        }
+
+        public async Task<Result> DeleteRefreshTokenForUser(string email)
+        {
+            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+
+            if (user == null) return DomainErrors.Auth.UserEmailNotFound;
+
+            var refreshToken = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.UserId == user.Id);
+
+            if(refreshToken == null) return DomainErrors.Auth.RefreshTokenNotFound;
+
+            return await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                _refreshTokenRepository.Remove(refreshToken);
+
+                // Return a Task so the signature matches `Func<Task<Result>>`
+                return Task.FromResult(Result.Success());
+            });
+        }
+
+        public async Task<Result<User?>> GetUserWithEmail(string email)
+        {
+            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
             if (user == null)
-                throw new Exception("User not found for refresh token");
+            {
+                return DomainErrors.Auth.UserEmailNotFound;
+            }
 
             return user;
-        }
-
-        public async Task DeleteRefreshTokenForUser(string email)
-        {
-            await _authRepository.DeleteRefreshTokenForUser(email);
-        }
-
-        public async Task<User?> GetUserWithEmail(string email)
-        {
-            return await _authRepository.GetUserWithEmail(email);
         }
 
         public async Task SaveRefreshToken(RefreshToken refreshToken, User user)
@@ -106,7 +148,7 @@ namespace Kumadio.Core.Services
         // PRIVATE HELPER METHODS
         // -------------------------------------------------------------------
 
-        private bool CheckPassword(string password, User user)
+        private bool PasswordMatch(string password, User user)
         {
             using (HMACSHA512 hmac = new HMACSHA512(user.PasswordSalt))
             {

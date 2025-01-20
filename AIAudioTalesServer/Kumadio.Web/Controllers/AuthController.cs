@@ -8,10 +8,11 @@ using Microsoft.Extensions.Options;
 using Google.Apis.Auth;
 using Kumadio.Core.Interfaces;
 using Kumadio.Web.DTOS.Auth;
-using AutoMapper;
 using Kumadio.Domain.Entities;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Settings;
+using Kumadio.Web.Mappers.Base;
+using Kumadio.Core.Common;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
@@ -20,86 +21,188 @@ namespace AIAudioTalesServer.Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper<DTORegister, User> _registerMapper;
+        private readonly IMapper<DTORegisterCreator, User> _registerCreatorMapper;
+        private readonly IMapper<User, DTOReturnUser> _returnUserMapper;
 
-        public AuthController(IAuthService authService, IMapper mapper, IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
+        public AuthController(
+            IAuthService authService,
+            IOptions<AppSettings> appSettings,
+            IHttpContextAccessor httpContextAccessor,
+            IMapper<DTORegister, User> registerMapper, 
+            IMapper<DTORegisterCreator, User> registerCreatorMapper,
+            IMapper<User, DTOReturnUser> returnUserMapper)
         {
-            _mapper = mapper;
             _authService = authService;
             _appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
+            _registerMapper = registerMapper;
+            _registerCreatorMapper = registerCreatorMapper;
+            _returnUserMapper = returnUserMapper;
         }
+
+        #region GET
+
+        [HttpGet("RefreshToken")]
+        public async Task<ActionResult> RefreshToken()
+        {
+            var refreshTokenHash = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
+            if (string.IsNullOrEmpty(refreshTokenHash))
+            {
+                return BadRequest(new
+                {
+                    Code = "REFRESH_TOKEN_MISSING",
+                    Message = "Refresh token missing from request cookie."
+                });
+            }
+
+            var refreshTokenResult = await _authService.GetRefreshToken(refreshTokenHash);
+
+            if (refreshTokenResult.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = refreshTokenResult.Error.Code,
+                    Message = refreshTokenResult.Error.Message
+                });
+            }
+
+            var refreshToken = refreshTokenResult.Value;
+
+            if (refreshToken.Expires < DateTime.Now)
+            {
+                // If expired, revoke and force re-login
+                var revokeTokenResult = await RevokeTokenAsync();
+                if (revokeTokenResult.IsFailure)
+                {
+                    return BadRequest(new
+                    {
+                        Code = revokeTokenResult.Error.Code,
+                        Message = revokeTokenResult.Error.Message
+                    });
+                }
+
+                var refreshTokenExpiredError = DomainErrors.Auth.RefreshTokenExpired;
+                return BadRequest(new
+                {
+                    Code = refreshTokenExpiredError.Code,
+                    Message = refreshTokenExpiredError.Message
+                });
+            }
+
+            var userResult = await _authService.GetUserWithRefreshToken(refreshToken);
+
+            if (userResult.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = userResult.Error.Code,
+                    Message = userResult.Error.Message
+                });
+            }
+
+            await GenerateJwt(userResult.Value);
+
+            return Ok();
+        }
+
+        [HttpGet("GetCurrentUser")]
+        public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
+        {
+            var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                var jwtTokenMissingError = DomainErrors.Auth.JwtTokenMissing;
+                return BadRequest(new
+                {
+                    Code = jwtTokenMissingError.Code,
+                    Message = jwtTokenMissingError.Message
+                });
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadJwtToken(jwtToken);
+
+            var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
+            if (emailClaim == null)
+            {
+                return BadRequest(new
+                {
+                    Code = DomainErrors.Auth.EmailClaimMissing.Code,
+                    Message = DomainErrors.Auth.EmailClaimMissing.Message
+                });
+            }
+
+            var email = emailClaim.Value;
+
+            var result = await _authService.GetUserWithEmail(email);
+            if (result.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = result.Error.Code,
+                    Message = result.Error.Message
+                });
+            }
+
+            return Ok(_returnUserMapper.Map(result.Value));
+        }
+
+        #endregion
+
+        #region POST
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] DTORegister model)
         {
-            var user = _mapper.Map<User>(model);
+            var user = _registerMapper.Map(model);
             var result = await _authService.RegisterAsync(user, model.Password);
 
-            if (result == 0) return BadRequest("Problem with registering user");
+            if (result.IsFailure) return BadRequest(new
+            {
+                Code = result.Error.Code,
+                Message = result.Error.Message
+            });
 
-            return Ok("User successfully registered");
+            return Ok();
         }
 
         [HttpPost("RegisterCreator")]
         public async Task<IActionResult> RegisterCreator([FromBody] DTORegisterCreator model)
         {
-            var user = _mapper.Map<User>(model);
+            var user = _registerCreatorMapper.Map(model);
             var result = await _authService.RegisterCreatorAsync(user, model.Password);
 
-            if (result == 0) return BadRequest("User with that email already exists");
-            
+            if (result.IsFailure) return BadRequest(new
+            {
+                Code = result.Error.Code,
+                Message = result.Error.Message
+            });
+
             return Ok();
         }
 
         [HttpPost("Login")]
         public async Task<ActionResult<DTOReturnUser>> Login([FromBody] DTOLogin model)
         {
-            var user = await _authService.ValidateLogin(model.Email, model.Password);
+            var result = await _authService.Login(model.Email, model.Password);
 
-            if (user == null) return BadRequest("User name or password was invalid");
+            if (result.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = result.Error.Code,
+                    Message = result.Error.Message
+                });
+            }
+
+            var user = result.Value;
 
             await GenerateJwt(user);
 
-            return Ok(_mapper.Map<DTOReturnUser>(user));
-        }
-
-        [HttpGet("RefreshToken")]
-        public async Task<ActionResult> RefreshToken()
-        {
-            try
-            {
-                var refreshToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
-                if (string.IsNullOrEmpty(refreshToken)) return BadRequest();
-
-                var tokenInDb = await _authService.GetRefreshToken(refreshToken);
-
-                if (tokenInDb.Expires < DateTime.Now)
-                {
-                    // If expired, revoke and force re-login
-                    await RevokeTokenAsync();
-                    return BadRequest("Refresh token has expired.");
-                }
-
-                var user = await _authService.GetUserWithRefreshToken(tokenInDb);
-
-                await GenerateJwt(user);
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-        }
-
-        [HttpDelete("RevokeToken")]
-        public async Task<IActionResult> RevokeToken()
-        {
-            await RevokeTokenAsync();
-            return Ok();
+            return Ok(_returnUserMapper.Map(user));
         }
 
         [HttpPost("LoginWithGoogle")]
@@ -111,61 +214,83 @@ namespace AIAudioTalesServer.Web.Controllers
             };
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(credentials, settings);
-            if (payload == null) return BadRequest();
+            if (payload == null)
+            {
+                return BadRequest(new
+                {
+                    Code = DomainErrors.Auth.GoogleCredentialsNotValid.Code,
+                    Message = DomainErrors.Auth.GoogleCredentialsNotValid.Message
+                });
+            }
 
-            var user = await _authService.GetUserWithEmail(payload.Email);
-            if (user == null) return BadRequest();
+            var result = await _authService.GetUserWithEmail(payload.Email);
+            if (result.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = result.Error.Code,
+                    Message = result.Error.Message
+                });
+            }
+
+            var user = result.Value;
 
             await GenerateJwt(user);
 
-            var dtoUser = _mapper.Map<DTOReturnUser>(user);
-            return Ok(dtoUser);
+            return Ok(_returnUserMapper.Map(user));
         }
 
-        [HttpGet("GetCurrentUser")]
-        public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
+        #endregion
+
+        #region DELETE
+
+        [HttpDelete("RevokeToken")]
+        public async Task<IActionResult> RevokeToken()
         {
-            var jwtTokenCookie = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
-            if (string.IsNullOrEmpty(jwtTokenCookie)) return BadRequest();
+            var result = await RevokeTokenAsync();
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+            if (result.IsFailure)
+            {
+                return BadRequest(new
+                {
+                    Code = result.Error.Code,
+                    Message = result.Error.Message
+                });
+            }
 
-            var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-            if (emailClaim == null) return BadRequest();
-
-            var email = emailClaim.Value;
-
-            var user = await _authService.GetUserWithEmail(email);
-            if (user == null) return BadRequest();
-
-            var dtoUser = _mapper.Map<DTOReturnUser>(user);
-            return Ok(dtoUser);
+            return Ok();
         }
 
+        #endregion
 
         #region Private Helper Methods
-        private async Task RevokeTokenAsync()
+        private async Task<Result> RevokeTokenAsync()
         {
-            var jwtTokenCookie = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
-            if (string.IsNullOrEmpty(jwtTokenCookie))
-                return; // no token to revoke
+            var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
+            if (string.IsNullOrEmpty(jwtToken))
+            {
+                return DomainErrors.Auth.JwtTokenMissing;
+            }
 
             // Decode the JWT
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+            var token = tokenHandler.ReadJwtToken(jwtToken);
 
             var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
             if (emailClaim != null)
             {
                 var email = emailClaim.Value;
-                await _authService.DeleteRefreshTokenForUser(email);
+                var deleteTokenResult = await _authService.DeleteRefreshTokenForUser(email);
+
+                if (deleteTokenResult.IsFailure) return deleteTokenResult;
             }
 
             // Optionally, clear cookies
             var response = _httpContextAccessor.HttpContext?.Response;
             response?.Cookies.Delete("X-Access-Token");
             response?.Cookies.Delete("X-Refresh-Token");
+
+            return Result.Success();
         }
         private async Task GenerateJwt(User user)
         {

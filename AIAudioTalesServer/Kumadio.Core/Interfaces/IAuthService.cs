@@ -1,16 +1,17 @@
-﻿using Kumadio.Domain.Entities;
+﻿using Kumadio.Core.Common;
+using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<int> RegisterAsync(User user, string password);
-        Task<int> RegisterCreatorAsync(User user, string password);
-        Task<User?> ValidateLogin(string email, string password);
-        Task<User?> GetUserWithEmail(string email);
-        Task<RefreshToken> GetRefreshToken(string refreshToken);
-        Task<User> GetUserWithRefreshToken(RefreshToken refreshToken);
-        Task DeleteRefreshTokenForUser(string email);
+        Task<Result> RegisterAsync(User user, string password);
+        Task<Result> RegisterCreatorAsync(User user, string password);
+        Task<Result<User?>> Login(string email, string password);
+        Task<Result<User?>> GetUserWithEmail(string email);
+        Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash);
+        Task<Result<User?>> GetUserWithRefreshToken(RefreshToken refreshToken);
+        Task<Result> DeleteRefreshTokenForUser(string email);
         Task SaveRefreshToken(RefreshToken refreshToken, User user);
      
     }

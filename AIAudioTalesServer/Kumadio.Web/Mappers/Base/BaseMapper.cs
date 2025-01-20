@@ -8,7 +8,6 @@
 
             return MapCore(source);
         }
-        public abstract TDestination MapCore(TSource source);
 
         public TSource? ReverseMap(TDestination destination)
         {
@@ -16,6 +15,8 @@
 
             return ReverseMapCore(destination);
         }
+
+        public abstract TDestination MapCore(TSource source);
 
         public virtual TSource ReverseMapCore(TDestination destination)
         {
