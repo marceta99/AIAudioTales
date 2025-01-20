@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Kumadio.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c36e872849d1403b009f9e9a8ae733ac91a18b83")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2983316668a603da5a201b3c386cb71fb3fb6a1e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Kumadio.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Kumadio.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

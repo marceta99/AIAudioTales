@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kumadio.Core\Kumadio.Core.csproj" />
     <ProjectReference Include="..\Kumadio.Domain\Kumadio.Domain.csproj" />
   </ItemGroup>
 

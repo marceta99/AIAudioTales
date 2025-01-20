@@ -3,16 +3,23 @@ using System.Text;
 using Kumadio.Infrastructure.Interfaces;
 using Kumadio.Core.Interfaces;
 using Kumadio.Domain.Entities;
+using Kumadio.Infrastructure.Interfaces.Domain;
 
 namespace Kumadio.Core.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserRepository _userRepository;
 
-        public AuthService(IAuthRepository authRepository)
+        public AuthService(IAuthRepository authRepository, IBookRepository bookRepository, IRefreshTokenRepository refreshTokenRepository, IUserRepository userRepository)
         {
             _authRepository = authRepository;
+            _bookRepository = bookRepository;
+            _refreshTokenRepository = refreshTokenRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<int> RegisterAsync(User user, string password)
@@ -24,11 +31,17 @@ namespace Kumadio.Core.Services
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            // Store in DB
-            var result = await _authRepository.AddNewUser(user);
-            
-            // This returns 1 if success, 0 if email was in use, etc.
-            return result;
+            var userWithEmail = _userRepository.GetFirstWhereAsync(u => u.Email == user.Email);
+
+            if(userWithEmail == null)
+            {
+                return 0;
+            }
+
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
+
+            return 1;
         }
 
         public async Task<int> RegisterCreatorAsync(User user, string password)

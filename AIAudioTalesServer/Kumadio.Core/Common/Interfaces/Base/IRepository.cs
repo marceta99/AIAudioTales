@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Kumadio.Infrastructure.Repositories.Base
+namespace Kumadio.Core.Common.Interfaces.Base
 {
     public interface IRepository<T> where T : class
     {
@@ -12,6 +12,7 @@ namespace Kumadio.Infrastructure.Repositories.Base
         void UpdateRange(IEnumerable<T> entities);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 
         // "Get all" and "Where" queries
         Task<IList<T>> GetAllAsync();

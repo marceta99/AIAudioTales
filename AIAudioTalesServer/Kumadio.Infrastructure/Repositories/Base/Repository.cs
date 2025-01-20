@@ -1,11 +1,7 @@
 ﻿using Kumadio.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Kumadio.Core.Common.Interfaces.Base;
 
 namespace Kumadio.Infrastructure.Repositories.Base
 {
@@ -53,6 +49,11 @@ namespace Kumadio.Infrastructure.Repositories.Base
         public virtual void RemoveRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
+        }
+
+        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
         }
 
         public virtual async Task<IList<T>> GetAllAsync()

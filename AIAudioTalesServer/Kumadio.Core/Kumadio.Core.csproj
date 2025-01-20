@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kumadio.Domain\Kumadio.Domain.csproj" />
-    <ProjectReference Include="..\Kumadio.Infrastructure\Kumadio.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
