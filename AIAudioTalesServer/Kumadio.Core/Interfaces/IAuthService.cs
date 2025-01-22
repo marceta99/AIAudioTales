@@ -5,13 +5,20 @@ namespace Kumadio.Core.Interfaces
 {
     public interface IAuthService
     {
+        #region Registration & Login
         Task<Result> RegisterAsync(User user, string password);
         Task<Result> RegisterCreatorAsync(User user, string password);
         Task<Result<User>> Login(string email, string password);
-        Task<Result<User>> GetUserWithEmail(string email);
+
+        #endregion
+
+        #region Tokens
         Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash);
         Task<Result<User>> GetUserWithRefreshToken(RefreshToken refreshToken);
         Task<Result> DeleteRefreshTokenForUser(string email);
         Task<Result> SaveRefreshToken(RefreshToken refreshToken, User user);
+
+        #endregion
+        Task<Result<User>> GetUserWithEmail(string email);
     }
 }

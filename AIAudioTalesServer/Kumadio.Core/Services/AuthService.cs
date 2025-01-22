@@ -26,7 +26,7 @@ namespace Kumadio.Core.Services
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
-
+        #region Registration & Login
         public async Task<Result> RegisterAsync(User user, string password)
         {
             if (user == null) return DomainErrors.Auth.UserNull;
@@ -40,7 +40,7 @@ namespace Kumadio.Core.Services
 
             var userExists = await _userRepository.AnyAsync(u => u.Email == user.Email);
 
-            if(!userExists)
+            if (!userExists)
             {
                 return DomainErrors.Auth.EmailAlreadyExists;
             }
@@ -79,7 +79,7 @@ namespace Kumadio.Core.Services
         public async Task<Result<User>> Login(string email, string password)
         {
             var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
-            if(user == null)
+            if (user == null)
             {
                 return DomainErrors.Auth.UserEmailNotFound;
             }
@@ -93,10 +93,13 @@ namespace Kumadio.Core.Services
             return user;
         }
 
+        #endregion
+
+        #region Tokens
         public async Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash)
         {
             var token = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.Token == refreshTokenHash);
-            
+
             if (token == null) return DomainErrors.Auth.RefreshTokenNotFound;
 
             return token;
@@ -119,7 +122,7 @@ namespace Kumadio.Core.Services
 
             var refreshToken = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.UserId == user.Id);
 
-            if(refreshToken == null) return DomainErrors.Auth.RefreshTokenNotFound;
+            if (refreshToken == null) return DomainErrors.Auth.RefreshTokenNotFound;
 
             return await _unitOfWork.ExecuteInTransactionAsync(() =>
             {
@@ -128,17 +131,6 @@ namespace Kumadio.Core.Services
                 // Return a Task so the signature matches `Func<Task<Result>>`
                 return Task.FromResult(Result.Success());
             });
-        }
-
-        public async Task<Result<User>> GetUserWithEmail(string email)
-        {
-            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
-            if (user == null)
-            {
-                return DomainErrors.Auth.UserEmailNotFound;
-            }
-
-            return user;
         }
 
         public async Task<Result> SaveRefreshToken(RefreshToken refreshToken, User user)
@@ -151,7 +143,8 @@ namespace Kumadio.Core.Services
                 {
                     refreshToken.UserId = user.Id;
                     await _refreshTokenRepository.AddAsync(refreshToken);
-                } else
+                }
+                else
                 {
                     existingToken.Token = refreshToken.Token;
                     existingToken.Expires = refreshToken.Expires;
@@ -160,6 +153,19 @@ namespace Kumadio.Core.Services
 
                 return Result.Success();
             });
+        }
+
+        #endregion
+
+        public async Task<Result<User>> GetUserWithEmail(string email)
+        {
+            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return DomainErrors.Auth.UserEmailNotFound;
+            }
+
+            return user;
         }
 
         #region Private Helper Methods
