@@ -2,14 +2,14 @@
 {
     public abstract class BaseMapper<TSource, TDestination> : IMapper<TSource, TDestination>
     {
-        public TDestination? Map(TSource source)
+        public TDestination? Map(TSource? source)
         {
             if (source == null) return default;
 
             return MapCore(source);
         }
 
-        public TSource? ReverseMap(TDestination destination)
+        public TSource? ReverseMap(TDestination? destination)
         {
             if (destination == null) return default;
 

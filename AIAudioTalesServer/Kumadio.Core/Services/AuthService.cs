@@ -29,6 +29,8 @@ namespace Kumadio.Core.Services
 
         public async Task<Result> RegisterAsync(User user, string password)
         {
+            if (user == null) return DomainErrors.Auth.UserNull;
+
             // Hash password
             using (HMACSHA512 hmac = new HMACSHA512())
             {
@@ -74,7 +76,7 @@ namespace Kumadio.Core.Services
             });
         }
 
-        public async Task<Result<User?>> Login(string email, string password)
+        public async Task<Result<User>> Login(string email, string password)
         {
             var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
             if(user == null)
@@ -100,7 +102,7 @@ namespace Kumadio.Core.Services
             return token;
         }
 
-        public async Task<Result<User?>> GetUserWithRefreshToken(RefreshToken refreshToken)
+        public async Task<Result<User>> GetUserWithRefreshToken(RefreshToken refreshToken)
         {
             var user = await _userRepository.GetFirstWhereAsync(u => u.Id == refreshToken.UserId);
 
@@ -128,7 +130,7 @@ namespace Kumadio.Core.Services
             });
         }
 
-        public async Task<Result<User?>> GetUserWithEmail(string email)
+        public async Task<Result<User>> GetUserWithEmail(string email)
         {
             var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
             if (user == null)
@@ -139,15 +141,28 @@ namespace Kumadio.Core.Services
             return user;
         }
 
-        public async Task SaveRefreshToken(RefreshToken refreshToken, User user)
+        public async Task<Result> SaveRefreshToken(RefreshToken refreshToken, User user)
         {
-            await _authRepository.SaveRefreshToken(refreshToken, user);
+            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            {
+                var existingToken = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.UserId == user.Id);
+
+                if (existingToken == null)
+                {
+                    refreshToken.UserId = user.Id;
+                    await _refreshTokenRepository.AddAsync(refreshToken);
+                } else
+                {
+                    existingToken.Token = refreshToken.Token;
+                    existingToken.Expires = refreshToken.Expires;
+                    existingToken.Created = refreshToken.Created;
+                }
+
+                return Result.Success();
+            });
         }
 
-        // -------------------------------------------------------------------
-        // PRIVATE HELPER METHODS
-        // -------------------------------------------------------------------
-
+        #region Private Helper Methods
         private bool PasswordMatch(string password, User user)
         {
             using (HMACSHA512 hmac = new HMACSHA512(user.PasswordSalt))
@@ -156,6 +171,7 @@ namespace Kumadio.Core.Services
                 return computed.SequenceEqual(user.PasswordHash);
             }
         }
+        #endregion
 
     }
 

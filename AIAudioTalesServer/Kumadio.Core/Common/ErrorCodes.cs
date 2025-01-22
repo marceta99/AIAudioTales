@@ -9,8 +9,10 @@
         public const string RefreshTokenNotFound = "REFRESH_TOKEN_NOT_FOUND";
         public const string UserWithTokenNotFound = "USER_WITH_TOKEN_NOT_FOUND";
         public const string JwtTokenMissing = "JWT_TOKEN_MISSING";
+        public const string RefreshTokenMissing = "REFRESH_TOKEN_MISSING";
         public const string RefreshTokenExpired = "REFRESH_TOKEN_EXPIRED";
         public const string GoogleCredentialsNotValid = "GOOGLE_CREDENTIALS_NOT_VALID";
         public const string EmailClaimMissing = "EMAIL_CLAIM_MISSING";
+        public const string UserNull = "USER_NULL";
     }
 }

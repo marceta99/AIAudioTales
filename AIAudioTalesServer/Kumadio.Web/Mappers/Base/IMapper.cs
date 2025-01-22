@@ -2,8 +2,8 @@
 {
     public interface IMapper<TSource, TDestination>
     {
-        public TDestination? Map(TSource source);
+        public TDestination? Map(TSource? source);
 
-        public TSource? ReverseMap(TDestination destination);
+        public TSource? ReverseMap(TDestination? destination);
     }
 }
