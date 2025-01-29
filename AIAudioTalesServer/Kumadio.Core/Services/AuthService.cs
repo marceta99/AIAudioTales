@@ -10,24 +10,21 @@ namespace Kumadio.Core.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IBookRepository _bookRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(
-            IBookRepository bookRepository,
             IRefreshTokenRepository refreshTokenRepository,
             IUserRepository userRepository,
             IUnitOfWork unitOfWork)
         {
-            _bookRepository = bookRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
         #region Registration & Login
-        public async Task<Result> RegisterAsync(User user, string password)
+        public async Task<Result> Register(User user, string password)
         {
             if (user == null) return DomainErrors.Auth.UserNull;
 
@@ -38,22 +35,22 @@ namespace Kumadio.Core.Services
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            var userExists = await _userRepository.AnyAsync(u => u.Email == user.Email);
+            var userExists = await _userRepository.Any(u => u.Email == user.Email);
 
             if (!userExists)
             {
                 return DomainErrors.Auth.EmailAlreadyExists;
             }
 
-            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                await _userRepository.AddAsync(user);
+                await _userRepository.Add(user);
 
                 return Result.Success();
             });
         }
 
-        public async Task<Result> RegisterCreatorAsync(User user, string password)
+        public async Task<Result> RegisterCreator(User user, string password)
         {
             using (HMACSHA512 hmac = new HMACSHA512())
             {
@@ -61,16 +58,16 @@ namespace Kumadio.Core.Services
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
 
-            var userExists = await _userRepository.AnyAsync(u => u.Email == user.Email);
+            var userExists = await _userRepository.Any(u => u.Email == user.Email);
 
             if (userExists)
             {
                 return DomainErrors.Auth.EmailAlreadyExists;
             }
 
-            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                await _userRepository.AddAsync(user);
+                await _userRepository.Add(user);
 
                 return Result.Success();
             });
@@ -78,7 +75,7 @@ namespace Kumadio.Core.Services
 
         public async Task<Result<User>> Login(string email, string password)
         {
-            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+            var user = await _userRepository.GetFirstWhere(u => u.Email == email);
             if (user == null)
             {
                 return DomainErrors.Auth.UserEmailNotFound;
@@ -98,7 +95,7 @@ namespace Kumadio.Core.Services
         #region Tokens
         public async Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash)
         {
-            var token = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.Token == refreshTokenHash);
+            var token = await _refreshTokenRepository.GetFirstWhere(rt => rt.Token == refreshTokenHash);
 
             if (token == null) return DomainErrors.Auth.RefreshTokenNotFound;
 
@@ -107,7 +104,7 @@ namespace Kumadio.Core.Services
 
         public async Task<Result<User>> GetUserWithRefreshToken(RefreshToken refreshToken)
         {
-            var user = await _userRepository.GetFirstWhereAsync(u => u.Id == refreshToken.UserId);
+            var user = await _userRepository.GetFirstWhere(u => u.Id == refreshToken.UserId);
 
             if (user == null) return DomainErrors.Auth.UserWithTokenNotFound;
 
@@ -116,15 +113,15 @@ namespace Kumadio.Core.Services
 
         public async Task<Result> DeleteRefreshTokenForUser(string email)
         {
-            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+            var user = await _userRepository.GetFirstWhere(u => u.Email == email);
 
             if (user == null) return DomainErrors.Auth.UserEmailNotFound;
 
-            var refreshToken = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.UserId == user.Id);
+            var refreshToken = await _refreshTokenRepository.GetFirstWhere(rt => rt.UserId == user.Id);
 
             if (refreshToken == null) return DomainErrors.Auth.RefreshTokenNotFound;
 
-            return await _unitOfWork.ExecuteInTransactionAsync(() =>
+            return await _unitOfWork.ExecuteInTransaction(() =>
             {
                 _refreshTokenRepository.Remove(refreshToken);
 
@@ -135,14 +132,14 @@ namespace Kumadio.Core.Services
 
         public async Task<Result> SaveRefreshToken(RefreshToken refreshToken, User user)
         {
-            return await _unitOfWork.ExecuteInTransactionAsync(async () =>
+            return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                var existingToken = await _refreshTokenRepository.GetFirstWhereAsync(rt => rt.UserId == user.Id);
+                var existingToken = await _refreshTokenRepository.GetFirstWhere(rt => rt.UserId == user.Id);
 
                 if (existingToken == null)
                 {
                     refreshToken.UserId = user.Id;
-                    await _refreshTokenRepository.AddAsync(refreshToken);
+                    await _refreshTokenRepository.Add(refreshToken);
                 }
                 else
                 {
@@ -159,7 +156,7 @@ namespace Kumadio.Core.Services
 
         public async Task<Result<User>> GetUserWithEmail(string email)
         {
-            var user = await _userRepository.GetFirstWhereAsync(u => u.Email == email);
+            var user = await _userRepository.GetFirstWhere(u => u.Email == email);
             if (user == null)
             {
                 return DomainErrors.Auth.UserEmailNotFound;

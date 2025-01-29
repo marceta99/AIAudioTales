@@ -1,14 +1,6 @@
 ﻿using Kumadio.Core.Common;
 using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore.Storage;
-using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Kumadio.Infrastructure.Repositories.Base
 {
@@ -20,7 +12,7 @@ namespace Kumadio.Infrastructure.Repositories.Base
         {
             _dbContext = dbContext;
         }
-        public async Task<Result> ExecuteInTransactionAsync(Func<Task<Result>> action)
+        public async Task<Result> ExecuteInTransaction(Func<Task<Result>> action)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
@@ -45,7 +37,7 @@ namespace Kumadio.Infrastructure.Repositories.Base
             }
         }
 
-        public async Task<Result<T>> ExecuteInTransactionAsync<T>(Func<Task<Result<T>>> action)
+        public async Task<Result<T>> ExecuteInTransaction<T>(Func<Task<Result<T>>> action)
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 

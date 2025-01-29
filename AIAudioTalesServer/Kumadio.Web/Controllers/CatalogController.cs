@@ -1,6 +1,9 @@
-﻿using AIAudioTalesServer.Core.Interfaces;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Web.DTOS;
+﻿using Kumadio.Core.Interfaces;
+using Kumadio.Core.Models;
+using Kumadio.Domain.Entities;
+using Kumadio.Web.Common;
+using Kumadio.Web.DTOS;
+using Kumadio.Web.Mappers.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Web.Controllers
@@ -10,67 +13,84 @@ namespace AIAudioTalesServer.Web.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
+        private readonly IMapper<Book, DTOReturnBook> _bookMapper;
+        private readonly IMapper<BookPart, DTOReturnPart> _partMapper;
+        private readonly IMapper<Category, DTOReturnCategory> _categoryMapper;
+        private readonly IMapper<PartTree, DTOReturnPartTree> _partTreeMapper;
 
-        public CatalogController(ICatalogService catalogService)
+        public CatalogController(
+            ICatalogService catalogService,
+            IMapper<Book, DTOReturnBook> bookMapper,
+            IMapper<BookPart, DTOReturnPart> partMapper,
+            IMapper<Category, DTOReturnCategory> categoryMapper,
+            IMapper<PartTree, DTOReturnPartTree> partTreeMapper
+            )
         {
             _catalogService = catalogService;
+            _bookMapper = bookMapper;
+            _partMapper = partMapper;
+            _categoryMapper = categoryMapper;
+            _partTreeMapper = partTreeMapper;
         }
 
-        [HttpGet("GetAllBooks")]
-        public async Task<ActionResult<IList<Book>>> GetAllBooks()
+        [HttpGet("categories")]
+        public async Task<ActionResult<IList<DTOReturnCategory>>> GetAllCategories()
         {
-            var books = await _catalogService.GetAllBooksAsync();
-            return Ok(books);
+            var categoriesResult = await _catalogService.GetAllCategories();
+            if(categoriesResult.IsFailure) return categoriesResult.Error.ToBadRequest();
+
+            return Ok(_categoryMapper.Map(categoriesResult.Value));
         }
 
-        [HttpGet("GetAllCategories")]
-        public async Task<ActionResult<IList<Category>>> GetAllCategories()
-        {
-            var cats = await _catalogService.GetAllCategoriesAsync();
-            return Ok(cats);
-        }
-
-        [HttpGet("GetBook/{bookId}")]
+        [HttpGet("books/{bookId}")]
         public async Task<ActionResult<DTOReturnBook>> GetBook(int bookId)
         {
-            var dto = await _catalogService.GetBookAsync(bookId);
-            if (dto == null) return NotFound("Book not found.");
-            return Ok(dto);
+            var bookResult = await _catalogService.GetBook(bookId);
+            if(bookResult.IsFailure) return bookResult.Error.ToBadRequest();
+            
+            return Ok(_bookMapper.Map(bookResult.Value));
         }
 
-        [HttpGet("GetBooksFromCategory")]
-        public async Task<ActionResult<IList<DTOReturnBook>>> GetBooksFromCategory(
+        [HttpGet("books")]
+        public async Task<ActionResult<IList<DTOReturnBook>>> GetBooks(
             [FromQuery] int categoryId,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            var dtos = await _catalogService.GetBooksFromCategoryAsync(categoryId, pageNumber, pageSize);
-            return Ok(dtos);
+            var booksResult = await _catalogService.GetBooks(categoryId, pageNumber, pageSize);
+            if (booksResult.IsFailure) return booksResult.Error.ToBadRequest();
+
+            return Ok(_bookMapper.Map(booksResult.Value));
         }
 
-        [HttpGet("Search")]
+        [HttpGet("search")]
         public async Task<ActionResult<IList<DTOReturnBook>>> SearchBooks(
             [FromQuery] string searchTerm,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            var books = await _catalogService.SearchBooksAsync(searchTerm, pageNumber, pageSize);
-            return Ok(books);
+            var booksResult = await _catalogService.SearchBooks(searchTerm, pageNumber, pageSize);
+            if (booksResult.IsFailure) return booksResult.Error.ToBadRequest();
+
+            return Ok(_bookMapper.Map(booksResult.Value));
         }
 
-        [HttpGet("GetPart/{partId}")]
+        [HttpGet("parts/{partId}")]
         public async Task<ActionResult<DTOReturnPart>> GetPart(int partId)
         {
-            var result = await _catalogService.GetPartAsync(partId);
-            if (result == null) return BadRequest("No part with that ID");
-            return Ok(result);
+            var partResult = await _catalogService.GetPart(partId);
+            if (partResult.IsFailure) return partResult.Error.ToBadRequest();
+
+            return Ok(_partMapper.Map(partResult.Value));
         }
 
-        [HttpGet("GetBookTree/{bookId}")]
-        public async Task<ActionResult<DTOReturnTreePart>> GetBookTree(int bookId)
+        [HttpGet("part-tree/{bookId}")]
+        public async Task<ActionResult<DTOReturnPartTree>> GetPartTree(int bookId)
         {
-            var tree = await _catalogService.GetBookTreeAsync(bookId);
-            return Ok(tree);
+            var partTreeResult = await _catalogService.GetPartTree(bookId);
+            if (partTreeResult.IsFailure) return partTreeResult.Error.ToBadRequest();
+
+            return Ok(_partTreeMapper.Map(partTreeResult.Value));
         }
     }
 }

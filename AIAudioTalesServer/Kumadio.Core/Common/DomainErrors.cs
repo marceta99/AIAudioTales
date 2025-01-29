@@ -19,7 +19,15 @@
             public static Error RefreshTokenMissing => new (ErrorCodes.RefreshTokenMissing, "Refresh token is missing from request cookie.");
             public static Error EmailClaimMissing => new (ErrorCodes.EmailClaimMissing, "Email claim is missing from jwt token.");
             public static Error UserNull => new (ErrorCodes.UserNull, "User object cannot be null.");
+        }
 
+        public static class Catalog
+        {
+            public static Error BooksNotFound => new(ErrorCodes.BooksNotFound, "Books are not found.");
+            public static Error CategoriesNotFound => new(ErrorCodes.CategoriesNotFound, "Categories are not found.");
+            public static Error BookNotFound => new(ErrorCodes.BookNotFound, "Book with that id is not found.");
+            public static Error BookPartNotFound => new(ErrorCodes.BookPartNotFound, "Book part with that id is not found.");
+            public static Error RootPartNotFound => new(ErrorCodes.RootPartNotFound, "Root part for that book id is not found.");
 
         }
     }

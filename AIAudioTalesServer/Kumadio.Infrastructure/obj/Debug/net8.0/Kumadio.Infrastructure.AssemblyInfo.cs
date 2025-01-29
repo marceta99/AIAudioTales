@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Kumadio.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2d0adee1a8d344c0ed8424bf9c52bd52712a79f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b331d56fe7c75ad4fcfa63fef474df3a0132ba7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Kumadio.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Kumadio.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

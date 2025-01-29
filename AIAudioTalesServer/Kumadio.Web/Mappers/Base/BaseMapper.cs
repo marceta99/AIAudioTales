@@ -9,6 +9,15 @@
             return MapCore(source);
         }
 
+        public IList<TDestination?> Map(IEnumerable<TSource>? sources)
+        {
+            if (sources == null) return new List<TDestination?>();
+
+            return sources
+                .Select(item => Map(item))
+                .ToList();
+        }
+
         public TSource? ReverseMap(TDestination? destination)
         {
             if (destination == null) return default;

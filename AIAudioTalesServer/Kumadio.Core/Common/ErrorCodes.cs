@@ -2,6 +2,7 @@
 {
     public static class ErrorCodes
     {
+        // Auth
         public const string TransactionFailed = "TRANSACTION_FAILED";
         public const string UserEmailNotFound = "USER_EMAIL_NOT_FOUND";
         public const string EmailAlreadyExists = "EMAIL_ALREADY_EXISTS";
@@ -14,5 +15,13 @@
         public const string GoogleCredentialsNotValid = "GOOGLE_CREDENTIALS_NOT_VALID";
         public const string EmailClaimMissing = "EMAIL_CLAIM_MISSING";
         public const string UserNull = "USER_NULL";
+
+        // Catalog
+        public const string BooksNotFound = "BOOKS_NOT_FOUND";
+        public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";
+        public const string BookNotFound = "BOOK_NOT_FOUND";
+        public const string BookPartNotFound = "BOOK_PART_NOT_FOUND";
+        public const string RootPartNotFound = "ROOT_PART_NOT_FOUND";
+
     }
 }

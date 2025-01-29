@@ -3,9 +3,9 @@
     public interface IUnitOfWork : IDisposable
     {
         // A method returning Result (no data), 
-        Task<Result> ExecuteInTransactionAsync(Func<Task<Result>> action);
+        Task<Result> ExecuteInTransaction(Func<Task<Result>> action);
 
         // A method returning Result<T> if your callback 
-        Task<Result<T>> ExecuteInTransactionAsync<T>(Func<Task<Result<T>>> action);
+        Task<Result<T>> ExecuteInTransaction<T>(Func<Task<Result<T>>> action);
     }
 }

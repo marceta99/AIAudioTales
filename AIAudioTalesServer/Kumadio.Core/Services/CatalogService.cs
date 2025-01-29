@@ -1,120 +1,125 @@
-﻿using AIAudioTalesServer.Core.Interfaces;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Infrastructure.Interfaces;
-using AIAudioTalesServer.Infrastructure.Repositories;
-using AIAudioTalesServer.Web.DTOS;
-using AutoMapper;
+﻿using Kumadio.Core.Common;
+using Kumadio.Core.Common.Interfaces;
+using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Core.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
+using Kumadio.Core.Models;
+using Kumadio.Domain.Entities;
+
 
 namespace Kumadio.Core.Services
 {
     public class CatalogService : ICatalogService
     {
-        private readonly ICatalogRepository _catalogRepository;
-        private readonly IMapper _mapper;
-        private readonly IMemoryCache _cache;  
-        public CatalogService(ICatalogRepository catalogRepository, IMapper mapper, IMemoryCache cache)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBookRepository _bookRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IBookPartRepository _bookPartRepository;
+
+        public CatalogService(
+            IUnitOfWork unitOfWork,
+            IBookRepository bookRepository,
+            ICategoryRepository categoryRepository, 
+            IBookPartRepository bookPartRepository
+            )
         {
-            _catalogRepository = catalogRepository;
-            _mapper = mapper;
-            _cache = cache;
-        }
-        public async Task<IList<Book>> GetAllBooksAsync()
-        {
-            // Example: place caching here instead of repository
-            const string cacheKey = "all_books";
-            if (!_cache.TryGetValue(cacheKey, out IList<Book>? books))
-            {
-                books = await _catalogRepository.GetAllBooksAsync();
-                _cache.Set(cacheKey, books, TimeSpan.FromMinutes(5));
-            }
-            return books ?? new List<Book>();
+            _unitOfWork = unitOfWork;
+            _bookRepository = bookRepository;
+            _categoryRepository = categoryRepository;
+            _bookPartRepository = bookPartRepository;
         }
 
-        public async Task<IList<Category>> GetAllCategoriesAsync()
+        #region Books
+        public async Task<Result<Book>> GetBook(int bookId)
         {
-            const string cacheKey = "all_categories";
-            if (!_cache.TryGetValue(cacheKey, out IList<Category>? categories))
-            {
-                categories = await _catalogRepository.GetAllCategoriesAsync();
-                _cache.Set(cacheKey, categories, TimeSpan.FromMinutes(5));
-            }
-            return categories ?? new List<Category>();
+            var book = await _bookRepository.GetFirstWhere(b => b.Id == bookId);
+            if (book == null) return DomainErrors.Catalog.BookNotFound;
+
+            return book;
         }
 
-        public async Task<DTOReturnBook?> GetBookAsync(int bookId)
-        {
-            var book = await _catalogRepository.GetBookByIdAsync(bookId);
-            if (book == null) return null;
-            return _mapper.Map<DTOReturnBook>(book);
-        }
-
-
-        public async Task<IList<DTOReturnBook>> GetBooksFromCategoryAsync(int categoryId, int pageNumber, int pageSize)
+        public async Task<Result<IList<Book>>> GetBooks(int categoryId, int pageNumber, int pageSize)
         {
             var skip = (pageNumber - 1) * pageSize;
-            var books = await _catalogRepository.GetBooksByCategoryAsync(categoryId, skip, pageSize);
-            return _mapper.Map<IList<DTOReturnBook>>(books);
+            var books = await _bookRepository.GetBooks(categoryId, skip, pageSize);
+            if (books == null) return DomainErrors.Catalog.BooksNotFound;
+
+            return Result<IList<Book>>.Success(books);
         }
 
-        public async Task<DTOReturnTreePart?> GetBookTreeAsync(int bookId)
+        public async Task<Result<IList<Book>>> SearchBooks(string searchTerm, int pageNumber, int pageSize)
         {
-            var rootPart = await _catalogRepository.GetRootPartAsync(bookId);
-            if (rootPart == null) return null;
+            var skip = (pageNumber - 1) * pageSize;
+            var books = await _bookRepository.SearchBooks(searchTerm, skip, pageSize);
+            if (books == null) return DomainErrors.Catalog.BooksNotFound;
+
+            return Result<IList<Book>>.Success(books);
+        }
+        #endregion
+
+        #region Parts
+        public async Task<Result<PartTree>> GetPartTree(int bookId)
+        {
+            var rootPart = await _bookPartRepository.GetRootPartAsync(bookId);
+            if (rootPart == null) return DomainErrors.Catalog.RootPartNotFound;
 
             // Build the tree
-            var rootDto = new DTOReturnTreePart
+            var rootPartTree = new PartTree
             {
                 PartId = rootPart.Id,
-                PartName = "Intro", // or rootPart?.Name if you prefer
-                Answers = _mapper.Map<IList<DTOReturnAnswer>>(rootPart.Answers)
+                PartName = "Intro",
+                Answers = rootPart.Answers
             };
 
-            rootDto.NextParts = await PopulateTree(rootPart.Answers);
-            return rootDto;
+            rootPartTree.NextParts = await PopulateTree(rootPartTree.Answers);
+
+            return rootPartTree;
         }
 
-        public async Task<BookPart?> GetRootPart(int bookId)
+        private async Task<IList<PartTree>> PopulateTree(IList<Answer>? answers)
         {
-            return await _catalogRepository.GetRootPartAsync(bookId);
-        }
+            var partTreeList = new List<PartTree>();
+            if (answers == null) return partTreeList;
 
-        private async Task<IList<DTOReturnTreePart>> PopulateTree(IList<Answer>? answers)
-        {
-            if (answers == null) return new List<DTOReturnTreePart>();
-
-            var list = new List<DTOReturnTreePart>();
-            foreach (var ans in answers)
+            foreach (var answer in answers)
             {
-                if (ans.NextPartId == null) continue;
-                var childPart = await _catalogRepository.GetBookPartAsync(ans.NextPartId.Value);
+                if (answer.NextPartId == null) continue;
+
+                var childPart = await _bookPartRepository.GetFirstWhere(bp => bp.Id == answer.NextPartId.Value);
                 if (childPart == null) continue;
 
-                var newTree = new DTOReturnTreePart
+                var newTree = new PartTree
                 {
                     PartId = childPart.Id,
-                    PartName = ans.Text,
-                    Answers = _mapper.Map<IList<DTOReturnAnswer>>(childPart.Answers)
+                    PartName = answer.Text,
+                    Answers = childPart.Answers
                 };
+
                 newTree.NextParts = await PopulateTree(childPart.Answers);
-                list.Add(newTree);
+
+                partTreeList.Add(newTree);
             }
-            return list;
+
+            return partTreeList;
         }
 
-        public async Task<DTOReturnPart?> GetPartAsync(int partId)
+        public async Task<Result<BookPart>> GetPart(int partId)
         {
-            var part = await _catalogRepository.GetBookPartAsync(partId);
-            if (part == null) return null;
-            return _mapper.Map<DTOReturnPart>(part);
+            var part = await _bookPartRepository.GetFirstWhere(bp => bp.Id == partId);
+            if (part == null) return DomainErrors.Catalog.BookPartNotFound;
+
+            return part;
         }
 
-        public async Task<IList<DTOReturnBook>> SearchBooksAsync(string searchTerm, int pageNumber, int pageSize)
+        #endregion
+
+        public async Task<Result<IList<Category>>> GetAllCategories()
         {
-            var skip = (pageNumber - 1) * pageSize;
-            var books = await _catalogRepository.SearchBooksAsync(searchTerm, skip, pageSize);
-            return _mapper.Map<IList<DTOReturnBook>>(books);
+            var categories = await _categoryRepository.GetAll();
+
+            if (categories == null) return DomainErrors.Catalog.CategoriesNotFound;
+
+            return Result<IList<Category>>.Success(categories);
         }
+
     }
 }

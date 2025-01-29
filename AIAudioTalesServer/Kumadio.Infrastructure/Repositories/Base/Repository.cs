@@ -16,17 +16,17 @@ namespace Kumadio.Infrastructure.Repositories.Base
             _dbSet = _dbContext.Set<T>();
         }
 
-        public virtual async Task<T?> GetByIdAsync(int id)
+        public virtual async Task<T?> GetById(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task AddAsync(T entity)
+        public virtual async Task Add(T entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+        public virtual async Task AddRange(IEnumerable<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);
         }
@@ -51,27 +51,27 @@ namespace Kumadio.Infrastructure.Repositories.Base
             _dbSet.RemoveRange(entities);
         }
 
-        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<bool> Any(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.AnyAsync(predicate);
         }
 
-        public virtual async Task<IList<T>> GetAllAsync()
+        public virtual async Task<IList<T>> GetAll()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public virtual async Task<T?> GetFirstWhereAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<T?> GetFirstWhere(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
-        public virtual async Task<IList<T>> GetAllWhereAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<IList<T>> GetAllWhere(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
-        public virtual async Task<int> SaveChangesAsync()
+        public virtual async Task<int> SaveChanges()
         {
             return await _dbContext.SaveChangesAsync();
         }

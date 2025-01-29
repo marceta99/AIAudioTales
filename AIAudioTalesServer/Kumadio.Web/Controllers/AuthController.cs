@@ -102,7 +102,7 @@ namespace AIAudioTalesServer.Web.Controllers
         {
             var user = _registerMapper.Map(model);
 
-            var result = await _authService.RegisterAsync(user!, model.Password);
+            var result = await _authService.Register(user!, model.Password);
             if (result.IsFailure) return result.Error!.ToBadRequest();
 
             return Ok();
@@ -113,7 +113,7 @@ namespace AIAudioTalesServer.Web.Controllers
         {
             var user = _registerCreatorMapper.Map(model);
 
-            var registerCreatorResult = await _authService.RegisterCreatorAsync(user!, model.Password);
+            var registerCreatorResult = await _authService.RegisterCreator(user!, model.Password);
             if (registerCreatorResult.IsFailure) return registerCreatorResult.Error.ToBadRequest();
 
             return Ok();

@@ -6,8 +6,8 @@ namespace Kumadio.Core.Interfaces
     public interface IAuthService
     {
         #region Registration & Login
-        Task<Result> RegisterAsync(User user, string password);
-        Task<Result> RegisterCreatorAsync(User user, string password);
+        Task<Result> Register(User user, string password);
+        Task<Result> RegisterCreator(User user, string password);
         Task<Result<User>> Login(string email, string password);
 
         #endregion
