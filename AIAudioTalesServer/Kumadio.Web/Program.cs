@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +28,6 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//stripe config
-StripeConfiguration.ApiKey = configuration["ApplicationSettings:StripeSecretKey"];
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>

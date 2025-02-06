@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2PWsR1P9RT9AH050VpDZAC3YXxOqYPZnvTBYTPbwdRhu5aULSifFkxk4mijYBXl3Ngs5BIwy3d5oSWSh4ve11g==",
+  "dgSpecHash": "JA7TybD4nd2GFvz6sh7XmafKNBM+15Dso0yM6gnf+VvD64CrFqo44VyUlTm4YL2WWZgnlMrh7VKkeffpGr0f8A==",
   "success": true,
   "projectFilePath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Core\\Kumadio.Core.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\mihai\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\mihai\\.nuget\\packages\\stripe.net\\47.2.0\\stripe.net.47.2.0.nupkg.sha512",
-    "C:\\Users\\mihai\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
-    "C:\\Users\\mihai\\.nuget\\packages\\system.diagnostics.eventlog\\8.0.0\\system.diagnostics.eventlog.8.0.0.nupkg.sha512",
-    "C:\\Users\\mihai\\.nuget\\packages\\system.security.cryptography.protecteddata\\8.0.0\\system.security.cryptography.protecteddata.8.0.0.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Kumadio.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01ca8607e9f46a52680f098884fec036e539dd35")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+322416cbd10e9e577bebd0bd87d59202792f962c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Kumadio.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Kumadio.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
