@@ -13,17 +13,17 @@ namespace AIAudioTalesServer.Web.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
-        private readonly IMapper<Book, DTOReturnBook> _bookMapper;
-        private readonly IMapper<BookPart, DTOReturnPart> _partMapper;
-        private readonly IMapper<Category, DTOReturnCategory> _categoryMapper;
-        private readonly IMapper<PartTree, DTOReturnPartTree> _partTreeMapper;
+        private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
+        private readonly IDtoMapper<BookPart, DTOReturnPart> _partMapper;
+        private readonly IDtoMapper<Category, DTOReturnCategory> _categoryMapper;
+        private readonly IDtoMapper<PartTreeModel, DTOReturnPartTree> _partTreeMapper;
 
         public CatalogController(
             ICatalogService catalogService,
-            IMapper<Book, DTOReturnBook> bookMapper,
-            IMapper<BookPart, DTOReturnPart> partMapper,
-            IMapper<Category, DTOReturnCategory> categoryMapper,
-            IMapper<PartTree, DTOReturnPartTree> partTreeMapper
+            IDtoMapper<Book, DTOReturnBook> bookMapper,
+            IDtoMapper<BookPart, DTOReturnPart> partMapper,
+            IDtoMapper<Category, DTOReturnCategory> categoryMapper,
+            IDtoMapper<PartTreeModel, DTOReturnPartTree> partTreeMapper
             )
         {
             _catalogService = catalogService;

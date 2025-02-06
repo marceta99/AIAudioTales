@@ -15,7 +15,7 @@ namespace Kumadio.Core.Interfaces
 
         #region Parts
         Task<Result<BookPart>> GetPart(int partId);
-        Task<Result<PartTree>> GetPartTree(int bookId);
+        Task<Result<PartTreeModel>> GetPartTree(int bookId);
         #region
 
         Task<Result<IList<Category>>> GetAllCategories();

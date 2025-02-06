@@ -19,9 +19,15 @@
         // Catalog
         public const string BooksNotFound = "BOOKS_NOT_FOUND";
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";
-        public const string BookNotFound = "BOOK_NOT_FOUND";
         public const string BookPartNotFound = "BOOK_PART_NOT_FOUND";
         public const string RootPartNotFound = "ROOT_PART_NOT_FOUND";
+
+        // Editor
+        public const string SaveFileFailed = "SAVE_FILE_FAILED";
+        public const string InvalidParentAnswer = "InvalidParentAnswer";
+
+        // Common
+        public const string BookNotFound = "BOOK_NOT_FOUND";
 
     }
 }

@@ -4,7 +4,7 @@ using Kumadio.Web.Mappers.Base;
 
 namespace Kumadio.Web.Mappers.BookMappers
 {
-    public class AnswerToDTOReturnAnswerMapper : BaseMapper<Answer, DTOReturnAnswer>
+    public class AnswerToDTOReturnAnswerMapper : DtoMapper<Answer, DTOReturnAnswer>
     {
         public override DTOReturnAnswer MapCore(Answer source)
         {

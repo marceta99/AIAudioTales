@@ -4,7 +4,7 @@ using Kumadio.Web.Mappers.Base;
 
 namespace Kumadio.Web.Mappers.CategoryMappers
 {
-    public class CategoryToDTOReturnCategoryMapper : BaseMapper<Category, DTOReturnCategory>
+    public class CategoryToDTOReturnCategoryMapper : DtoMapper<Category, DTOReturnCategory>
     {
         public override DTOReturnCategory MapCore(Category source)
         {

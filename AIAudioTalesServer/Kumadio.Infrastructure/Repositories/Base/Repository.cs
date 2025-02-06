@@ -26,6 +26,12 @@ namespace Kumadio.Infrastructure.Repositories.Base
             await _dbSet.AddAsync(entity);
         }
 
+        public virtual async Task<T> AddAndReturn(T entity)
+        {
+            var entry = await _dbSet.AddAsync(entity);
+            return entry.Entity; // EF tracks it, so after SaveChanges, the entity has its PK set
+        }
+
         public virtual async Task AddRange(IEnumerable<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);

@@ -30,5 +30,13 @@
             public static Error RootPartNotFound => new(ErrorCodes.RootPartNotFound, "Root part for that book id is not found.");
 
         }
+
+        public static class Editor
+        {
+            public static Error BookNotFound => new(ErrorCodes.BookNotFound, "Book with that id is not found.");
+            public static Error SaveFileFailed => new(ErrorCodes.SaveFileFailed, "Save of audio file failed.");
+            public static Error InvalidParentAnswer => new(ErrorCodes.InvalidParentAnswer, "Invalid parent answer.");
+
+        }
     }
 }

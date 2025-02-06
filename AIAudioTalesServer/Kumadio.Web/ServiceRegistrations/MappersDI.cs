@@ -13,14 +13,13 @@ namespace Kumadio.Web.ServiceRegistrations
     {
         public static IServiceCollection AddKumadioMappers(this IServiceCollection services)
         {
-            services.AddScoped<IMapper<Answer, DTOReturnAnswer>, AnswerToDTOReturnAnswerMapper>();
-            services.AddScoped<IMapper<BasketItem, DTOReturnBasketItem>, BasketItemToDTOReturnBasketItemMapper>();
-            services.AddScoped<IMapper<BookPart, DTOReturnPart>, BookPartToDTOReturnPartMapper>();
-            services.AddScoped<IMapper<Book, DTOReturnBook>, BookToDTOReturnBookMapper>();
-            services.AddScoped<IMapper<DTOCreateBook, Book>, DTOCreateBookToBookMapper>();
-            services.AddScoped<IMapper<DTORegisterCreator, User>, DTORegisterCreatorToUserMapper>();
-            services.AddScoped<IMapper<DTORegister, User>, DTORegisterToUserMapper>();
-            services.AddScoped<IMapper<User, DTOReturnUser>, UserToDTOReturnUserMapper>();
+            services.AddScoped<IDtoMapper<Answer, DTOReturnAnswer>, AnswerToDTOReturnAnswerMapper>();
+            services.AddScoped<IDtoMapper<BasketItem, DTOReturnBasketItem>, BasketItemToDTOReturnBasketItemMapper>();
+            services.AddScoped<IDtoMapper<BookPart, DTOReturnPart>, BookPartToDTOReturnPartMapper>();
+            services.AddScoped<IDtoMapper<Book, DTOReturnBook>, BookToDTOReturnBookMapper>();
+            services.AddScoped<IDtoMapper<DTORegisterCreator, User>, DTORegisterCreatorToUserMapper>();
+            services.AddScoped<IDtoMapper<DTORegister, User>, DTORegisterToUserMapper>();
+            services.AddScoped<IDtoMapper<User, DTOReturnUser>, UserToDTOReturnUserMapper>();
 
             return services;
         }

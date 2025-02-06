@@ -1,149 +1,131 @@
-﻿using AIAudioTalesServer.Core.Interfaces;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Infrastructure.Interfaces;
-using AIAudioTalesServer.Infrastructure.Repositories;
-using AIAudioTalesServer.Web.DTOS;
-using AutoMapper;
+﻿using Kumadio.Core.Common;
+using Kumadio.Core.Common.Interfaces;
+using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Core.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
+using Kumadio.Core.Models;
+using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Services
 {
     public class EditorService : IEditorService
     {
-        private readonly IEditorRepository _editorRepository;
-        private readonly ICatalogRepository _catalogRepository;
-        private readonly IMapper _mapper;
-        private readonly IMemoryCache _cache;  // if you want caching at the service level
+        private readonly IFileStorage _fileStorage;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAnswerRepository _answerRepository;
+        private readonly IBookPartRepository _bookPartRepository;
 
         public EditorService(
-            IEditorRepository editorRepository,
-            ICatalogRepository catalogRepository,
-            IMapper mapper,
-            IMemoryCache cache)
+            IFileStorage fileStorage,
+            IUnitOfWork unitOfWork,
+            IBookRepository bookRepository,
+            IAnswerRepository answerRepository,
+            IBookPartRepository bookPartRepository
+            )
         {
-            _editorRepository = editorRepository;
-            _catalogRepository = catalogRepository;
-            _mapper = mapper;
-            _cache = cache;
+            _fileStorage = fileStorage;
+            _unitOfWork = unitOfWork;
+            _bookRepository = bookRepository;
+            _answerRepository = answerRepository;
+            _bookPartRepository = bookPartRepository;
         }
-        public async Task<int> AddBookAsync(DTOCreateBook dto, int creatorId)
+        public async Task<Result<Book>> AddBook(Book book)
         {
-            var domainBook = new Book
+            return await _unitOfWork.ExecuteInTransaction<Book>(async () =>
             {
-                Title = dto.Title,
-                Description = dto.Description,
-                Price = dto.Price,
-                CategoryId = dto.CategoryId,
-                CreatorId = creatorId
-            };
-            var created = await _editorRepository.AddBookAsync(domainBook);
-            return created.Id;
+                return await _bookRepository.AddAndReturn(book);
+            });
         }
 
-        public async Task<DTOReturnPart?> AddRootPartAsync(DTOCreateRootPart root, HttpRequest request)
+        public async Task<Result<BookPart>> AddRootPart(RootPartModel root, string host)
         {
-            // 1) Check if book exists, etc. The repository method is pure DB, so we do logic here
-            var domainBook = await _catalogRepository.GetBookByIdAsync(root.BookId);
-            if (domainBook == null) return null;
+            var book = await _bookRepository.GetFirstWhere(b => b.Id == root.BookId);
+            if (book == null) return DomainErrors.Editor.BookNotFound;
 
-            // 2) Upload audio
-            var audioLink = await UploadAsync(root.PartAudio, request);
-            if (audioLink == null) return null;
+            var fileLink = await _fileStorage.SaveFile(root.AudioBytes, root.Extension, host);
+            if (fileLink == null)
+                return DomainErrors.Editor.SaveFileFailed;
 
-            // 3) Create BookPart
-            var bookPart = new BookPart
+            var result = await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                BookId = root.BookId,
-                IsRoot = true,
-                PartAudioLink = audioLink
-            };
-            var createdPart = await _editorRepository.AddBookPartAsync(bookPart);
-
-            // 4) Add answers
-            var answersToAdd = new List<Answer>();
-            if (root.Answers != null)
-            {
-                foreach (var a in root.Answers)
+                var bookPart = new BookPart
                 {
-                    answersToAdd.Add(new Answer
-                    {
-                        Text = a.Text,
-                        CurrentPartId = createdPart.Id
-                    });
-                }
-                await _editorRepository.AddAnswersAsync(answersToAdd);
-                createdPart.Answers = answersToAdd;
-            }
-            return _mapper.Map<DTOReturnPart>(createdPart);
-        }
+                    BookId = root.BookId,
+                    IsRoot = true,
+                    PartAudioLink = fileLink
+                };
 
-        public async Task<DTOReturnPart?> AddBookPartAsync(DTOCreatePart part, HttpRequest request)
-        {
-            // 1) Check if book exists
-            var domainBook = await _catalogRepository.GetBookByIdAsync(part.BookId);
-            if (domainBook == null) return null;
+                var newPart = await _bookPartRepository.AddAndReturn(bookPart);
+                await _bookPartRepository.SaveChanges();
 
-            // 2) Upload audio
-            var audioLink = await UploadAsync(part.PartAudio, request);
-            if (audioLink == null) return null;
-
-            // 3) Create child BookPart
-            var bookPart = new BookPart
-            {
-                BookId = part.BookId,
-                PartAudioLink = audioLink
-            };
-            var createdPart = await _editorRepository.AddBookPartAsync(bookPart);
-
-            // 4) Link it to parent answer
-            // Note that we do not store the “parentAnswer.NextPartId” here
-            var parentAnswer = await _catalogRepository.GetAnswersForPartAsync(part.ParentAnswerId);
-            // Simplify checking, or you can do a dedicated method to fetch a single Answer by ID
-            var theParentAnswer = parentAnswer.FirstOrDefault(a => a.Id == part.ParentAnswerId);
-            if (theParentAnswer != null && theParentAnswer.NextPartId == null)
-            {
-                theParentAnswer.NextPartId = createdPart.Id;
-                await _editorRepository.UpdateAnswerAsync(theParentAnswer);
-                // (We’d need the dbContext or a “repository.UpdateAnswer()” method.)
-            }
-
-            // 5) Add child answers if any
-            var answersToAdd = new List<Answer>();
-            if (part.Answers != null)
-            {
-                foreach (var ans in part.Answers)
+                var answers = root.AnswersText.Select(answerText => new Answer
                 {
-                    if (!string.IsNullOrEmpty(ans.Text))
-                    {
-                        answersToAdd.Add(new Answer
-                        {
-                            Text = ans.Text,
-                            CurrentPartId = createdPart.Id
-                        });
-                    }
-                }
-                await _editorRepository.AddAnswersAsync(answersToAdd);
-                createdPart.Answers = answersToAdd;
+                    Text = answerText,
+                    CurrentPartId = newPart.Id
+                }).ToList();
+
+                await _answerRepository.AddRange(answers);
+                await _answerRepository.SaveChanges();
+
+                newPart.Answers = answers;
+                return Result<BookPart>.Success(newPart);
+            });
+
+            // If the transaction failed, delete the audio file.
+            if (result.IsFailure)
+            {
+                await _fileStorage.DeleteFile(fileLink);
             }
 
-            return _mapper.Map<DTOReturnPart>(createdPart);
+            return result;
         }
 
-
-        public async Task<string?> UploadAsync(IFormFile file, HttpRequest request)
+        public async Task<Result<BookPart>> AddBookPart(PartModel part, string host)
         {
-            // e.g. validate file size/extension here
-            if (file == null || file.Length == 0) return null;
+            var book = await _bookRepository.GetFirstWhere(b => b.Id == part.BookId);
+            if (book == null) return DomainErrors.Editor.BookNotFound;
 
-            // We'll do a basic approach: generate a link
-            // For a real scenario, you'd store them in some folder or an S3 bucket, etc.
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            // Return the URL
-            var audioLink = $"https://{request.Host}/uploads/{fileName}";
-            // You can do the actual disk I/O here or in the repository if you prefer “pure data”.
-            // For pure DB approach, you could store the file in DB as bytes (less common).
-            return audioLink;
+            var fileLink = await _fileStorage.SaveFile(part.AudioBytes, part.Extension, host);
+            if (fileLink == null)
+                return DomainErrors.Editor.SaveFileFailed;
+
+            var parentAnswer = await _answerRepository.GetFirstWhere(a => a.Id == part.ParentAnswerId);
+            if (parentAnswer == null || parentAnswer.NextPartId != null)
+                return DomainErrors.Editor.InvalidParentAnswer;
+
+            var result = await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var bookPart = new BookPart
+                {
+                    BookId = part.BookId,
+                    IsRoot = false,
+                    PartAudioLink = fileLink
+                };
+
+                var newPart = await _bookPartRepository.AddAndReturn(bookPart);
+                await _bookPartRepository.SaveChanges(); // saveChanges is called here so that new is for newly created part is generated
+
+                parentAnswer.NextPartId = newPart.Id;
+
+                var answers = part.AnswersText.Select(answerText => new Answer
+                {
+                    Text = answerText,
+                    CurrentPartId = newPart.Id
+                }).ToList();
+
+                await _answerRepository.AddRange(answers);
+
+                newPart.Answers = answers;
+                return Result<BookPart>.Success(newPart);
+            });
+
+            // If the transaction failed, delete the audio file.
+            if (result.IsFailure)
+            {
+                await _fileStorage.DeleteFile(fileLink);
+            }
+
+            return result;
         }
 
     }

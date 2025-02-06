@@ -1,6 +1,6 @@
-﻿namespace Kumadio.Web.Mappers.Base
+﻿namespace Kumadio.Core.Mappers.Base
 {
-    public abstract class BaseMapper<TSource, TDestination> : IMapper<TSource, TDestination>
+    public abstract class ModelMapper<TSource, TDestination> : IModelMapper<TSource, TDestination>
     {
         public TDestination? Map(TSource? source)
         {

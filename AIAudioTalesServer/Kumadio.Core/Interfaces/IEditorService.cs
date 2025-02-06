@@ -1,12 +1,13 @@
-﻿using AIAudioTalesServer.Web.DTOS;
+﻿using Kumadio.Core.Common;
+using Kumadio.Core.Models;
+using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Interfaces
 {
     public interface IEditorService
     {
-        Task<string?> UploadAsync(IFormFile file, HttpRequest request);
-        Task<DTOReturnPart?> AddRootPartAsync(DTOCreateRootPart root, HttpRequest request);
-        Task<DTOReturnPart?> AddBookPartAsync(DTOCreatePart part, HttpRequest request);
-        Task<int> AddBookAsync(DTOCreateBook dto, int creatorId);
+        Task<Result<BookPart>> AddRootPart(RootPartModel root, string host);
+        Task<Result<BookPart>> AddBookPart(PartModel part, string host);
+        Task<Result<Book>> AddBook(Book book);
     }
 }

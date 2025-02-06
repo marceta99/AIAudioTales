@@ -12,7 +12,7 @@ namespace Kumadio.Web.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IAuthService authService) // OVDE MORAM DA PROMENIM DA NE KORISTIM DIREKTNO repository u middleware nego service umesto repository
+        public async Task Invoke(HttpContext context, IAuthService authService)
         {
             var jwtTokenCookie = context.Request.Cookies["X-Access-Token"];
             if (!string.IsNullOrEmpty(jwtTokenCookie))

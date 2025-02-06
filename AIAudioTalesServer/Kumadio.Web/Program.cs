@@ -1,14 +1,6 @@
-using Kumadio.Core.Interfaces;
-using Kumadio.Core.Services;
-using Kumadio.Domain.Entities;
+using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Infrastructure.Data;
-using Kumadio.Infrastructure.Interfaces;
-using Kumadio.Infrastructure.Repositories;
-using Kumadio.Web.DTOS;
-using Kumadio.Web.DTOS.Auth;
-using Kumadio.Web.Mappers.Base;
-using Kumadio.Web.Mappers.BookMappers;
-using Kumadio.Web.Mappers.UserMappers;
+using Kumadio.Infrastructure.DiskFileStorage;
 using Kumadio.Web.Middlewares;
 using Kumadio.Web.ServiceRegistrations;
 using Kumadio.Web.Settings;
@@ -51,6 +43,8 @@ builder.Services
     .AddKumadioRepositories()
     .AddKumadioServices()
     .AddKumadioMappers();
+
+builder.Services.AddScoped<IFileStorage, DiskFileStorageService>();
 
 builder.Services.Configure<AppSettings>(
         builder.Configuration.GetSection("ApplicationSettings")

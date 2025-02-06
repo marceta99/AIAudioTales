@@ -4,7 +4,7 @@ using Kumadio.Web.Mappers.Base;
 
 namespace Kumadio.Web.Mappers.UserMappers
 {
-    public class UserToDTOReturnUserMapper : BaseMapper<User, DTOReturnUser>
+    public class UserToDTOReturnUserMapper : DtoMapper<User, DTOReturnUser>
     {
         public override DTOReturnUser MapCore(User source)
         {

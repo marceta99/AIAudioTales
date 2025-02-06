@@ -24,17 +24,17 @@ namespace AIAudioTalesServer.Web.Controllers
         private readonly IAuthService _authService;
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMapper<DTORegister, User> _registerMapper;
-        private readonly IMapper<DTORegisterCreator, User> _registerCreatorMapper;
-        private readonly IMapper<User, DTOReturnUser> _returnUserMapper;
+        private readonly IDtoMapper<DTORegister, User> _registerMapper;
+        private readonly IDtoMapper<DTORegisterCreator, User> _registerCreatorMapper;
+        private readonly IDtoMapper<User, DTOReturnUser> _returnUserMapper;
 
         public AuthController(
             IAuthService authService,
             IOptions<AppSettings> appSettings,
             IHttpContextAccessor httpContextAccessor,
-            IMapper<DTORegister, User> registerMapper, 
-            IMapper<DTORegisterCreator, User> registerCreatorMapper,
-            IMapper<User, DTOReturnUser> returnUserMapper)
+            IDtoMapper<DTORegister, User> registerMapper, 
+            IDtoMapper<DTORegisterCreator, User> registerCreatorMapper,
+            IDtoMapper<User, DTOReturnUser> returnUserMapper)
         {
             _authService = authService;
             _appSettings = appSettings.Value;

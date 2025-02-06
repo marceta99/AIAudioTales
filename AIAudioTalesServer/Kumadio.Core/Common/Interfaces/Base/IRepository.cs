@@ -7,6 +7,7 @@ namespace Kumadio.Core.Common.Interfaces.Base
         // Basic CRUD
         Task<T?> GetById(int id);
         Task Add(T entity);
+        Task<T> AddAndReturn(T entity);
         Task AddRange(IEnumerable<T> entities);
         void Update(T entity);
         void UpdateRange(IEnumerable<T> entities);

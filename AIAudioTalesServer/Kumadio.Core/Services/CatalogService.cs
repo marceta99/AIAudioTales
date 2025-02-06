@@ -1,6 +1,5 @@
 ﻿using Kumadio.Core.Common;
 using Kumadio.Core.Common.Interfaces;
-using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Core.Interfaces;
 using Kumadio.Core.Models;
 using Kumadio.Domain.Entities;
@@ -10,19 +9,16 @@ namespace Kumadio.Core.Services
 {
     public class CatalogService : ICatalogService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IBookRepository _bookRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IBookPartRepository _bookPartRepository;
 
         public CatalogService(
-            IUnitOfWork unitOfWork,
             IBookRepository bookRepository,
             ICategoryRepository categoryRepository, 
             IBookPartRepository bookPartRepository
             )
         {
-            _unitOfWork = unitOfWork;
             _bookRepository = bookRepository;
             _categoryRepository = categoryRepository;
             _bookPartRepository = bookPartRepository;
@@ -57,13 +53,13 @@ namespace Kumadio.Core.Services
         #endregion
 
         #region Parts
-        public async Task<Result<PartTree>> GetPartTree(int bookId)
+        public async Task<Result<PartTreeModel>> GetPartTree(int bookId)
         {
             var rootPart = await _bookPartRepository.GetRootPartAsync(bookId);
             if (rootPart == null) return DomainErrors.Catalog.RootPartNotFound;
 
             // Build the tree
-            var rootPartTree = new PartTree
+            var rootPartTree = new PartTreeModel
             {
                 PartId = rootPart.Id,
                 PartName = "Intro",
@@ -75,9 +71,9 @@ namespace Kumadio.Core.Services
             return rootPartTree;
         }
 
-        private async Task<IList<PartTree>> PopulateTree(IList<Answer>? answers)
+        private async Task<IList<PartTreeModel>> PopulateTree(IList<Answer>? answers)
         {
-            var partTreeList = new List<PartTree>();
+            var partTreeList = new List<PartTreeModel>();
             if (answers == null) return partTreeList;
 
             foreach (var answer in answers)
@@ -87,7 +83,7 @@ namespace Kumadio.Core.Services
                 var childPart = await _bookPartRepository.GetFirstWhere(bp => bp.Id == answer.NextPartId.Value);
                 if (childPart == null) continue;
 
-                var newTree = new PartTree
+                var newTree = new PartTreeModel
                 {
                     PartId = childPart.Id,
                     PartName = answer.Text,

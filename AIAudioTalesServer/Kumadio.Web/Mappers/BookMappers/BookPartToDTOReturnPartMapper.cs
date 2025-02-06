@@ -5,11 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Kumadio.Web.Mappers.BookMappers
 {
-    public class BookPartToDTOReturnPartMapper : BaseMapper<BookPart, DTOReturnPart>
+    public class BookPartToDTOReturnPartMapper : DtoMapper<BookPart, DTOReturnPart>
     {
-        private readonly IMapper<Answer, DTOReturnAnswer> _answerMapper;
+        private readonly IDtoMapper<Answer, DTOReturnAnswer> _answerMapper;
 
-        public BookPartToDTOReturnPartMapper(IMapper<Answer, DTOReturnAnswer> answerMapper)
+        public BookPartToDTOReturnPartMapper(IDtoMapper<Answer, DTOReturnAnswer> answerMapper)
         {
             _answerMapper = answerMapper;
         }

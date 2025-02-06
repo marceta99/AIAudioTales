@@ -4,11 +4,11 @@ using Kumadio.Web.Mappers.Base;
 
 namespace Kumadio.Web.Mappers.BookMappers
 {
-    public class BasketItemToDTOReturnBasketItemMapper : BaseMapper<BasketItem, DTOReturnBasketItem>
+    public class BasketItemToDTOReturnBasketItemMapper : DtoMapper<BasketItem, DTOReturnBasketItem>
     {
-        private readonly IMapper<Book, DTOReturnBook> _bookMapper;
+        private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
 
-        public BasketItemToDTOReturnBasketItemMapper(IMapper<Book, DTOReturnBook> bookMapper)
+        public BasketItemToDTOReturnBasketItemMapper(IDtoMapper<Book, DTOReturnBook> bookMapper)
         {
             _bookMapper = bookMapper;
         }

@@ -5,7 +5,7 @@ using Kumadio.Web.Mappers.Base;
 
 namespace Kumadio.Web.Mappers.UserMappers
 {
-    public class DTORegisterToUserMapper : BaseMapper<DTORegister, User>
+    public class DTORegisterToUserMapper : DtoMapper<DTORegister, User>
     {
         public override User MapCore(DTORegister source)
         {
