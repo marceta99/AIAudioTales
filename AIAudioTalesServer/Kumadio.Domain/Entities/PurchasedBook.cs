@@ -2,7 +2,7 @@
 
 namespace Kumadio.Domain.Entities
 {
-    public class PurchasedBooks
+    public class PurchasedBook
     {
         public int UserId { get; set; }
         public User User { get; set; }

@@ -23,7 +23,6 @@
 
         public static class Catalog
         {
-            public static Error BooksNotFound => new(ErrorCodes.BooksNotFound, "Books are not found.");
             public static Error CategoriesNotFound => new(ErrorCodes.CategoriesNotFound, "Categories are not found.");
             public static Error BookNotFound => new(ErrorCodes.BookNotFound, "Book with that id is not found.");
             public static Error BookPartNotFound => new(ErrorCodes.BookPartNotFound, "Book part with that id is not found.");

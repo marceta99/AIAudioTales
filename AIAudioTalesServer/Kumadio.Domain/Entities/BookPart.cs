@@ -9,7 +9,7 @@
         public int BookId { get; set; }
         public Answer ParentAnswer { get; set; }
         public IList<Answer> Answers { get; set; }
-        public IList<PurchasedBooks> PurchasedBooks { get; set; }
+        public IList<PurchasedBook> PurchasedBooks { get; set; }
 
     }
 }

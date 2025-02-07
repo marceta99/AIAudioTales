@@ -11,7 +11,7 @@
         public Category Category { get; set; }
         public int CreatorId { get; set; }
         public User Creator { get; set; }
-        public IList<PurchasedBooks> PurchasedBooks { get; set; }
+        public IList<PurchasedBook> PurchasedBooks { get; set; }
         public IList<BasketItem> BasketItems { get; set; }
         public IList<BookPart> BookParts { get; set; }
     }

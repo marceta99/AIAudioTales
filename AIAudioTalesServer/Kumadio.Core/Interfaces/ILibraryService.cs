@@ -1,15 +1,13 @@
-﻿using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Domain.Enums;
-using AIAudioTalesServer.Web.DTOS;
+﻿using Kumadio.Core.Common;
+using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Interfaces
 {
     public interface ILibraryService
     {
         // GET
-        Task<bool> UserHasBookAsync(int bookId, int userId);
-        Task<bool> IsBasketItemAsync(int bookId, int userId);
-        Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooksAsync(int userId);
+        Task<Result<bool>> UserHasBook(int bookId, int userId);
+        Task<Result<IList<PurchasedBook>>> GetPurchasedBooks(int userId);
         Task<IList<DTOReturnBook>> GetCreatorBooksAsync(int userId);
         Task<DTOReturnPurchasedBook?> GetPurchasedBookAsync(int userId, int bookId);
         Task<IList<string>> GetSearchHistoryAsync(int userId);

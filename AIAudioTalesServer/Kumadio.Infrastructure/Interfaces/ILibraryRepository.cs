@@ -10,10 +10,10 @@ namespace Kumadio.Infrastructure.Interfaces
     {
         Task<bool> UserHasBookAsync(int bookId, int userId);
         Task<bool> IsBasketItemAsync(int bookId, int userId);
-        Task<IList<PurchasedBooks>> GetPurchasedBooksAsync(int userId);
-        Task<PurchasedBooks?> GetCurrentPurchasedBookAsync(int userId);
+        Task<IList<PurchasedBook>> GetPurchasedBooksAsync(int userId);
+        Task<PurchasedBook?> GetCurrentPurchasedBookAsync(int userId);
 
-        Task<PurchasedBooks?> GetPurchasedBookAsync(int userId, int bookId);
+        Task<PurchasedBook?> GetPurchasedBookAsync(int userId, int bookId);
         Task<IList<string>> GetSearchHistoryAsync(int userId);
         Task<IList<BasketItem>> GetBasketItemsAsync(int userId);
         Task<IList<Book>> GetCreatorBooksAsync(int userId);
@@ -21,22 +21,22 @@ namespace Kumadio.Infrastructure.Interfaces
         // POST
         Task AddNewSearchTermAsync(int userId, string searchTerm);
         Task<BasketItem?> AddBasketItemAsync(int userId, int bookId);
-        Task AddPurchasedBooksAsync(IList<PurchasedBooks> purchases);
+        Task AddPurchasedBooksAsync(IList<PurchasedBook> purchases);
 
 
         // PATCH
         Task<bool> AddToLibraryAsync(User user, int bookId);
-        Task<PurchasedBooks?> GetPurchaseBySessionIdAsync(string sessionId);
-        Task UpdatePurchaseAsync(PurchasedBooks purchase);
-        Task UpdatePurchasedBooksAsync(IEnumerable<PurchasedBooks> purchases);
+        Task<PurchasedBook?> GetPurchaseBySessionIdAsync(string sessionId);
+        Task UpdatePurchaseAsync(PurchasedBook purchase);
+        Task UpdatePurchasedBooksAsync(IEnumerable<PurchasedBook> purchases);
 
         // DELETE
         Task RemoveBasketItemAsync(BasketItem item);
         Task RemoveBasketItemsAsync(int userId);
-        Task RemovePurchasedBooksAsync(IEnumerable<PurchasedBooks> purchases);
+        Task RemovePurchasedBooksAsync(IEnumerable<PurchasedBook> purchases);
 
         // Additional convenience queries
-        Task<IList<PurchasedBooks>> GetPendingPurchasesAsync(User user);
+        Task<IList<PurchasedBook>> GetPendingPurchasesAsync(User user);
 
         Task<bool> RemoveUserPendingPurchases(User user);
         Task PurchaseBooks(int userId, IList<int> bookIds, PurchaseType purchaseType, Language language, string sessionId);

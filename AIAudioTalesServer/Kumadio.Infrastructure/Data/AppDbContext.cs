@@ -10,7 +10,7 @@ namespace Kumadio.Infrastructure.Data
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
-        public DbSet<PurchasedBooks> PurchasedBooks { get; set; }
+        public DbSet<PurchasedBook> PurchasedBooks { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
         public DbSet<Category> BookCategories { get; set; }
@@ -143,22 +143,22 @@ namespace Kumadio.Infrastructure.Data
 
             #region PurchasedBooks
 
-            modelBuilder.Entity<PurchasedBooks>().HasKey(pb => new { pb.UserId, pb.BookId });
+            modelBuilder.Entity<PurchasedBook>().HasKey(pb => new { pb.UserId, pb.BookId });
 
-            modelBuilder.Entity<PurchasedBooks>()
+            modelBuilder.Entity<PurchasedBook>()
             .HasOne(pb => pb.User)
             .WithMany(u => u.PurchasedBooks)
             .HasForeignKey(pb => pb.UserId)
             .OnDelete(DeleteBehavior.NoAction);
 
 
-            modelBuilder.Entity<PurchasedBooks>()
+            modelBuilder.Entity<PurchasedBook>()
             .HasOne(pb => pb.Book)
             .WithMany(b => b.PurchasedBooks)
             .HasForeignKey(pb => pb.BookId)
             .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<PurchasedBooks>()
+            modelBuilder.Entity<PurchasedBook>()
             .HasOne(pb => pb.PlayingPart)
             .WithMany(p => p.PurchasedBooks)
             .HasForeignKey(pb => pb.PlayingPartId)
@@ -213,7 +213,7 @@ namespace Kumadio.Infrastructure.Data
                 .Property(b => b.Price)
                 .HasColumnType("decimal(18, 2)");
 
-            modelBuilder.Entity<PurchasedBooks>()
+            modelBuilder.Entity<PurchasedBook>()
                 .Property(p => p.PlayingPosition)
                 .HasColumnType("decimal(18, 2)");
 

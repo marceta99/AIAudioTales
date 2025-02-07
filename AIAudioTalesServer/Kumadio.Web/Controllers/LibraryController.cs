@@ -1,8 +1,9 @@
-﻿using AIAudioTalesServer.Core.Interfaces;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Settings;
-using AIAudioTalesServer.Web.DTOS;
-using Microsoft.AspNetCore.Http;
+﻿using Kumadio.Core.Interfaces;
+using Kumadio.Core.Services;
+using Kumadio.Domain.Entities;
+using Kumadio.Web.Common;
+using Kumadio.Web.DTOS;
+using Kumadio.Web.Mappers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -16,46 +17,46 @@ namespace AIAudioTalesServer.Web.Controllers
     public class LibraryController : ControllerBase
     {
         private readonly ILibraryService _libraryService;
+        private readonly IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> _pbMapper;
         private readonly OpenAISettings _openAISettings;
-        public LibraryController(ILibraryService libraryService, IOptions<OpenAISettings> openAISettings)
+        public LibraryController(
+            ILibraryService libraryService,
+            IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> pbMapper,
+            IOptions<OpenAISettings> openAISettings)
         {
             _libraryService = libraryService;
+            _pbMapper = pbMapper;
             _openAISettings = openAISettings.Value;
         }
 
         #region GET
 
-        [HttpGet("UserHasBook/{bookId}")]
+        [HttpGet("user-has-book/{bookId}")]
         public async Task<ActionResult<bool>> UserHasBook(int bookId)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            bool hasBook = await _libraryService.UserHasBookAsync(bookId, user.Id);
-            return Ok(hasBook);
+            var hasBookResult = await _libraryService.UserHasBook(bookId, user.Id);
+            if (hasBookResult.IsFailure) return hasBookResult.Error.ToBadRequest();
+
+            return Ok(hasBookResult.Value);
         }
 
-        [HttpGet("IsBasketItem/{bookId}")]
-        public async Task<ActionResult<bool>> IsBasketItem(int bookId)
-        {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
 
-            bool isBasket = await _libraryService.IsBasketItemAsync(bookId, user.Id);
-            return Ok(isBasket);
-        }
-
-        [HttpGet("GetPurchasedBooks")]
+        [HttpGet("purchased-books")]
         public async Task<ActionResult<IList<DTOReturnPurchasedBook>>> GetPurchasedBooks()
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.GetPurchasedBooksAsync(user.Id);
-            return Ok(result);
+            var pbResult = await _libraryService.GetPurchasedBooks(user.Id);
+            if (pbResult.IsFailure) return pbResult.Error.ToBadRequest();
+            
+            return Ok(_pbMapper.Map(pbResult.Value));
         }
 
-        [HttpGet("GetCreatorBooks")]
+        [HttpGet("creator/books")]
         public async Task<ActionResult<IList<DTOReturnBook>>> GetCreatorBooks()
         {
             var user = HttpContext.Items["CurrentUser"] as User;

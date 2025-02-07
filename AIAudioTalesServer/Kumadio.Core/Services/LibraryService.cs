@@ -1,73 +1,37 @@
-﻿using AIAudioTalesServer.Core.Interfaces;
-using AIAudioTalesServer.Domain.Entities;
-using AIAudioTalesServer.Domain.Enums;
-using AIAudioTalesServer.Infrastructure.Interfaces;
-using AIAudioTalesServer.Infrastructure.Repositories;
-using AIAudioTalesServer.Web.DTOS;
-using AutoMapper;
+﻿using Kumadio.Core.Common;
+using Kumadio.Core.Common.Interfaces;
 using Kumadio.Core.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
+using Kumadio.Domain.Entities;
+using Kumadio.Domain.Enums;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Kumadio.Core.Services
 {
     public class LibraryService : ILibraryService
     {
-        private readonly ILibraryRepository _libraryRepository;
         private readonly ICatalogService _catalogService;
-        private readonly IMapper _mapper;
-        private readonly IMemoryCache _cache;  
+        private readonly IPurchasedBookRepository _purchasedBookRepository;
 
-        public LibraryService(
-            ILibraryRepository libraryRepository,
-            ICatalogService catalogService,
-            IMapper mapper,
-            IMemoryCache cache)
+        public LibraryService(ICatalogService catalogService, IPurchasedBookRepository purchasedBookRepository)
         {
-            _libraryRepository = libraryRepository;
             _catalogService = catalogService;
-            _mapper = mapper;
-            _cache = cache;
+            _purchasedBookRepository = purchasedBookRepository;
         }
 
         // GET
 
-        public async Task<bool> UserHasBookAsync(int bookId, int userId)
+        public async Task<Result<bool>> UserHasBook(int bookId, int userId)
         {
-            return await _libraryRepository.UserHasBookAsync(bookId, userId);
+            return await _purchasedBookRepository.Any(pb => pb.BookId == bookId
+                                                          && pb.UserId == userId
+                                                          && pb.PurchaseStatus == PurchaseStatus.Success);   
         }
 
-        public async Task<bool> IsBasketItemAsync(int bookId, int userId)
+        public async Task<Result<IList<PurchasedBook>>> GetPurchasedBooks(int userId)
         {
-            return await _libraryRepository.IsBasketItemAsync(bookId, userId);
-        }
+            var purchasedBooks = await _purchasedBookRepository.GetPurchasedBooks(userId);
 
-        public async Task<IList<DTOReturnPurchasedBook>> GetPurchasedBooksAsync(int userId)
-        {
-            var purchasedBooks = await _libraryRepository.GetPurchasedBooksAsync(userId);
-            // Map each purchased domain entity to a DTOReturnPurchasedBook
-            var results = new List<DTOReturnPurchasedBook>();
-
-            foreach (var pb in purchasedBooks)
-            {
-                var domainBook = await _catalogService.GetBookAsync(pb.BookId);
-                if (domainBook == null) continue;
-
-                var dto = new DTOReturnPurchasedBook
-                {
-                    Id = domainBook.Id,
-                    Description = domainBook.Description,
-                    Title = domainBook.Title,
-                    ImageURL = domainBook.ImageURL,
-                    PurchaseType = pb.PurchaseType,
-                    Language = pb.Language,
-                    PlayingPart = _mapper.Map<DTOReturnPart>(pb.PlayingPart),
-                    PlayingPosition = pb.PlayingPosition,
-                    IsBookPlaying = pb.IsBookPlaying,
-                    QuestionsActive = pb.QuestionsActive
-                };
-                results.Add(dto);
-            }
-            return results;
+            return Result<IList<PurchasedBook>>.Success(purchasedBooks);
         }
 
         public async Task<IList<DTOReturnBook>> GetCreatorBooksAsync(int userId)

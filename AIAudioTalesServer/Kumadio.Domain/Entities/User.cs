@@ -12,7 +12,7 @@ namespace Kumadio.Domain.Entities
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; }
         public IList<Book> CreatedBooks { get; set; }
-        public IList<PurchasedBooks> PurchasedBooks { get; set; }
+        public IList<PurchasedBook> PurchasedBooks { get; set; }
         public IList<BasketItem> BasketItems { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public SearchHistory SearchHistory { get; set; }

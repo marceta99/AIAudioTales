@@ -37,7 +37,6 @@ namespace Kumadio.Core.Services
         {
             var skip = (pageNumber - 1) * pageSize;
             var books = await _bookRepository.GetBooks(categoryId, skip, pageSize);
-            if (books == null) return DomainErrors.Catalog.BooksNotFound;
 
             return Result<IList<Book>>.Success(books);
         }
@@ -46,7 +45,6 @@ namespace Kumadio.Core.Services
         {
             var skip = (pageNumber - 1) * pageSize;
             var books = await _bookRepository.SearchBooks(searchTerm, skip, pageSize);
-            if (books == null) return DomainErrors.Catalog.BooksNotFound;
 
             return Result<IList<Book>>.Success(books);
         }

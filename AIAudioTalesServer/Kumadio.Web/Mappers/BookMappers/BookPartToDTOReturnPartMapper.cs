@@ -1,7 +1,6 @@
 ﻿using Kumadio.Domain.Entities;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Kumadio.Web.Mappers.BookMappers
 {

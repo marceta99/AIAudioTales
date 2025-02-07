@@ -17,7 +17,6 @@
         public const string UserNull = "USER_NULL";
 
         // Catalog
-        public const string BooksNotFound = "BOOKS_NOT_FOUND";
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";
         public const string BookPartNotFound = "BOOK_PART_NOT_FOUND";
         public const string RootPartNotFound = "ROOT_PART_NOT_FOUND";

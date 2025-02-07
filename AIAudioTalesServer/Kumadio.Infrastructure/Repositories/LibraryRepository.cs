@@ -33,7 +33,7 @@ namespace Kumadio.Infrastructure.Repositories
             return (basketItem != null);
         }
 
-        public async Task<IList<PurchasedBooks>> GetPurchasedBooksAsync(int userId)
+        public async Task<IList<PurchasedBook>> GetPurchasedBooksAsync(int userId)
         {
             return await _dbContext.PurchasedBooks
                 .Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success)
@@ -41,7 +41,7 @@ namespace Kumadio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PurchasedBooks?> GetCurrentPurchasedBookAsync(int userId)
+        public async Task<PurchasedBook?> GetCurrentPurchasedBookAsync(int userId)
         {
             return await _dbContext.PurchasedBooks
                 .Where(pb => pb.UserId == userId
@@ -58,7 +58,7 @@ namespace Kumadio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PurchasedBooks?> GetPurchasedBookAsync(int userId, int bookId)
+        public async Task<PurchasedBook?> GetPurchasedBookAsync(int userId, int bookId)
         {
             return await _dbContext.PurchasedBooks
                 .FirstOrDefaultAsync(pb => pb.UserId == userId
@@ -114,7 +114,7 @@ namespace Kumadio.Infrastructure.Repositories
             return basketItem;
         }
 
-        public async Task AddPurchasedBooksAsync(IList<PurchasedBooks> purchases)
+        public async Task AddPurchasedBooksAsync(IList<PurchasedBook> purchases)
         {
             await _dbContext.PurchasedBooks.AddRangeAsync(purchases);
             await _dbContext.SaveChangesAsync();
@@ -132,7 +132,7 @@ namespace Kumadio.Infrastructure.Repositories
             var rootPart = await GetRootPartAsync(book.Id);
             if (rootPart == null) return false;
 
-            var pb = new PurchasedBooks
+            var pb = new PurchasedBook
             {
                 BookId = book.Id,
                 UserId = user.Id,
@@ -159,19 +159,19 @@ namespace Kumadio.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<PurchasedBooks?> GetPurchaseBySessionIdAsync(string sessionId)
+        public async Task<PurchasedBook?> GetPurchaseBySessionIdAsync(string sessionId)
         {
             return await _dbContext.PurchasedBooks
                 .FirstOrDefaultAsync(pb => pb.SessionId == sessionId);
         }
 
-        public async Task UpdatePurchaseAsync(PurchasedBooks purchase)
+        public async Task UpdatePurchaseAsync(PurchasedBook purchase)
         {
             _dbContext.PurchasedBooks.Update(purchase);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdatePurchasedBooksAsync(IEnumerable<PurchasedBooks> purchases)
+        public async Task UpdatePurchasedBooksAsync(IEnumerable<PurchasedBook> purchases)
         {
             _dbContext.PurchasedBooks.UpdateRange(purchases);
             await _dbContext.SaveChangesAsync();
@@ -193,13 +193,13 @@ namespace Kumadio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task RemovePurchasedBooksAsync(IEnumerable<PurchasedBooks> purchases)
+        public async Task RemovePurchasedBooksAsync(IEnumerable<PurchasedBook> purchases)
         {
             _dbContext.PurchasedBooks.RemoveRange(purchases);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IList<PurchasedBooks>> GetPendingPurchasesAsync(User user)
+        public async Task<IList<PurchasedBook>> GetPendingPurchasesAsync(User user)
         {
             return await _dbContext.PurchasedBooks
                 .Where(pb => pb.UserId == user.Id && pb.PurchaseStatus == PurchaseStatus.Pending)
@@ -236,11 +236,11 @@ namespace Kumadio.Infrastructure.Repositories
             Language language,
             string sessionId)
         {
-            var purchasedBooks = new List<PurchasedBooks>();
+            var purchasedBooks = new List<PurchasedBook>();
 
             foreach (var bookId in bookIds)
             {
-                var pb = new PurchasedBooks
+                var pb = new PurchasedBook
                 {
                     BookId = bookId,
                     UserId = userId,

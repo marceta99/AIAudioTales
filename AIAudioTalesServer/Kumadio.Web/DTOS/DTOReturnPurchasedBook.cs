@@ -1,8 +1,11 @@
-﻿namespace Kumadio.Web.DTOS
+﻿using Kumadio.Domain.Entities;
+using Kumadio.Domain.Enums;
+
+namespace Kumadio.Web.DTOS
 {
     public class DTOReturnPurchasedBook
     {
-        public int Id { get; set; }
+        public int BookId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string ImageURL { get; set; }
