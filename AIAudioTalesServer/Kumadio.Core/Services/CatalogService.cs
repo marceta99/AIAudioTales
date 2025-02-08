@@ -53,7 +53,7 @@ namespace Kumadio.Core.Services
         #region Parts
         public async Task<Result<PartTreeModel>> GetPartTree(int bookId)
         {
-            var rootPart = await _bookPartRepository.GetRootPartAsync(bookId);
+            var rootPart = await _bookPartRepository.GetRootPart(bookId);
             if (rootPart == null) return DomainErrors.Catalog.RootPartNotFound;
 
             // Build the tree

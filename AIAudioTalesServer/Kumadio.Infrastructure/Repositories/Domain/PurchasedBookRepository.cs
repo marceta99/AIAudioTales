@@ -16,8 +16,7 @@ namespace Kumadio.Infrastructure.Repositories.Domain
         public async Task<IList<PurchasedBook>> GetPurchasedBooks(int userId)
         {
             return await _dbSet
-                .Where(pb => pb.UserId == userId
-                          && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Where(pb => pb.UserId == userId)
                 .Include(pb => pb.Book)
                 .Include(pb => pb.PlayingPart)
                 .ThenInclude(bp => bp.Answers)
@@ -28,12 +27,28 @@ namespace Kumadio.Infrastructure.Repositories.Domain
         {
             return await _dbSet
                 .Where(pb => pb.UserId == userId
-                          && pb.IsBookPlaying == true
-                          && pb.PurchaseStatus == PurchaseStatus.Success)
+                          && pb.IsBookPlaying == true)
                 .Include(pb => pb.Book)
                 .Include(pb => pb.PlayingPart)
                 .ThenInclude(bp => bp.Answers)
                 .FirstOrDefaultAsync();
         }
+        public async Task<PurchasedBook?> GetPurchasedBook(int userId, int bookId)
+        {
+            return await _dbSet
+                .Where(pb => pb.UserId == userId && pb.BookId == bookId)
+                .Include(pb => pb.Book)
+                .Include(pb => pb.PlayingPart)
+                .ThenInclude(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+        }
+
+        public PurchasedBook UpdatePurchasedBook(PurchasedBook purchasedBook)
+        {
+            var pb = _dbSet.Update(purchasedBook).Include(pb => pb.Book)
+                .Include(pb => pb.PlayingPart)
+                .ThenInclude(bp => bp.Answers);
+        }
+
     }
 }

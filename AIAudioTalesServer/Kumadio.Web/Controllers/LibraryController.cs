@@ -113,30 +113,21 @@ namespace AIAudioTalesServer.Web.Controllers
 
         #region POST
 
-        [HttpPost("SaveSearchTerm")]
-        public async Task<IActionResult> SaveSearchTerm([FromQuery] string searchTerm)
+        [HttpPost("search-term")]
+        public async Task<IActionResult> AddSearchTerm([FromQuery] string searchTerm)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            await _libraryService.SaveSearchTermAsync(user.Id, searchTerm);
+            var addTermResult =  await _libraryService.AddSearchTerm(user.Id, searchTerm);
+            if (addTermResult.IsFailure) return addTermResult.Error.ToBadRequest(); 
+
             return Ok();
         }
 
-        [HttpPost("AddBasketItem")]
-        public async Task<ActionResult<DTOBasket>> AddBasketItem([FromQuery] int bookId)
+        [HttpPost("process-response")]
+        public async Task<IActionResult> ProcessResponse([FromBody] DTOUserResponse dto)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var basket = await _libraryService.AddBasketItemAsync(user.Id, bookId);
-            return Ok(basket);
-        }
-
-        [HttpPost("ProcessChildResponse")]
-        public async Task<IActionResult> ProcessChildResponse([FromBody] DTOChildResponse dto)
-        {
-            // Example using OpenAI. 
             var apiKey = _openAISettings.ApiKey;
             var apiUrl = _openAISettings.ApiUrl;
             var model = _openAISettings.Model;
@@ -157,6 +148,7 @@ namespace AIAudioTalesServer.Web.Controllers
                 Encoding.UTF8,
                 "application/json"
             );
+
             try
             {
                 var response = await client.PostAsync(apiUrl, content);
@@ -179,26 +171,28 @@ namespace AIAudioTalesServer.Web.Controllers
 
         #region PATCH
 
-        [HttpPost("AddToLibrary/{bookId}")]
+        [HttpPost("library/{bookId}")]
         public async Task<IActionResult> AddToLibrary(int bookId)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var success = await _libraryService.AddToLibraryAsync(user, bookId);
-            if (!success) return BadRequest("Could not add book to library");
+            var libraryResult = await _libraryService.AddToLibrary(user, bookId);
+            if (libraryResult.IsFailure) return libraryResult.Error.ToBadRequest();
+
             return Ok();
         }
 
-        [HttpPatch("NextPart")]
+        [HttpPatch("next-part")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart([FromBody] DTOUpdateNextPart nextPart)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.NextPartAsync(nextPart, user.Id);
-            if (result == null) return BadRequest("No part or purchase found");
-            return Ok(result);
+            var nextPartResult = await _libraryService.NextPart(nextPart.BookId, nextPart.NextPartId, user.Id);
+            if (nextPartResult.IsFailure) return nextPartResult.Error.ToBadRequest();
+
+            return Ok(_pbMapper.Map(nextPartResult.Value));
         }
 
         [HttpPatch("ActivateQuestions")]

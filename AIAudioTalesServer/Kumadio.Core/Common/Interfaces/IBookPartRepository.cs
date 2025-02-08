@@ -5,6 +5,6 @@ namespace Kumadio.Core.Common.Interfaces
 {
     public interface IBookPartRepository : IRepository<BookPart>
     {
-        Task<BookPart?> GetRootPartAsync(int bookId);
+        Task<BookPart?> GetRootPart(int bookId);
     }
 }

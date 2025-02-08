@@ -1,5 +1,6 @@
 ﻿using Kumadio.Core.Common;
 using Kumadio.Core.Common.Interfaces;
+using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Core.Interfaces;
 using Kumadio.Domain.Entities;
 using Kumadio.Domain.Enums;
@@ -11,22 +12,26 @@ namespace Kumadio.Core.Services
     {
         private readonly ICatalogService _catalogService;
         private readonly IBookRepository _bookRepository;
+        private readonly IBookPartRepository _bookPartRepository;
         private readonly ISearchHistoryRepository _searchHistoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IPurchasedBookRepository _purchasedBookRepository;
 
         public LibraryService(
             ICatalogService catalogService,
             IBookRepository bookRepository,
+            IBookPartRepository bookPartRepository,
             ISearchHistoryRepository searchHistoryRepository,
+            IUnitOfWork unitOfWork,
             IPurchasedBookRepository purchasedBookRepository)
         {
             _catalogService = catalogService;
             _bookRepository = bookRepository;
+            _bookPartRepository = bookPartRepository;
             _searchHistoryRepository = searchHistoryRepository;
+            _unitOfWork = unitOfWork;
             _purchasedBookRepository = purchasedBookRepository;
         }
-
-        // GET
 
         public async Task<Result<bool>> UserHasBook(int bookId, int userId)
         {
@@ -53,9 +58,8 @@ namespace Kumadio.Core.Services
         public async Task<Result<PurchasedBook>> GetPurchasedBook(int userId, int bookId)
         {
             var pb = await _purchasedBookRepository
-                .GetFirstWhere(pb => pb.UserId == userId
-                                  && pb.BookId == bookId
-                                  && pb.PurchaseStatus == PurchaseStatus.Success);
+                            .GetFirstWhere(pb => pb.UserId == userId
+                                                && pb.BookId == bookId);
             
             if (pb == null) return DomainErrors.Library.PurchasedBookNotFound;
 
@@ -80,70 +84,69 @@ namespace Kumadio.Core.Services
 
         // POST
 
-
-        public async Task<DTOBasket> AddBasketItemAsync(int userId, int bookId)
-        {
-            var basketItem = await _libraryRepository.AddBasketItemAsync(userId, bookId);
-            if (basketItem == null)
-                return new DTOBasket { BasketItems = new List<DTOReturnBasketItem>(), TotalPrice = 0 };
-
-            // Return updated basket
-            return await GetBasketAsync(userId);
-        }
-
-        public async Task SaveSearchTermAsync(int userId, string searchTerm)
+        public async Task<Result> AddSearchTerm(int userId, string searchTerm)
         {
             // You can do checks (like limiting to 15) here or in the repo
-            await _libraryRepository.AddNewSearchTermAsync(userId, searchTerm);
+            var search = new SearchHistory
+            {
+                UserId = userId,
+                SearchTerm = searchTerm,
+                SearchDate = DateTime.UtcNow
+            };
+
+            return await _unitOfWork.ExecuteInTransaction(async () => 
+            {
+                await _searchHistoryRepository.Add(search);
+
+                return Result.Success();
+            });
         }
 
         // PATCH
-        public async Task<bool> AddToLibraryAsync(User user, int bookId)
+        public async Task<Result> AddToLibrary(User user, int bookId)
         {
+            var book = await _bookRepository.GetFirstWhere(b => b.Id == bookId);
+            var rootPart = await _bookPartRepository.GetRootPart(bookId);
+            if (book == null || rootPart == null) return DomainErrors.Library.InvalidBook;
 
-            return await _libraryRepository.AddToLibraryAsync(user, bookId);
-        }
-
-        public async Task<bool> UpdatePurchaseStatusAsync(string sessionId)
-        {
-            var purchase = await _libraryRepository.GetPurchaseBySessionIdAsync(sessionId);
-            if (purchase == null) return false;
-
-            purchase.PurchaseStatus = PurchaseStatus.Success;
-            await _libraryRepository.UpdatePurchaseAsync(purchase);
-            return true;
-        }
-
-
-        public async Task<DTOReturnPurchasedBook?> NextPartAsync(DTOUpdateNextPart dto, int userId)
-        {
-            var pb = await _libraryRepository.GetPurchasedBookAsync(userId, dto.BookId);
-            if (pb == null) return null;
-
-            pb.PlayingPartId = dto.NextPartId;
-            pb.PlayingPosition = 0;
-            pb.QuestionsActive = false;
-            await _libraryRepository.UpdatePurchaseAsync(pb);
-
-            var playingPart = await _catalogService.GetPartAsync(dto.NextPartId);
-            if (playingPart == null) return null;
-
-            var domainBook = await _catalogService.GetBookAsync(pb.BookId);
-            if (domainBook == null) return null;
-
-            return new DTOReturnPurchasedBook
+            var pb = new PurchasedBook
             {
-                Id = domainBook.Id,
-                Description = domainBook.Description,
-                Title = domainBook.Title,
-                ImageURL = domainBook.ImageURL,
-                PurchaseType = pb.PurchaseType,
-                Language = pb.Language,
-                PlayingPart = _mapper.Map<DTOReturnPart>(playingPart),
-                PlayingPosition = pb.PlayingPosition,
-                IsBookPlaying = pb.IsBookPlaying,
-                QuestionsActive = pb.QuestionsActive
+                BookId = book.Id,
+                UserId = user.Id,
+                PurchaseType = PurchaseType.Enroled,
+                Language = Language.ENGLISH_UK,
+                PlayingPartId = rootPart.Id,
+                PlayingPosition = 0,
+                IsBookPlaying = false,
+                QuestionsActive = false
             };
+
+            return await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                await _purchasedBookRepository.Add(pb);
+
+                return Result.Success();
+            });
+        }
+
+        public async Task<Result<PurchasedBook>> NextPart(int bookId, int nextPartId, int userId)
+        {
+            return await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var pb = await _purchasedBookRepository.GetPurchasedBook(userId, bookId);
+                if (pb == null) return DomainErrors.Library.PurchasedBookNotFound;
+
+                var playingPart = await _bookPartRepository.GetFirstWhere(p => p.Id == nextPartId);
+                if (playingPart == null) return DomainErrors.Library.NextPartNotFound;
+
+                pb.PlayingPartId = nextPartId;
+                pb.PlayingPosition = 0;
+                pb.QuestionsActive = false;
+
+                pb.PlayingPart = playingPart;
+
+                return Result<PurchasedBook>.Success(pb);
+            });
         }
 
         public async Task<DTOReturnPurchasedBook?> ActivateQuestionsAsync(int bookId, int userId, decimal playingPosition)

@@ -23,11 +23,13 @@
 
         // Editor
         public const string SaveFileFailed = "SAVE_FILE_FAILED";
-        public const string InvalidParentAnswer = "InvalidParentAnswer";
+        public const string InvalidParentAnswer = "INVALID_PARENT_ANSWER";
 
         // Library
         public const string PurchasedBookNotFound = "PURCHASED_BOOK_NOT_FOUND";
         public const string CurrentBookNotFound = "CURRENT_BOOK_NOT_FOUND";
+        public const string InvalidBook = "INVALID_BOOK";
+        public const string NextPartNotFound = "NEXT_PART_NOT_FOUND";
 
         // Common
         public const string BookNotFound = "BOOK_NOT_FOUND";

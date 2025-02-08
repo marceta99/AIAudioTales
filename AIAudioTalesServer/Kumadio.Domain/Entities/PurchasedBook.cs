@@ -15,7 +15,5 @@ namespace Kumadio.Domain.Entities
         public bool QuestionsActive { get; set; } // this boolean represent if user is on part of the book where he need to select question answer
         public PurchaseType PurchaseType { get; set; }
         public Language Language { get; set; }
-        public PurchaseStatus PurchaseStatus { get; set; }
-        public string SessionId { get; set; }
     }
 }

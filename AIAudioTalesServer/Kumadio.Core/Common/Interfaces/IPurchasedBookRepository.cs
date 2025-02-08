@@ -7,5 +7,7 @@ namespace Kumadio.Core.Common.Interfaces
     {
         Task<IList<PurchasedBook>> GetPurchasedBooks(int userId);
         Task<PurchasedBook?> GetCurrentBook(int userId);
+        Task<PurchasedBook?> GetPurchasedBook(int userId, int bookId);
+        Task<PurchasedBook> UpdatePurchasedBook(PurchasedBook purchasedBook);
     }
 }

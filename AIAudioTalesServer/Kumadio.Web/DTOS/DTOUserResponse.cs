@@ -1,6 +1,6 @@
 ﻿namespace Kumadio.Web.DTOS
 {
-    public class DTOChildResponse
+    public class DTOUserResponse
     {
         public string Prompt { get; set; }
     }

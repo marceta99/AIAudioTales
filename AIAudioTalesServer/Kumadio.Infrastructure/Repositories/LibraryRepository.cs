@@ -90,22 +90,6 @@ namespace Kumadio.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<BasketItem?> AddBasketItemAsync(int userId, int bookId)
-        {
-            var book = await _dbContext.Books.FindAsync(bookId);
-            if (book == null) return null;
-
-            var basketItem = new BasketItem
-            {
-                UserId = userId,
-                BookId = bookId,
-                ItemPrice = book.Price
-            };
-            await _dbContext.BasketItems.AddAsync(basketItem);
-            await _dbContext.SaveChangesAsync();
-            return basketItem;
-        }
-
         public async Task AddPurchasedBooksAsync(IList<PurchasedBook> purchases)
         {
             await _dbContext.PurchasedBooks.AddRangeAsync(purchases);

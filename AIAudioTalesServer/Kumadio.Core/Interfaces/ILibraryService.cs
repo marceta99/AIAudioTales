@@ -14,13 +14,11 @@ namespace Kumadio.Core.Interfaces
         Task<Result<PurchasedBook>> GetCurrentBook(int userId);
 
         // POST
-        Task<DTOBasket> AddBasketItemAsync(int userId, int bookId);
-        Task SaveSearchTermAsync(int userId, string searchTerm);
+        Task<Result> AddSearchTerm(int userId, string searchTerm);
 
         // PATCH
-        Task<bool> AddToLibraryAsync(User user, int bookId);
-        Task<bool> UpdatePurchaseStatusAsync(string sessionId);
-        Task<DTOReturnPurchasedBook?> NextPartAsync(DTOUpdateNextPart dto, int userId);
+        Task<Result> AddToLibrary(User user, int bookId);
+        Task<Result<PurchasedBook>> NextPart(int bookId, int nextPartId, int userId);
         Task<DTOReturnPurchasedBook?> ActivateQuestionsAsync(int bookId, int userId, decimal playingPosition);
         Task<DTOReturnPurchasedBook?> UpdateProgressAsync(DTOUpdateProgress dto, int userId);
         Task<DTOReturnPurchasedBook?> StartBookAgainAsync(int bookId, int userId);

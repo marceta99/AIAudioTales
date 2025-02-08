@@ -12,7 +12,7 @@ namespace Kumadio.Infrastructure.Repositories.Domain
         {
         }
 
-        public async Task<BookPart?> GetRootPartAsync(int bookId)
+        public async Task<BookPart?> GetRootPart(int bookId)
         {
             return await _dbSet
                 .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
