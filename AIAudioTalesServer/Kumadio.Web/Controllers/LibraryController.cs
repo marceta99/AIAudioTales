@@ -1,9 +1,9 @@
 ﻿using Kumadio.Core.Interfaces;
-using Kumadio.Core.Services;
 using Kumadio.Domain.Entities;
 using Kumadio.Web.Common;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
+using Kumadio.Web.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -18,14 +18,17 @@ namespace AIAudioTalesServer.Web.Controllers
     {
         private readonly ILibraryService _libraryService;
         private readonly IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> _pbMapper;
+        private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
         private readonly OpenAISettings _openAISettings;
         public LibraryController(
             ILibraryService libraryService,
             IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> pbMapper,
+            IDtoMapper<Book, DTOReturnBook> bookMapper,
             IOptions<OpenAISettings> openAISettings)
         {
             _libraryService = libraryService;
             _pbMapper = pbMapper;
+            _bookMapper = bookMapper;
             _openAISettings = openAISettings.Value;
         }
 
@@ -62,54 +65,48 @@ namespace AIAudioTalesServer.Web.Controllers
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.GetCreatorBooksAsync(user.Id);
-            return Ok(result);
+            var booksResult = await _libraryService.GetCreatorBooks(user.Id);
+            if (booksResult.IsFailure) return booksResult.Error.ToBadRequest();
+
+            return Ok(_bookMapper.Map(booksResult.Value));
         }
 
-        [HttpGet("GetBasket")]
-        public async Task<ActionResult<DTOBasket>> GetBasket()
-        {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var basket = await _libraryService.GetBasketAsync(user.Id);
-            return Ok(basket);
-        }
-
-        [HttpGet("GetPurchasedBook/{bookId}")]
+        [HttpGet("purchased-book/{bookId}")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> GetPurchasedBook(int bookId)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var purchased = await _libraryService.GetPurchasedBookAsync(user.Id, bookId);
-            if (purchased == null) return BadRequest("User does not have that book.");
-            return Ok(purchased);
+            var pbResult = await _libraryService.GetPurchasedBook(user.Id, bookId);
+            if (pbResult.IsFailure) return pbResult.Error.ToBadRequest();
+            
+            return Ok(_pbMapper.Map(pbResult.Value));
         }
 
 
 
-        [HttpGet("GetSearchHistory")]
+        [HttpGet("search-history")]
         public async Task<ActionResult<IList<string>>> GetSearchHistory()
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var history = await _libraryService.GetSearchHistoryAsync(user.Id);
-            return Ok(history);
+            var historyResult = await _libraryService.GetSearchHistory(user.Id);
+            if (historyResult.IsFailure) return historyResult.Error.ToBadRequest();
+
+            return Ok(historyResult.Value);
         }
 
-
-
-        [HttpGet("GetCurrentBook")]
+        [HttpGet("current-book")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> GetCurrentBook()
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var current = await _libraryService.GetCurrentBookAsync(user.Id);
-            if (current == null) return BadRequest("No current book for this user");
-            return Ok(current);
+            var currentResult = await _libraryService.GetCurrentBook(user.Id);
+            if (currentResult.IsFailure) return currentResult.Error.ToBadRequest();
+
+            return Ok(_pbMapper.Map(currentResult.Value));
         }
 
         #endregion

@@ -16,11 +16,24 @@ namespace Kumadio.Infrastructure.Repositories.Domain
         public async Task<IList<PurchasedBook>> GetPurchasedBooks(int userId)
         {
             return await _dbSet
-                .Where(pb => pb.UserId == userId && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Where(pb => pb.UserId == userId
+                          && pb.PurchaseStatus == PurchaseStatus.Success)
                 .Include(pb => pb.Book)
                 .Include(pb => pb.PlayingPart)
                 .ThenInclude(bp => bp.Answers)
                 .ToListAsync();
+        }
+
+        public async Task<PurchasedBook?> GetCurrentBook(int userId)
+        {
+            return await _dbSet
+                .Where(pb => pb.UserId == userId
+                          && pb.IsBookPlaying == true
+                          && pb.PurchaseStatus == PurchaseStatus.Success)
+                .Include(pb => pb.Book)
+                .Include(pb => pb.PlayingPart)
+                .ThenInclude(bp => bp.Answers)
+                .FirstOrDefaultAsync();
         }
     }
 }

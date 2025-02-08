@@ -76,14 +76,6 @@ namespace Kumadio.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IList<BasketItem>> GetBasketItemsAsync(int userId)
-        {
-            return await _dbContext.BasketItems
-                .Where(bi => bi.UserId == userId)
-                .Include(bi => bi.Book)
-                .ToListAsync();
-        }
-
 
         // POST
         public async Task AddNewSearchTermAsync(int userId, string searchTerm)

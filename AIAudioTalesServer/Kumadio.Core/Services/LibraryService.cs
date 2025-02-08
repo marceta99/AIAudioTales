@@ -10,11 +10,19 @@ namespace Kumadio.Core.Services
     public class LibraryService : ILibraryService
     {
         private readonly ICatalogService _catalogService;
+        private readonly IBookRepository _bookRepository;
+        private readonly ISearchHistoryRepository _searchHistoryRepository;
         private readonly IPurchasedBookRepository _purchasedBookRepository;
 
-        public LibraryService(ICatalogService catalogService, IPurchasedBookRepository purchasedBookRepository)
+        public LibraryService(
+            ICatalogService catalogService,
+            IBookRepository bookRepository,
+            ISearchHistoryRepository searchHistoryRepository,
+            IPurchasedBookRepository purchasedBookRepository)
         {
             _catalogService = catalogService;
+            _bookRepository = bookRepository;
+            _searchHistoryRepository = searchHistoryRepository;
             _purchasedBookRepository = purchasedBookRepository;
         }
 
@@ -22,9 +30,10 @@ namespace Kumadio.Core.Services
 
         public async Task<Result<bool>> UserHasBook(int bookId, int userId)
         {
-            return await _purchasedBookRepository.Any(pb => pb.BookId == bookId
-                                                          && pb.UserId == userId
-                                                          && pb.PurchaseStatus == PurchaseStatus.Success);   
+            return await _purchasedBookRepository
+                .Any(pb => pb.BookId == bookId
+                        && pb.UserId == userId
+                        && pb.PurchaseStatus == PurchaseStatus.Success);   
         }
 
         public async Task<Result<IList<PurchasedBook>>> GetPurchasedBooks(int userId)
@@ -34,71 +43,38 @@ namespace Kumadio.Core.Services
             return Result<IList<PurchasedBook>>.Success(purchasedBooks);
         }
 
-        public async Task<IList<DTOReturnBook>> GetCreatorBooksAsync(int userId)
+        public async Task<Result<IList<Book>>> GetCreatorBooks(int userId)
         {
-            var books = await _libraryRepository.GetCreatorBooksAsync(userId);
-            return _mapper.Map<IList<DTOReturnBook>>(books);
+            var books = await _bookRepository.GetAllWhere(b => b.CreatorId == userId);
+
+            return Result<IList<Book>>.Success(books);
         }
 
-        public async Task<DTOReturnPurchasedBook?> GetPurchasedBookAsync(int userId, int bookId)
+        public async Task<Result<PurchasedBook>> GetPurchasedBook(int userId, int bookId)
         {
-            var pb = await _libraryRepository.GetPurchasedBookAsync(userId, bookId);
-            if (pb == null) return null;
+            var pb = await _purchasedBookRepository
+                .GetFirstWhere(pb => pb.UserId == userId
+                                  && pb.BookId == bookId
+                                  && pb.PurchaseStatus == PurchaseStatus.Success);
+            
+            if (pb == null) return DomainErrors.Library.PurchasedBookNotFound;
 
-            var domainBook = await _catalogService.GetBookAsync(pb.BookId);
-            if (domainBook == null) return null;
-
-            return new DTOReturnPurchasedBook
-            {
-                Id = domainBook.Id,
-                Description = domainBook.Description,
-                Title = domainBook.Title,
-                ImageURL = domainBook.ImageURL,
-                CategoryId = domainBook.CategoryId,
-                PurchaseType = pb.PurchaseType,
-                Language = pb.Language
-            };
+            return pb;
         }
 
-        public async Task<IList<string>> GetSearchHistoryAsync(int userId)
+        public async Task<Result<IList<string>>> GetSearchHistory(int userId)
         {
-            return await _libraryRepository.GetSearchHistoryAsync(userId);
+            var searchHistory = await _searchHistoryRepository.GetSearchHistory(userId);
+
+            return Result<IList<string>>.Success(searchHistory);
         }
 
-        public async Task<DTOBasket> GetBasketAsync(int userId)
+        public async Task<Result<PurchasedBook>> GetCurrentBook(int userId)
         {
-            var basketItems = await _libraryRepository.GetBasketItemsAsync(userId);
-            var itemDtos = _mapper.Map<IList<DTOReturnBasketItem>>(basketItems);
-            var total = itemDtos.Sum(i => i.ItemPrice);
+            var pb = await _purchasedBookRepository.GetCurrentBook(userId);
+            if (pb == null) return DomainErrors.Library.CurrentBookNotFound;
 
-            return new DTOBasket
-            {
-                BasketItems = itemDtos,
-                TotalPrice = total
-            };
-        }
-
-        public async Task<DTOReturnPurchasedBook?> GetCurrentBookAsync(int userId)
-        {
-            var pb = await _libraryRepository.GetCurrentPurchasedBookAsync(userId);
-            if (pb == null) return null;
-
-            var domainBook = await _catalogService.GetBookAsync(pb.BookId);
-            if (domainBook == null) return null;
-
-            return new DTOReturnPurchasedBook
-            {
-                Id = domainBook.Id,
-                Description = domainBook.Description,
-                Title = domainBook.Title,
-                ImageURL = domainBook.ImageURL,
-                PurchaseType = pb.PurchaseType,
-                Language = pb.Language,
-                PlayingPart = _mapper.Map<DTOReturnPart>(pb.PlayingPart),
-                PlayingPosition = pb.PlayingPosition,
-                IsBookPlaying = pb.IsBookPlaying,
-                QuestionsActive = pb.QuestionsActive
-            };
+            return pb;
         }
 
 

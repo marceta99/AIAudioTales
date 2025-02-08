@@ -37,5 +37,11 @@
             public static Error InvalidParentAnswer => new(ErrorCodes.InvalidParentAnswer, "Invalid parent answer.");
 
         }
+
+        public static class Library
+        {
+            public static Error PurchasedBookNotFound => new(ErrorCodes.PurchasedBookNotFound, "Purchased book for that user is not found.");
+            public static Error CurrentBookNotFound => new(ErrorCodes.CurrentBookNotFound, "Current book for that user is not found.");
+        }
     }
 }

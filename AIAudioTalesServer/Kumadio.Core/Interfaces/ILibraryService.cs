@@ -8,11 +8,10 @@ namespace Kumadio.Core.Interfaces
         // GET
         Task<Result<bool>> UserHasBook(int bookId, int userId);
         Task<Result<IList<PurchasedBook>>> GetPurchasedBooks(int userId);
-        Task<IList<DTOReturnBook>> GetCreatorBooksAsync(int userId);
-        Task<DTOReturnPurchasedBook?> GetPurchasedBookAsync(int userId, int bookId);
-        Task<IList<string>> GetSearchHistoryAsync(int userId);
-        Task<DTOBasket> GetBasketAsync(int userId);
-        Task<DTOReturnPurchasedBook?> GetCurrentBookAsync(int userId);
+        Task<Result<IList<Book>>> GetCreatorBooks(int userId);
+        Task<Result<PurchasedBook>> GetPurchasedBook(int userId, int bookId);
+        Task<Result<IList<string>>> GetSearchHistory(int userId);
+        Task<Result<PurchasedBook>> GetCurrentBook(int userId);
 
         // POST
         Task<DTOBasket> AddBasketItemAsync(int userId, int bookId);

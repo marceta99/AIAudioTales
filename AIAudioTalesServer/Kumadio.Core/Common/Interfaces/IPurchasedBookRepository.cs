@@ -6,5 +6,6 @@ namespace Kumadio.Core.Common.Interfaces
     public interface IPurchasedBookRepository : IRepository<PurchasedBook>
     {
         Task<IList<PurchasedBook>> GetPurchasedBooks(int userId);
+        Task<PurchasedBook?> GetCurrentBook(int userId);
     }
 }

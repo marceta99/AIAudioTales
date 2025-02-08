@@ -25,6 +25,10 @@
         public const string SaveFileFailed = "SAVE_FILE_FAILED";
         public const string InvalidParentAnswer = "InvalidParentAnswer";
 
+        // Library
+        public const string PurchasedBookNotFound = "PURCHASED_BOOK_NOT_FOUND";
+        public const string CurrentBookNotFound = "CURRENT_BOOK_NOT_FOUND";
+
         // Common
         public const string BookNotFound = "BOOK_NOT_FOUND";
 
