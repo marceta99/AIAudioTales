@@ -43,12 +43,5 @@ namespace Kumadio.Infrastructure.Repositories.Domain
                 .FirstOrDefaultAsync();
         }
 
-        public PurchasedBook UpdatePurchasedBook(PurchasedBook purchasedBook)
-        {
-            var pb = _dbSet.Update(purchasedBook).Include(pb => pb.Book)
-                .Include(pb => pb.PlayingPart)
-                .ThenInclude(bp => bp.Answers);
-        }
-
     }
 }

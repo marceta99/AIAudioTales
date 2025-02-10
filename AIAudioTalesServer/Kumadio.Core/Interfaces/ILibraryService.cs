@@ -19,7 +19,7 @@ namespace Kumadio.Core.Interfaces
         // PATCH
         Task<Result> AddToLibrary(User user, int bookId);
         Task<Result<PurchasedBook>> NextPart(int bookId, int nextPartId, int userId);
-        Task<DTOReturnPurchasedBook?> ActivateQuestionsAsync(int bookId, int userId, decimal playingPosition);
+        Task<Result<PurchasedBook>> ActivateQuestions(int bookId, int userId, decimal playingPosition);
         Task<DTOReturnPurchasedBook?> UpdateProgressAsync(DTOUpdateProgress dto, int userId);
         Task<DTOReturnPurchasedBook?> StartBookAgainAsync(int bookId, int userId);
 

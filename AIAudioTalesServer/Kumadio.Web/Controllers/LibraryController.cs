@@ -195,21 +195,19 @@ namespace AIAudioTalesServer.Web.Controllers
             return Ok(_pbMapper.Map(nextPartResult.Value));
         }
 
-        [HttpPatch("ActivateQuestions")]
-        public async Task<ActionResult<DTOReturnPurchasedBook>> ActivateQuestions(
-            [FromBody] DTOUpdateActivateQuestions activate)
+        [HttpPatch("activate-questions")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> ActivateQuestions([FromBody] DTOUpdateActivateQuestions activate)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.ActivateQuestionsAsync(
-                activate.BookId, user.Id, activate.PlayingPosition);
+            var activateResult = await _libraryService.ActivateQuestions(activate.BookId, user.Id, activate.PlayingPosition);
+            if (activateResult.IsFailure) return activateResult.Error.ToBadRequest();
 
-            if (result == null) return BadRequest("Cannot activate questions");
-            return Ok(result);
+            return Ok(_pbMapper.Map(activateResult.Value));
         }
 
-        [HttpPatch("UpdateProgress")]
+        [HttpPatch("update-progress")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> UpdateProgress(DTOUpdateProgress progress)
         {
             var user = HttpContext.Items["CurrentUser"] as User;

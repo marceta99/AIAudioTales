@@ -10,7 +10,6 @@ namespace Kumadio.Core.Services
 {
     public class LibraryService : ILibraryService
     {
-        private readonly ICatalogService _catalogService;
         private readonly IBookRepository _bookRepository;
         private readonly IBookPartRepository _bookPartRepository;
         private readonly ISearchHistoryRepository _searchHistoryRepository;
@@ -18,14 +17,12 @@ namespace Kumadio.Core.Services
         private readonly IPurchasedBookRepository _purchasedBookRepository;
 
         public LibraryService(
-            ICatalogService catalogService,
             IBookRepository bookRepository,
             IBookPartRepository bookPartRepository,
             ISearchHistoryRepository searchHistoryRepository,
             IUnitOfWork unitOfWork,
             IPurchasedBookRepository purchasedBookRepository)
         {
-            _catalogService = catalogService;
             _bookRepository = bookRepository;
             _bookPartRepository = bookPartRepository;
             _searchHistoryRepository = searchHistoryRepository;
@@ -37,8 +34,7 @@ namespace Kumadio.Core.Services
         {
             return await _purchasedBookRepository
                 .Any(pb => pb.BookId == bookId
-                        && pb.UserId == userId
-                        && pb.PurchaseStatus == PurchaseStatus.Success);   
+                        && pb.UserId == userId);   
         }
 
         public async Task<Result<IList<PurchasedBook>>> GetPurchasedBooks(int userId)
@@ -149,31 +145,18 @@ namespace Kumadio.Core.Services
             });
         }
 
-        public async Task<DTOReturnPurchasedBook?> ActivateQuestionsAsync(int bookId, int userId, decimal playingPosition)
+        public async Task<Result<PurchasedBook>> ActivateQuestions(int bookId, int userId, decimal playingPosition)
         {
-            var pb = await _libraryRepository.GetPurchasedBookAsync(userId, bookId);
-            if (pb == null) return null;
-
-            pb.QuestionsActive = true;
-            pb.PlayingPosition = playingPosition;
-            await _libraryRepository.UpdatePurchaseAsync(pb);
-
-            var domainBook = await _catalogService.GetBookAsync(pb.BookId);
-            if (domainBook == null) return null;
-
-            return new DTOReturnPurchasedBook
+            return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                Id = domainBook.Id,
-                Description = domainBook.Description,
-                Title = domainBook.Title,
-                ImageURL = domainBook.ImageURL,
-                PurchaseType = pb.PurchaseType,
-                Language = pb.Language,
-                PlayingPart = _mapper.Map<DTOReturnPart>(pb.PlayingPart),
-                PlayingPosition = pb.PlayingPosition,
-                IsBookPlaying = pb.IsBookPlaying,
-                QuestionsActive = pb.QuestionsActive
-            };
+                var pb = await _purchasedBookRepository.GetPurchasedBook(userId, bookId);
+                if (pb == null) return DomainErrors.Library.PurchasedBookNotFound;
+
+                pb.QuestionsActive = true;
+                pb.PlayingPosition = playingPosition;
+
+                return Result<PurchasedBook>.Success(pb);
+            });
         }
 
         public async Task<DTOReturnPurchasedBook?> UpdateProgressAsync(DTOUpdateProgress dto, int userId)
@@ -251,26 +234,6 @@ namespace Kumadio.Core.Services
             };
         }
 
-
-        // DELETE
-        public async Task<DTOBasket> RemoveBasketItemAsync(int userId, int itemId)
-        {
-            var item = await _libraryRepository.GetBasketItemByIdAsync(itemId);
-            if (item == null)
-            {
-                // Return current basket anyway
-                return await GetBasketAsync(userId);
-            }
-
-            await _libraryRepository.RemoveBasketItemAsync(item);
-            return await GetBasketAsync(userId);
-        }
-
-        public async Task<bool> RemoveUserPendingPurchases(User user)
-        {
-            return await _libraryRepository.RemoveUserPendingPurchases(user);
-        }
-
         public async Task PurchaseBooks(int userId, IList<DTOReturnBasketItem> basketItems,
             PurchaseType purchaseType, Language language, string sessionId)
         {
@@ -284,19 +247,6 @@ namespace Kumadio.Core.Services
             await _libraryRepository.PurchaseBooks(userId, bookIds, purchaseType, language, sessionId);
         }
 
-        public async Task RemoveBasketItems(int userId)
-        {
-            await _libraryRepository.RemoveBasketItems(userId);
-        }
 
-        public async Task<bool> UpdatePurchaseStatus(string sessionId)
-        {
-            return await _libraryRepository.UpdatePurchaseStatus(sessionId);
-        }
-
-        public async Task<bool> RemoveCanceledPurchase(string sessionId)
-        {
-            return await _libraryRepository.RemoveCanceledPurchase(sessionId);
-        }
     }
 }
