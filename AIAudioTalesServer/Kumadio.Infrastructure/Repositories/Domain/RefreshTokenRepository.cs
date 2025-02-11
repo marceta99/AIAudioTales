@@ -5,7 +5,7 @@ using Kumadio.Infrastructure.Repositories.Base;
 
 namespace Kumadio.Infrastructure.Repositories.Domain
 {
-    internal class RefreshTokenRepository : Repository<RefreshToken>, IRefreshTokenRepository
+    public class RefreshTokenRepository : Repository<RefreshToken>, IRefreshTokenRepository
     {
         public RefreshTokenRepository(AppDbContext dbContext) : base(dbContext)
         {

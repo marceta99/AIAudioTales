@@ -1,4 +1,5 @@
 ﻿using Kumadio.Core.Interfaces;
+using Kumadio.Core.Models;
 using Kumadio.Domain.Entities;
 using Kumadio.Web.Common;
 using Kumadio.Web.DTOS;
@@ -19,16 +20,19 @@ namespace AIAudioTalesServer.Web.Controllers
         private readonly ILibraryService _libraryService;
         private readonly IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> _pbMapper;
         private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
+        private readonly IDtoMapper<DTOUpdateProgress, UpdateProgressModel> _progressMapper;
         private readonly OpenAISettings _openAISettings;
         public LibraryController(
             ILibraryService libraryService,
             IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> pbMapper,
             IDtoMapper<Book, DTOReturnBook> bookMapper,
+            IDtoMapper<DTOUpdateProgress, UpdateProgressModel> progressMapper,
             IOptions<OpenAISettings> openAISettings)
         {
             _libraryService = libraryService;
             _pbMapper = pbMapper;
             _bookMapper = bookMapper;
+            _progressMapper = progressMapper;
             _openAISettings = openAISettings.Value;
         }
 
@@ -213,34 +217,24 @@ namespace AIAudioTalesServer.Web.Controllers
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.UpdateProgressAsync(progress, user.Id);
-            if (result == null) return BadRequest("Problem updating progress");
-            return Ok(result);
+            var progressModel = _progressMapper.Map(progress);
+
+            var progressResult = await _libraryService.UpdateProgress(progressModel, user.Id);
+            if (progressResult.IsFailure) return progressResult.Error.ToBadRequest();
+
+            return Ok(_pbMapper.Map(progressResult.Value));
         }
 
-        [HttpPatch("StartBookAgain/{bookId}")]
-        public async Task<ActionResult<DTOReturnPurchasedBook>> StartBookAgain(int bookId)
+        [HttpPatch("restart-book/{bookId}")]
+        public async Task<ActionResult<DTOReturnPurchasedBook>> RestartBook(int bookId)
         {
             var user = HttpContext.Items["CurrentUser"] as User;
             if (user == null) return Unauthorized();
 
-            var result = await _libraryService.StartBookAgainAsync(bookId, user.Id);
-            if (result == null) return BadRequest("Problem resetting book");
-            return Ok(result);
-        }
+            var restartResult = await _libraryService.RestartBook(bookId, user.Id);
+            if (restartResult.IsFailure) return restartResult.Error.ToBadRequest();
 
-        #endregion
-
-        #region DELETE
-
-        [HttpDelete("RemoveBasketItem")]
-        public async Task<ActionResult<DTOBasket>> RemoveBasketItem([FromQuery] int itemId)
-        {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var updatedBasket = await _libraryService.RemoveBasketItemAsync(user.Id, itemId);
-            return updatedBasket;
+            return Ok(_pbMapper.Map(restartResult.Value));
         }
 
         #endregion

@@ -14,7 +14,6 @@ namespace Kumadio.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<SearchHistory> SearchHistories { get; set; }
         public DbSet<Category> BookCategories { get; set; }
-        public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<BookPart> BookParts { get; set; }
         public DbSet<Answer> Answers { get; set; }
@@ -116,31 +115,6 @@ namespace Kumadio.Infrastructure.Data
 
             #endregion
 
-            #region BasketItem
-
-            modelBuilder.Entity<BasketItem>()
-            .HasKey(bi => bi.Id)
-            .IsClustered(false);
-
-            modelBuilder.Entity<BasketItem>()
-             .HasIndex(bi => bi.UserId)
-             .IsClustered(true)
-             .IsUnique(false);
-
-            modelBuilder.Entity<BasketItem>()
-            .HasOne(bi => bi.User)
-            .WithMany(u => u.BasketItems)
-            .HasForeignKey(bi => bi.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<BasketItem>()
-            .HasOne(bi => bi.Book)
-            .WithMany(b => b.BasketItems)
-            .HasForeignKey(bi => bi.BookId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
             #region PurchasedBooks
 
             modelBuilder.Entity<PurchasedBook>().HasKey(pb => new { pb.UserId, pb.BookId });
@@ -205,10 +179,6 @@ namespace Kumadio.Infrastructure.Data
 
             #region Fixed precision for decimal types
 
-            modelBuilder.Entity<BasketItem>()
-                .Property(b => b.ItemPrice)
-                .HasColumnType("decimal(18, 2)");
-
             modelBuilder.Entity<Book>()
                 .Property(b => b.Price)
                 .HasColumnType("decimal(18, 2)");
@@ -220,6 +190,5 @@ namespace Kumadio.Infrastructure.Data
             #endregion
 
         }
-
     }
 }

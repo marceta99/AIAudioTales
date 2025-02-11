@@ -19,7 +19,6 @@
         // Catalog
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";
         public const string BookPartNotFound = "BOOK_PART_NOT_FOUND";
-        public const string RootPartNotFound = "ROOT_PART_NOT_FOUND";
 
         // Editor
         public const string SaveFileFailed = "SAVE_FILE_FAILED";
@@ -30,9 +29,11 @@
         public const string CurrentBookNotFound = "CURRENT_BOOK_NOT_FOUND";
         public const string InvalidBook = "INVALID_BOOK";
         public const string NextPartNotFound = "NEXT_PART_NOT_FOUND";
+        public const string NextBookNotFound = "NEXT_BOOK_NOT_FOUND";
 
         // Common
         public const string BookNotFound = "BOOK_NOT_FOUND";
+        public const string RootPartNotFound = "ROOT_PART_NOT_FOUND";
 
     }
 }

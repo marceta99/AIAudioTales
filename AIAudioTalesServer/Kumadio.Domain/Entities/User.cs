@@ -13,7 +13,6 @@ namespace Kumadio.Domain.Entities
         public Role Role { get; set; }
         public IList<Book> CreatedBooks { get; set; }
         public IList<PurchasedBook> PurchasedBooks { get; set; }
-        public IList<BasketItem> BasketItems { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public SearchHistory SearchHistory { get; set; }
         public Subscription Subscription { get; set; }

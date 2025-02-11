@@ -1,0 +1,6 @@
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.AssemblyInfoInputs.cache
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.AssemblyInfo.cs
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.csproj.CoreCompileInputs.cache
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.sourcelink.json
+C:\Users\mihai\OneDrive\Desktop\Kumadio\KumadioApplication\AIAudioTales\AIAudioTalesServer\Kumadio.Core\obj\Debug\net8.0\Kumadio.Core.csproj.AssemblyReference.cache
