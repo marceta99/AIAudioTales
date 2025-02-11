@@ -1,6 +1,6 @@
 ﻿using Kumadio.Core.Common.Interfaces;
-using Kumadio.Infrastructure.Interfaces;
-using Kumadio.Infrastructure.Repositories;
+using Kumadio.Core.Common.Interfaces.Base;
+using Kumadio.Infrastructure.Repositories.Base;
 using Kumadio.Infrastructure.Repositories.Domain;
 
 namespace Kumadio.Web.ServiceRegistrations
@@ -9,6 +9,7 @@ namespace Kumadio.Web.ServiceRegistrations
     {
         public static IServiceCollection AddKumadioRepositories(this IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<IBookPartRepository, BookPartRepository>();
             services.AddScoped<IBookRepository, BookRepository>();

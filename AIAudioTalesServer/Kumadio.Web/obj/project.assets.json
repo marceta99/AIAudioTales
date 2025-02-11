@@ -3378,6 +3378,7 @@
     "net8.0": [
       "Google.Apis.Auth >= 1.68.0",
       "Kumadio.Core >= 1.0.0",
+      "Kumadio.Domain >= 1.0.0",
       "Kumadio.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 8.0.11",
@@ -3413,6 +3414,9 @@
           "projectReferences": {
             "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Core\\Kumadio.Core.csproj": {
               "projectPath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Core\\Kumadio.Core.csproj"
+            },
+            "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Domain\\Kumadio.Domain.csproj": {
+              "projectPath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Domain\\Kumadio.Domain.csproj"
             },
             "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Infrastructure\\Kumadio.Infrastructure.csproj": {
               "projectPath": "C:\\Users\\mihai\\OneDrive\\Desktop\\Kumadio\\KumadioApplication\\AIAudioTales\\AIAudioTalesServer\\Kumadio.Infrastructure\\Kumadio.Infrastructure.csproj"

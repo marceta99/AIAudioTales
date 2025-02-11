@@ -14,7 +14,6 @@ namespace Kumadio.Web.ServiceRegistrations
         public static IServiceCollection AddKumadioMappers(this IServiceCollection services)
         {
             services.AddScoped<IDtoMapper<Answer, DTOReturnAnswer>, AnswerToDTOReturnAnswerMapper>();
-            services.AddScoped<IDtoMapper<BasketItem, DTOReturnBasketItem>, BasketItemToDTOReturnBasketItemMapper>();
             services.AddScoped<IDtoMapper<BookPart, DTOReturnPart>, BookPartToDTOReturnPartMapper>();
             services.AddScoped<IDtoMapper<Book, DTOReturnBook>, BookToDTOReturnBookMapper>();
             services.AddScoped<IDtoMapper<DTORegisterCreator, User>, DTORegisterCreatorToUserMapper>();

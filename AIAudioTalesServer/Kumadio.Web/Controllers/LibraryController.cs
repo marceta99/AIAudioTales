@@ -13,7 +13,7 @@ using System.Text;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/library")]
     [ApiController]
     public class LibraryController : ControllerBase
     {

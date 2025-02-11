@@ -17,7 +17,7 @@ using Kumadio.Web.Common;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -46,7 +46,7 @@ namespace AIAudioTalesServer.Web.Controllers
 
         #region GET
 
-        [HttpGet("RefreshToken")]
+        [HttpGet("refresh-token")]
         public async Task<ActionResult> RefreshToken()
         {
             var refreshTokenHash = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
@@ -59,7 +59,7 @@ namespace AIAudioTalesServer.Web.Controllers
             if (refreshToken.Expires < DateTime.Now)
             {
                 // If expired, revoke and force re-login
-                var revokeTokenResult = await RevokeTokenAsync();
+                var revokeTokenResult = await RevokeTokenHelper();
                 if (revokeTokenResult.IsFailure) return revokeTokenResult.Error.ToBadRequest();
 
                 return DomainErrors.Auth.RefreshTokenExpired.ToBadRequest();
@@ -74,7 +74,7 @@ namespace AIAudioTalesServer.Web.Controllers
             return Ok();
         }
 
-        [HttpGet("GetCurrentUser")]
+        [HttpGet("current-user")]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
             var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
@@ -97,7 +97,7 @@ namespace AIAudioTalesServer.Web.Controllers
 
         #region POST
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] DTORegister model)
         {
             var user = _registerMapper.Map(model);
@@ -108,7 +108,7 @@ namespace AIAudioTalesServer.Web.Controllers
             return Ok();
         }
 
-        [HttpPost("RegisterCreator")]
+        [HttpPost("register-creator")]
         public async Task<IActionResult> RegisterCreator([FromBody] DTORegisterCreator model)
         {
             var user = _registerCreatorMapper.Map(model);
@@ -119,7 +119,7 @@ namespace AIAudioTalesServer.Web.Controllers
             return Ok();
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<ActionResult<DTOReturnUser>> Login([FromBody] DTOLogin model)
         {
             var loginResult = await _authService.Login(model.Email, model.Password);
@@ -132,8 +132,8 @@ namespace AIAudioTalesServer.Web.Controllers
             return Ok(_returnUserMapper.Map(user));
         }
 
-        [HttpPost("LoginWithGoogle")]
-        public async Task<ActionResult<DTOReturnUser>> LoginWithGoogle([FromBody] string credentials)
+        [HttpPost("google-login")]
+        public async Task<ActionResult<DTOReturnUser>> GoogleLogin([FromBody] string credentials)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
@@ -157,10 +157,10 @@ namespace AIAudioTalesServer.Web.Controllers
 
         #region DELETE
 
-        [HttpDelete("RevokeToken")]
+        [HttpDelete("revoke-token")]
         public async Task<IActionResult> RevokeToken()
         {
-            var revokeResult = await RevokeTokenAsync();
+            var revokeResult = await RevokeTokenHelper();
 
             if (revokeResult.IsFailure) return revokeResult.Error.ToBadRequest();
 
@@ -170,7 +170,7 @@ namespace AIAudioTalesServer.Web.Controllers
         #endregion
 
         #region Private Helper Methods
-        private async Task<Result> RevokeTokenAsync()
+        private async Task<Result> RevokeTokenHelper()
         {
             var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
             if (string.IsNullOrEmpty(jwtToken)) return DomainErrors.Auth.JwtTokenMissing;

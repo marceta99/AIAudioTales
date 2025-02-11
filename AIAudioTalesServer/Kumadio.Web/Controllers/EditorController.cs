@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/editor")]
     [ApiController]
     public class EditorController : ControllerBase
     {

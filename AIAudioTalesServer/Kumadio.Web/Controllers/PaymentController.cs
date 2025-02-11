@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/payment")]
     [ApiController]
     public class PaymentController : ControllerBase
     {

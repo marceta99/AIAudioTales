@@ -1,5 +1,4 @@
-﻿
-using Kumadio.Domain.Entities;
+﻿using Kumadio.Domain.Entities;
 using Kumadio.Domain.Enums;
 
 namespace Kumadio.Infrastructure.Data.Seed.BooksPictures

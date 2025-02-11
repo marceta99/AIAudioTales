@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AIAudioTalesServer.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/catalog")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
