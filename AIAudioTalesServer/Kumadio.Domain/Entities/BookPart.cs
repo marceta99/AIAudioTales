@@ -8,8 +8,8 @@
         public Book Book { get; set; }
         public int BookId { get; set; }
         public Answer ParentAnswer { get; set; }
-        public IList<Answer> Answers { get; set; }
-        public IList<PurchasedBook> PurchasedBooks { get; set; }
+        public ICollection<Answer> Answers { get; set; }
+        public ICollection<PurchasedBook> PurchasedBooks { get; set; }
 
     }
 }

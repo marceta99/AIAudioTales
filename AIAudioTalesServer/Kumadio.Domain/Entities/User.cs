@@ -11,8 +11,8 @@ namespace Kumadio.Domain.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; }
-        public IList<Book> CreatedBooks { get; set; }
-        public IList<PurchasedBook> PurchasedBooks { get; set; }
+        public ICollection<Book> CreatedBooks { get; set; }
+        public ICollection<PurchasedBook> PurchasedBooks { get; set; }
         public RefreshToken RefreshToken { get; set; }
         public ICollection<SearchHistory> SearchHistories { get; set; }
         public Subscription Subscription { get; set; }

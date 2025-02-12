@@ -42,8 +42,6 @@ Thumbs.db
 
 # Visual Studio - Adjusted for the server project
 AIAudioTalesServer/.vs/*
-AIAudioTalesServer/AIAudioTalesServer/bin/*
-AIAudioTalesServer/AIAudioTalesServer/obj/*
 *.user
 *.userosscache
 *.suo
@@ -52,8 +50,21 @@ AIAudioTalesServer/AIAudioTalesServer/obj/*
 *.csproj.user
 *.vbproj.user
 
-#exclude audio files
+# Exclude audio files
 AIAudioTalesServer/AIAudioTalesServer/uploads
 
-#exclude migrations
+# Exclude migrations
 AIAudioTalesServer/AIAudioTalesServer/Migrations
+
+# -------------------------------
+# Additional .NET build artifacts
+# -------------------------------
+**/bin/
+**/obj/
+*.dll
+*.pdb
+*.exe
+*.log
+*.cache
+*.dbmdl
+*.jfm

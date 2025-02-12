@@ -41,7 +41,7 @@ namespace Kumadio.Core.Services
             {
                 BookId = book.Id,
                 UserId = user.Id,
-                PurchaseType = PurchaseType.Enroled,
+                PurchaseType = PurchaseType.Basic,
                 Language = Language.ENGLISH_UK,
                 PlayingPartId = rootPart.Id,
                 PlayingPosition = 0,
