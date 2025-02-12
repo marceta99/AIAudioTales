@@ -59,12 +59,6 @@ namespace Kumadio.Infrastructure.Data
             .HasForeignKey<Subscription>(s => s.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
-            .HasOne(u => u.SearchHistory)
-            .WithOne(sh => sh.User)
-            .HasForeignKey<SearchHistory>(sh => sh.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
             #endregion
 
             #region Book
@@ -112,6 +106,12 @@ namespace Kumadio.Infrastructure.Data
              .HasIndex(sh => sh.UserId)
              .IsClustered(true)
              .IsUnique(false);
+
+            modelBuilder.Entity<SearchHistory>()
+            .HasOne(sh => sh.User)
+            .WithMany(u => u.SearchHistories)
+            .HasForeignKey(sh => sh.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             #endregion
 
