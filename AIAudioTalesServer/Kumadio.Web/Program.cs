@@ -3,7 +3,13 @@ using Kumadio.Web.ServiceRegistrations;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
-configuration.AddJsonFile("appsettings.json");
+
+
+// Add user secrets for dev environment
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 builder.Services.AddCustomServices(configuration);
 
