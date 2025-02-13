@@ -1,5 +1,6 @@
 ﻿using Kumadio.Core.Common.Interfaces;
 using Kumadio.Core.Common.Interfaces.Base;
+using Kumadio.Infrastructure.DiskFileStorage;
 using Kumadio.Infrastructure.Repositories.Base;
 using Kumadio.Infrastructure.Repositories.Domain;
 
@@ -18,6 +19,8 @@ namespace Kumadio.Web.ServiceRegistrations
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ISearchHistoryRepository, SearchHistoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IFileStorage, DiskFileStorageService>();
 
             return services;
         }
