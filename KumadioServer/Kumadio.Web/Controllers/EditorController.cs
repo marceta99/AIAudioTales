@@ -7,7 +7,7 @@ using Kumadio.Web.Mappers.Base;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace AIAudioTalesServer.Web.Controllers
+namespace Kumadio.Web.Controllers
 {
     [Route("api/editor")]
     [ApiController]

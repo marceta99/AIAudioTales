@@ -15,7 +15,7 @@ using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
 
-namespace AIAudioTalesServer.Web.Controllers
+namespace Kumadio.Web.Controllers
 {
     [Route("api/auth")]
     [ApiController]

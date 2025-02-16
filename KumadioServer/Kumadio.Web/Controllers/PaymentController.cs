@@ -1,7 +1,7 @@
 ﻿using Kumadio.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AIAudioTalesServer.Web.Controllers
+namespace Kumadio.Web.Controllers
 {
     [Route("api/payment")]
     [ApiController]

@@ -4,9 +4,8 @@ AiAudioTalesClient/tmp/
 AiAudioTalesClient/out-tsc/
 AiAudioTalesClient/bazel-out/
 
-# Node modules - Assuming both projects might have node_modules
+# Node modules
 AiAudioTalesClient/node_modules/
-AIAudioTalesServer/node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -41,7 +40,7 @@ testem.log
 Thumbs.db
 
 # Visual Studio - Adjusted for the server project
-AIAudioTalesServer/.vs/*
+KumadioServer/.vs/*
 *.user
 *.userosscache
 *.suo
@@ -51,10 +50,10 @@ AIAudioTalesServer/.vs/*
 *.vbproj.user
 
 # Exclude audio files
-AIAudioTalesServer/AIAudioTalesServer/uploads
+KumadioServer/KumadioServer/uploads
 
 # Exclude migrations
-AIAudioTalesServer/AIAudioTalesServer/Migrations
+KumadioServer/KumadioServer/Migrations
 
 # -------------------------------
 # Additional .NET build artifacts

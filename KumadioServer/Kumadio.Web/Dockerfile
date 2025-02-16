@@ -16,4 +16,4 @@ RUN dotnet publish -c Release -o out
 EXPOSE 5000
 
 # Set the entry point for the application
-CMD ["dotnet", "/app/out/AIAudioTalesServer.dll"]
+CMD ["dotnet", "/app/out/KumadioServer.dll"]

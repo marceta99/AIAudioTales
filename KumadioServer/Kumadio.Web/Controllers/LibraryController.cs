@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace AIAudioTalesServer.Web.Controllers
+namespace Kumadio.Web.Controllers
 {
     [Route("api/library")]
     [ApiController]

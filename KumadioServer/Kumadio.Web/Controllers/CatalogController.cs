@@ -6,7 +6,7 @@ using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AIAudioTalesServer.Web.Controllers
+namespace Kumadio.Web.Controllers
 {
     [Route("api/catalog")]
     [ApiController]
