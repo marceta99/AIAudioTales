@@ -4,8 +4,14 @@ AiAudioTalesClient/tmp/
 AiAudioTalesClient/out-tsc/
 AiAudioTalesClient/bazel-out/
 
+KumadioClient/dist/
+KumadioClient/tmp/
+KumadioClient/out-tsc/
+KumadioClient/bazel-out/
+
 # Node modules
 AiAudioTalesClient/node_modules/
+KumadioClient/node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -26,8 +32,17 @@ AiAudioTalesClient/.vscode/*
 !AiAudioTalesClient/.vscode/extensions.json
 AiAudioTalesClient/.history/*
 
+KumadioClient/.vscode/*
+!KumadioClient/.vscode/settings.json
+!KumadioClient/.vscode/tasks.json
+!KumadioClient/.vscode/launch.json
+!KumadioClient/.vscode/extensions.json
+KumadioClient/.history/*
+
 # Miscellaneous
 AiAudioTalesClient/.angular/cache
+KumadioClient/.angular/cache
+/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
