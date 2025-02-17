@@ -82,3 +82,8 @@ KumadioServer/KumadioServer/Migrations
 *.cache
 *.dbmdl
 *.jfm
+
+# Exclude client build from www
+KumadioClient/www/
+KumadioClient/android/
+KumadioClient/ios/
