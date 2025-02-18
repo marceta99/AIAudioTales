@@ -1,6 +1,7 @@
 ﻿using Kumadio.Core.Interfaces;
 using Kumadio.Core.Models;
 using Kumadio.Domain.Entities;
+using Kumadio.Web.Attributes.Filters;
 using Kumadio.Web.Common;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
@@ -15,6 +16,7 @@ namespace Kumadio.Web.Controllers
 {
     [Route("api/library")]
     [ApiController]
+    [RequireCurrentUser]
     public class LibraryController : ControllerBase
     {
         private readonly ILibraryService _libraryService;
@@ -22,6 +24,9 @@ namespace Kumadio.Web.Controllers
         private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
         private readonly IDtoMapper<DTOUpdateProgress, UpdateProgressModel> _progressMapper;
         private readonly OpenAISettings _openAISettings;
+
+        protected User CurrentUser => (User)HttpContext.Items["CurrentUser"]!;
+
         public LibraryController(
             ILibraryService libraryService,
             IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> pbMapper,
@@ -41,10 +46,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("user-has-book/{bookId}")]
         public async Task<ActionResult<bool>> UserHasBook(int bookId)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var hasBookResult = await _libraryService.UserHasBook(bookId, user.Id);
+            var hasBookResult = await _libraryService.UserHasBook(bookId, CurrentUser.Id);
             if (hasBookResult.IsFailure) return hasBookResult.Error.ToBadRequest();
 
             return Ok(hasBookResult.Value);
@@ -54,10 +56,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("purchased-books")]
         public async Task<ActionResult<IList<DTOReturnPurchasedBook>>> GetPurchasedBooks()
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var pbResult = await _libraryService.GetPurchasedBooks(user.Id);
+            var pbResult = await _libraryService.GetPurchasedBooks(CurrentUser.Id);
             if (pbResult.IsFailure) return pbResult.Error.ToBadRequest();
             
             return Ok(_pbMapper.Map(pbResult.Value));
@@ -66,10 +65,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("creator/books")]
         public async Task<ActionResult<IList<DTOReturnBook>>> GetCreatorBooks()
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var booksResult = await _libraryService.GetCreatorBooks(user.Id);
+            var booksResult = await _libraryService.GetCreatorBooks(CurrentUser.Id);
             if (booksResult.IsFailure) return booksResult.Error.ToBadRequest();
 
             return Ok(_bookMapper.Map(booksResult.Value));
@@ -78,10 +74,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("purchased-book/{bookId}")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> GetPurchasedBook(int bookId)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var pbResult = await _libraryService.GetPurchasedBook(user.Id, bookId);
+            var pbResult = await _libraryService.GetPurchasedBook(CurrentUser.Id, bookId);
             if (pbResult.IsFailure) return pbResult.Error.ToBadRequest();
             
             return Ok(_pbMapper.Map(pbResult.Value));
@@ -92,10 +85,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("search-history")]
         public async Task<ActionResult<IList<string>>> GetSearchHistory()
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var historyResult = await _libraryService.GetSearchHistory(user.Id);
+            var historyResult = await _libraryService.GetSearchHistory(CurrentUser.Id);
             if (historyResult.IsFailure) return historyResult.Error.ToBadRequest();
 
             return Ok(historyResult.Value);
@@ -104,10 +94,7 @@ namespace Kumadio.Web.Controllers
         [HttpGet("current-book")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> GetCurrentBook()
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var currentResult = await _libraryService.GetCurrentBook(user.Id);
+            var currentResult = await _libraryService.GetCurrentBook(CurrentUser.Id);
             if (currentResult.IsFailure) return currentResult.Error.ToBadRequest();
 
             return Ok(_pbMapper.Map(currentResult.Value));
@@ -120,10 +107,7 @@ namespace Kumadio.Web.Controllers
         [HttpPost("search-term")]
         public async Task<IActionResult> AddSearchTerm([FromQuery] string searchTerm)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var addTermResult =  await _libraryService.AddSearchTerm(user.Id, searchTerm);
+            var addTermResult =  await _libraryService.AddSearchTerm(CurrentUser.Id, searchTerm);
             if (addTermResult.IsFailure) return addTermResult.Error.ToBadRequest(); 
 
             return Ok();
@@ -178,10 +162,7 @@ namespace Kumadio.Web.Controllers
         [HttpPost("library/{bookId}")]
         public async Task<IActionResult> AddToLibrary(int bookId)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var libraryResult = await _libraryService.AddToLibrary(user, bookId);
+            var libraryResult = await _libraryService.AddToLibrary(CurrentUser, bookId);
             if (libraryResult.IsFailure) return libraryResult.Error.ToBadRequest();
 
             return Ok();
@@ -190,10 +171,7 @@ namespace Kumadio.Web.Controllers
         [HttpPatch("next-part")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart([FromBody] DTOUpdateNextPart nextPart)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var nextPartResult = await _libraryService.NextPart(nextPart.BookId, nextPart.NextPartId, user.Id);
+            var nextPartResult = await _libraryService.NextPart(nextPart.BookId, nextPart.NextPartId, CurrentUser.Id);
             if (nextPartResult.IsFailure) return nextPartResult.Error.ToBadRequest();
 
             return Ok(_pbMapper.Map(nextPartResult.Value));
@@ -202,10 +180,7 @@ namespace Kumadio.Web.Controllers
         [HttpPatch("activate-questions")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> ActivateQuestions([FromBody] DTOUpdateActivateQuestions activate)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var activateResult = await _libraryService.ActivateQuestions(activate.BookId, user.Id, activate.PlayingPosition);
+            var activateResult = await _libraryService.ActivateQuestions(activate.BookId, CurrentUser.Id, activate.PlayingPosition);
             if (activateResult.IsFailure) return activateResult.Error.ToBadRequest();
 
             return Ok(_pbMapper.Map(activateResult.Value));
@@ -214,12 +189,9 @@ namespace Kumadio.Web.Controllers
         [HttpPatch("update-progress")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> UpdateProgress(DTOUpdateProgress progress)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
             var progressModel = _progressMapper.Map(progress);
 
-            var progressResult = await _libraryService.UpdateProgress(progressModel, user.Id);
+            var progressResult = await _libraryService.UpdateProgress(progressModel, CurrentUser.Id);
             if (progressResult.IsFailure) return progressResult.Error.ToBadRequest();
 
             return Ok(_pbMapper.Map(progressResult.Value));
@@ -228,10 +200,7 @@ namespace Kumadio.Web.Controllers
         [HttpPatch("restart-book/{bookId}")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> RestartBook(int bookId)
         {
-            var user = HttpContext.Items["CurrentUser"] as User;
-            if (user == null) return Unauthorized();
-
-            var restartResult = await _libraryService.RestartBook(bookId, user.Id);
+            var restartResult = await _libraryService.RestartBook(bookId, CurrentUser.Id);
             if (restartResult.IsFailure) return restartResult.Error.ToBadRequest();
 
             return Ok(_pbMapper.Map(restartResult.Value));
