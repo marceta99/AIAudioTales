@@ -77,7 +77,22 @@ namespace Kumadio.Web.ServiceRegistrations
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["X-Access-Token"];
+                        // 1) Extract token from http only cookie if this is request from web application
+                        var tokenFromCookie = context.Request.Cookies["X-Access-Token"];
+                        if (!string.IsNullOrEmpty(tokenFromCookie))
+                        {
+                            context.Token = tokenFromCookie;
+                        }
+                        else
+                        {
+                            // 2) Extract token from authorization header if this is request from mobile app
+                            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Extract token after "Bearer "
+                                context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                            }
+                        }
                         return Task.CompletedTask;
                     }
                 };

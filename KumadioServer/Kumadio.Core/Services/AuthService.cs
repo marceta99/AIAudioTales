@@ -111,6 +111,21 @@ namespace Kumadio.Core.Services
             return user;
         }
 
+        public async Task<Result> DeleteRefreshToken(string refreshTokenHash)
+        {
+            var refreshToken = await _refreshTokenRepository.GetFirstWhere(rt => rt.Token == refreshTokenHash);
+
+            if (refreshToken == null) return DomainErrors.Auth.RefreshTokenNotFound;
+
+            return await _unitOfWork.ExecuteInTransaction(() =>
+            {
+                _refreshTokenRepository.Remove(refreshToken);
+
+                // Return a Task so the signature matches `Func<Task<Result>>`
+                return Task.FromResult(Result.Success());
+            });
+        }
+
         public async Task<Result> DeleteRefreshTokenForUser(string email)
         {
             var user = await _userRepository.GetFirstWhere(u => u.Email == email);

@@ -16,6 +16,7 @@ namespace Kumadio.Core.Interfaces
         Task<Result<RefreshToken>> GetRefreshToken(string refreshTokenHash);
         Task<Result<User>> GetUserWithRefreshToken(RefreshToken refreshToken);
         Task<Result> DeleteRefreshTokenForUser(string email);
+        Task<Result> DeleteRefreshToken(string refreshTokenHash);
         Task<Result> SaveRefreshToken(RefreshToken refreshToken, User user);
 
         #endregion
