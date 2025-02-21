@@ -2,9 +2,9 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { RegisterUser } from 'src/app/entities';
 import { passwordMatchValidator } from '../custom-validators';
+import { AuthService } from '../services/auth-new.service';
 
 @Component({
   selector: 'app-register',                  

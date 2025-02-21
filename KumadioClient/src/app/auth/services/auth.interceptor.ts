@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 import { Observable, catchError, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthInterceptor implements HttpInterceptor {
   errorCounter = 0;
 

@@ -109,10 +109,11 @@ namespace Kumadio.Web.ServiceRegistrations
             {
                 options.AddPolicy(name: "CorsPolicy", builder =>
                 {
-                    builder.WithOrigins(configuration["ApplicationSettings:ClientUrl"])
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+                    var clientUrls = configuration.GetSection("ApplicationSettings:ClientUrls").Get<string[]>();
+                    builder.WithOrigins(clientUrls)
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
                 });
             });
 

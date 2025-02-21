@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/entities';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth-new.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +23,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
   private clientId = environment.clientId;
 
@@ -36,16 +36,11 @@ export class LoginComponent implements OnInit {
     private _ngZone: NgZone,
     private service: AuthService
   ) {}
-
-  ngOnInit(): void {
-    this.loginForm = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
-    });
-
-    // Initialize Google One Tap on window load
+  ngAfterViewInit(): void {
+     // Initialize Google One Tap on window load
     // @ts-ignore
     window.onGoogleLibraryLoad = () => {
+      console.log("test google ")
       // @ts-ignore
       google.accounts.id.initialize({
         client_id: this.clientId,
@@ -66,8 +61,15 @@ export class LoginComponent implements OnInit {
     };
   }
 
+  ngOnInit(): void {
+    this.loginForm = new FormGroup({
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
+    });
+  }
+
   handleCredentialResponse(response: CredentialResponse) {
-    this.service.loginWithGoogle(response.credential).subscribe({
+    /*this.service.loginWithGoogle(response.credential).subscribe({
       next: (user: User) => {
         // handle successful login
       },
@@ -79,15 +81,15 @@ export class LoginComponent implements OnInit {
           this.showGoogleErrorMessage = true;
         });
       }
-    });
+    });*/
   }
 
   login() {
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
     this.service.login(email, password).subscribe({
-      next: (user: User) => {
-        // handle successful login
+      next: (user: any) => {
+        this.router.navigate(['/home']);
       },
       error: (error: any) => {
         console.log(error);

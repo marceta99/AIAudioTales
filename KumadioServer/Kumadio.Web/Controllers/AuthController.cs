@@ -152,7 +152,7 @@ namespace Kumadio.Web.Controllers
             var result = await _authService.Register(user!, model.Password);
             if (result.IsFailure) return result.Error!.ToBadRequest();
 
-            return Ok();
+            return Ok("Successful registration");
         }
 
         [HttpPost("register-creator")]
@@ -203,7 +203,7 @@ namespace Kumadio.Web.Controllers
             if (setRefreshResult.IsFailure)
                 return setRefreshResult.Error.ToBadRequest();
 
-            return Ok("Login successful");
+            return Ok("Successful login");
         }
 
         [HttpPost("google-login")]

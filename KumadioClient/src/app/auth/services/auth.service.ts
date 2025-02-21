@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   public register(user: RegisterUser):Observable<any>{
-    return this.httpClient.post(this.path+"Auth/Register", user );
+    return this.httpClient.post<any>(this.path+"Auth/Register", user );
   }
 
   public registerCreator(creator: RegisterCreator):Observable<any>{

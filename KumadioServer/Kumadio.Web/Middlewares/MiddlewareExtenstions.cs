@@ -18,7 +18,7 @@ namespace Kumadio.Web.Middlewares
             app.UseCors("CorsPolicy");
 
             // Enable HTTPS redirection
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             // Serve files from "uploads" directory
             app.UseStaticFiles(new StaticFileOptions

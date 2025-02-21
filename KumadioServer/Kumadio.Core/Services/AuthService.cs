@@ -37,7 +37,7 @@ namespace Kumadio.Core.Services
 
             var userExists = await _userRepository.Any(u => u.Email == user.Email);
 
-            if (!userExists)
+            if (userExists)
             {
                 return DomainErrors.Auth.EmailAlreadyExists;
             }

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: "https://34b910nm-44320.euw.devtunnels.ms/api/",
+  apiUrl: "http://10.0.2.2:5000/api",
   clientId: "109854671037-dsb45t436gcgtfqvjdshf756o7ith0ma.apps.googleusercontent.com",
 };
 

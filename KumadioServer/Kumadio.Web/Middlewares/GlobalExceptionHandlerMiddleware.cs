@@ -4,13 +4,16 @@ using System.Text.Json;
 public class GlobalExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly IHostEnvironment _env;
     private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
 
     public GlobalExceptionHandlerMiddleware(
         RequestDelegate next,
+        IHostEnvironment env,
         ILogger<GlobalExceptionHandlerMiddleware> logger)
     {
         _next = next;
+        _env = env;
         _logger = logger;
     }
 
@@ -33,8 +36,13 @@ public class GlobalExceptionHandlerMiddleware
             var problemDetails = new
             {
                 Status = statusCode,
-                Error = ex.Message,  // For production, hide or sanitize this
-                StackTrace = ex.StackTrace //  omit in production or log separately
+                Error = _env.IsDevelopment()
+                    ? ex.Message
+                    : "An unexpected error occurred on the server.",
+                traceId = context.TraceIdentifier,
+                stackTrace = _env.IsDevelopment()
+                    ? ex.StackTrace
+                    : null,
             };
 
             // 4) Write the response
