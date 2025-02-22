@@ -3,7 +3,7 @@ using Kumadio.Domain.Entities;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
 
-namespace Kumadio.Web.Mappers.BookPartMappers
+namespace Kumadio.Web.Mappers.ModelMappers
 {
     public class PartTreeToDTOReturnPartTreeMapper : DtoMapper<PartTreeModel, DTOReturnPartTree>
     {
