@@ -6,7 +6,7 @@ import { environment } from "src/environments/environment";
 
 @Injectable()
 export class SearchService {
-  private path = environment.apiUrl;
+  private baseUrl = environment.apiUrl;
 
   searchTerm: string = "";
     
@@ -20,7 +20,7 @@ export class SearchService {
   constructor(private httpClient: HttpClient) {}
 
   public getSearchHistory(): Observable<string[]> {
-    return this.httpClient.get<string[]>(this.path+"Books/GetSearchHistory");
+    return this.httpClient.get<string[]>(`${this.baseUrl}/library/search-history`, { withCredentials : true });
   }  
 
   public searchBooks(searchTerm: string, pageNumber: number, pageSize: number): Observable<ReturnBook[]> {
@@ -29,13 +29,14 @@ export class SearchService {
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-    return this.httpClient.get<ReturnBook[]>(this.path+"Books/Search", { params , withCredentials: true});
+    return this.httpClient.get<ReturnBook[]>(`${this.baseUrl}/catalog/search`, { params , withCredentials: true});
   }
 
   public saveSearchTerm(searchTerm: string){
     const params = new HttpParams().set('searchTerm', searchTerm);
 
-    this.httpClient.post(this.path+"Books/SaveSearchTerm", searchTerm, {params}).subscribe((res:any)=>console.log(res));
+    this.httpClient.post(`${this.baseUrl}/library/search-term`, {}, {params, withCredentials: true})
+      .subscribe((res:any)=>console.log(res));
   }
 
 }

@@ -7,6 +7,10 @@ export default [
           path: "",
           loadComponent: () => import("./components/catalog/catalog.component").then(m => m.CatalogComponent)
         },
+        {
+          path: "search",
+          loadComponent: () => import("./components/search/search.component").then(m => m.SearchComponent)
+        },
         // You can add additional child routes here:
         // { path: 'another-route', loadComponent: () => import('./another/another.component').then(m => m.AnotherComponent) }
       ]

@@ -1,0 +1,43 @@
+<div class="main-search-container" #mainSearchContainer>
+  <div class="search-history-container" *ngIf="activeSearchHistory">
+    <ng-container *ngIf="searchHistory.length > 0; else emptyState">
+      <div class="search-history">
+        <div class="history-item" *ngFor="let search of searchHistory">
+          <span class="history-icon">
+            <img src="../../../../assets/icons/prev_searched.svg" alt="Search Icon">
+          </span>
+          <p class="history-text">{{ search }}</p>
+          <span class="arrow-icon">
+            <img src="../../../../assets/icons/rightArrow24Gray.svg" alt="Right Arrow">
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <h1>Listen what you love</h1>
+        <p>Search for books, authors and more.</p>
+      </div>
+    </ng-template>
+  </div>
+  
+  <div class="categories" *ngIf="!activeSearchHistory">
+    <div class="category" *ngFor="let category of categories" (click)="getBooksFromCategory(category.id)">
+      {{ category.categoryName }}
+    </div>
+  </div>
+  
+  <div class="searched-books">
+    <div class="searched-book" *ngFor="let book of searchedBooks" (click)="selectBook(book)">
+      <img [src]="book.imageURL" alt="{{ book.title }}" class="book-image"/>
+      <div class="book-details">
+        <span class="title">{{ book.title }}</span>
+        <span class="author">By Kumadio</span>
+      </div>
+      <span class="arrow-icon">
+        <img src="../../../../assets/icons/rightArrow24Gray.svg" alt="Right Arrow">
+      </span>
+    </div>
+  </div>
+</div>

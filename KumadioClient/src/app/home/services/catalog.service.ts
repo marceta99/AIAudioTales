@@ -31,5 +31,4 @@ export class CatalogService {
   public getAllCategories(): Observable<Category[]> {
       return this.http.get<Category[]>(`${this.baseUrl}/categories`);
   }
-
 }

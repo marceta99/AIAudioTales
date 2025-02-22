@@ -4,7 +4,7 @@ import { LoadingSpinnerService } from '../common/services/loading-spinner.servic
 import { LoadingSpinnerComponent } from '../common/components/loading-spinner/loading-spinner.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { CommonModule } from '@angular/common';
-import { IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { PlayerComponent } from './components/player/player.component';
 import { PlayerService } from './services/player.service';
 import { CatalogService } from './services/catalog.service';
@@ -22,7 +22,8 @@ import { SearchService } from './services/search.service';
     LoadingSpinnerComponent,
     SidenavComponent,
     CommonModule,
-    IonRouterOutlet
+    IonRouterOutlet,
+    IonContent
   ]
 })
 export class HomeComponent implements OnInit{

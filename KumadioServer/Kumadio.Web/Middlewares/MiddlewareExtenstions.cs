@@ -30,6 +30,7 @@ namespace Kumadio.Web.Middlewares
 
             app.UseAuthentication();
 
+            app.UseMiddleware<UserContextMiddleware>();
             app.UseMiddleware<RequestLoggingMiddleware>();
 
             app.UseAuthorization();
