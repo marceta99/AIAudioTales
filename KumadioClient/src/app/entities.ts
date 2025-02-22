@@ -137,6 +137,10 @@ export interface ReturnAnswer {
   nextPartId: number | null
 }
 
+export interface ApiMessageResponse {
+  message: string
+}
+
 //Enums
 export enum ToastType{
   Success = "success",

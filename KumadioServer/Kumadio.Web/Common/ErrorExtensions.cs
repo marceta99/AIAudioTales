@@ -12,6 +12,7 @@ namespace Kumadio.Web.Common
                 Code = error.Code, 
                 Message = error.Message
             });
+            
         }
     }
 }

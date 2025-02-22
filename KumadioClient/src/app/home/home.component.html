@@ -1,0 +1,9 @@
+
+<app-sidenav ></app-sidenav>
+<div id="body-container" [style.height]="(playerActive$ | async) ? 'calc(100vh - 90px)' : '100vh'">
+    <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
+    <div [ngClass]="(isLoading$ | async) ? 'hide':'show'" class="content-container">
+      <ion-router-outlet></ion-router-outlet>
+    </div>
+</div>
+<!--<app-player></app-player>-->

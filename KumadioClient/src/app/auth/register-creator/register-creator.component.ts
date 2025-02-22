@@ -2,9 +2,9 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { RegisterCreator } from 'src/app/entities';
 import { passwordMatchValidator } from '../custom-validators';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register-creator',
@@ -17,9 +17,7 @@ import { passwordMatchValidator } from '../custom-validators';
   styleUrls: ['register-creator.component.scss']
 })
 export class RegisterCreatorComponent implements OnInit {
-
-  private creator!: RegisterCreator;
-  registerForm!: FormGroup;
+  public registerForm!: FormGroup;
 
   constructor(
     private authService: AuthService,
@@ -38,7 +36,7 @@ export class RegisterCreatorComponent implements OnInit {
   }
 
   onSubmit() {
-    this.creator = {
+    const creator: RegisterCreator = {
       firstName: this.registerForm.controls['firstName'].value,
       lastName: this.registerForm.controls['lastName'].value,
       email: this.registerForm.controls['email'].value,
@@ -46,17 +44,8 @@ export class RegisterCreatorComponent implements OnInit {
       confirmPassword: this.registerForm.controls['confirmPassword'].value
     };
 
-    // If passwords match, proceed
-    if (this.creator.password === this.creator.confirmPassword) {
-      this.registerCreator(this.creator);
-    } else {
-      // Handle mismatch (e.g., show an error in the template)
-    }
-  }
-
-  registerCreator(creator: RegisterCreator) {
     this.authService.registerCreator(creator).subscribe({
-      next: (res: any) => {
+      next: () => {
         this._ngZone.run(() => {
           this.router.navigate(['/login'])
             .then(() => window.location.reload());
@@ -67,5 +56,6 @@ export class RegisterCreatorComponent implements OnInit {
         // handle error
       }
     });
+
   }
 }

@@ -1,0 +1,602 @@
+.minimized-player-container{
+    position: fixed;
+    bottom: 50px;
+    height: 70px;
+    width: 100%;
+    //background: linear-gradient(90deg, #ff7bfd, #b43ac9); /* Gradient for background */
+    background: linear-gradient(90deg, #a481ff, #9d77fd);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.top-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    align-items: end;
+    justify-content: center;
+}
+
+.book-details{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 180px;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+}
+
+.book-details .book-cover{
+  height: 65px;
+  width: 120px;
+  padding: 5px;
+  border-radius: 10px;
+  object-fit: cover; /* This ensures the image fills the entire space */
+  overflow: hidden;  /* Hides any part of the image that overflows */
+}
+
+.book-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Prevent overflow in case of long text */
+  margin: 5px;
+}
+
+
+.title, .artist {
+  display: inline-block;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.scrolling {
+  animation: circular-scroll 10s linear infinite; /* Apply the scrolling animation */
+}
+
+@keyframes circular-scroll {
+  0% {
+    transform: translateX(100%); /* Start with the text just off-screen to the right */
+  }
+  50% {
+    transform: translateX(-100%); /* Move the text to the left until it has fully scrolled off-screen */
+  }
+  100% {
+    transform: translateX(100%); /* Move the text back to the starting point, ready to repeat */
+  }
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Ensure all controls have the same width */
+    height: 50px; /* Ensure all controls have the same height */
+    cursor: pointer;
+    border-radius: 50%; /* Make buttons circular */
+}
+
+.controls img {
+  width: 40px;
+  height: 40px;
+
+  &:hover {
+    transform: scale(1.10); /* Slightly grow the element on hover */
+  }
+}
+
+.progress-container {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.progress-container span {
+  margin: 5px;
+  color: white;
+}
+
+.progress-area {
+    height: 6px;
+    width: 60%;
+    border-radius: 50px;
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+.progress-area .progress-bar {
+    height: inherit;
+    width: 0%;
+    position: relative;
+    border-radius: inherit;
+    //background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 100%);
+   // background-image: linear-gradient(to right, #cf6bd1, #be7add, #ad88e5, #9d93e9, #909dea, #81a9f2, #73b4f6, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+   background-color: #1b1919;
+  }
+
+.progress-bar::before {
+    content: "";
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    top: 50%;
+    right: -5px;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    background: inherit;
+    transition: opacity 0.2s ease;
+}
+
+.progress-area:hover .progress-bar::before {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+  
+.question {
+    margin: 10;
+    height: 50px;
+    width: 50px;
+}
+
+.pulse {
+    border-radius: 50%;
+    animation: pulse 2s linear infinite;
+}
+  
+.pulse:before, .pulse:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 5px;
+  }
+  
+.pulse::before {
+    width: 15px;
+    height: 5.5px;
+}
+  
+.pulse::after {
+    width: 15px;
+    height: 35px;
+}
+  
+@keyframes pulse
+{
+  0%
+  {
+    //box-shadow: 0 0 0 0 #f0f0f0;
+    transform: scale(1);
+
+  }
+  50%
+  {
+    transform: scale(1.10);
+  }
+  100%
+  {
+    transform: scale(1);
+    //box-shadow: 0 0 0 20px rgba(255, 190, 11, 0);
+  }
+}
+
+.side-buttons {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-progress-area {
+  height: 2px;
+  width: 100%;
+  border-radius: 50px;
+  background: #f0f0f0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom-progress-area .bottom-progress-bar {
+  height: 2px;
+  width: 0%;
+  position: relative;
+  border-radius: inherit;
+  background-color: #1b1919;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom-progress-bar::before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  top: 50%;
+  right: -5px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  background: inherit;
+  transition: opacity 0.2s ease;
+}
+
+#next, #prev {
+  display: none;
+}
+
+#rewind {
+  display: flex;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5; /* or any styling to show the button is disabled */
+}
+
+// for desktop
+@media (min-width: 768px) {
+    .minimized-player-container {
+        bottom: 0;
+        height: 90px;
+    }
+
+    .book-details{
+      width: 200px;
+    }
+
+    .book-info {
+      width: 100px;
+    }
+
+    .book-details .book-cover {
+      height: 85px;
+      width: 100px;
+      padding: 8px;
+    }
+
+    .progress-container{
+      display: flex;
+    }
+
+    .side-buttons{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-right: 10px;
+      margin-top: 25px;
+    }
+
+    .bottom-progress-area {
+      display: none;
+    }
+
+    .player {
+      align-items: center;
+    }
+
+    #next, #prev {
+      display: flex;
+    }
+
+    #rewind {
+      display: none;
+    }
+
+    .progress-container {
+      margin-bottom: 0;
+    }
+
+
+    .control.large{
+      width: 50px; 
+      height: 50px;
+    }
+
+    .control.large img {
+      width: 45px;
+      height: 45px;
+    }
+
+    .control.small {
+      width: 35px; /* Smaller size for rewind and forward buttons */
+      height: 35px;
+    }
+
+    .control.small img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .control.medium {
+      width: 45px; /* Smaller size for rewind and forward buttons */
+      height: 45px;
+    }
+
+    .control.medium img{
+      width: 40px;
+      height: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+  .minimized-player-container {
+    width: calc(100% - 20px); /* Adds a small margin for a cleaner look */
+    margin: 0 10px; /* Centered with a margin */
+    border-radius: 12px; /* Matches Spotify's border radius */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    //background: linear-gradient(90deg, #ff7bfd, #b43ac9); /* Gradient for background */
+    background: linear-gradient(90deg, #b297f8, #895bff);
+
+    padding: 0 10px;
+  }
+
+  .bottom-progress-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px; /* Matches Spotify's thicker progress bar */
+    width: 100%;
+    border-radius: 50px; /* Rounded progress bar */
+    background: #fff; /* Light background for bar track */
+    overflow: hidden;
+  }
+
+  .bottom-progress-bar {
+    height: 100%;
+    width: 0%; /* Dynamically updated width */
+    background: linear-gradient(to right, #625f5f, #302b2b); /* Vibrant gradient for progress */
+    transition: width 0.3s ease; /* Smooth transition for updates */
+  }
+}
+
+// Fullscreen Player Styling
+.fullscreen-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align elements closer to the top */
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #b297f8, #895bff);
+  z-index: 1000;
+
+  .top-bar {
+    margin: 0; /* Remove extra margins */
+    padding: 20px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
+    font-size: 16px;
+    color: white;
+  
+    .close-icon,
+    .three-dots {
+      display: flex; /* Ensure icons are flex items */
+      align-items: center; /* Center icons vertically */
+      cursor: pointer;
+  
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+  
+  .album-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+
+    .album-cover {
+      width: 90%; /* Increase the width for a larger image */
+      max-width: 300px; /* Ensure it doesn't grow excessively on larger screens */;
+      max-height: 400px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .play-container {
+    width: 95%;
+    flex: 2; /* Take 2 units of vertical space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .details {
+    margin-top: 15px;
+    text-align: center;
+    color: white;
+
+    .title {
+      font-family: 'Poppins', sans-serif; /* Modern font */
+    font-size: 24px;
+    font-weight: 700; /* Bold for emphasis */
+    color: #FFFFFF; /* Pure white for clarity */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    }
+
+    .artist {
+      font-family: 'Inter', sans-serif; /* Clean and modern font */
+      font-size: 18px;
+      font-weight: 500;
+      color: #E0E0E0; /* Softer white for contrast */
+      margin-top: 5px;
+    }
+
+    .title,
+    .artist {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.scrolling {
+        animation: scroll-text 8s linear infinite;
+      }
+    }
+
+    .artist {
+      font-size: 18px;
+      color: #dedede;
+    }
+  }
+
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(100%);
+    }
+    50% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Adjust width to fit nicely */
+    margin: 0 auto; /* Center the container */
+    margin-top: 15px;
+  }
+  
+  .progress-area {
+    width: 100%; /* Full width */
+    height: 6px; /* Thickness of the bar */
+    border-radius: 50px;
+    background: #e0e0e0;
+    position: relative;
+    margin-top: 8px; /* Space below the progress bar */
+  }
+  
+  .progress-bar {
+    height: 100%;
+    width: 0%; /* This will be dynamically updated */
+    background: linear-gradient(to right, #625f5f, #302b2b);
+    border-radius: 50px;
+    transition: width 0.3s ease;
+  }
+  
+  .time-container {
+    display: flex;
+    justify-content: space-between; /* Align times at both ends */
+    width: 100%; /* Match the width of the progress bar */
+    font-size: 16px; /* Small font for subtle appearance */
+    color: white; /* Ensure readability */
+  }
+  
+
+  .controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    padding: 10px;
+
+    .control {
+      cursor: pointer;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    .control.small {
+      width: 45px; /* Smaller size for rewind and forward buttons */
+      height: 45px;
+    }
+
+    .control.small img {
+      width: 35px;
+      height: 35px;
+    }
+
+    .control.medium {
+      width: 50px; /* Smaller size for rewind and forward buttons */
+      height: 50px;
+    }
+
+    .control.medium img{
+      width: 45px;
+      height: 45px;
+    }
+
+  }
+}
+
+@media (min-width: 768px) {
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* Reduce the space between the buttons */
+    max-width: 300px; /* Limit the total width of the controls container */
+    margin: 0 auto; /* Center the controls on the screen */
+}
+
+.control {
+    width: 40px; /* Adjust button size if needed */
+    height: 40px;
+}
+
+.control img {
+    width: 30px; /* Adjust icon size */
+    height: 30px;
+}
+}

@@ -1,83 +1,149 @@
-import { Injectable, NgZone } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { RegisterCreator, RegisterUser, Role, User } from 'src/app/entities';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthStorageService } from './auth-storage.service';
 import { environment } from 'src/environments/environment';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { isNativeApp } from 'src/utils/functions';
+import { ApiMessageResponse, RegisterCreator, RegisterUser, User } from 'src/app/entities';
+
+interface MobileLoginResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+interface MobileRefreshResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private path = environment.apiUrl;
-  currentUser: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
-  isLoggedIn: boolean = false;
+  private baseUrl = environment.apiUrl + '/auth';
 
-  constructor(private httpClient: HttpClient, private _ngZone: NgZone, private router: Router) { }
+  private currentUserSubject: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+  public currentUser$: Observable<User | undefined> = this.currentUserSubject.asObservable();
 
-  public login(email: string, password: string): Observable<User>{
-    const user = {
-      "email": email,
-      "password": password
-    };
-    return this.httpClient.post<User>(
-      this.path + "Auth/Login", user, {withCredentials: true}
-    ).pipe(tap((user : User) =>{
-        console.log(user)
-        this.currentUser.next(user);
-        this.isLoggedIn = true;
-        //localStorage.setItem("c23fj2",JSON.stringify(this.customEncode(response)));
+  public get currentUser(): User | undefined {
+    return this.currentUserSubject.value;
+  }
 
-        this._ngZone.run(() => {
-          if(user.role === Role.CREATOR){
-            this.router.navigate(['/home/statistics']);
-          }else{
-            this.router.navigate(['/home']);
-          }
+  public set currentUser(user: User) {
+    this.currentUserSubject.next(user);
+  }
+
+  constructor(
+    private http: HttpClient,
+    private storageService: AuthStorageService
+  ) {}
+
+  public login(email: string, password: string): Observable<ApiMessageResponse | MobileLoginResponse> {
+    if (isNativeApp()) {
+      // mobile => call /login-mobile
+      return this.http.post<MobileLoginResponse>(
+        `${this.baseUrl}/login-mobile`,
+        { email, password }
+      ).pipe(
+        switchMap(res => {
+          // store tokens
+          return from(this.storageService.setTokens(res.accessToken, res.refreshToken)).pipe(
+            map(() => res)
+          );
         })
-    }))
-  }
-
-  public register(user: RegisterUser):Observable<any>{
-    return this.httpClient.post<any>(this.path+"Auth/Register", user );
-  }
-
-  public registerCreator(creator: RegisterCreator):Observable<any>{
-    return this.httpClient.post(this.path+"Auth/RegisterCreator", creator );
-  }
-
-  public loginWithGoogle(credentials: string): Observable<User>{
-    const headers = new HttpHeaders().set('Content-type', 'application/json');
-
-    const requestOptions = {
-      headers: headers,
-      withCredentials: true
+      );
+    } else {
+      // web => call /login-web (withCredentials so cookies are set)
+      return this.http.post<ApiMessageResponse>(
+        `${this.baseUrl}/login-web`,
+        { email, password },
+        { withCredentials: true}
+      );
     }
-    return this.httpClient.post<User>(
-      this.path + "Auth/LoginWithGoogle",
-      JSON.stringify(credentials),
-      requestOptions
-    ).pipe(tap((user : User) =>{
-      console.log(user)
-      this.currentUser.next(user);
-      this.isLoggedIn = true;
-      //localStorage.setItem("c23fj2",JSON.stringify(this.customEncode(response)));
-
-      this._ngZone.run(() => {
-        if(user.role === Role.CREATOR){
-          this.router.navigate(['/home/statistics']);
-        }else{
-          this.router.navigate(['/home']);
-        }
-      })
-  }));
   }
 
-  public refreshToken(): Observable<any> {
-    return this.httpClient.get(this.path + "Auth/RefreshToken");
+  public refresh(): Observable<MobileRefreshResponse | ApiMessageResponse | string> {
+    if (isNativeApp()) {
+      // mobile => call /refresh-mobile with the stored refresh token
+      return from(this.storageService.getRefreshToken()).pipe(
+        switchMap(rToken => {
+          if (!rToken) {
+            return of('No refresh token found');
+          }
+          return this.http.post<MobileRefreshResponse>(
+            `${this.baseUrl}/refresh-mobile`,
+            { refreshToken: rToken }
+          ).pipe(
+            switchMap(res => {
+              // store new tokens
+              return from(this.storageService.setTokens(res.accessToken, res.refreshToken)).pipe(
+                map(() => res)
+              );
+            })
+          );
+        })
+      );
+    } else {
+      // web => call /refresh-web (withCredentials)
+      return this.http.post<ApiMessageResponse>(
+        `${this.baseUrl}/refresh-web`,
+        {},
+        { withCredentials: true }
+      );
+    }
+  }
+
+  public logout(): Observable<ApiMessageResponse | string> {
+    if (isNativeApp()) {
+      // mobile => call /logout-mobile + remove tokens from storage
+      return from(this.storageService.getRefreshToken()).pipe(
+        switchMap(rToken => {
+          if (!rToken) {
+            // no token, just clear anyway
+            return from(this.storageService.clearTokens()).pipe(map(() => 'No refresh token found.'));
+          }
+          return this.http.post<ApiMessageResponse>(`${this.baseUrl}/logout-mobile`, { refreshToken: rToken })
+            .pipe(
+              switchMap(res => 
+                from(this.storageService.clearTokens()).pipe(
+                map(() => res)
+              )
+            )
+          );
+        })
+      );
+    } else {
+      // web => call /logout-web, cookies are cleared
+      return this.http.post<ApiMessageResponse>(
+        `${this.baseUrl}/logout-web`,
+        {},
+        { withCredentials: true}
+      );
+    }
+  }
+
+  public isLoggedIn(): Observable<boolean> {
+    if (isNativeApp()) {
+      return from(this.storageService.getAccessToken()).pipe(
+        map(token => !!token)
+      );
+    } else {
+      // web might do a call to a user endpoint or something
+      // for now, let's just return an observable of true
+      return of(true);
+    }
+  }
+
+  public register(user: RegisterUser):Observable<ApiMessageResponse>{
+    return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register`, user);
+  }
+
+  public registerCreator(creator: RegisterCreator): Observable<ApiMessageResponse>{
+    return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register-creator`, creator);
   }
 
   public getCurrentUser(): Observable<User> {
-    return this.httpClient.get<User>(this.path + "Auth/GetCurrentUser");
+    return this.http.get<User>(`${this.baseUrl}/current-user`, { withCredentials: true});
   }
 }

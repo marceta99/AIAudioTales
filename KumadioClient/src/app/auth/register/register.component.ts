@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RegisterUser } from 'src/app/entities';
 import { passwordMatchValidator } from '../custom-validators';
-import { AuthService } from '../services/auth-new.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register',                  
@@ -17,9 +17,7 @@ import { AuthService } from '../services/auth-new.service';
   styleUrls: ['register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-
-  private user!: RegisterUser;
-  registerForm!: FormGroup;
+  public registerForm!: FormGroup;
 
   constructor(
     private authService: AuthService,
@@ -39,8 +37,8 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    this.user = {
+  public onSubmit(): void {
+    const user: RegisterUser = {
       firstName: this.registerForm.controls['firstName'].value,
       lastName: this.registerForm.controls['lastName'].value,
       email: this.registerForm.controls['email'].value,
@@ -48,19 +46,8 @@ export class RegisterComponent implements OnInit {
       confirmPassword: this.registerForm.controls['confirmPassword'].value
     };
 
-    // Basic check before registration
-    if (this.user.password !== this.user.confirmPassword) {
-      // handle mismatch (you can show an error in the template)
-      return;
-    }
-
-    // If passwords match, proceed with registration
-    this.registerUser(this.user);
-  }
-
-  registerUser(user: RegisterUser) {
     this.authService.register(user).subscribe({
-      next: (res: any) => {
+      next: () => {
         this._ngZone.run(() => {
           this.router.navigate(['/login']).then(() => window.location.reload());
         });
@@ -71,4 +58,5 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
+
 }

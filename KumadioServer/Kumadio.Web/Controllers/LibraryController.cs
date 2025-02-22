@@ -155,11 +155,7 @@ namespace Kumadio.Web.Controllers
             }
         }
 
-        #endregion
-
-        #region PATCH
-
-        [HttpPost("library/{bookId}")]
+        [HttpPost("{bookId}")]
         public async Task<IActionResult> AddToLibrary(int bookId)
         {
             var libraryResult = await _libraryService.AddToLibrary(CurrentUser, bookId);
@@ -167,6 +163,10 @@ namespace Kumadio.Web.Controllers
 
             return Ok();
         }
+
+        #endregion
+
+        #region PATCH
 
         [HttpPatch("next-part")]
         public async Task<ActionResult<DTOReturnPurchasedBook>> NextPart([FromBody] DTOUpdateNextPart nextPart)

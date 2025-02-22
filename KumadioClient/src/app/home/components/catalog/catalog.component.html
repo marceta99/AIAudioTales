@@ -1,0 +1,32 @@
+<div class="main-container">
+  <!-- Banner Slider -->
+  <div class="banner-slider">
+    <div class="slider-container" #slider (scroll)="onScroll()" (mouseup)="onScrollEnd()" (touchend)="onScrollEnd()">
+      <div class="banner-item" *ngFor="let ad of ads; let i = index">
+        <img [src]="ad.image" [alt]="ad.alt" />
+      </div>
+    </div>
+    <div class="dots-container">
+      <span
+        class="dot"
+        *ngFor="let ad of ads; let i = index"
+        [class.active]="i === activeAdIndex"
+        (click)="scrollToAd(i)"
+      ></span>
+    </div>
+  </div>
+
+  <!-- Books Section -->
+  <div class="main-book-div" *ngFor="let category of categories; let index = index">
+    <div class="cat-head">
+      <h2>{{ category.category | bookCategoryPipe }}</h2>
+      <h5>View All</h5>
+    </div>
+
+    <app-slider
+      [size]="index % 2 === 0 ? 'small' : 'big'"
+      [books]="category.books"
+      [sliderId]="index.toString()"
+    ></app-slider>
+  </div>
+</div>

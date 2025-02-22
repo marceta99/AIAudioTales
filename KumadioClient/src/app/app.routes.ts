@@ -3,12 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    loadChildren: () => import("./home/home.routes")
   },
   {
     path: "login",
@@ -21,5 +16,14 @@ export const routes: Routes = [
   {
     path: "register-creator",
     loadComponent: () => import("./auth/register-creator/register-creator.component").then(m => m.RegisterCreatorComponent)
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found'
   },
 ];

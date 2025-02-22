@@ -1,0 +1,47 @@
+img {
+  width: 200px; /* Set the width to 50 pixels */
+  height: 200px; /* Set the height to 50 pixels */
+  object-fit: cover; /* Maintain aspect ratio and cover the 50x50 box */
+}
+
+.show{
+  visibility: visible;
+}
+.hide{
+  visibility: hidden;
+}
+
+#body-container {
+  position: relative;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-container {
+  position: relative; /* Add this */
+  overflow-y: auto; /* Keep this */
+  display: flex;
+  flex-direction: column;
+}
+
+
+router-outlet + * {
+  flex: 1;
+  overflow: auto; /* Adds scroll if content overflows */
+  display: flex;
+  flex-direction: column;
+}
+
+// for desktop
+@media (min-width: 768px) {
+  #body-container {
+    margin-left: 200px;
+    // max-width: 1100px;
+    top: 0;
+  }
+}
+@media screen and (max-width: 900px) {
+
+}

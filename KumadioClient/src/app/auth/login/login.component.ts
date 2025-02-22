@@ -10,11 +10,10 @@ import {
 } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/entities';
-import { AuthService } from '../services/auth-new.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  // Import the modules you need for this component:
   imports: [
     CommonModule,
     RouterModule,        // for [routerLink] and Router
@@ -24,12 +23,10 @@ import { AuthService } from '../services/auth-new.service';
   styleUrls: ['login.component.scss'],
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-
   private clientId = environment.clientId;
-
-  showErrorMessage = false;
-  showGoogleErrorMessage = false;
-  loginForm!: FormGroup;
+  public showErrorMessage = false;
+  public showGoogleErrorMessage = false;
+  public loginForm!: FormGroup;
 
   constructor(
     private router: Router,
@@ -88,7 +85,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
     this.service.login(email, password).subscribe({
-      next: (user: any) => {
+      next: () => {
         this.router.navigate(['/home']);
       },
       error: (error: any) => {
