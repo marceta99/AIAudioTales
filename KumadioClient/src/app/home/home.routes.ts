@@ -19,6 +19,14 @@ export default [
           path: "discover",
           loadComponent: () => import("./components/discover/discover.component").then(m => m.DiscoverComponent)
         },
+        {
+          path: "library",
+          loadComponent: () => import("./components/library/library.component").then(m => m.LibraryComponent)
+        },
+        {
+          path: 'my-profile',
+          loadChildren: () => import("./components/my-profile/my-profile.routes")
+        },
       ]
     },
     

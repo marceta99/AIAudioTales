@@ -64,14 +64,18 @@ namespace Kumadio.Web.ServiceRegistrations
             })
             .AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false;
+                x.RequireHttpsMetadata = false; // only for dev; set to true in production if using HTTPS
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["ApplicationSettings:Secret"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["ApplicationSettings:Issuer"], // Issuer is authority that issues the token. In your case, that’s your .NET API
+                    ValidateAudience = true,
+                    ValidAudience = configuration["ApplicationSettings:Audience"], // Audience is intended recipient of the token, again the resource server that’s validating the token.
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero  // optional: default 5 min clock skew
                 };
                 x.Events = new JwtBearerEvents
                 {

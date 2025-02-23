@@ -7,7 +7,7 @@ import { environment } from "src/environments/environment";
 
 @Injectable()
 export class PlayerService {
-  private path = environment.apiUrl;
+  private baseUrl = environment.apiUrl + '/library';
 
   public remainingTime = new BehaviorSubject<number>(0); // Emits the remaining time in seconds
   public currentBookIndex: Subject<number> = new Subject<number>();
@@ -18,7 +18,7 @@ export class PlayerService {
   constructor(private http: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
   public processChildResponse(prompt: string): Observable<{ reply: string }> {
-    return this.http.post<{ reply: string }>(this.path + "Books/ProcessChildResponse", { prompt });
+    return this.http.post<{ reply: string }>(`${this.baseUrl}/process-response`, { prompt });
   }
 
   public nextPart(bookId: number, nextPartId: number): Observable<PurchasedBook>{
@@ -27,7 +27,7 @@ export class PlayerService {
        nextPartId
     };
 
-    return this.http.patch<PurchasedBook>(this.path + "Books/NextPart", nextPart);
+    return this.http.patch<PurchasedBook>(`${this.baseUrl}/next-part`, nextPart);
   }
 
   public activateQuestions(bookId: number, playingPosition: number): Observable<PurchasedBook> {
@@ -36,7 +36,7 @@ export class PlayerService {
       playingPosition
     };
 
-    return this.http.patch<PurchasedBook>(this.path + "Books/ActivateQuestions", activateQuestions);
+    return this.http.patch<PurchasedBook>(`${this.baseUrl}/activate-questions`, activateQuestions);
   }
 
   public updateProgress(bookId: number, playingPosition?: number, nextBookId?: number, questionsActive?: boolean): Observable<PurchasedBook> {
@@ -55,10 +55,10 @@ export class PlayerService {
       progress.questionsActive = questionsActive;
     }
 
-    return this.http.patch<PurchasedBook>(this.path + "Books/UpdateProgress", progress);
+    return this.http.patch<PurchasedBook>(`${this.baseUrl}/update-progress`, progress);
   }
 
   public startBookAgain(bookId: number): Observable<PurchasedBook> {
-    return this.http.patch<PurchasedBook>(this.path + "Books/StartBookAgain/"+ bookId, {});
+    return this.http.patch<PurchasedBook>(`${this.baseUrl}/restart-book/${bookId}`, {});
   }
 }

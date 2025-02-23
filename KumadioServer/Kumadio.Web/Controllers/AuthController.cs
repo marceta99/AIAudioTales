@@ -245,12 +245,14 @@ namespace Kumadio.Web.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(-1)
             });
             Response.Cookies.Append("X-Refresh-Token", "", new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(-1)
             });
 
@@ -322,7 +324,7 @@ namespace Kumadio.Web.Controllers
                     new Claim("email", user.Email),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -345,7 +347,7 @@ namespace Kumadio.Web.Controllers
             var response = _httpContextAccessor.HttpContext?.Response;
             response?.Cookies.Append("X-Access-Token", tokenValue, new CookieOptions
             {
-                Expires = DateTime.Now.AddMinutes(5),
+                Expires = DateTime.Now.AddMinutes(1),
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,

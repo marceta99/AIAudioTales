@@ -1,0 +1,163 @@
+$primary-color: #003a70; // Darker shade of blue for the profile circle and active tab
+
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .profile-circle {
+      width: 100px;
+      height: 100px;
+      background-color: #a481ff; // Apply the darker color here
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: white;
+    }
+
+    .profile-details {
+      margin-top: 10px;
+
+      h2 {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+
+        .stat {
+          text-align: center;
+
+          .stat-num {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            span {
+              margin-left: 2px;
+              margin-top: 4px;
+            }
+          }
+
+          h3 {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
+          }
+
+          p {
+            font-size: 14px;
+            margin: 0;
+            color: #777;
+          }
+        }
+      }
+    }
+  }
+
+  .settings-section {
+    margin-top: 20px;
+
+    .section {
+      margin-bottom: 20px;
+
+      h4 {
+        text-align: left; /* Align section titles to the left */
+        
+        color: #333; /* Ensure the color is consistent */
+        font-weight: bold;
+        font-size: 18px; /* Adjust font size if needed */
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0; /* Remove side padding, keep top and bottom */
+        background: none; /* Remove background for a clean look */
+        border: none; /* Remove all borders */
+        border-bottom: 1px solid #ccc; /* Add a bottom border as a separator */
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+
+        .arrow-icon {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        /* Toggle Switch Styling */
+        input[type='checkbox'] {
+          appearance: none;
+          width: 40px;
+          height: 20px;
+          background-color: #ccc;
+          border-radius: 20px;
+          position: relative;
+          outline: none;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:checked {
+            background-color: #4caf50; /* Green color when checked */
+          }
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+          }
+
+          &:checked::before {
+            transform: translateX(20px); /* Move the knob when checked */
+          }
+        }
+      }
+    }
+
+    .sign-out-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #c9302c;
+      }
+    }
+  }
+}

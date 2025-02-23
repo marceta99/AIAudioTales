@@ -1,123 +1,121 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-  HttpInterceptor,
+  HttpContextToken,
+  HttpContext,
   HttpRequest,
-  HttpHandler,
   HttpEvent,
+  HttpHandlerFn,
   HttpErrorResponse,
-  HttpHeaders,
-  HttpHandlerFn
+  HttpHeaders
 } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable, throwError, from, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
-import { AuthStorageService } from './auth-storage.service';  
 import { AuthService } from './auth.service';
+import { AuthStorageService } from './auth-storage.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthInterceptor implements HttpInterceptor {
-  private errorCounter = 0;
+// 1) The token that indicates whether we've tried to refresh
+export const REFRESH_ATTEMPTED = new HttpContextToken<boolean>(() => false);
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private storageService: AuthStorageService
-  ) {}
+export function authInterceptor(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> {
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  // 2) We can inject the Angular services in function-based interceptors
+  const router = inject(Router);
+  const authService = inject(AuthService);
+  const storageService = inject(AuthStorageService);
 
-    // Check if request uses formData
-    const isFormDataRequest =
-      request.url.includes('AddRootPart') ||
-      request.url.includes('AddBookPart');
+  // Check if request uses formData
+  const isFormDataRequest =
+    req.url.includes('AddRootPart') || req.url.includes('AddBookPart');
 
-    // If we’re on web, rely on cookies. If on mobile, attach Bearer token
-    if (Capacitor.isNativePlatform()) {
-      // Mobile scenario attach bearer token inside header
-      if (!isFormDataRequest) {
-        const headers = new HttpHeaders().set('Content-type', 'application/json');
-        request = request.clone({ headers });
-      }
-
-      // Attach Bearer token from storage
-      return from(this.storageService.getAccessToken()).pipe(
-        switchMap(token => {
-          if (token) {
-            request = request.clone({
-              setHeaders: {
-                Authorization: `Bearer ${token}`
-              }
-            });
-          }
-
-          return next.handle(request).pipe(
-            catchError(err => this.handleAuthError(err, request, next))
-          );
-        })
-      );
-
-    } else {
-      // Web scenario: use cookies with credentials
-      if (!isFormDataRequest) {
-        const headers = new HttpHeaders().set('Content-type', 'application/json');
-        request = request.clone({
-          headers,
-          withCredentials: true
-        });
-      } else {
-        // For formData uploads, just set withCredentials = true
-        request = request.clone({
-          withCredentials: true
-        });
-      }
-
-      return next.handle(request).pipe(
-        catchError(err => this.handleAuthError(err, request, next))
-      );
+  // Decide between mobile vs. web
+  if (Capacitor.isNativePlatform()) {
+    // Mobile → attach Bearer token
+    if (!isFormDataRequest) {
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+      req = req.clone({ headers });
     }
+    // retrieve token from secure storage
+    return from(storageService.getAccessToken()).pipe(
+      switchMap(token => {
+        if (token) {
+          req = req.clone({
+            setHeaders: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+        }
+        // pass request to next, handle 401
+        return next(req).pipe(
+          catchError(err => handleAuthError(err, req, next, router, authService))
+        );
+      })
+    );
+  } else {
+    // Web → attach withCredentials: true, rely on cookies
+    if (!isFormDataRequest) {
+      const headers = new HttpHeaders().set('Content-Type', 'application/json');
+      req = req.clone({
+        headers,
+        withCredentials: true
+      });
+    } else {
+      req = req.clone({ withCredentials: true });
+    }
+    return next(req).pipe(
+      catchError(err => handleAuthError(err, req, next, router, authService))
+    );
   }
+}
 
-  private handleAuthError(
-    err: HttpErrorResponse,
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<any> {
-    // If 401, try refresh once
-    if (err && err.status === 401 && this.errorCounter < 1) {
-      this.errorCounter++;
-
-      // attempt refresh
-      return this.authService.refresh().pipe(
+// 3) The error handler, using context-based approach
+function handleAuthError(
+  err: HttpErrorResponse,
+  originalReq: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+  router: Router,
+  authService: AuthService
+): Observable<HttpEvent<unknown>> {
+  if (err?.status === 401) {
+    // check if we've already tried refreshing on this request
+    const alreadyTried = originalReq.context.get(REFRESH_ATTEMPTED);
+    if (!alreadyTried) {
+      // we haven't tried yet → attempt refresh
+      return authService.refresh().pipe(
         switchMap(() => {
-          // reset counter
-          this.errorCounter = 0;
-          // retry original request
-          return next.handle(request).pipe(
-            catchError((retryErr: any) => {
+          // set REFRESH_ATTEMPTED = true in the request context
+          // so we don't keep looping if refresh fails again
+          const newContext = originalReq.context.set(REFRESH_ATTEMPTED, true);
+
+          // clone the original request with the updated context
+          const retriedReq = originalReq.clone({
+            context: newContext
+          });
+
+          // re-issue the request
+          return next(retriedReq).pipe(
+            catchError(retryErr => {
               console.error('Retried request failed:', retryErr);
-              return throwError(() => new Error(retryErr));
+              return throwError(() => retryErr);
             })
           );
         }),
-        catchError((refreshErr: any) => {
-          // Refresh failed => force logout
-          console.warn('Refresh token failed. Logging out.', refreshErr);
-          this.errorCounter = 0;
-          this.authService.logout().subscribe({
+        catchError(refreshErr => {
+          console.warn('Refresh token failed → forcing logout.', refreshErr);
+          authService.logout().subscribe({
             next: () => {
-              this.router.navigate(['/login']).then(() => window.location.reload());
+              router.navigate(['/login']).then(() => window.location.reload());
             }
           });
-          return throwError(() => new Error(refreshErr));
+          return throwError(() => refreshErr);
         })
       );
-    } else {
-      // Non-401 or second-time failure => pass it through
-      this.errorCounter = 0;
-      return throwError(() => err);
     }
   }
+  // if we get here, it's either not a 401 or we've already tried refresh
+  return throwError(() => err);
 }
