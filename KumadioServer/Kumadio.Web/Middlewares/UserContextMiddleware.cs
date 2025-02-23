@@ -14,13 +14,29 @@ namespace Kumadio.Web.Middlewares
 
         public async Task Invoke(HttpContext context, IAuthService authService)
         {
-            var jwtTokenCookie = context.Request.Cookies["X-Access-Token"];
-            if (!string.IsNullOrEmpty(jwtTokenCookie))
+            var jwtToken = "";
+            var tokenFromCookie = context.Request.Cookies["X-Access-Token"];
+            if (!string.IsNullOrEmpty(tokenFromCookie))
+            {
+                jwtToken = tokenFromCookie;
+            }
+            else
+            {
+                // 2) Extract token from authorization header if this is request from mobile app
+                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Extract token after "Bearer "
+                    jwtToken = authHeader.Substring("Bearer ".Length).Trim();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(jwtToken))
             {
                 try
                 {
                     var tokenHandler = new JwtSecurityTokenHandler();
-                    var token = tokenHandler.ReadJwtToken(jwtTokenCookie);
+                    var token = tokenHandler.ReadJwtToken(jwtToken);
                     var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
 
                     if (emailClaim != null)

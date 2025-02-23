@@ -11,8 +11,14 @@ export default [
           path: "search",
           loadComponent: () => import("./components/search/search.component").then(m => m.SearchComponent)
         },
-        // You can add additional child routes here:
-        // { path: 'another-route', loadComponent: () => import('./another/another.component').then(m => m.AnotherComponent) }
+        {
+          path: "books/:bookId",
+          loadComponent: () => import("./components/book/book.component").then(m => m.BookComponent)
+        },
+        {
+          path: "discover",
+          loadComponent: () => import("./components/discover/discover.component").then(m => m.DiscoverComponent)
+        },
       ]
     },
     

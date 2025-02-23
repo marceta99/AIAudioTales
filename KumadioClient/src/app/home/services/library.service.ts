@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, finalize, Observable, Subject } from "rxjs";
 import { LoadingSpinnerService } from "src/app/common/services/loading-spinner.service";
-import { PurchasedBook, SearchedBooks } from "src/app/entities";
+import { Purchase, PurchasedBook, SearchedBooks } from "src/app/entities";
 import { environment } from "src/environments/environment";
 
 @Injectable()
@@ -34,6 +34,7 @@ export class LibraryService {
         finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
       );
     }
+    
     public addToLibrary(bookId: number): Observable<void> {
       return this.httpClient.post<void>(`${this.baseUrl}/${bookId}`, {});
     }

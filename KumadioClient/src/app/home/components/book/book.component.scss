@@ -1,0 +1,80 @@
+.book-head {
+  display: flex;
+  margin-top: 2rem;
+  cursor: pointer;
+  .back {
+    border: none;
+    background: none;
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  h3 {
+    font-weight: 600;
+  }
+}
+.book-route {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+.book-img {
+  max-width: 250px;
+  max-height: 250px;
+  box-shadow: 3px 3px 1px #ccc;
+  -webkit-box-shadow: 3px 3px 1px #ccc;
+  -moz-box-shadow: 3px 3px 1px #ccc;
+  border-radius: 1rem;
+}
+.book-desc {
+  text-align: center;
+  max-width: 350px;
+}
+.title-block {
+  text-align: center;
+}
+.list-categories {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  li {
+    
+      border: 1px solid var(--text-light-blue);
+      color: var(--text-light-blue);
+      border-radius: 15px;
+      padding: 0.1rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+  }
+}
+.btn-div {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  button {
+    max-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .btn-g {
+    padding: 0.6rem 1rem;
+  }
+}
+@media (min-width: 768px) {
+  .book-desc {
+    max-width: 600px;
+  }
+  .book-img {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}
+
+.disable{
+    cursor: not-allowed; /* Cursor to indicate that the button is not clickable */
+}

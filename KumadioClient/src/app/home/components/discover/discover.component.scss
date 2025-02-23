@@ -1,0 +1,172 @@
+
+/* Content container takes the remaining space */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Fills the remaining space after the search bar */
+  overflow: hidden; /* Prevents scrolling of the entire content */
+  min-height: 0; /* Allows flex item to shrink */
+}
+
+.book-list-container {
+  overflow-y: auto; /* Enables vertical scrolling */
+  width: 100%;
+  flex: 1;
+}
+
+/* Optional: Hide scrollbar if desired */
+.book-list-container::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+
+.categories {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; /* Prevents wrapping to the next line */
+  overflow-x: auto;  /* Enables horizontal scrolling */
+  overflow-y: hidden;
+  margin-bottom: 5px;
+  padding: 0 4px; /* Adjusted to prevent overflow caused by padding */
+  width: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+}
+
+.categories::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for WebKit browsers(chrome safari) */
+}
+
+/* Hide scrollbar for Firefox */
+.categories {
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+/* For older versions of Internet Explorer and Edge */
+.categories {
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+}
+
+.categorie {
+  flex: 0 0 auto; /* Prevents items from shrinking or growing */
+  margin: 0 5px; /* Simplified margin */
+  padding: 2px;
+  border-radius: 25px;
+  box-shadow: 0px 1px 3px 2px rgba(0,0,0,0.12);
+  background: #fff;
+  color: black;
+  font-weight: 200;
+  font-size: small;
+  cursor: pointer;
+}
+
+.active-categorie {
+  font-weight: bolder;
+}
+
+//mobile view
+@media (max-width: 768px) {
+  .categories .categorie:first-child {
+    margin-left: 0; /* Ensure the first category has no left margin */
+  }
+
+  .categories {
+    justify-content: flex-start; /* Ensure left alignment on mobile */
+  }
+
+  .categorie {
+    padding: 1px;
+  }
+
+  .content-container {
+    padding-top: 55px; /* Adds space equal to the search bar's height */
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// grid styling 
+.discover-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  overflow-y: auto;
+}
+
+
+.grid-container {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: #a481ff; /* Dark background similar to your example */
+  border-radius: 8px;
+  color:#fff; /* Text color */
+}
+
+.item-image {
+  width: 50px;
+  height: 100%;
+  object-fit: cover;
+  margin-right: 12px;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.item-text {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+
+.cat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 2rem;
+
+}
+
+.main-book-div {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Responsive Grid for Different Screen Sizes */
+@media (max-width: 768px) {
+  /* 4 rows with 2 columns on mobile screens */
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
+  }
+
+  .item-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .item-text {
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+}
+
+@media (min-width: 769px) {
+  /* 2 rows with 4 columns on desktop screens */
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+}

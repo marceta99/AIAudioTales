@@ -1,0 +1,18 @@
+<div class="wrapper">
+  <div class="search-input" [ngClass]="{'active': isInputActive}">
+    <input [formControl]="searchControl" type="text" placeholder="Type book title.." (focus)="focus()" (blur)="blur()">
+
+    <div class="search-box">
+      <li class="search-book" *ngFor="let book of filteredBooks" (click)="searchFromInputList(book.title)">
+        <img [src]="book.imageURL" alt="">
+        <span>{{book.title}}</span>
+      </li>
+      <li class="previous-search" *ngFor="let searchTerm of searchHistory" (click)="searchFromSearchHistory(searchTerm)">
+        <i><img src="../../../../../assets/icons/prev_searched.svg" alt="skip"></i>
+        <span>{{searchTerm}}</span>
+      </li>
+    </div>
+
+    <div class="icon" (click)="searchSubmit()" ><i class="fas fa-search"></i></div>
+  </div>
+</div>
