@@ -46,81 +46,6 @@ namespace Kumadio.Web.Controllers
 
         #region GET
 
-        [HttpGet("refresh-web")]
-        public async Task<IActionResult> RefreshWeb()
-        {
-            var refreshTokenHash = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
-            if (string.IsNullOrEmpty(refreshTokenHash)) return DomainErrors.Auth.RefreshTokenMissing.ToBadRequest();
-
-            var refreshTokenResult = await _authService.GetRefreshToken(refreshTokenHash);
-            if (refreshTokenResult.IsFailure) return refreshTokenResult.Error.ToBadRequest();
-
-            var refreshToken = refreshTokenResult.Value;
-            if (refreshToken.Expires < DateTime.Now)
-            {
-                // If expired, revoke and force re-login
-                var revokeTokenResult = await RevokeTokenHelper();
-                if (revokeTokenResult.IsFailure) return revokeTokenResult.Error.ToBadRequest();
-
-                return DomainErrors.Auth.RefreshTokenExpired.ToBadRequest();
-            }
-
-            var userResult = await _authService.GetUserWithRefreshToken(refreshToken);
-            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
-
-            var user = userResult.Value;
-
-            var accessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(accessToken))
-                return BadRequest("Problem with refresh");
-
-            var newRefreshToken = GenerateRefreshToken();
-
-            SetJwtCookie(accessToken);
-            var setRefreshResult = await SetRefreshTokenCookie(newRefreshToken, user);
-            if (setRefreshResult.IsFailure)
-                return setRefreshResult.Error.ToBadRequest();
-
-            return Ok("Refresh successful");
-        }
-
-        [HttpGet("refresh-mobile")]
-        public async Task<IActionResult> RefreshMobile()
-        {
-            var refreshTokenHash = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
-            if (string.IsNullOrEmpty(refreshTokenHash)) return DomainErrors.Auth.RefreshTokenMissing.ToBadRequest();
-
-            var refreshTokenResult = await _authService.GetRefreshToken(refreshTokenHash);
-            if (refreshTokenResult.IsFailure) return refreshTokenResult.Error.ToBadRequest();
-
-            var refreshToken = refreshTokenResult.Value;
-            if (refreshToken.Expires < DateTime.Now)
-            {
-                // If expired, revoke and force re-login
-                var revokeTokenResult = await RevokeTokenHelper();
-                if (revokeTokenResult.IsFailure) return revokeTokenResult.Error.ToBadRequest();
-
-                return DomainErrors.Auth.RefreshTokenExpired.ToBadRequest();
-            }
-
-            var userResult = await _authService.GetUserWithRefreshToken(refreshToken);
-            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
-
-            var user = userResult.Value;
-
-            var newAccessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(newAccessToken))
-                return BadRequest("Problem with refresh");
-
-            var newRefreshToken = GenerateRefreshToken();
-
-            return Ok(new
-            {
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
-            });
-        }
-
         [HttpGet("current-user")]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
@@ -169,41 +94,50 @@ namespace Kumadio.Web.Controllers
         [HttpPost("login-mobile")]
         public async Task<IActionResult> LoginMobile([FromBody] DTOLogin model)
         {
-            var loginResult = await _authService.Login(model.Email, model.Password);
+            var loginResult = await LoginHelper(model);
             if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
 
-            var user = loginResult.Value;
+            var (accessToken, refreshToken) = loginResult.Value;
 
-            var accessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(accessToken))
-                return BadRequest("Problem with login");
-
-            var refreshToken = GenerateRefreshToken();
-
-            return Ok(new { accessToken, refreshToken });
+            return Ok(new 
+            {   
+                accessToken,
+                refreshToken 
+            });
         }
 
         [HttpPost("login-web")]
         public async Task<IActionResult> LoginWeb([FromBody] DTOLogin model)
         {
+            var loginResult = await LoginHelper(model);
+            if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
+
+            var (accessToken, refreshToken) = loginResult.Value;
+
+            SetJwtCookie(accessToken);
+            SetRefreshTokenCookie(refreshToken);
+
+            return MessageResponse.Ok("Successful login");
+        }
+
+        private async Task<Result<(string accessToken, RefreshToken refreshToken)>> LoginHelper(DTOLogin model)
+        {
             var loginResult = await _authService.Login(model.Email, model.Password);
             if (loginResult.IsFailure)
-                return loginResult.Error.ToBadRequest();
+                return loginResult.Error;
 
             var user = loginResult.Value;
 
             var accessToken = GenerateJwt(user);
             if (String.IsNullOrEmpty(accessToken))
-                return BadRequest("Problem with login"); 
+                return DomainErrors.Auth.JwtTokenIssue;
 
             var refreshToken = GenerateRefreshToken();
 
-            SetJwtCookie(accessToken);
-            var setRefreshResult = await SetRefreshTokenCookie(refreshToken, user);
-            if (setRefreshResult.IsFailure)
-                return setRefreshResult.Error.ToBadRequest();
+            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
 
-            return MessageResponse.Ok("Successful login");
+            return (accessToken, refreshToken);
         }
 
         [HttpPost("google-login")]
@@ -269,6 +203,37 @@ namespace Kumadio.Web.Controllers
             return MessageResponse.Ok("Logged out");
         }
 
+        [HttpPost("refresh-web")]
+        public async Task<IActionResult> RefreshWeb()
+        {
+            var refreshTokenHash = _httpContextAccessor.HttpContext?.Request.Cookies["X-Refresh-Token"];
+
+            var refreshResult = await RefreshTokenHelper(refreshTokenHash);
+            if (refreshResult.IsFailure)
+                return refreshResult.Error.ToBadRequest();
+
+            var (newAccessToken, newRefreshToken) = refreshResult.Value;
+
+            SetJwtCookie(newAccessToken);
+            SetRefreshTokenCookie(newRefreshToken);
+
+            return MessageResponse.Ok("Refresh successful");
+        }
+
+        [HttpPost("refresh-mobile")]
+        public async Task<IActionResult> RefreshMobile(DTORefreshToken refreshTokenDto)
+        {
+            var refreshResult = await RefreshTokenHelper(refreshTokenDto.RefreshToken);
+            if (refreshResult.IsFailure) return refreshResult.Error.ToBadRequest();
+            var (newAccessToken, newRefreshToken) = refreshResult.Value;
+
+            return Ok(new
+            {
+                accessToken = newAccessToken,
+                refreshToken = newRefreshToken
+            });
+        }
+
 
         #endregion
 
@@ -287,6 +252,60 @@ namespace Kumadio.Web.Controllers
         #endregion
 
         #region Private Helper Methods
+        private async Task<Result<(string newAccessToken, RefreshToken newRefreshToken)>> RefreshTokenHelper(string? oldRefreshToken)
+        {
+            if (string.IsNullOrEmpty(oldRefreshToken))
+                return DomainErrors.Auth.RefreshTokenMissing;
+
+            // 1) Retrieve old token from DB
+            var refreshTokenResult = await _authService.GetRefreshToken(oldRefreshToken);
+            if (refreshTokenResult.IsFailure)
+                return refreshTokenResult.Error;
+
+            var refreshToken = refreshTokenResult.Value;
+
+            // 2) Check absolute expiry
+            if (DateTime.Now > refreshToken.AbsoluteExpires)
+            {
+                // Revoke & force re-login
+                var revokeTokenResult = await RevokeTokenHelper();
+                if (revokeTokenResult.IsFailure)
+                    return revokeTokenResult.Error;
+
+                return DomainErrors.Auth.RefreshTokenExpired;
+            }
+
+            // 3) Check normal sliding expiry
+            if (DateTime.Now > refreshToken.Expires)
+            {
+                // Revoke & force re-login
+                var revokeTokenResult = await RevokeTokenHelper();
+                if (revokeTokenResult.IsFailure)
+                    return revokeTokenResult.Error;
+
+                return DomainErrors.Auth.RefreshTokenExpired;
+            }
+
+            // 4) Retrieve the user
+            var userResult = await _authService.GetUserWithRefreshToken(refreshToken);
+            if (userResult.IsFailure)
+                return userResult.Error;
+
+            var user = userResult.Value;
+
+            // 5) Generate new access token & new refresh token
+            var newAccessToken = GenerateJwt(user);
+            if (string.IsNullOrEmpty(newAccessToken))
+                return DomainErrors.Auth.JwtTokenIssue;
+
+            var newRefreshToken = GenerateRefreshToken(refreshToken);
+
+            var saveRefreshResult = await _authService.SaveRefreshToken(newRefreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
+
+            return (newAccessToken, newRefreshToken);
+
+        }
         private async Task<Result> RevokeTokenHelper()
         {
             var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
@@ -324,7 +343,7 @@ namespace Kumadio.Web.Controllers
                     new Claim("email", user.Email),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -333,21 +352,39 @@ namespace Kumadio.Web.Controllers
 
             return encryptedToken;
         }
-        private RefreshToken GenerateRefreshToken()
+        private RefreshToken GenerateRefreshToken(RefreshToken? oldToken = null)
         {
-            return new RefreshToken
+            var now = DateTime.Now;
+            if (oldToken == null)
             {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Created = DateTime.Now,
-                Expires = DateTime.Now.AddDays(7)
-            };
+                // brand-new login scenario
+                return new RefreshToken
+                {
+                    Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                    Created = now,
+                    Expires = now.AddDays(7),   // sliding 7-day
+                    AbsoluteExpires = now.AddMinutes(3) // absolute 90-day
+                };
+            }
+            else
+            {
+                // We rotate to a new token each refresh, but keep the same AbsoluteExpires
+                return new RefreshToken
+                {
+                    Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                    Created = now,
+                    Expires = now.AddDays(15),
+                    AbsoluteExpires = oldToken.AbsoluteExpires,
+                    UserId = oldToken.UserId
+                };
+            }
         }
         private void SetJwtCookie(string tokenValue)
         {
             var response = _httpContextAccessor.HttpContext?.Response;
             response?.Cookies.Append("X-Access-Token", tokenValue, new CookieOptions
             {
-                Expires = DateTime.Now.AddMinutes(1),
+                Expires = DateTime.Now.AddMinutes(15),
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
@@ -355,7 +392,7 @@ namespace Kumadio.Web.Controllers
                 Path = "/"
             });
         }
-        private async Task<Result> SetRefreshTokenCookie(RefreshToken refreshToken, User user)
+        private void SetRefreshTokenCookie(RefreshToken refreshToken)
         {
             var response = _httpContextAccessor.HttpContext?.Response;
             response?.Cookies.Append("X-Refresh-Token", refreshToken.Token, new CookieOptions
@@ -367,8 +404,6 @@ namespace Kumadio.Web.Controllers
                 SameSite = SameSiteMode.None,
                 Path = "/"
             });
-
-            return await _authService.SaveRefreshToken(refreshToken, user);
         }
         
         #endregion

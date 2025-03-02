@@ -6,6 +6,7 @@
         public string Token { get; set; }
         public DateTime Created { get; set; }
         public DateTime Expires { get; set; }
+        public DateTime AbsoluteExpires { get; set; }
         public User User { get; set; }
     }
 }

@@ -15,6 +15,7 @@
         public const string GoogleCredentialsNotValid = "GOOGLE_CREDENTIALS_NOT_VALID";
         public const string EmailClaimMissing = "EMAIL_CLAIM_MISSING";
         public const string UserNull = "USER_NULL";
+        public const string JwtTokenIssue = "JWT_TOKEN_ISSUE";
 
         // Catalog
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";

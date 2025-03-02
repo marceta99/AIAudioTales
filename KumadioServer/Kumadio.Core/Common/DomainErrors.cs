@@ -19,6 +19,7 @@
             public static Error RefreshTokenMissing => new (ErrorCodes.RefreshTokenMissing, "Refresh token is missing from request cookie.");
             public static Error EmailClaimMissing => new (ErrorCodes.EmailClaimMissing, "Email claim is missing from jwt token.");
             public static Error UserNull => new (ErrorCodes.UserNull, "User object cannot be null.");
+            public static Error JwtTokenIssue => new (ErrorCodes.JwtTokenIssue, "Issue with creating new jwt token.");
         }
 
         public static class Catalog
