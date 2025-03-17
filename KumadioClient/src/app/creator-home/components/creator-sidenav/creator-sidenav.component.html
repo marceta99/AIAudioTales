@@ -1,0 +1,37 @@
+<div class="sidenav">
+
+  <div class="topnav-lg">
+    <span class="logo-span" [routerLink]="['/creator']" >
+      <img class="logo-img" src="../../../../assets/logo_no_t.png" alt="logo">
+      <p class="logo-text">Kumadio</p>
+    </span>
+  </div>
+
+  <span class="menu_ctg" [routerLink]="['/creator']" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+    <img src="../../../../assets/icons/home.svg" alt="home"><a>Home</a>
+  </span>
+  <span class="menu_ctg" [routerLink]="['/creator']" routerLinkActive="active-link" >
+    <img src="../../../../assets/icons/insights_24.svg" alt="search"><a>Analytics</a>
+  </span>
+  <span class="menu_ctg" [routerLink]="['/creator/create-book']" routerLinkActive="active-link">
+    <img src="../../../../assets/icons/add_circle_24.svg" alt="library"><a>Create</a>
+  </span>
+  <span class="menu_ctg" [routerLink]="['/creator/my-books']" routerLinkActive="active-link">
+    <img src="../../../../assets/icons/library.svg" alt="library"><a>My books</a>
+  </span>
+
+  <span class="menu_ctg my-prof" [routerLink]="['/creator/profile']" routerLinkActive="active-link">
+    <img src="../../../../assets/icons/settings.svg" alt="settings"><a>My Profile</a>
+  </span>
+</div>
+
+<div class="topnav-mob">
+  <span class="logo-span" [routerLink]="['/creator']" >
+    <img class="logo-img" src="../../../../assets/logo_no_t.png" alt="logo">
+  </span>
+  <div class="mob-icons" >
+    <span class="menu_ctg" [routerLink]="['/creator/my-profile']" routerLinkActive="active-link">
+      <img src="../../../../assets/icons/settings.svg" alt="profile">
+    </span>
+  </div>
+</div>

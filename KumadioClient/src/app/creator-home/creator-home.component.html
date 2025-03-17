@@ -1,0 +1,8 @@
+
+<app-creator-sidenav></app-creator-sidenav>
+<ion-content id="body-container" >
+    <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
+    <ion-content [ngClass]="(isLoading$ | async) ? 'hide':'show'" class="content-container">
+        <ion-router-outlet></ion-router-outlet>
+    </ion-content>
+</ion-content>

@@ -1,0 +1,76 @@
+<!-- The overlay that covers the screen and is blurred/faded -->
+<div class="dialog-overlay" (click)="onOverlayClick($event)">
+
+  <!-- The main modal container -->
+  <div class="dialog-container">
+    
+    <!-- Modal Header -->
+    <div class="dialog-header">
+      <h2>Create Part</h2>
+      <button class="close-button" (click)="closeDialog()">
+        &#10005; <!-- X icon -->
+      </button>
+    </div>
+
+    <!-- (Optional) Subheader or short description -->
+    <div class="dialog-subtitle">
+      <!-- You can place a short description or instructions here. -->
+      <p>Please fill out the form below:</p>
+    </div>
+
+    <!-- Your form content -->
+    <form [formGroup]="partForm" (ngSubmit)="addPart()" class="dialog-form">
+
+      <!-- Audio input -->
+      <div class="form-group">
+        <label>Add audio file for this part</label>
+        <input
+          type="file"
+          (change)="onFileChange($event)"
+          accept=".mp3"
+          formControlName="partAudio"
+        />
+        <!-- You can show an error or other validation message if needed -->
+        <div class="error" *ngIf="partForm.get('partAudio')?.invalid && partForm.get('partAudio')?.touched">
+          * Audio is required
+        </div>
+      </div>
+
+      <!-- Answers array -->
+      <div formArrayName="answers" class="form-group">
+        <label>Answers:</label>
+        <div
+          class="answer-item"
+          *ngFor="let answer of partFormAnswers.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <input
+            type="text"
+            formControlName="text"
+            placeholder="Answer Text"
+          />
+          <button type="button" class="remove-btn" (click)="removeAnswer(i)">Remove</button>
+        </div>
+
+        <button
+          type="button"
+          class="add-answer-btn"
+          (click)="addAnswer()"
+          [disabled]="partFormAnswers.length >= 3"
+        >
+          Add Answer
+        </button>
+      </div>
+
+      <!-- Submit button -->
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="partForm.invalid"
+      >
+        Submit
+      </button>
+      
+    </form>
+  </div>
+</div>

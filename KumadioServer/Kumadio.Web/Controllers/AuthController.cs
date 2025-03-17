@@ -99,15 +99,19 @@ namespace Kumadio.Web.Controllers
 
             var (accessToken, refreshToken) = loginResult.Value;
 
+            var userResult = await _authService.GetUserWithEmail(model.Email);
+            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
+
             return Ok(new 
             {   
                 accessToken,
-                refreshToken 
+                refreshToken,
+                user = _returnUserMapper.Map(userResult.Value)
             });
         }
 
         [HttpPost("login-web")]
-        public async Task<IActionResult> LoginWeb([FromBody] DTOLogin model)
+        public async Task<ActionResult<DTOReturnUser>> LoginWeb([FromBody] DTOLogin model)
         {
             var loginResult = await LoginHelper(model);
             if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
@@ -117,27 +121,13 @@ namespace Kumadio.Web.Controllers
             SetJwtCookie(accessToken);
             SetRefreshTokenCookie(refreshToken);
 
-            return MessageResponse.Ok("Successful login");
-        }
+            var userResult = await _authService.GetUserWithEmail(model.Email);
+            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
 
-        private async Task<Result<(string accessToken, RefreshToken refreshToken)>> LoginHelper(DTOLogin model)
-        {
-            var loginResult = await _authService.Login(model.Email, model.Password);
-            if (loginResult.IsFailure)
-                return loginResult.Error;
-
-            var user = loginResult.Value;
-
-            var accessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(accessToken))
-                return DomainErrors.Auth.JwtTokenIssue;
-
-            var refreshToken = GenerateRefreshToken();
-
-            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
-            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
-
-            return (accessToken, refreshToken);
+            return Ok(new
+            {
+                user = _returnUserMapper.Map(userResult.Value)
+            }); ;
         }
 
         [HttpPost("google-login")]
@@ -252,6 +242,25 @@ namespace Kumadio.Web.Controllers
         #endregion
 
         #region Private Helper Methods
+        private async Task<Result<(string accessToken, RefreshToken refreshToken)>> LoginHelper(DTOLogin model)
+        {
+            var loginResult = await _authService.Login(model.Email, model.Password);
+            if (loginResult.IsFailure)
+                return loginResult.Error;
+
+            var user = loginResult.Value;
+
+            var accessToken = GenerateJwt(user);
+            if (String.IsNullOrEmpty(accessToken))
+                return DomainErrors.Auth.JwtTokenIssue;
+
+            var refreshToken = GenerateRefreshToken();
+
+            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
+
+            return (accessToken, refreshToken);
+        }
         private async Task<Result<(string newAccessToken, RefreshToken newRefreshToken)>> RefreshTokenHelper(string? oldRefreshToken)
         {
             if (string.IsNullOrEmpty(oldRefreshToken))

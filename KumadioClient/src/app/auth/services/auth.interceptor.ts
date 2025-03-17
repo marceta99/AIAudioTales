@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import {
   HttpContextToken,
-  HttpContext,
   HttpRequest,
   HttpEvent,
   HttpHandlerFn,
@@ -15,7 +14,7 @@ import { Capacitor } from '@capacitor/core';
 import { AuthService } from './auth.service';
 import { AuthStorageService } from './auth-storage.service';
 
-// 1) The token that indicates whether we've tried to refresh
+// The token that indicates whether we've tried to refresh
 export const REFRESH_ATTEMPTED = new HttpContextToken<boolean>(() => false);
 
 export function authInterceptor(
@@ -72,7 +71,6 @@ export function authInterceptor(
   }
 }
 
-// 3) The error handler, using context-based approach
 function handleAuthError(
   err: HttpErrorResponse,
   originalReq: HttpRequest<unknown>,

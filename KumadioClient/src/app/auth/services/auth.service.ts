@@ -10,6 +10,10 @@ import { ApiMessageResponse, RegisterCreator, RegisterUser, User } from 'src/app
 interface MobileLoginResponse {
   accessToken: string;
   refreshToken: string;
+  user: User
+}
+interface WebLoginResponse {
+  user: User
 }
 
 interface MobileRefreshResponse {
@@ -39,7 +43,7 @@ export class AuthService {
     private storageService: AuthStorageService
   ) {}
 
-  public login(email: string, password: string): Observable<ApiMessageResponse | MobileLoginResponse> {
+  public login(email: string, password: string): Observable<User> {
     if (isNativeApp()) {
       // mobile => call /login-mobile
       return this.http.post<MobileLoginResponse>(
@@ -47,19 +51,23 @@ export class AuthService {
         { email, password }
       ).pipe(
         switchMap(res => {
+          this.currentUser = res.user;
           // store tokens
           return from(this.storageService.setTokens(res.accessToken, res.refreshToken)).pipe(
-            map(() => res)
+            map(() => res.user)
           );
         })
       );
     } else {
       // web => call /login-web (withCredentials so cookies are set)
-      return this.http.post<ApiMessageResponse>(
+      return this.http.post<WebLoginResponse>(
         `${this.baseUrl}/login-web`,
         { email, password },
         { withCredentials: true}
-      );
+      ).pipe(map(response => {
+        this.currentUser = response.user;
+        return response.user;
+      }));
     }
   }
 
@@ -144,7 +152,9 @@ export class AuthService {
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register-creator`, creator);
   }
 
-  public getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/current-user`, { withCredentials: true});
+  public getCurrentUser(): void {
+     this.http
+         .get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})
+         .subscribe(user => this.currentUser = user)
   }
 }

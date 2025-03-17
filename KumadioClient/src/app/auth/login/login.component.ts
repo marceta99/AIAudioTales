@@ -9,7 +9,7 @@ import {
   Validators
 } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/entities';
+import { Role, User } from 'src/app/entities';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -85,8 +85,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
     this.service.login(email, password).subscribe({
-      next: () => {
-        this.router.navigate(['/home']);
+      next: user => {
+        user.role === Role.CREATOR
+         ? this.router.navigate(['/creator'])
+         : this.router.navigate(['/home']);
       },
       error: (error: any) => {
         console.log(error);

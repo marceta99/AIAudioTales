@@ -1,0 +1,14 @@
+<h2>Create Book</h2>
+
+<form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="title" placeholder="Book title">
+    <textarea formControlName="description" placeholder="Description" rows="4"></textarea>
+    <input type="text" formControlName="imageURL" placeholder="Image URL">
+    <select formControlName="categoryId">
+      <option *ngFor="let category of bookCategories" [value]="category.id">
+        {{ category.categoryName }}
+      </option>
+    </select>
+
+    <button type="submit" [disabled]="bookForm.invalid">Submit</button>
+  </form>

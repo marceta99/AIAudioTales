@@ -6,6 +6,10 @@ export const routes: Routes = [
     loadChildren: () => import("./home/home.routes")
   },
   {
+    path: 'creator',
+    loadChildren: () => import("./creator-home/creator.routes")
+  },
+  {
     path: "login",
     loadComponent: () => import("./auth/login/login.component").then(m => m.LoginComponent)
   },

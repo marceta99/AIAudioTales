@@ -20,7 +20,7 @@ export class SearchService {
   constructor(private httpClient: HttpClient) {}
 
   public getSearchHistory(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/library/search-history`, { withCredentials : true });
+    return this.httpClient.get<string[]>(`${this.baseUrl}/library/search-history`);
   }  
 
   public searchBooks(searchTerm: string, pageNumber: number, pageSize: number): Observable<ReturnBook[]> {
@@ -29,13 +29,13 @@ export class SearchService {
             .set('pageNumber', pageNumber.toString())
             .set('pageSize', pageSize.toString());
 
-    return this.httpClient.get<ReturnBook[]>(`${this.baseUrl}/catalog/search`, { params , withCredentials: true});
+    return this.httpClient.get<ReturnBook[]>(`${this.baseUrl}/catalog/search`, { params });
   }
 
   public saveSearchTerm(searchTerm: string){
     const params = new HttpParams().set('searchTerm', searchTerm);
 
-    this.httpClient.post(`${this.baseUrl}/library/search-term`, {}, {params, withCredentials: true})
+    this.httpClient.post(`${this.baseUrl}/library/search-term`, {}, {params})
       .subscribe((res:any)=>console.log(res));
   }
 

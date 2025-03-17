@@ -1,0 +1,26 @@
+
+<div class="main-container">
+  <ng-template class="root-form" #rootForm >
+    <form [formGroup]="rootPartForm" (ngSubmit)="addRootPart()">
+        <h1>Add first part of the book</h1>
+        <input type="file" (change)="onFileChange($event)" accept=".mp3" formControlName="partAudio">
+        <div formArrayName="answers">
+            <div *ngFor="let answer of rootPartFormAnswers .controls; let i=index" [formGroupName]="i">
+              <input type="text" formControlName="text" placeholder="Answer Text">
+              <button type="button" (click)="removeAnswer(rootPartFormAnswers,i)">Remove</button>
+            </div>
+        </div> 
+
+        <button type="button" (click)="addAnswer(rootPartFormAnswers)" [disabled]="rootPartFormAnswers.length >= 3">Add Answer</button>
+        <button type="submit" [disabled]="rootPartForm.invalid">Submit</button>
+    </form>
+  </ng-template>
+
+    <div class="container" *ngIf="partTree;else rootForm">
+      <div class="row">
+        <div class="tree">
+          <ul #treeContainer ></ul>
+        </div>
+      </div>
+    </div>
+</div>

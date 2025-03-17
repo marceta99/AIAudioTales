@@ -41,8 +41,7 @@ export class HomeComponent implements OnInit{
     
     this.isLoading$ = this.spinnerService.loading$;
 
-    this.authService.getCurrentUser()
-      .subscribe(user => this.authService.currentUser = user);
+    if(!this.authService.currentUser) this.authService.getCurrentUser();
   }
 
 }

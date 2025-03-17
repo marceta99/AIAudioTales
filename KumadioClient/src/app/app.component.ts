@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AuthService } from './auth/services/auth.service';
+import { DialogHostComponent } from './common/components/dialog/base/dialog.host.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  imports: [IonApp, IonRouterOutlet, DialogHostComponent],
 })
 export class AppComponent implements OnInit {
 
