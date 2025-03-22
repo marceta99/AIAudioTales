@@ -118,8 +118,7 @@ export interface ReturnPart {
   partAudioLink: string;
   isRoot: boolean;
   bookId: number;
-  parentAnswerId: number;
-  parentAnswerText: string;
+  parentAnswer?: ReturnAnswer;
   answers: ReturnAnswer[];
 }
 

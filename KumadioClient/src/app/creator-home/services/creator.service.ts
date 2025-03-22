@@ -22,8 +22,8 @@ export class CreatorService {
   return this.http.get<Book[]>(`${this.baseUrl}/library/creator/books`);
   }
 
-  public createBook(newBook: CreateBook): Observable<number>{
-    return this.http.post<number>(`${this.baseUrl}/editor/book`, newBook);
+  public createBook(newBook: CreateBook): Observable<Book>{
+    return this.http.post<Book>(`${this.baseUrl}/editor/book`, newBook);
   }
 
   public addRootPart(formData: FormData): Observable<ReturnPart>{

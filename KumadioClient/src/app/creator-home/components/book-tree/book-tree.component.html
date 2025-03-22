@@ -1,26 +1,68 @@
-
-<div class="main-container">
-  <ng-template class="root-form" #rootForm >
-    <form [formGroup]="rootPartForm" (ngSubmit)="addRootPart()">
-        <h1>Add first part of the book</h1>
-        <input type="file" (change)="onFileChange($event)" accept=".mp3" formControlName="partAudio">
-        <div formArrayName="answers">
-            <div *ngFor="let answer of rootPartFormAnswers .controls; let i=index" [formGroupName]="i">
-              <input type="text" formControlName="text" placeholder="Answer Text">
-              <button type="button" (click)="removeAnswer(rootPartFormAnswers,i)">Remove</button>
-            </div>
-        </div> 
-
-        <button type="button" (click)="addAnswer(rootPartFormAnswers)" [disabled]="rootPartFormAnswers.length >= 3">Add Answer</button>
-        <button type="submit" [disabled]="rootPartForm.invalid">Submit</button>
-    </form>
-  </ng-template>
-
-    <div class="container" *ngIf="partTree;else rootForm">
+<!-- Replace the main-container-with-bg + <ng-template> with this: -->
+  <div class="main-container-with-bg" *ngIf="!partTree; else showTree">
+    <div class="form-card root-form">
+      <h1 class="form-title">Add First Part of the Book</h1>
+      
+      <form [formGroup]="rootPartForm" (ngSubmit)="addRootPart()" class="root-part-form">
+        <!-- Part Audio -->
+        <div class="form-group">
+          <label>Audio File</label>
+          <input
+            type="file"
+            (change)="onFileChange($event)"
+            accept=".mp3"
+            formControlName="partAudio"
+          />
+        </div>
+  
+        <!-- Answers Array -->
+        <div formArrayName="answers" class="form-group">
+          <label>Answers</label>
+          
+          <div
+            class="answer-item"
+            *ngFor="let answer of rootPartFormAnswers.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <input type="text" formControlName="text" placeholder="Answer Text" />
+            <button
+              type="button"
+              (click)="removeAnswer(rootPartFormAnswers, i)"
+              class="remove-answer-btn"
+            >
+              Remove
+            </button>
+          </div>
+          
+          <button
+            type="button"
+            (click)="addAnswer(rootPartFormAnswers)"
+            [disabled]="rootPartFormAnswers.length >= 3"
+            class="add-answer-btn"
+          >
+            Add Answer
+          </button>
+        </div>
+  
+        <button
+          type="submit"
+          [disabled]="rootPartForm.invalid"
+          class="submit-btn"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- The "else" block for when partTree is defined -->
+  <ng-template #showTree>
+    <div class="container">
       <div class="row">
         <div class="tree">
-          <ul #treeContainer ></ul>
+          <ul #treeContainer></ul>
         </div>
       </div>
     </div>
-</div>
+  </ng-template>
+  

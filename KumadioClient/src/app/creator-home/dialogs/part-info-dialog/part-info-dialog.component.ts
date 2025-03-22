@@ -18,6 +18,14 @@ export interface PartInfoDialogResult {
 })
 export class PartInfoDialogComponent implements IDialogComponent<PartInfoDialogProps, PartInfoDialogResult>{
   
+  public onOverlayClick(event: MouseEvent): void {
+    // If user clicks directly on the overlay (not inside .dialog-container), close
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('dialog-overlay')) {
+      this.closeDialog();
+    }
+  }  
+
   //region IDialogComponent Implementation
   
   public closeDialog!: (value?: PartInfoDialogResult | undefined) => void;

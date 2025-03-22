@@ -20,8 +20,7 @@ namespace Kumadio.Web.Mappers.BookPartMappers
                 PartAudioLink = source.PartAudioLink,
                 IsRoot = source.IsRoot,
                 BookId = source.BookId,
-                ParentAnwserId = source.ParentAnswer.Id,
-                ParentAnswerText = source.ParentAnswer.Text,
+                ParentAnswer = _answerMapper.Map(source.ParentAnswer),
                 Answers = _answerMapper.Map(source.Answers)
             };
         }

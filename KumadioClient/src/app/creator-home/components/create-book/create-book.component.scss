@@ -1,0 +1,92 @@
+:host {
+    display: block;
+    height: 100%; // so this component can fill the parent ion-content
+    overflow: hidden; // we don't want a second scrollbar here
+  }
+  
+  .create-book-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    // center horizontally
+    align-items: center;       // center horizontally by default
+    min-height: 100%;          // occupy full parent height
+    box-sizing: border-box;
+    padding: 2rem 1rem;
+    background-color: #f9f9f9;  // a light background
+  }
+  
+  .form-card {
+    background: #fff;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;         // limit how wide the card can get
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); // a soft shadow
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-card h2 {
+    margin-top: 0; // remove default heading margin
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;  // space between fields
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  
+    label {
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+  
+    input,
+    select,
+    textarea {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+      
+      &:focus {
+        border-color: #999;
+      }
+    }
+  
+    textarea {
+      resize: vertical; // allow vertical resizing only
+    }
+  }
+  
+  .submit-btn {
+    align-self: flex-end;
+    background: #5cb85c;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  
+    &:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+  
+    &:hover:not(:disabled) {
+      background-color: #4cae4c;
+    }
+  }
+  

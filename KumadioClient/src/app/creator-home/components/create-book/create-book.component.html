@@ -1,14 +1,56 @@
-<h2>Create Book</h2>
+<div class="create-book-container">
+  <div class="form-card">
+    <h2>Create Book</h2>
 
-<form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
-    <input type="text" formControlName="title" placeholder="Book title">
-    <textarea formControlName="description" placeholder="Description" rows="4"></textarea>
-    <input type="text" formControlName="imageURL" placeholder="Image URL">
-    <select formControlName="categoryId">
-      <option *ngFor="let category of bookCategories" [value]="category.id">
-        {{ category.categoryName }}
-      </option>
-    </select>
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+      <!-- Title -->
+      <div class="form-group">
+        <label>Book Title</label>
+        <input
+          type="text"
+          formControlName="title"
+          placeholder="Enter book title"
+        />
+      </div>
 
-    <button type="submit" [disabled]="bookForm.invalid">Submit</button>
-  </form>
+      <!-- Description -->
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          rows="4"
+          formControlName="description"
+          placeholder="Enter a short description"
+        ></textarea>
+      </div>
+
+      <!-- Image URL -->
+      <div class="form-group">
+        <label>Image URL</label>
+        <input
+          type="text"
+          formControlName="imageURL"
+          placeholder="https://example.com/cover.jpg"
+        />
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label>Category</label>
+        <select formControlName="categoryId">
+          <option *ngFor="let category of bookCategories" [value]="category.id">
+            {{ category.categoryName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="bookForm.invalid"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

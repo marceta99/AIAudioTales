@@ -60,7 +60,6 @@ export class BookTreeComponent implements OnInit {
     }) 
   }
 
-
   private getBookTree(): void {
     this.creatorService.getBookTree(this.bookId).subscribe({
       next: (partTree: PartTree) => {
@@ -148,7 +147,7 @@ export class BookTreeComponent implements OnInit {
   }
 
   public addRootPart(){
-    const answers = this.rootPartFormAnswers.controls.map(control => control.value);
+    const answers = this.rootPartFormAnswers.controls.map(control => control.value.text);
 
     if (this.selectedFile) {
       const formData = new FormData();
@@ -177,8 +176,14 @@ export class BookTreeComponent implements OnInit {
     }
   }
 
-  public onFileChange(event: any) {
-    this.selectedFile = event.target.files[0];
+  public onFileChange(event: Event) {
+     const input = event.target as HTMLInputElement;
+    
+    if (!input.files || input.files.length === 0) {
+      return; // no files selected
+    }
+  
+    this.selectedFile = input.files[0];
     console.log("selected file", this.selectedFile)
   }
 

@@ -29,7 +29,7 @@ export function authInterceptor(
 
   // Check if request uses formData
   const isFormDataRequest =
-    req.url.includes('AddRootPart') || req.url.includes('AddBookPart');
+    req.url.includes('root-part') || req.url.includes('part');
 
   // Decide between mobile vs. web
   if (Capacitor.isNativePlatform()) {

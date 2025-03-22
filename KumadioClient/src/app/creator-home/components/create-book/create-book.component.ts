@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Category, CreateBook } from 'src/app/entities';
+import { Book, Category, CreateBook } from 'src/app/entities';
 import { Router } from '@angular/router';
 import { LoadingSpinnerService } from 'src/app/common/services/loading-spinner.service';
 import { CreatorService } from '../../services/creator.service';
@@ -47,9 +47,9 @@ export class CreateBookComponent implements OnInit {
     }
 
     this.creatorService.createBook(newBook).subscribe({
-      next: (bookId: number) => {
-        console.log('Book created successfully with id : ', bookId);
-        this.router.navigate(['/home/book-tree',bookId]);
+      next: (book: Book) => {
+        console.log('Book created successfully with id : ', book.id);
+        this.router.navigate(['/creator/book-tree',book.id]);
       },
       error: (error) => {
         console.error('Error creating book:', error);

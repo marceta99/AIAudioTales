@@ -1,5 +1,38 @@
-<h3>{{dialogProps.clickedPart.isRoot ? 'Intro' : dialogProps.clickedPart.parentAnswerText}}</h3>
-<audio #audioPlayer *ngIf="dialogProps.clickedPart.partAudioLink" controls>
-  <source [src]="dialogProps.clickedPart.partAudioLink" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+<!-- part-info-dialog.component.html -->
+
+<!-- Blurred overlay that closes on background click -->
+<div class="dialog-overlay" (click)="onOverlayClick($event)">
+
+  <!-- White “card” container -->
+  <div class="dialog-container">
+    
+    <!-- Header with title + “X” close button -->
+    <div class="dialog-header">
+      
+      <h2>Part Details</h2>
+      <button class="close-button" (click)="closeDialog()">&#10005;</button>
+    </div>
+
+    <div class="dialog-body">
+      <!-- Put label + name in one row -->
+      <div class="part-name-line">
+        <label class="part-name-label">Part Name:</label>
+        <h3 class="part-name-value">
+          {{ dialogProps.clickedPart?.isRoot ? 'Intro' : dialogProps.clickedPart?.parentAnswer?.text }}
+        </h3>
+      </div>
+    
+      <audio *ngIf="dialogProps.clickedPart?.partAudioLink" controls>
+        <source [src]="dialogProps.clickedPart.partAudioLink" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    
+
+    <!-- Footer with a single close button -->
+    <div class="dialog-footer">
+      <button class="footer-close-btn" (click)="closeDialog()">Close</button>
+    </div>
+
+  </div>
+</div>

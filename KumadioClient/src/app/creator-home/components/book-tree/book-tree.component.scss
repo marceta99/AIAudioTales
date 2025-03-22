@@ -146,3 +146,123 @@
 	height: 100vh;  // Ensure the container takes up the full viewport height
 	text-align: center;  // Center text if necessary
   }
+
+
+
+/****************************************************************
+ * 1) Overall container for the form, with light background
+ ****************************************************************/
+ .main-container-with-bg {
+	/* Takes full viewport height so we can center vertically */
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  
+	/* A light background to match your “create-book” style */
+	background: #f6f7f9;
+	box-sizing: border-box;
+	padding: 2rem 1rem; /* some spacing so the card isn't at the very edge */
+  }
+  
+  /****************************************************************
+   * 2) The form card styles
+   ****************************************************************/
+  .root-form .form-card {
+	background-color: #fff;
+	border-radius: 8px;
+	max-width: 600px;          /* keep it from stretching too wide */
+	width: 100%;               /* fully responsive on smaller screens */
+	margin: auto;              /* center in container (horizontal) */
+	padding: 2rem;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  
+  /****************************************************************
+   * 3) The form title, headings, etc.
+   ****************************************************************/
+  .root-form .form-title {
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+	font-size: 1.4rem;
+	text-align: center;
+  }
+  
+  /****************************************************************
+   * 4) The form layout (like the “create book” form)
+   ****************************************************************/
+  .root-form .root-part-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+  }
+  
+  /* Each group (label + input) */
+  .root-form .form-group {
+	display: flex;
+	flex-direction: column;
+  
+	label {
+	  font-weight: 600;
+	  margin-bottom: 0.5rem;
+	}
+  
+	input[type="file"],
+	input[type="text"],
+	textarea,
+	select {
+	  padding: 0.75rem;
+	  font-size: 1rem;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  outline: none;
+	  transition: border-color 0.2s ease;
+  
+	  &:focus {
+		border-color: #4a90e2;
+	  }
+	}
+  }
+  
+  /* For each answer item row */
+  .root-form .answer-item {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+  }
+  
+  /* Buttons use the same modern style you had for create-book */
+  .root-form .remove-answer-btn,
+  .root-form .add-answer-btn,
+  .root-form .submit-btn {
+	background-color: #4a90e2;
+	color: #fff;
+	border: none;
+	padding: 0.6rem 1.2rem;
+	font-size: 0.95rem;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+  
+	&:hover {
+	  background-color: #3b7dc5;
+	}
+  
+	&:disabled {
+	  opacity: 0.6;
+	  cursor: not-allowed;
+	}
+  }
+  
+  /* 'Add Answer' button aligns left within the group */
+  .root-form .add-answer-btn {
+	align-self: flex-start;
+  }
+  
+  /* The Submit button at the bottom right */
+  .root-form .submit-btn {
+	align-self: flex-end;
+	margin-top: 1rem;
+  }
+  
+  
