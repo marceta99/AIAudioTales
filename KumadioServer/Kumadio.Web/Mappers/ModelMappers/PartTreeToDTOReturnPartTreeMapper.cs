@@ -19,7 +19,8 @@ namespace Kumadio.Web.Mappers.ModelMappers
             {
                 PartId = source.PartId,
                 PartName = source.PartName,
-                Answers = _answerMapper.Map(source.Answers)!
+                Answers = _answerMapper.Map(source.Answers)!,
+                NextParts = Map(source.NextParts)!
             };
         }
     }

@@ -17,9 +17,9 @@
       <!-- Put label + name in one row -->
       <div class="part-name-line">
         <label class="part-name-label">Part Name:</label>
-        <h3 class="part-name-value">
+        <label class="part-name-value">
           {{ dialogProps.clickedPart?.isRoot ? 'Intro' : dialogProps.clickedPart?.parentAnswer?.text }}
-        </h3>
+        </label>
       </div>
     
       <audio *ngIf="dialogProps.clickedPart?.partAudioLink" controls>

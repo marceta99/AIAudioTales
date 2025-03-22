@@ -63,9 +63,11 @@ namespace Kumadio.Web.Controllers
                 AnswersText = answers
             };
 
-            var host = Request.Host.Value;
+            var scheme = Request.Scheme; // "http" or "https"
+            var hostValue = Request.Host.Value;
+            var baseUrl = $"{scheme}://{hostValue}";
 
-            var rootResult = await _editorService.AddRootPart(rootPart, host);
+            var rootResult = await _editorService.AddRootPart(rootPart, baseUrl);
             if (rootResult.IsFailure) return rootResult.Error.ToBadRequest();
 
             return Ok(_partMapper.Map(rootResult.Value));
@@ -117,9 +119,11 @@ namespace Kumadio.Web.Controllers
                 AnswersText = answers
             };
 
-            var host = Request.Host.Value;
+            var scheme = Request.Scheme; // "http" or "https"
+            var hostValue = Request.Host.Value;
+            var baseUrl = $"{scheme}://{hostValue}";
 
-            var partResult = await _editorService.AddBookPart(part, host);
+            var partResult = await _editorService.AddBookPart(part, baseUrl);
             if (partResult.IsFailure) return partResult.Error.ToBadRequest();
 
             return Ok(_partMapper.Map(partResult.Value));

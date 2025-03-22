@@ -3,7 +3,6 @@ import { Component, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { IDialogComponent } from "src/app/common/components/dialog/base/idialog-component.interface";
 
-
 export interface CreatePartDialogProps { }
 
 export interface CreatePartDialogResult {
@@ -54,7 +53,7 @@ export class CreatePartDialogComponent implements IDialogComponent<CreatePartDia
   public addPart(){
     const result: CreatePartDialogResult = {
       file: this.partForm.value.partAudio,
-      answers: this.partFormAnswers.controls.map(control => control.value)
+      answers: this.partFormAnswers.controls.map(control => control.value.text)
     };
 
     this.closeDialog(result);

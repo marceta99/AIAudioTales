@@ -90,7 +90,9 @@ namespace Kumadio.Web.Controllers
             var partTreeResult = await _catalogService.GetPartTree(bookId);
             if (partTreeResult.IsFailure) return partTreeResult.Error.ToBadRequest();
 
-            return Ok(_partTreeMapper.Map(partTreeResult.Value));
+            var value = _partTreeMapper.Map(partTreeResult.Value);
+
+            return Ok(value);
         }
     }
 }

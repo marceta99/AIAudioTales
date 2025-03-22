@@ -69,7 +69,7 @@ namespace Kumadio.Core.Services
             return rootPartTree;
         }
 
-        private async Task<IList<PartTreeModel>> PopulateTree(ICollection<Answer>? answers)
+        private async Task<IList<PartTreeModel>> PopulateTree(IEnumerable<Answer>? answers)
         {
             var partTreeList = new List<PartTreeModel>();
             if (answers == null) return partTreeList;

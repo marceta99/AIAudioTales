@@ -6,7 +6,7 @@ namespace Kumadio.Infrastructure.DiskFileStorage
     {
         private readonly string _uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
 
-        public async Task<string?> SaveFile(byte[] fileBytes, string extension, string host)
+        public async Task<string?> SaveFile(byte[] fileBytes, string extension, string baseUrl)
         {
             if (fileBytes == null || fileBytes.Length == 0)
             {
@@ -25,7 +25,7 @@ namespace Kumadio.Infrastructure.DiskFileStorage
                 return null;
             }
 
-            var accessLink = $"https://{host}/uploads/{fileName}";
+            var accessLink = $"{baseUrl}/uploads/{fileName}";
             return accessLink;
         }
 

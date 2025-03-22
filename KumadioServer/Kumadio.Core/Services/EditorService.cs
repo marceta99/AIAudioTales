@@ -37,12 +37,12 @@ namespace Kumadio.Core.Services
             });
         }
 
-        public async Task<Result<BookPart>> AddRootPart(RootPartModel root, string host)
+        public async Task<Result<BookPart>> AddRootPart(RootPartModel root, string baseUrl)
         {
             var book = await _bookRepository.GetFirstWhere(b => b.Id == root.BookId);
             if (book == null) return DomainErrors.Editor.BookNotFound;
 
-            var fileLink = await _fileStorage.SaveFile(root.AudioBytes, root.Extension, host);
+            var fileLink = await _fileStorage.SaveFile(root.AudioBytes, root.Extension, baseUrl);
             if (fileLink == null)
                 return DomainErrors.Editor.SaveFileFailed;
 

@@ -66,10 +66,9 @@ export class BookTreeComponent implements OnInit {
         console.log('BookTree', partTree);
         this.partTree = partTree;
         this.cdr.detectChanges();
-         console.log("tree container",this.treeContainer)
-         this.treeContainer.nativeElement.innerHTML = this.generateTreeHtml(this.partTree);
+        console.log("tree container",this.treeContainer)
+        this.treeContainer.nativeElement.innerHTML = this.generateTreeHtml(this.partTree);
         this.addClickListeners(this.treeContainer.nativeElement);
-
       },
       error: (error: any) => {
         console.error('Error creating book:', error);

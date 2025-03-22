@@ -6,7 +6,7 @@ namespace Kumadio.Core.Models
     {
         public int PartId { get; set; }
         public string PartName { get; set; }
-        public ICollection<Answer> Answers { get; set; }
-        public ICollection<PartTreeModel> NextParts { get; set; }
+        public IEnumerable<Answer>? Answers { get; set; }
+        public IEnumerable<PartTreeModel>? NextParts { get; set; }
     }
 }
