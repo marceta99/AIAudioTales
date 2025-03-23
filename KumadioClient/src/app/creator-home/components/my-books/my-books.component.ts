@@ -24,6 +24,6 @@ export class MyBooksComponent implements OnInit {
     this.creatorService.getCreatorBooks().subscribe((books: Book[])=> this.books = books);
   }
   navigateToTree(bookId: number){
-    this.router.navigate(['/home/book-tree',bookId])
+    this.router.navigate(['/creator/book-tree',bookId])
   }
 }
