@@ -1,17 +1,12 @@
-.show{
-  visibility: visible;
-}
-.hide{
-  visibility: hidden;
-}
-
 .main-container {
   /* Mobile default = no left margin */
   margin-left: 0;
+  margin-top: 50px;
 
   /* On desktop, shift 200px for the sidenav */
   @media (min-width: 768px) {
     margin-left: 200px;
+    margin-top: 0;
   }
 
   ion-content {
