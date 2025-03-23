@@ -170,14 +170,17 @@
   .sidenav {
     background-color: var(--main-bg-color);
     position: fixed;
-    bottom: auto;
-    height: 100%;
-    width: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-content: center;
     padding: 1rem;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    bottom: auto;
   }
   .my-prof {
     display: flex;

@@ -59,6 +59,8 @@ ion-content {
     --text-size-6: 32px;
     --text-size-7: 48px;
 
+    --ion-safe-area-top: 0 !important;
+
 }
 
 body {
@@ -66,6 +68,7 @@ body {
     background-color: var(--main-bg-color);
     color: var(--text-blue);
 }
+
 
 .orange_click {
     color: var(--text-orange);

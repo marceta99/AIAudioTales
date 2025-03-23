@@ -12,7 +12,7 @@ export class PlayerService {
   public remainingTime = new BehaviorSubject<number>(0); // Emits the remaining time in seconds
   public currentBookIndex: Subject<number> = new Subject<number>();
   public isPlaying: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public playerActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  public playerActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public playerActive$: Observable<boolean> = this.playerActive.asObservable();
 
   constructor(private http: HttpClient, private spinnerService: LoadingSpinnerService) { }
