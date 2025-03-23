@@ -19,8 +19,8 @@
   <!-- Books Section -->
   <div class="main-book-div" *ngFor="let category of categories; let index = index">
     <div class="cat-head">
-      <h2>{{ category.category | bookCategoryPipe }}</h2>
-      <h5>View All</h5>
+      <span class="category-title">{{ category.category | bookCategoryPipe }}</span>
+      <span class="view-all">View All</span>
     </div>
 
     <app-slider
