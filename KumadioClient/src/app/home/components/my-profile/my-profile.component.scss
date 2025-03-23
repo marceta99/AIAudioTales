@@ -5,6 +5,10 @@ $primary-color: #003a70; // Darker shade of blue for the profile circle and acti
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
 
   .user-info {
     display: flex;

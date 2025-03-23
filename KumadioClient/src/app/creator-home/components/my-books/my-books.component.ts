@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class MyBooksComponent implements OnInit {
-  public books!: Book[];
+  public books: Book[] = [];
 
   constructor(private spinnerService: LoadingSpinnerService,
               private creatorService: CreatorService,

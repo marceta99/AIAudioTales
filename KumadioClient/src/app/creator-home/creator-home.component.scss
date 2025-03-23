@@ -8,10 +8,14 @@
 .main-container {
   /* Mobile default = no left margin */
   margin-left: 0;
+  margin-top: 50px;
+  margin-bottom: 50px;
 
   /* On desktop, shift 200px for the sidenav */
   @media (min-width: 768px) {
     margin-left: 200px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   ion-content {
@@ -20,10 +24,4 @@
   }
 }
 
-router-outlet + * {
-  flex: 1;
-  overflow: auto; /* Adds scroll if content overflows */
-  display: flex;
-  flex-direction: column;
-}
 
