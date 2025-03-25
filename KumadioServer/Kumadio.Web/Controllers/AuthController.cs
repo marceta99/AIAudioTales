@@ -13,6 +13,7 @@ using Kumadio.Web.Settings;
 using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kumadio.Web.Controllers
 {
@@ -46,6 +47,7 @@ namespace Kumadio.Web.Controllers
         #region GET
 
         [HttpGet("current-user")]
+        [Authorize(Policy = "LoggedInPolicy")]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
             var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];

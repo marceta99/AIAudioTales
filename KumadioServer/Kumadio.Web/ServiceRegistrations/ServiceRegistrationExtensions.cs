@@ -105,7 +105,19 @@ namespace Kumadio.Web.ServiceRegistrations
             // 7) Authorization policies
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ListenerNoSubscription", policy => policy.RequireRole("LISTENER_NO_SUBSCRIPTION"));
+                options.AddPolicy("ListenerPolicy", policy => 
+                    policy.RequireRole("LISTENER_NO_SUBSCRIPTION", "LISTENER_WITH_SUBSCRIPTION")
+                );
+
+                options.AddPolicy("CreatorPolicy", policy =>
+                    policy.RequireRole("CREATOR")
+                );
+
+                // 1) New policy for "just logged in", no role required
+                options.AddPolicy("LoggedInPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser(); // ensures any valid token
+                });
             });
 
             // 8) CORS
