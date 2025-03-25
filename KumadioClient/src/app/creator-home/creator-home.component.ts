@@ -31,8 +31,6 @@ export class CreatorHomeComponent implements OnInit{
 
   ngOnInit():void {
     this.isLoading$ = this.spinnerService.loading$;
-
-    if(!this.authService.currentUser) this.authService.getCurrentUser();
   }
 
 }

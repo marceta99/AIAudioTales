@@ -6,14 +6,8 @@ namespace Kumadio.Web.DTOS
     {
         [Required]
         public int BookId { get; set; }
-
-        [Required]
         public decimal? PlayingPosition { get; set; }
-        
-        [Required]
         public int? NextBookId { get; set; }
-        
-        [Required]
         public bool? QuestionsActive { get; set; }
     }
 }

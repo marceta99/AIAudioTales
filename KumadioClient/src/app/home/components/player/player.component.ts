@@ -162,9 +162,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private saveProgress(playingPosition?: number, nextBookIndex?: number, questionsActive?: boolean): void {
-    const bookId = this.books[this.currentBookIndex].id;
+    const bookId = this.books[this.currentBookIndex].bookId;
     const currentTimeSec = playingPosition ? playingPosition : this.audioElement.nativeElement.currentTime;
-    const nextBookId = nextBookIndex ? this.books[nextBookIndex].id : undefined ; 
+    const nextBookId = nextBookIndex ? this.books[nextBookIndex].bookId : undefined ; 
 
     this.playerService.updateProgress(bookId, currentTimeSec, nextBookId, questionsActive).subscribe({
       next: (purchasedBook: PurchasedBook) => { 
@@ -194,7 +194,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     if(this.currentBook.playingPart.answers.length > 0){
       this.playerService.isPlaying.next(false);
 
-      this.playerService.activateQuestions(this.currentBook.id, this.audioElement.nativeElement.currentTime)
+      this.playerService.activateQuestions(this.currentBook.bookId, this.audioElement.nativeElement.currentTime)
       .subscribe((purchasedBook: PurchasedBook) => {
         this.currentBook = purchasedBook;
         console.log("questions activated")
@@ -204,7 +204,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     } else {
       //if there is no more answers it means that user have reached the end of that book part and we should
       // set current book back to start and play the next book
-      this.playerService.startBookAgain(this.currentBook.id).subscribe({
+      this.playerService.startBookAgain(this.currentBook.bookId).subscribe({
         next: (updatedPurchasedBook: PurchasedBook) => {
           console.log("start again response ", updatedPurchasedBook)
           this.currentBook = updatedPurchasedBook;
@@ -221,7 +221,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   public nextPart(nextPlayingPartId: number | null): void {
-    const bookId = this.currentBook.id;
+    const bookId = this.currentBook.bookId;
     const nextPartId = nextPlayingPartId as number;
 
     this.playerService.nextPart(bookId, nextPartId).subscribe((updatedPurchasedBook: PurchasedBook)=>{

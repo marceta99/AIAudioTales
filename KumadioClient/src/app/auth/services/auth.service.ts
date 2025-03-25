@@ -152,9 +152,7 @@ export class AuthService {
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register-creator`, creator);
   }
 
-  public getCurrentUser(): void {
-     this.http
-         .get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})
-         .subscribe(user => this.currentUser = user)
+  public getCurrentUser(): Observable<User> {
+     return this.http.get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})
   }
 }

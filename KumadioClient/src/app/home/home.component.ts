@@ -40,8 +40,6 @@ export class HomeComponent implements OnInit{
     this.playerActive$ = this.playerService.playerActive$;
     
     this.isLoading$ = this.spinnerService.loading$;
-
-    if(!this.authService.currentUser) this.authService.getCurrentUser();
   }
 
 }

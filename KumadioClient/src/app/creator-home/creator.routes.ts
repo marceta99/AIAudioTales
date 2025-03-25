@@ -1,8 +1,13 @@
 import { Route } from "@angular/router";
 import { CreatorHomeComponent } from "./creator-home.component";
+import { canActivateCreator } from "./guards/creator.guard";
 
 export default [
-    {path: "", component: CreatorHomeComponent, children: [
+    {
+      path: "",
+      component: CreatorHomeComponent,
+      canActivate: [canActivateCreator],
+      children: [
         {
           path: "",
           loadComponent: () => import("./components/analytics/analytics.component").then(m => m.AnalyticsComponent)

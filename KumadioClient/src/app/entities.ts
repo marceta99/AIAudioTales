@@ -30,7 +30,7 @@ export interface Book {
 }
 
 export interface PurchasedBook {
-  id: number,
+  bookId: number,
   title: string,
   description: string,
   bookCategory: BookCategory,

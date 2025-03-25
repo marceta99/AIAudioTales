@@ -17,6 +17,7 @@ namespace Kumadio.Web.Mappers.PurchasedBookMappers
             return new DTOReturnPurchasedBook
             {
                 BookId = source.BookId,
+                BookCategory = source.Book.CategoryId,
                 Description = source.Book.Description,
                 Title = source.Book.Title,
                 ImageURL = source.Book.ImageURL,

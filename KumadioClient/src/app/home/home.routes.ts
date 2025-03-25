@@ -1,8 +1,13 @@
 import { Route } from "@angular/router";
 import { HomeComponent } from "./home.component";
+import { canActivateListener } from "./guards/listener.guard";
 
 export default [
-    {path: "", component: HomeComponent, children: [
+    {
+      path: "", 
+      component: HomeComponent,
+      canActivate: [canActivateListener],
+      children: [
         {
           path: "",
           loadComponent: () => import("./components/catalog/catalog.component").then(m => m.CatalogComponent)

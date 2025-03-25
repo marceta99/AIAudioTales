@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
-using Google.Apis.Auth;
 using Kumadio.Core.Interfaces;
 using Kumadio.Web.DTOS.Auth;
 using Kumadio.Domain.Entities;
@@ -372,7 +371,7 @@ namespace Kumadio.Web.Controllers
                     Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                     Created = now,
                     Expires = now.AddDays(7),   // sliding 7-day
-                    AbsoluteExpires = now.AddMinutes(3) // absolute 90-day
+                    AbsoluteExpires = now.AddDays(90) // absolute 90-day
                 };
             }
             else

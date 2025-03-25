@@ -22,6 +22,10 @@ export const routes: Routes = [
     loadComponent: () => import("./auth/register-creator/register-creator.component").then(m => m.RegisterCreatorComponent)
   },
   {
+    path: "not-found",
+    loadComponent: () => import("./common/components/not-found/not-found.component").then(m => m.NotFoundComponent)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
