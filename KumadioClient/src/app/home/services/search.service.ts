@@ -8,7 +8,16 @@ import { environment } from "src/environments/environment";
 export class SearchService {
   private baseUrl = environment.apiUrl;
 
-  searchTerm: string = "";
+  private searchTermSubject: BehaviorSubject<string> = new BehaviorSubject("");
+  public searchTerm$: Observable<string> = this.searchTermSubject.asObservable();
+
+  public get searchTerm(): string {
+   return this.searchTermSubject.value; 
+  }
+
+  public set searchTerm(term: string) {
+    this.searchTermSubject.next(term);
+  }
     
   isSearchActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isSearchActive$: Observable<boolean> = this.isSearchActive.asObservable();

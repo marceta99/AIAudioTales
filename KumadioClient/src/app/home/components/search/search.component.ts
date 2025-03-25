@@ -170,4 +170,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.searchService.isSearchActive.next(false);
     this.router.navigate(['/home/books',book.id])
   }
+
+  public onHistoryItemClick(searchTerm: string): void {
+    // 3) This sets the side nav’s input to this value
+    this.searchService.searchTerm = searchTerm;
+    // If you also want to instantly trigger the search, it’ll happen
+    // because Sidenav is listening to `searchControl.valueChanges`.
+  }
 }

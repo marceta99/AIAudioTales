@@ -60,12 +60,16 @@ export class SidenavComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private authService: AuthService,
     private location: Location
   ) {}
 
   ngOnInit(): void {
     this.isSearchActive$ = this.searchService.isSearchActive$;
+
+    this.searchService.searchTerm$.subscribe(value => {
+      if (value !== this.searchControl.value)
+        this.searchControl.setValue(value);
+    })
 
     this.searchControl.valueChanges
     .pipe(
@@ -99,6 +103,7 @@ export class SidenavComponent implements OnInit {
   public toggleSearch(): void {
     if (this.searchService.isSearchActive.value) {
       this.searchService.isSearchActive.next(false);
+      this.searchService.searchTerm = "";
       this.location.back();
     } else {
       this.searchService.isSearchActive.next(true);
