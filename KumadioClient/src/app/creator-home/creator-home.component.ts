@@ -25,8 +25,7 @@ export class CreatorHomeComponent implements OnInit{
   public isLoading$!: Observable<boolean>;
 
   constructor(
-    private spinnerService: LoadingSpinnerService,
-    private authService: AuthService
+    private spinnerService: LoadingSpinnerService
   ) { }
 
   ngOnInit():void {

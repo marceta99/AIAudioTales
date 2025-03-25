@@ -1,7 +1,0 @@
-<h1>My Books: </h1>
-<div class="container">
-  <div class="book" *ngFor="let book of books" (click)="navigateToTree(book.id)">
-    <h1>{{book.title}}</h1>
-    <img [src]="book.imageURL" alt="">
-  </div>
-</div>

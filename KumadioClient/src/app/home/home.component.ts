@@ -33,12 +33,10 @@ export class HomeComponent implements OnInit{
   constructor(
     private spinnerService: LoadingSpinnerService,
     private playerService: PlayerService,
-    private authService: AuthService
   ) { }
 
   ngOnInit():void {
     this.playerActive$ = this.playerService.playerActive$;
-    
     this.isLoading$ = this.spinnerService.loading$;
   }
 
