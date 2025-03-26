@@ -47,20 +47,15 @@ namespace Kumadio.Web.Controllers
         #region GET
 
         [HttpGet("current-user")]
-        [Authorize(Policy = "LoggedInPolicy")]
+        [Authorize]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
-            var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["X-Access-Token"];
-            if (string.IsNullOrEmpty(jwtToken)) return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
+            var user = (User)HttpContext.Items["CurrentUser"]!;
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.ReadJwtToken(jwtToken);
+            if (user == null)
+                return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
 
-            var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "email");
-            if (emailClaim == null) return DomainErrors.Auth.EmailClaimMissing.ToBadRequest();
-
-            var email = emailClaim.Value;
-            var result = await _authService.GetUserWithEmail(email);
+            var result = await _authService.GetUserWithEmail(user.Email);
             if (result.IsFailure) return result.Error.ToBadRequest();
 
             return Ok(_returnUserMapper.Map(result.Value));

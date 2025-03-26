@@ -4,12 +4,14 @@ using Kumadio.Domain.Entities;
 using Kumadio.Web.Common;
 using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kumadio.Web.Controllers
 {
     [Route("api/catalog")]
     [ApiController]
+    [Authorize]
     public class CatalogController : ControllerBase
     {
         private readonly ICatalogService _catalogService;

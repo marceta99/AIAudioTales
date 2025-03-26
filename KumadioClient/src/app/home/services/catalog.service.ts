@@ -17,18 +17,19 @@ export class CatalogService {
       .set('page', page)
       .set('pageSize', pageSize);
 
-    return this.http.get<ReturnBook[]>(`${this.baseUrl}/books`, {params});
+    return this.http.get<ReturnBook[]>(`${this.baseUrl}/books`, {params, withCredentials : true});
   }
 
   public getBookWithId(bookId: number): Observable<ReturnBook>{
     this.spinnerService.setLoading(true);
 
-    return this.http.get<ReturnBook>(`${this.baseUrl}/books/${bookId}`).pipe(
+    return this.http.get<ReturnBook>(`${this.baseUrl}/books/${bookId}`, {withCredentials : true})
+    .pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );
   }
 
   public getAllCategories(): Observable<Category[]> {
-      return this.http.get<Category[]>(`${this.baseUrl}/categories`);
+      return this.http.get<Category[]>(`${this.baseUrl}/categories`, {withCredentials : true});
   }
 }
