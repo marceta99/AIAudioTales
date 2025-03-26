@@ -47,7 +47,7 @@ namespace Kumadio.Web.Controllers
         #region GET
 
         [HttpGet("current-user")]
-        [Authorize]
+       // [Authorize]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
             var user = (User)HttpContext.Items["CurrentUser"]!;

@@ -11,7 +11,7 @@ namespace Kumadio.Web.Controllers
 {
     [Route("api/catalog")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CatalogController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
