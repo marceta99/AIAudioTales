@@ -1,12 +1,11 @@
 .main-container {
-  /* Mobile default = no left margin */
   margin-left: 0;
   margin-top: 50px;
   margin-bottom: 50px;
   height: 100vh;
   overflow-y: auto;
 
-  /* On desktop, shift 200px for the sidenav */
+  // desktops
   @media (min-width: 768px) {
     margin-left: 200px;
     margin-top: 0;
@@ -17,5 +16,14 @@
     --padding-top: 0 !important;
     margin-top: 0 !important;
   }
-}
 
+  &.player-active {
+    /* Mobile default: margin-bottom: 90px */
+    margin-bottom: 90px;
+
+    /* On desktop (>=768px): margin-bottom: 40px */
+    @media (min-width: 768px) {
+      margin-bottom: 40px;
+    }
+  }
+}
