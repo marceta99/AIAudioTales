@@ -100,23 +100,21 @@ namespace Kumadio.Core.Services
 
             return Result<IList<string>>.Success(searchHistory);
         }
+
         public async Task<Result> AddSearchTerm(int userId, string searchTerm)
         {
-            // You can do checks (like limiting to 15) here or in the repo
-            var search = new SearchHistory
-            {
-                UserId = userId,
-                SearchTerm = searchTerm,
-                SearchDate = DateTime.UtcNow
-            };
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return DomainErrors.Library.InvalidSearchTerm;
 
             return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                await _searchHistoryRepository.Add(search);
+                await _searchHistoryRepository.AddSearchTerm(userId, searchTerm);
 
                 return Result.Success();
             });
         }
+
+
         #endregion
 
         #region Book Player

@@ -16,7 +16,7 @@ import { SearchService } from './services/search.service';
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.scss'],
-  providers: [CatalogService, PlayerService, LibraryService, SearchService],
+  providers: [CatalogService, PlayerService, LibraryService],
   imports: [
     PlayerComponent,
     LoadingSpinnerComponent,

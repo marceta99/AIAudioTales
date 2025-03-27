@@ -30,6 +30,7 @@
         public const string InvalidBook = "INVALID_BOOK";
         public const string NextPartNotFound = "NEXT_PART_NOT_FOUND";
         public const string NextBookNotFound = "NEXT_BOOK_NOT_FOUND";
+        public const string InvalidSerachTerm = "INVALID_SEARCH_TERM";
 
         // Common
         public const string BookNotFound = "BOOK_NOT_FOUND";

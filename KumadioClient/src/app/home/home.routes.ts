@@ -1,11 +1,14 @@
 import { Route } from "@angular/router";
 import { HomeComponent } from "./home.component";
 import { canActivateListener } from "./guards/listener.guard";
+import { toggleSearchGuard } from "./guards/toggle-search.guard";
+import { SearchService } from "./services/search.service";
 
 export default [
     {
       path: "", 
       component: HomeComponent,
+      providers: [SearchService], // search service is provided here in route injector so that it can be injected inside toggleSearchGuard
       canActivate: [canActivateListener],
       children: [
         {
@@ -14,7 +17,8 @@ export default [
         },
         {
           path: "search",
-          loadComponent: () => import("./components/search/search.component").then(m => m.SearchComponent)
+          loadComponent: () => import("./components/search/search.component").then(m => m.SearchComponent),
+          canDeactivate: [toggleSearchGuard]
         },
         {
           path: "books/:bookId",
