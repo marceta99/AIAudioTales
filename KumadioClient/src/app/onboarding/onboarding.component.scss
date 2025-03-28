@@ -1,0 +1,205 @@
+.onboarding-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #fafafa;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 1) The horizontal slides wrapper */
+  .slides-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y;
+  
+    .slide {
+      width: 100%;
+      flex: 0 0 100%;
+      padding: 2rem;
+      box-sizing: border-box;
+  
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      @media (min-width: 768px) {
+        padding: 3rem 6rem;
+      }
+  
+      h1 {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 1rem;
+        text-align: center;
+        @media (min-width: 768px) {
+          font-size: 1.8rem;
+        }
+      }
+  
+      p {
+        font-size: 1rem;
+        color: #666;
+        text-align: center;
+        margin-bottom: 1rem;
+        @media (min-width: 768px) {
+          font-size: 1.1rem;
+        }
+      }
+  
+      .styled-input {
+        width: 60%;
+        max-width: 300px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.2s;
+  
+        &:focus {
+          border-color: #a481ff ; /* highlight color */
+        }
+      }
+  
+      .radio-group,
+      .checkbox-item {
+        margin: 0.5rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+  
+        .radio-label {
+          margin: 0.2rem 0;
+          display: flex;
+          align-items: center;
+          font-size: 1rem;
+          input[type='radio'] {
+            margin-right: 0.4rem;
+          }
+        }
+  
+        label {
+          font-size: 1rem;
+          input[type='checkbox'] {
+            margin-right: 0.4rem;
+          }
+        }
+      }
+    }
+  }
+  
+  /* 2) Dot Indicators */
+  .dots-container {
+    position: absolute;
+    bottom: 145px; /* Moved up further so there's more gap above the button */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+  
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: #ccc; /* inactive color */
+      border-radius: 50%;
+      margin: 0 4px;
+      transition: background-color 0.2s;
+  
+      &.active {
+        background-color: #a481ff ; /* pink for active */
+      }
+    }
+  }
+  
+  /* 3) The floating pink circular button + ring gap */
+  .floating-button {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 11;
+  
+    .progress-circle {
+      width: 100px;   /* bigger outer size */
+      height: 100px;
+      border-radius: 50%;
+      /* The partial pink/gray ring from 0 to degrees, degrees to 360. */
+      background: conic-gradient(#a481ff  0deg, #a481ff  25deg, #fff 25deg, #fff 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+  
+      /* 1) The new white circle wrapper inside the ring. */
+      .center-wrapper {
+        width: 92px;   /* slightly smaller than 100 => 4px ring each side */
+        height: 92px;
+        background: #fff;         /* White background => visible gap. */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+  
+        /* 2) Then the actual pink button inside. */
+        .arrow-button {
+          background: #a481ff ;    /* Pink center */
+          width: 76px;          /* leaves 8px white gap around it */
+          height: 76px;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-size: 1.4rem;
+          transition: background-color 0.2s ease;
+  
+          &:hover {
+            background-color: #a481ff ;
+          }
+  
+          .arrow-icon {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+  }
+  
+  
+  
+  
+  /* 4) Responsive tweaks for smaller screens */
+  @media (max-width: 767px) {
+    .slides-wrapper .slide h1 {
+      font-size: 1.2rem;
+    }
+    .slides-wrapper .slide p {
+      font-size: 0.95rem;
+    }
+  
+    .floating-button .progress-circle {
+      width: 100px;
+      height: 100px;
+
+      .center-wrapper {
+        width: 92px;   /* slightly smaller than 100 => 4px ring each side */
+        height: 92px;
+     }
+      .arrow-button {
+       width: 76px;          /* leaves 8px white gap around it */
+       height: 76px;
+      }
+    }
+  }
+  

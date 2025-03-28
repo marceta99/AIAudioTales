@@ -1,0 +1,114 @@
+<div class="onboarding-container">
+    <!-- The slides wrapper (horizontal) -->
+    <div
+      class="slides-wrapper"
+      #slidesWrapper
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerUp($event)"
+      [style.transform]="translateXStyle"
+      [style.transition]="animating ? 'transform 0.3s ease' : 'none'"
+    >
+  
+      <!-- Slide 1: Child Age -->
+      <div class="slide">
+        <h1>Koliko godina ima vaše dete?</h1>
+        <p>Unesite uzrast od 4 do 10 godina.</p>
+        <input
+          type="number"
+          class="styled-input"
+          [formControl]="onboardingForm.controls.childAge"
+          placeholder="npr. 8"
+        />
+      </div>
+  
+      <!-- Slide 2: Child Gender -->
+      <div class="slide">
+        <h1>Koji je pol vašeg deteta?</h1>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="M" />
+            Muški
+          </label>
+          <label class="radio-label">
+            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="F" />
+            Ženski
+          </label>
+          <label class="radio-label">
+            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="U" />
+            Ne želim da navedem
+          </label>
+        </div>
+      </div>
+  
+      <!-- Slide 3: Interests (checkbox array) -->
+      <div class="slide">
+        <h1>Koje teme su trenutno najinteresantnije vašem detetu?</h1>
+        <p>(Možete izabrati više opcija)</p>
+        <div
+          class="checkbox-item"
+          *ngFor="let ctrl of childInterests.controls; let i = index"
+        >
+          <label>
+            <input type="checkbox" [formControl]="ctrl" />
+            {{ interests[i] }}
+          </label>
+        </div>
+      </div>
+  
+      <!-- Slide 4: Preferred Duration -->
+      <div class="slide">
+        <h1>Koja dužina trajanja knjige je najbolja za vaše dete?</h1>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input
+              type="radio"
+              [formControl]="onboardingForm.controls.preferredDuration"
+              value="short"
+            />
+            Kratke priče (5-10 min)
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              [formControl]="onboardingForm.controls.preferredDuration"
+              value="medium"
+            />
+            Srednje duge priče (10-20 min)
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              [formControl]="onboardingForm.controls.preferredDuration"
+              value="long"
+            />
+            Duže priče (više od 20 min)
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Dot Indicators for slides -->
+    <div class="dots-container">
+      <span
+        class="dot"
+        *ngFor="let s of slides; let i=index"
+        [class.active]="i === currentIndex"
+      ></span>
+    </div>
+  
+    <!-- Pink circular button with conic gradient ring -->
+    <!-- Pink circular button with conic gradient ring -->
+<div class="floating-button">
+    <div class="progress-circle" [style.background]="progressCircleBackground">
+      <!-- The new "center-wrapper" for the white gap -->
+      <div class="center-wrapper">
+        <button class="arrow-button" (click)="onNextClick()">
+            <i class="fa-solid fa-angle-right arrow-icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  

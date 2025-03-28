@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       next: user => {
         user.role === Role.CREATOR
          ? this.router.navigate(['/creator'])
-         : this.router.navigate(['/home']);
+         : true ? this.router.navigate(['/onboarding']) : this.router.navigate(['/home']);
       },
       error: (error: any) => {
         console.log(error);

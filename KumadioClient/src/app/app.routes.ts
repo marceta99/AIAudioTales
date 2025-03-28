@@ -10,6 +10,11 @@ export const routes: Routes = [
     loadChildren: () => import("./creator-home/creator.routes")
   },
   {
+    path: 'onboarding',
+    loadComponent: () => import('./onboarding/onboarding.component').then(m => m.OnboardingComponent),
+  },
+
+  {
     path: "login",
     loadComponent: () => import("./auth/login/login.component").then(m => m.LoginComponent)
   },
