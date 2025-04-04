@@ -52,42 +52,105 @@
       }
   
       .styled-input {
-        width: 60%;
-        max-width: 300px;
-        padding: 0.75rem 1rem;
+        width: 80%;
+        max-width: 340px;
+        margin: 0.5rem auto;
+        padding: 1rem;
         font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
+        border: none;                      /* remove border */
+        border-radius: 12px;              /* more rounded corners */
+        background-color: #f2f2f2;        /* light gray background */
+        color: #333;
         outline: none;
-        transition: border-color 0.2s;
-  
+        transition: box-shadow 0.2s, background-color 0.2s;
+      
         &:focus {
-          border-color: #a481ff ; /* highlight color */
+          box-shadow: 0 0 0 2px #a481ff;  /* purple focus ring */
+          background-color: #fafafa;      /* slightly lighter on focus */
         }
       }
   
-      .radio-group,
-      .checkbox-item {
-        margin: 0.5rem 0;
+      .radio-group {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-  
-        .radio-label {
-          margin: 0.2rem 0;
-          display: flex;
+        gap: 1rem;        /* space between options */
+        width: 80%;
+        max-width: 340px;
+        margin: 0.5rem auto;
+      }
+      
+      .radio-label {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        background-color: #f2f2f2; /* same light gray */
+        border-radius: 9999px;     /* super rounded for “pill” shape */
+        cursor: pointer;
+        font-size: 1rem;
+        color: #333;
+      
+        /* Hide the original radio circle and rely on the label styling. */
+        input[type='radio'] {
+          position: absolute;  /* keep it stacked but hidden */
+          opacity: 0;
+          pointer-events: none;
+        }
+      
+        /* If the radio is checked, highlight the label. 
+           This trick works because the <input> is inside .radio-label. */
+        input[type='radio']:checked + * {
+          /* not needed unless you have extra sibling text,
+             if your label is just the parent, we can do a :has() approach or extra logic. 
+             Instead, here's a simpler approach below. */
+        }
+      }
+      
+      /* This approach uses the :has() selector (supported in modern browsers).
+         If you need broader support, you'd dynamically add a class in TS/HTML. */
+      .radio-label:has(input[type='radio']:checked) {
+        background-color: #a481ff; /* highlight color */
+        color: #fff;
+      }
+      
+      /*****************************************************
+       * 3) Interests Checkboxes: "pill" items (first pic)
+       *****************************************************/
+      .checkbox-item {
+        display: inline-block; /* so they can wrap or fill multiple columns if you want */
+        margin: 0.25rem;
+        
+        label {
+          display: inline-flex;
           align-items: center;
-          font-size: 1rem;
-          input[type='radio'] {
-            margin-right: 0.4rem;
+          justify-content: center;
+          padding: 0.75rem 1rem;
+          background-color: #f2f2f2;
+          border-radius: 9999px;
+          font-size: 0.95rem;
+          color: #333;
+          cursor: pointer;
+          position: relative;
+          transition: background-color 0.2s, color 0.2s;
+      
+          /* Hide default checkmark; we’ll highlight pill instead. */
+          input[type='checkbox'] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+          }
+      
+          /* When checked => pill is colored & text is white. */
+          input[type='checkbox']:checked + * {
+            /* not used unless there's extra sibling text */
           }
         }
-  
-        label {
-          font-size: 1rem;
-          input[type='checkbox'] {
-            margin-right: 0.4rem;
-          }
+      
+        /* Use :has() so the entire label pill changes color if its checkbox is checked. */
+        label:has(input[type='checkbox']:checked) {
+          background-color: #a481ff; /* or #4aa0ff if you want a blue fill like the sample */
+          color: #fff;
         }
       }
     }
