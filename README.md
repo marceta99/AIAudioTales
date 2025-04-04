@@ -2,10 +2,6 @@
 
 **Kumadio** is an interactive audio books platform built with **.NET** (Clean Architecture), **Angular** (standalone components), and **Ionic** for mobile integration. The platform enables branching audio storytelling, advanced creator tools, and a smooth user experience across web and mobile devices.
 
-<div align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4E0BAQHrhPezbdG85A/company-logo_200_200/company-logo_200_200/0/1730828228363/kumadio_logo?e=1749081600&v=beta&t=c4dRSnD6-tORESnJgNuRdFZUEVE1j7dhc3k9kVD2JA0" alt="Kumadio Logo" width="200">
-</div>
-
 ---
 
 ## Table of Contents
@@ -17,10 +13,8 @@
 5. [Project Structure](#project-structure)
 6. [Installation](#installation)
 7. [Usage](#usage)
-8. [Demo](#demo)
-9. [Onboarding Flow](#onboarding-flow)
-10. [Contributing](#contributing)
-11. [License](#license)
+8. [Onboarding Flow](#onboarding-flow)
+9. [Contributing](#contributing)
 
 ---
 
@@ -32,7 +26,9 @@
 - **Creators** tools to build multi-path audio stories.
 - A frictionless login, signup, and **onboarding** flow that personalizes content for children based on age, interests, and learning goals.
 
+## Demo : 
 ---
+https://github.com/user-attachments/assets/686be07b-7668-4956-902c-4c225b9eae26
 
 ## Features
 
@@ -180,16 +176,6 @@ Access at `http://localhost:8100`
 
 ---
 
-## Demo
-
-Check out our demo video on YouTube:
-
-[![Kumadio Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
-
-*Click thumbnail to watch!*
-
-*(Replace `VIDEO_ID` with your actual YouTube video ID.)*
-
 ---
 
 ## Onboarding Flow
@@ -218,9 +204,9 @@ For major changes, [open an issue](../../issues) first.
 
 ---
 
-## License
-
-Licensed under the MIT License. See [LICENSE](LICENSE).
-
 **Enjoy Kumadio** – A new horizon for interactive storytelling!
+
+<div align="center">
+  <img src="https://media.licdn.com/dms/image/v2/D4E0BAQHrhPezbdG85A/company-logo_200_200/company-logo_200_200/0/1730828228363/kumadio_logo?e=1749081600&v=beta&t=c4dRSnD6-tORESnJgNuRdFZUEVE1j7dhc3k9kVD2JA0" alt="Kumadio Logo" width="200">
+</div>
 
