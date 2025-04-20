@@ -3,6 +3,7 @@ using Kumadio.Domain.Entities;
 using Kumadio.Infrastructure.Data;
 using Kumadio.Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Kumadio.Infrastructure.Repositories.Domain
 {
@@ -16,6 +17,14 @@ namespace Kumadio.Infrastructure.Repositories.Domain
         {
             return await _dbSet
                 .Where(bp => bp.BookId == bookId && bp.IsRoot == true)
+                .Include(bp => bp.Answers)
+                .FirstOrDefaultAsync();
+        }
+
+        public override async Task<BookPart?> GetFirstWhere(Expression<Func<BookPart, bool>> predicate)
+        {
+            return await _dbSet
+                .Where(predicate)
                 .Include(bp => bp.Answers)
                 .FirstOrDefaultAsync();
         }

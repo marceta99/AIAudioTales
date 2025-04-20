@@ -20,7 +20,8 @@ export class PlayerComponent implements OnInit, OnDestroy {
   currentTime = '0:00';
   maxDuration = '0:00';
   isPlaying: boolean = false;
-  recognitionActive: boolean = false;
+  private recognitionActive = false;   // “am I actually running right now?”
+  private shouldListen   = false;     // “do I want to be running?”
   isTitleOverflowing: boolean = false;
   isArtistOverflowing: boolean = false;
   isFullScreen: boolean = false;
@@ -244,52 +245,97 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
 
-  private initializeSpeechRecognition(): void {
-    if (!('webkitSpeechRecognition' in window)) {
-      console.error('Web Speech API not supported in this browser.');
-      return;
-    }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition;
-    this.recognition = new SpeechRecognition();
-    this.recognition.continuous = true; // Keep continuous recognition
-    this.recognition.interimResults = false;
-    this.recognition.lang = 'sr';
-
-    this.recognition.onstart = () => {
-      console.log('Speech recognition started');
-    };
-
-    this.recognition.onresult = (event: any) => {
-      const transcript = event.results[event.resultIndex][0].transcript.trim().toLowerCase();
-      console.log('Recognized: ', transcript);
-
-      this.zone.run(() => {
-        if (this.currentBook.questionsActive) {
-
+    private initializeSpeechRecognition(): void {
+      const SpeechRecognition = (window as any).SpeechRecognition
+                             || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.error('Web Speech API not supported');
+        return;
+      }
+  
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous      = true;
+      this.recognition.interimResults  = true;
+      this.recognition.maxAlternatives = 1;
+      this.recognition.lang            = 'sr-RS';
+  
+      // ─── inside initializeSpeechRecognition() ────────────────────────────────────
+this.recognition.onstart = () => {
+  console.log('🎙️ Speech recognition actually started');
+  this.recognitionActive = true;    // mark it running
+};
+  
+      this.recognition.onresult = (event: any) => {
+        const transcript = event
+          .results[event.resultIndex][0]
+          .transcript
+          .trim()
+          .toLowerCase();
+        console.log('🗣 Recognized:', transcript);
+  
+        this.zone.run(() => {
+          if (this.currentBook.questionsActive && this.isTranscriptValid(transcript)) {
             this.processChildResponse(transcript);
-         
+          }
+        });
+      };
+  
+      this.recognition.onerror = (event: any) => {
+        // handle the no‑speech auto‑retry
+        if (event.error === 'no-speech' && this.shouldListen) {
+          console.warn('No speech—but I’ll retry in 300ms');
+          setTimeout(() => this.recognition.start(), 300);
+          return;
         }
-      });
-    };
-
-    this.recognition.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
-      // Handle network errors or no-speech errors
-      if (event.error === 'no-speech') {
-        // Optionally, restart recognition or prompt the user
-        console.log('No speech detected, continuing to listen...');
+      
+        // ignore the user‑initiated abort
+        if (event.error === 'aborted') {
+          // no-op
+          return;
+        }
+      
+        // anything else is actually bad
+        console.error('Speech error:', event.error);
+      };
+      
+      this.recognition.onend = () => {
+        this.recognitionActive = false;
+        console.log('🎙️ Speech ended');
+        // remove your unconditional restart from here!
+        // if you really want to restart after results, do it in onresult instead.
+      };
+    }
+  
+    private startRecognition(): void {
+      // “I want the mic open”
+      this.shouldListen = true;
+    
+      // only call start() if we’re not already running
+      if (this.recognition && !this.recognitionActive) {
+        try {
+          // immediately mark running so subsequent calls are skipped
+          this.recognitionActive = true;
+          this.recognition.start();
+        } catch (err: any) {
+          // swallow the “already started” error
+          if (err.name !== 'InvalidStateError') {
+            console.error('Unexpected speech‑start error:', err);
+          }
+        }
       }
-    };
-
-    this.recognition.onend = () => {
-      console.log('Speech recognition ended');
-      if (this.currentBook.questionsActive) {
-        console.log("Restarting recognition");
-        this.startRecognition(); // Restart recognition if still in question mode
+    }
+    
+    private stopRecognition(): void {
+      this.shouldListen = false;
+      if (this.recognition && this.recognitionActive) {
+        // abort() will silently end without firing an “aborted” error
+        this.recognition.abort();
+        // onend will still fire, where you set recognitionActive = false
       }
-    };
-  }
+    }
+    
+  
 
   private isTranscriptValid(transcript: string): boolean {
     // Filter out empty or irrelevant transcripts
@@ -361,19 +407,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     audio.play();
   }
 
-  private startRecognition(): void {
-    if (this.currentBook.questionsActive && this.recognition) {
-      this.recognition.start();
-      this.recognitionActive = true;
-    }
-  }
-
-  private stopRecognition(): void {
-    if (this.recognition) {
-      this.recognition.stop();
-      this.recognitionActive = false;
-    }
-  }
 
   public updatePlayingTime(event: MouseEvent): void {
     const progressWidth = this.progressArea.nativeElement.clientWidth;

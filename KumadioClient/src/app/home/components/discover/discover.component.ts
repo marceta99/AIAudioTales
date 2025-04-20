@@ -32,12 +32,12 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   items = [
     { imageUrl: 'https://picsum.photos/101', title: 'Priče za laku noć' },
     { imageUrl: 'https://picsum.photos/202', title: 'Čarobne bajke i basne' },
-    { imageUrl: 'https://picsum.photos/303', title: 'Istorijske priče za decu' },
+    { imageUrl: 'https://picsum.photos/303', title: 'Finansijske priče za decu' },
     { imageUrl: 'https://picsum.photos/404', title: 'Matematičke pustolovine' },
     { imageUrl: 'https://picsum.photos/505', title: 'Geografski svet iz slikovnica' },
     { imageUrl: 'https://picsum.photos/606', title: 'Prirodna čudesa za najmlađe' },
     { imageUrl: 'https://picsum.photos/707', title: 'Trendovi dečijih knjiga 2024' },
-    { imageUrl: 'https://picsum.photos/808', title: 'Preporučene priče' }
+    { imageUrl: 'https://picsum.photos/808', title: 'Krojeno za tebe' }
   ];
   
   constructor(
