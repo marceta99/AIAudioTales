@@ -84,7 +84,7 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
             if (creator != null && !_dbContext.Books.Any())
             {
                 // Seed the database with initial data, only changing Title and Description to Serbian
-                var initialData = new List<Book>
+                var initialDataSrb = new List<Book>
                 {
                     new Book
                     {
@@ -1159,7 +1159,282 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                     },
                 };
 
-                _dbContext.Books.AddRange(initialData);
+                var initialDataEng = new List<Book>
+                {
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "Stories from the Little Farm",
+                        Description = "A little farm filled with wise animals who guide children through adventures in nature and friendship.",
+                        ImageURL = "https://picsum.photos/200"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "Harmony of the Celestial Fields",
+                        Description = "High in the starry sky, birds sing of nature's unity and the sounds of the wind embracing vast landscapes.",
+                        ImageURL = "https://picsum.photos/201"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 4,
+                        Title = "Echo of the Green Mountains",
+                        Description = "At the foot of tall mountains, a girl discovers hidden villages as the murmuring stream accompanies her path to knowledge.",
+                        ImageURL = "https://picsum.photos/202"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 3,
+                        Title = "Legacy of the Little Mathematician",
+                        Description = "A boy finds a magical multiplication table revealing the secrets of numbers, turning every task into a game.",
+                        ImageURL = "https://picsum.photos/203"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 2,
+                        Title = "Hidden Tales of Ancient Castles",
+                        Description = "In the shadows of ancient castles, a brave little historian discovers legends of knights and kings of the past.",
+                        ImageURL = "https://picsum.photos/204"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 1,
+                        Title = "Lullaby of Golden Stars",
+                        Description = "As night falls, stars weave a gentle web of dreams, bringing peaceful sleep to every child.",
+                        ImageURL = "https://picsum.photos/205"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 4,
+                        Title = "Maps of Hidden Continents",
+                        Description = "Flipping through old maps, a girl learns about deserts, seas, and polar regions of distant lands.",
+                        ImageURL = "https://picsum.photos/206"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "Secret of the Forest Clearing",
+                        Description = "In the heart of the dense forest, there is a clearing where animals gather and speak of nature's beauty.",
+                        ImageURL = "https://picsum.photos/207"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "Floral River",
+                        Description = "A stream flowing through meadows carries flower petals, spreading stories from one bank to the other.",
+                        ImageURL = "https://picsum.photos/208"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "Windy Valley",
+                        Description = "In a valley where the wind hums, children uncover the secrets of trees while the moon shines above.",
+                        ImageURL = "https://picsum.photos/209"
+                    },
+
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 1,
+                        Title = "The Whispering Willow",
+                        Description = "A curious child discovers the secrets hidden in an ancient willow tree.",
+                        ImageURL = "https://picsum.photos/210"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 2,
+                        Title = "The Rainbow Carousel",
+                        Description = "Join the magical carousel that travels through colors and dreams.",
+                        ImageURL = "https://picsum.photos/211"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 3,
+                        Title = "Starlight Explorers",
+                        Description = "A group of friends builds a spaceship out of cardboard and visits the stars.",
+                        ImageURL = "https://picsum.photos/212"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 4,
+                        Title = "The Secret Garden Key",
+                        Description = "Emily finds a key that opens a hidden garden full of talking flowers.",
+                        ImageURL = "https://picsum.photos/213"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "The Cloud Painter",
+                        Description = "A young artist learns to paint shapes in the sky that come to life.",
+                        ImageURL = "https://picsum.photos/214"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 6,
+                        Title = "Robot Buddy",
+                        Description = "Leo builds a little robot who becomes his best friend.",
+                        ImageURL = "https://picsum.photos/215"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 7,
+                        Title = "Forest of Giggles",
+                        Description = "In a forest where trees giggle, Mia discovers laughter is magic.",
+                        ImageURL = "https://picsum.photos/216"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 1,
+                        Title = "The Midnight Bakery",
+                        Description = "Every night, a bakery opens only under the moonlight, baking dream-flavored treats.",
+                        ImageURL = "https://picsum.photos/217"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 2,
+                        Title = "Dragonfly Daydream",
+                        Description = "A dragonfly takes a tired child on a gentle flight over flower fields.",
+                        ImageURL = "https://picsum.photos/218"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 3,
+                        Title = "The Pocket-Sized Pirate",
+                        Description = "A brave little pirate in your pocket brings big ocean adventures.",
+                        ImageURL = "https://picsum.photos/219"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 4,
+                        Title = "Sock Puppet Theater",
+                        Description = "Tommy’s sock puppets come alive and put on a grand performance.",
+                        ImageURL = "https://picsum.photos/220"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "The Magic Compass",
+                        Description = "A compass that points to kindness leads Ava on a heartwarming journey.",
+                        ImageURL = "https://picsum.photos/221"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 6,
+                        Title = "Moonbeam Music",
+                        Description = "Children discover melodies hidden in moonbeams on a starry night.",
+                        ImageURL = "https://picsum.photos/222"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 7,
+                        Title = "The Tiny Train That Could",
+                        Description = "A small toy train sets off on a big adventure around the playroom.",
+                        ImageURL = "https://picsum.photos/223"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 1,
+                        Title = "Bubbles in the Breeze",
+                        Description = "Soap bubbles carry laughter and tiny wishes through the summer air.",
+                        ImageURL = "https://picsum.photos/224"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 2,
+                        Title = "The Snowflake Circus",
+                        Description = "A circus of snowflakes performs dazzling acrobatics in winter skies.",
+                        ImageURL = "https://picsum.photos/225"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 3,
+                        Title = "The Wishing Well",
+                        Description = "A hidden well grants wishes that teach gentle lessons of generosity.",
+                        ImageURL = "https://picsum.photos/226"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 4,
+                        Title = "Pirate’s Paper Hat",
+                        Description = "A paper hat transforms a child into captain of a paper-ship exploring puddles.",
+                        ImageURL = "https://picsum.photos/227"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 5,
+                        Title = "The Garden of Dreams",
+                        Description = "Flowers in this garden bloom only when children share their dreams.",
+                        ImageURL = "https://picsum.photos/228"
+                    },
+                    new Book
+                    {
+                        CreatorId = creator.Id,
+                        Price = 6,
+                        CategoryId = 6,
+                        Title = "The Little Lantern",
+                        Description = "A tiny lantern lights the way for nighttime adventures in a dollhouse village.",
+                        ImageURL = "https://picsum.photos/229"
+                    }
+                };
+
+                _dbContext.Books.AddRange(initialDataEng);
                 _dbContext.SaveChanges();
             }
         }

@@ -258,7 +258,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.recognition.continuous      = true;
       this.recognition.interimResults  = true;
       this.recognition.maxAlternatives = 1;
-      this.recognition.lang            = 'sr-RS';
+      this.recognition.lang            = 'en-US'    //'sr-RS';
   
       // ─── inside initializeSpeechRecognition() ────────────────────────────────────
 this.recognition.onstart = () => {
