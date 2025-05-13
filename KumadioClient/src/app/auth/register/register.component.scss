@@ -2,11 +2,12 @@
     max-width: 150px;
 }
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* vertical centering */
+  align-items: center;      /* horizontal centering */
+  min-height: 100vh;        /* at least the full viewport height */
+  padding: 1rem;            /* optional breathing room on small screens */
 }
 .container form {
     display: flex;

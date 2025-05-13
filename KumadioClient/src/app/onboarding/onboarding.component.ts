@@ -46,13 +46,10 @@ import {
       'Avantura',
       'Životinje',
       'Nauka i priroda',
-      'Fantazija',
       'Sport',
       'Istorija',
       'Geografija',
       'Matematika i logičke igre',
-      'Priče sa moralnim poukama',
-      'Humor i zabava'
     ];
   
     // We can store slides indexes for a “horizontal slider” approach
