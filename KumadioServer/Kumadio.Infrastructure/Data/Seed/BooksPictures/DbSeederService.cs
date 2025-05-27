@@ -33,7 +33,6 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 _dbContext.SaveChanges();
             }
 
-
             if (!_dbContext.BookCategories.Any())
             {
                 var categoryInitialData = new List<Category>
@@ -79,11 +78,70 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 _dbContext.SaveChanges();
             }
 
+            if (!_dbContext.OnboardingQuestions.Any())
+            {
+                // 1) Dodaj pitanja
+                var q1 = new OnboardingQuestion
+                {
+                    Key = "childAge",
+                    Text = "Koliko godina ima vaše dete?",
+                    Type = QuestionType.NumberInput,
+                    Order = 1
+                };
+                var q2 = new OnboardingQuestion
+                {
+                    Key = "childGender",
+                    Text = "Koji je pol vašeg deteta?",
+                    Type = QuestionType.SingleChoice,
+                    Order = 2
+                };
+                var q3 = new OnboardingQuestion
+                {
+                    Key = "childInterests",
+                    Text = "Koje teme su najinteresantnije vašem detetu?",
+                    Type = QuestionType.MultiChoice,
+                    Order = 3
+                };
+                var q4 = new OnboardingQuestion
+                {
+                    Key = "preferredDuration",
+                    Text = "Koja dužina trajanja knjige je najbolja?",
+                    Type = QuestionType.SingleChoice,
+                    Order = 4
+                };
+                _dbContext.OnboardingQuestions.AddRange(q1, q2, q3, q4);
+                _dbContext.SaveChanges();
+
+                // 2) Dodaj opcije za svako pitanje
+                var opts = new List<OnboardingOption>
+            {
+                // childGender (q2.Id)
+                new OnboardingOption { QuestionId = q2.Id, Text = "M", Order = 1 },
+                new OnboardingOption { QuestionId = q2.Id, Text = "F", Order = 2 },
+                new OnboardingOption { QuestionId = q2.Id, Text = "U", Order = 3 },
+
+                // childInterests (q3.Id)
+                new OnboardingOption { QuestionId = q3.Id, Text = "Avantura", Order = 1 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Životinje", Order = 2 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Nauka i priroda", Order = 3 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Sport", Order = 4 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Istorija", Order = 5 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Geografija", Order = 6 },
+                new OnboardingOption { QuestionId = q3.Id, Text = "Matematika i logičke igre", Order = 7 },
+
+                // preferredDuration (q4.Id)
+                new OnboardingOption { QuestionId = q4.Id, Text = "short", Order = 1 },
+                new OnboardingOption { QuestionId = q4.Id, Text = "medium", Order = 2 },
+                new OnboardingOption { QuestionId = q4.Id, Text = "long", Order = 3 }
+            };
+                _dbContext.OnboardingOptions.AddRange(opts);
+                _dbContext.SaveChanges();
+            }
+
             var creator = _dbContext.Users.Where(u => u.Email == "kumadio@gmail.com").FirstOrDefault();
 
             if (creator != null && !_dbContext.Books.Any())
             {
-                // Seed the database with initial data, only changing Title and Description to Serbian
                 var initialDataSrb = new List<Book>
 {
     new Book

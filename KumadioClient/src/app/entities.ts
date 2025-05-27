@@ -1,10 +1,12 @@
-//Entities
+// #region User Entities
+
 export interface User {
   firstName: string,
   lastName: string,
   email: string,
   role: Role
 }
+
 export interface RegisterUser {
   firstName: string, 
   lastName: string,
@@ -20,6 +22,31 @@ export interface RegisterCreator {
   password : string,
   confirmPassword: string
 }
+
+export interface OnboardingOptionDto {
+  id: number;
+  text: string;
+}
+
+export interface OnboardingQuestionDto {
+  id: number;
+  key: string;
+  text: string;
+  type: OnboardingQuestionType;
+  options: OnboardingOptionDto[];
+}
+
+export interface OnboardingDto {
+  childAge?:         number;
+  childGender?:      string;
+  selectedOptionIds?: number[];
+  preferredDuration?: string;
+}
+
+// #endregion
+
+// #region Book Entities
+
 export interface Book {
   id: number,
   title: string,
@@ -28,6 +55,37 @@ export interface Book {
   imageURL: string,
   categoryId: number
 }
+
+export interface Category {
+  id: number,
+  categoryName: string,
+  description: string
+}
+
+export interface CreateBook {
+  title: string,
+  description: string,
+  price: number,
+  imageURL: string,
+  categoryId: number
+}
+
+export interface SearchedBooks {
+  searchTerm: string,
+  books: ReturnBook[]
+}
+
+export interface ReturnBook {
+  id: number;
+  title: string;
+  description: string;
+  imageURL: string;
+  categoryId: number;
+}
+
+// #endregion
+
+// #region Purchase Entities
 
 export interface PurchasedBook {
   bookId: number,
@@ -43,18 +101,6 @@ export interface PurchasedBook {
   questionsActive: boolean,
   remainingTime?: number;
 }
-export interface SearchedBooks {
-  searchTerm: string,
-  books: ReturnBook[]
-}
-
-export interface ReturnBook {
-  id: number;
-  title: string;
-  description: string;
-  imageURL: string;
-  categoryId: number;
-}
 
 export interface Purchase {
   bookId: number,
@@ -62,39 +108,9 @@ export interface Purchase {
   language: Language
 }
 
-export interface Toast {
-  toastType: ToastType,
-  toastIcon: ToastIcon,
-  text: string;
-  timeoutId?: any; // Optional property to store the timeout ID
-}
+// #endregion
 
-export interface Category {
-  id: number,
-  categoryName: string,
-  description: string
-}
-
-export interface BasketItem {
-  id: number,
-  itemPrice: number,
-  bookId: number,
-  book: Book
-}
-
-export interface Basket {
-  basketItems: BasketItem[],
-  totalPrice: number
-}
-
-
-export interface CreateBook {
-  title: string,
-  description: string,
-  price: number,
-  imageURL: string,
-  categoryId: number
-}
+// #region Part & Answer Entities
 
 export interface CreateRootPart {
   bookId: number,
@@ -122,13 +138,6 @@ export interface ReturnPart {
   answers: ReturnAnswer[];
 }
 
-export interface PartTree {
-  partId: number,
-  partName: string,
-  answers: ReturnAnswer[],
-  nextParts: PartTree[]
-}
-
 export interface ReturnAnswer {
   id: number,
   text: string,
@@ -136,32 +145,54 @@ export interface ReturnAnswer {
   nextPartId: number | null
 }
 
+export interface PartTree {
+  partId: number,
+  partName: string,
+  answers: ReturnAnswer[],
+  nextParts: PartTree[]
+}
+
+// #endregion
+
+// #region Toast & UI
+
+export interface Toast {
+  toastType: ToastType,
+  toastIcon: ToastIcon,
+  text: string;
+  timeoutId?: any;
+}
+
 export interface ApiMessageResponse {
   message: string
 }
 
-//Enums
-export enum ToastType{
+// #endregion
+
+// #region Enums
+
+export enum ToastType {
   Success = "success",
   Error = "error",
   Warning = "warning",
   Info = "info"
 }
-export enum ToastIcon{
+
+export enum ToastIcon {
   Success = "fa-circle-check",
   Error = "fa-circle-xmark",
   Warning = "fa-triangle-exclamation",
   Info = "fa-circle-info"
 }
 
-export enum Role{
+export enum Role {
   ADMIN = 0,
   LISTENER_WITH_SUBSCRIPTION = 1,
   LISTENER_NO_SUBSCRIPTION = 2,
   CREATOR = 3
 }
 
-export enum BookCategory{
+export enum BookCategory {
   BedTime = 0,
   History = 1,
   Math = 2,
@@ -171,25 +202,33 @@ export enum BookCategory{
   Recommended = 6
 }
 
-export enum PurchaseType{
+export enum PurchaseType {
   BasicPurchase = 0,
   CustomVoice = 1,
   Enroled = 2
 }
 
-export enum Language{
-  ENGLISH_USA=0,
-  ENGLISH_UK=1,
-  ENGLISH_AUSTRALIA=2,
-  ENGLISH_CANADA=3,
-  GERMAN=4,
-  POLISH=5,
-  SPANISH_SPAIN=6,
-  SPANISH_MEXICO=7,
-  ITALIAN=8,
-  FRENCH_FRANCE=9,
-  FRENCH_CANADA=10,
-  PORTUGUESE_PORTUGAL=11,
-  PORTUGUESE_BRASIL=12,
-  HINDI=13
+export enum Language {
+  ENGLISH_USA = 0,
+  ENGLISH_UK = 1,
+  ENGLISH_AUSTRALIA = 2,
+  ENGLISH_CANADA = 3,
+  GERMAN = 4,
+  POLISH = 5,
+  SPANISH_SPAIN = 6,
+  SPANISH_MEXICO = 7,
+  ITALIAN = 8,
+  FRENCH_FRANCE = 9,
+  FRENCH_CANADA = 10,
+  PORTUGUESE_PORTUGAL = 11,
+  PORTUGUESE_BRASIL = 12,
+  HINDI = 13
 }
+
+export enum OnboardingQuestionType {
+  NumberInput   = 0,
+  SingleChoice  = 1,
+  MultiChoice   = 2,
+}
+
+// #endregion

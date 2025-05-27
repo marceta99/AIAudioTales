@@ -1,4 +1,5 @@
 ﻿using Kumadio.Core.Common;
+using Kumadio.Core.Models;
 using Kumadio.Domain.Entities;
 
 namespace Kumadio.Core.Interfaces
@@ -9,6 +10,7 @@ namespace Kumadio.Core.Interfaces
         Task<Result> Register(User user, string password);
         Task<Result> RegisterCreator(User user, string password);
         Task<Result<User>> Login(string email, string password);
+        Result<IEnumerable<OnboardingQuestion>> GetOnboardingQuestions();
 
         #endregion
 
@@ -21,5 +23,6 @@ namespace Kumadio.Core.Interfaces
 
         #endregion
         Task<Result<User>> GetUserWithEmail(string email);
+        Task<Result> CompleteOnboarding(OnboardingData onboardingData);
     }
 }

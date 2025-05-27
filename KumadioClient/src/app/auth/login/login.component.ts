@@ -9,7 +9,7 @@ import {
   Validators
 } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Role, User } from 'src/app/entities';
+import { Role } from 'src/app/entities';
 import { AuthService } from '../services/auth.service';
 
 @Component({

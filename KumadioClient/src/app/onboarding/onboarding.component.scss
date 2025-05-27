@@ -156,30 +156,6 @@
     }
   }
   
-  /* 2) Dot Indicators */
-  .dots-container {
-    position: absolute;
-    bottom: 145px; /* Moved up further so there's more gap above the button */
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 10;
-  
-    .dot {
-      width: 8px;
-      height: 8px;
-      background-color: #ccc; /* inactive color */
-      border-radius: 50%;
-      margin: 0 4px;
-      transition: background-color 0.2s;
-  
-      &.active {
-        background-color: #a481ff ; /* pink for active */
-      }
-    }
-  }
-  
   /* 3) The floating pink circular button + ring gap */
   .floating-button {
     position: absolute;
@@ -238,9 +214,6 @@
       }
     }
   }
-  
-  
-  
   
   /* 4) Responsive tweaks for smaller screens */
   @media (max-width: 767px) {

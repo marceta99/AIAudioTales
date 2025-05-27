@@ -5,21 +5,28 @@ using Kumadio.Domain.Entities;
 using Kumadio.Core.Common;
 using Kumadio.Core.Common.Interfaces;
 using Kumadio.Core.Common.Interfaces.Base;
+using Kumadio.Core.Models;
 
 namespace Kumadio.Core.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IOnboardingQuestionRepository _onboardingQuestionRepository;
+        private readonly IOnboardingDataRepository _onboardingDataRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(
             IRefreshTokenRepository refreshTokenRepository,
+            IOnboardingQuestionRepository onboardingQuestionRepository,
+            IOnboardingDataRepository onboardingDataRepository,
             IUserRepository userRepository,
             IUnitOfWork unitOfWork)
         {
             _refreshTokenRepository = refreshTokenRepository;
+            _onboardingQuestionRepository = onboardingQuestionRepository;
+            _onboardingDataRepository = onboardingDataRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
@@ -88,6 +95,13 @@ namespace Kumadio.Core.Services
             }
 
             return user;
+        }
+
+        public Result<IEnumerable<OnboardingQuestion>> GetOnboardingQuestions()
+        {
+            var questions = _onboardingQuestionRepository.GetAllQuestions();
+
+            return Result<IEnumerable<OnboardingQuestion>>.Success(questions);
         }
 
         #endregion
@@ -178,6 +192,16 @@ namespace Kumadio.Core.Services
             }
 
             return user;
+        }
+
+        public async Task<Result> CompleteOnboarding(OnboardingData onboardingData)
+        {
+            return await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                await _onboardingDataRepository.Add(onboardingData);
+
+                return Result.Success();
+            });
         }
 
         #region Private Helper Methods

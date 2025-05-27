@@ -13,47 +13,22 @@ import {
     Validators,
   } from '@angular/forms';
   import { Router } from '@angular/router';
-  
-  /** 
-   * We define each form control as a typed property.
-   * FormControl<T> ensures that control’s value is T.
-   */
-  interface OnboardingFormControls {
-    childAge: FormControl<number | null>;
-    childGender: FormControl<string>;
-    childInterests: FormArray<FormControl<boolean>>;
-    preferredDuration: FormControl<string>;
-  }
+import { OnboardingQuestionDto, OnboardingQuestionType } from '../entities';
+import { OnboardingService } from './onboarding.service';
   
   @Component({
     selector: 'app-onboarding',
     templateUrl: 'onboarding.component.html',
     styleUrls: ['onboarding.component.scss'],
-    imports: [CommonModule, ReactiveFormsModule]
+    imports: [CommonModule, ReactiveFormsModule],
+    providers: [OnboardingService]
   })
   export class OnboardingComponent implements OnInit {
     @ViewChild('slidesWrapper') slidesWrapper!: ElementRef<HTMLDivElement>;
-  
-    /** A typed FormGroup, referencing our OnboardingFormControls interface. */
-    onboardingForm!: FormGroup<OnboardingFormControls>;
-  
-    /** 
-     * For the multi-checkbox question:
-     * We'll store possible interests in an array of strings.
-     * The form array will have a boolean control for each string.
-     */
-    interests = [
-      'Avantura',
-      'Životinje',
-      'Nauka i priroda',
-      'Sport',
-      'Istorija',
-      'Geografija',
-      'Matematika i logičke igre',
-    ];
-  
-    // We can store slides indexes for a “horizontal slider” approach
-    slides = [0, 1, 2, 3]; // 4 slides total
+
+    onboardingForm!: FormGroup;
+    questions: OnboardingQuestionDto[] = [];
+
     currentIndex = 0;
     animating = false;
   
@@ -62,33 +37,57 @@ import {
     private currentX = 0;
     private isDragging = false;
     private threshold = 50; // px threshold for swipe
+
+    public OnboardingQuestionType = OnboardingQuestionType; // expose enum as property just so will be able to use this in template 
   
-    constructor(private router: Router) {}
+    constructor(private router: Router, private onboardingService: OnboardingService) {}
   
     ngOnInit(): void {
-      this.buildForm();
+      this.onboardingService.getQuestions()
+        .subscribe(questions =>{
+          this.questions = questions;
+          this.buildForm();
+        });
+        
     }
-  
-    private buildForm(): void {
-      // Create each interest control as a FormControl<boolean>
-      const interestsArray = this.interests.map(
-        () => new FormControl<boolean>(false, { nonNullable: true })
-      );
-  
-      // Build the typed FormGroup
-      this.onboardingForm = new FormGroup<OnboardingFormControls>({
-        childAge: new FormControl<number | null>(null, {
-          nonNullable: false  // allow null
-        }),
-        childGender: new FormControl<string>('', { nonNullable: true }),
-        childInterests: new FormArray<FormControl<boolean>>(interestsArray),
-        preferredDuration: new FormControl<string>('', { nonNullable: true })
+    
+    private buildForm() {
+      // Kreiramo prazan objekat u koji ćemo ubacivati FormControl-ove ili FormArray-e
+      const group: Record<string, FormControl<any> | FormArray> = {};
+
+      // Prođemo kroz svako pitanje i na osnovu tipa kreiramo odgovarajući kontroler
+      this.questions.forEach(q => {
+        switch (q.type) {
+          case OnboardingQuestionType.NumberInput:
+            // Za „number“ input: FormControl koji drži broj ili null
+            group[q.key] = new FormControl<number | null>(null);
+            break;
+
+          case OnboardingQuestionType.SingleChoice:
+            // Za „single choice“ (radio): FormControl koji drži ID izabrane opcije
+            group[q.key] = new FormControl<number | null>(null);
+            break;
+
+          case OnboardingQuestionType.MultiChoice:
+            // Za „multi choice“ (checkbox array):
+            // - pravimo niz FormControl<boolean> iste dužine kao što ima opcija
+            // - svaki kontroler će biti false (neoznačeno) po defaultu
+            const controls = q.options!.map(() => new FormControl<boolean>(false));
+            group[q.key] = new FormArray(controls);
+            break;
+
+          default:
+            // (tehnički se ne bi desilo, ali radi type-safety-a)
+            throw new Error(`Unknown question type: ${q.type}`);
+        }
       });
+
+      // Na kraju, grupu kontrolera pretvaramo u FormGroup
+      this.onboardingForm = new FormGroup(group);
     }
-  
-    /** A convenient getter for the array of boolean controls. */
-    get childInterests(): FormArray<FormControl<boolean>> {
-      return this.onboardingForm.controls.childInterests;
+
+    public getFormArray(key: string): FormArray<FormControl<boolean>> {
+      return this.onboardingForm.get(key) as FormArray<FormControl<boolean>>;
     }
   
     // For the horizontal slider: 
@@ -98,14 +97,13 @@ import {
   
     // The conic-gradient ring behind the arrow button
     get progressCircleBackground(): string {
-        const fraction = (this.currentIndex + 1) / this.slides.length;
+        const fraction = (this.currentIndex + 1) / this.questions.length;
         const degrees = fraction * 360;
         // For example, fraction=0.25 => degrees=90, so 25% pink, 75% gray
         // You want pink from 0deg -> degrees deg, gray from degrees deg -> 360
       
         return `conic-gradient(#a481ff 0deg, #a481ff ${degrees}deg, #fff ${degrees}deg, #fff 360deg)`;
-      }
-      
+    }  
   
     // pointer down
     onPointerDown(event: PointerEvent) {
@@ -135,7 +133,7 @@ import {
       const dx = this.currentX - this.startX;
       if (Math.abs(dx) > this.threshold) {
         // left swipe => next slide
-        if (dx < 0 && this.currentIndex < this.slides.length - 1) {
+        if (dx < 0 && this.currentIndex < this.questions.length - 1) {
           this.currentIndex++;
         }
         // right swipe => prev slide
@@ -154,7 +152,7 @@ import {
   
     // Called by the pink arrow button
     onNextClick() {
-      if (this.currentIndex < this.slides.length - 1) {
+      if (this.currentIndex < this.questions.length - 1) {
         this.currentIndex++;
         this.updateSlidePosition();
       } else {
@@ -164,7 +162,7 @@ import {
     }
   
     private submitOnboarding() {
-      // gather final data from typed form
+      /*// gather final data from typed form
       const { childAge, childGender, childInterests, preferredDuration } = this.onboardingForm.value;
       // childInterests is an array of booleans matching `this.interests`.
   
@@ -184,7 +182,7 @@ import {
   
       // Here you would post to your backend, e.g. /api/auth/onboarding
       // once done => navigate:
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home']);*/
     }
   }
   

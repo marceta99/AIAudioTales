@@ -17,6 +17,9 @@ namespace Kumadio.Infrastructure.Data
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<BookPart> BookParts { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<OnboardingQuestion> OnboardingQuestions { get; set; }
+        public DbSet<OnboardingOption> OnboardingOptions { get; set; }
+        public DbSet<OnboardingData> OnboardingData { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -58,6 +61,12 @@ namespace Kumadio.Infrastructure.Data
             .WithOne(s => s.User)
             .HasForeignKey<Subscription>(s => s.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+           .HasOne(u => u.OnboardingData)
+           .WithOne(s => s.User)
+           .HasForeignKey<OnboardingData>(od => od.UserId)
+           .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
 
@@ -186,6 +195,22 @@ namespace Kumadio.Infrastructure.Data
             modelBuilder.Entity<PurchasedBook>()
                 .Property(p => p.PlayingPosition)
                 .HasColumnType("decimal(18, 2)");
+
+            #endregion
+
+            #region Onboarding
+
+            modelBuilder.Entity<OnboardingQuestion>().HasKey(ok => ok.Id);
+
+            modelBuilder.Entity<OnboardingData>().HasKey(od => od.UserId);
+
+            modelBuilder.Entity<OnboardingOption>().HasKey(op => op.Id);
+
+            // 1:N Question → Options
+            modelBuilder.Entity<OnboardingOption>()
+                .HasOne(o => o.Question)
+                .WithMany(q => q.Options)
+                .HasForeignKey(o => o.QuestionId);
 
             #endregion
 

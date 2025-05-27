@@ -1,7 +1,8 @@
-<div class="onboarding-container">
+<div class="onboarding-container" *ngIf="questions.length > 0">
+  <form [formGroup]="onboardingForm" class="onboarding-container">
     <!-- The slides wrapper (horizontal) -->
     <div
-      class="slides-wrapper"
+   class="slides-wrapper"
       #slidesWrapper
       (pointerdown)="onPointerDown($event)"
       (pointermove)="onPointerMove($event)"
@@ -9,98 +10,48 @@
       (pointercancel)="onPointerUp($event)"
       [style.transform]="translateXStyle"
       [style.transition]="animating ? 'transform 0.3s ease' : 'none'"
-    >
-  
-      <!-- Slide 1: Child Age -->
+  >
+    <ng-container *ngFor="let q of questions">
       <div class="slide">
-        <h1>Koliko godina ima vaše dete?</h1>
-        <p>Unesite uzrast od 4 do 10 godina.</p>
+        <h1>{{ q.text }}</h1>
+
+        <!-- NumberInput -->
         <input
+          *ngIf="q.type===OnboardingQuestionType.NumberInput"
           type="number"
-          class="styled-input"
-          [formControl]="onboardingForm.controls.childAge"
+          [formControlName]="q.key"
           placeholder="npr. 8"
+          class="styled-input"
         />
-      </div>
-  
-      <!-- Slide 2: Child Gender -->
-      <div class="slide">
-        <h1>Koji je pol vašeg deteta?</h1>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="M" />
-            Muški
+
+        <!-- SingleChoice -->
+        <div *ngIf="q.type===OnboardingQuestionType.SingleChoice" class="radio-group">
+          <label *ngFor="let opt of q.options"  class="radio-label">
+            <input
+              type="radio"
+              [formControlName]="q.key"
+              [value]="opt.id"
+            />
+            {{ opt.text }}
           </label>
-          <label class="radio-label">
-            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="F" />
-            Ženski
-          </label>
-          <label class="radio-label">
-            <input type="radio" [formControl]="onboardingForm.controls.childGender" value="U" />
-            Ne želim da navedem
+        </div>
+
+        <!-- MultiChoice -->
+        <div *ngIf="q.type=== OnboardingQuestionType.MultiChoice" class="checkbox-list">
+          <label *ngFor="let opt of q.options; let i = index" class="checkbox-item">
+            <input
+              type="checkbox"
+              [formControl]="getFormArray(q.key).controls[i]"
+            />
+            {{ opt.text }}
           </label>
         </div>
       </div>
-  
-      <!-- Slide 3: Interests (checkbox array) -->
-      <div class="slide">
-        <h1>Koje teme su trenutno najinteresantnije vašem detetu?</h1>
-        <p>(Možete izabrati više opcija)</p>
-        <div
-          class="checkbox-item"
-          *ngFor="let ctrl of childInterests.controls; let i = index"
-        >
-          <label>
-            <input type="checkbox" [formControl]="ctrl" />
-            {{ interests[i] }}
-          </label>
-        </div>
-      </div>
-  
-      <!-- Slide 4: Preferred Duration -->
-      <div class="slide">
-        <h1>Koja dužina trajanja knjige je najbolja za vaše dete?</h1>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input
-              type="radio"
-              [formControl]="onboardingForm.controls.preferredDuration"
-              value="short"
-            />
-            Kratke priče (5-10 min)
-          </label>
-          <label class="radio-label">
-            <input
-              type="radio"
-              [formControl]="onboardingForm.controls.preferredDuration"
-              value="medium"
-            />
-            Srednje duge priče (10-20 min)
-          </label>
-          <label class="radio-label">
-            <input
-              type="radio"
-              [formControl]="onboardingForm.controls.preferredDuration"
-              value="long"
-            />
-            Duže priče (više od 20 min)
-          </label>
-        </div>
-      </div>
+    </ng-container>
     </div>
   
-    <!-- Dot Indicators for slides -->
-    <div class="dots-container">
-      <span
-        class="dot"
-        *ngFor="let s of slides; let i=index"
-        [class.active]="i === currentIndex"
-      ></span>
-    </div>
-  
-    <!-- Pink circular button with conic gradient ring -->
-    <!-- Pink circular button with conic gradient ring -->
-<div class="floating-button">
+<!-- Pink circular button with conic gradient ring -->
+  <div class="floating-button">
     <div class="progress-circle" [style.background]="progressCircleBackground">
       <!-- The new "center-wrapper" for the white gap -->
       <div class="center-wrapper">
@@ -109,6 +60,8 @@
         </button>
       </div>
     </div>
-  </div>
+    </div>
+    </form>
+</div>
   
   

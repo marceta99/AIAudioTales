@@ -19,6 +19,8 @@ namespace Kumadio.Web.ServiceRegistrations
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ISearchHistoryRepository, SearchHistoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOnboardingDataRepository, OnboardingDataRepository>();
+            services.AddScoped<IOnboardingQuestionRepository, OnboardingQuestionRepository>();
 
             services.AddScoped<IFileStorage, DiskFileStorageService>();
 

@@ -2,15 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface ChildInfo {
-  childAge?: number;
-  childGender?: string;
-  childInterests?: string[];
-  favoriteCharacters?: string[];
-  improvementAreas?: string[];
-  preferredDuration?: string;
-}
+import { OnboardingDto, OnboardingQuestionDto } from '../entities';
 
 @Injectable()
 export class OnboardingService {
@@ -18,9 +10,11 @@ export class OnboardingService {
 
   constructor(private http: HttpClient) {}
 
-  submitOnboardingData(data: ChildInfo): Observable<any> {
-    return this.http.post(`${this.baseUrl}/onboarding`, data, {
-      withCredentials: true
-    });
+  getQuestions(): Observable<OnboardingQuestionDto[]> {
+    return this.http.get<OnboardingQuestionDto[]>(`${this.baseUrl}/onboarding-questions`, { withCredentials: true });
+  }
+
+  complete(data: OnboardingDto): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/complete`, data, { withCredentials: true });
   }
 }

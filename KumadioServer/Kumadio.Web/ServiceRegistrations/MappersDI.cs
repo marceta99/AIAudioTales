@@ -10,6 +10,7 @@ using Kumadio.Web.Mappers.AnswerMappers;
 using Kumadio.Web.Mappers.CategoryMappers;
 using Kumadio.Web.Mappers.ModelMappers;
 using Kumadio.Web.Mappers.PurchasedBookMappers;
+using Kumadio.Web.Mappers.OnboardingMappers;
 
 namespace Kumadio.Web.ServiceRegistrations
 {
@@ -26,6 +27,7 @@ namespace Kumadio.Web.ServiceRegistrations
             services.AddScoped<IDtoMapper<User, DTOReturnUser>, UserToDTOReturnUserMapper>();
             services.AddScoped<IDtoMapper<Category, DTOReturnCategory>, CategoryToDTOReturnCategoryMapper>();
             services.AddScoped<IDtoMapper<PurchasedBook, DTOReturnPurchasedBook>, PurchasedBookToDTOReturnPurchasedBookMapper>();
+            services.AddScoped<IDtoMapper<OnboardingQuestion, DTOOnboardingQuestion>, OnboardingQuestionToDTOOnboardingQuestionMapper>();
 
             // Model mappers
             services.AddScoped<IDtoMapper<PartTreeModel, DTOReturnPartTree>, PartTreeToDTOReturnPartTreeMapper>();

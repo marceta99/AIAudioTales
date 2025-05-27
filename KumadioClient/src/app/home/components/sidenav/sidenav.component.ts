@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Basket, ReturnBook, User } from 'src/app/entities';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { ReturnBook } from 'src/app/entities';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule, Location } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';

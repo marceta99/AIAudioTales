@@ -14,6 +14,8 @@ using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
 using Microsoft.AspNetCore.Authorization;
+using Kumadio.Core.Models;
+using System.Text.Json;
 
 namespace Kumadio.Web.Controllers
 {
@@ -25,6 +27,7 @@ namespace Kumadio.Web.Controllers
         private readonly AppSettings _appSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDtoMapper<DTORegister, User> _registerMapper;
+        private readonly IDtoMapper<OnboardingQuestion, DTOOnboardingQuestion> _onboardingQuestionMapper;
         private readonly IDtoMapper<DTORegisterCreator, User> _registerCreatorMapper;
         private readonly IDtoMapper<User, DTOReturnUser> _returnUserMapper;
 
@@ -33,6 +36,7 @@ namespace Kumadio.Web.Controllers
             IOptions<AppSettings> appSettings,
             IHttpContextAccessor httpContextAccessor,
             IDtoMapper<DTORegister, User> registerMapper,
+            IDtoMapper<OnboardingQuestion, DTOOnboardingQuestion> onboardingQuestionMapper,
             IDtoMapper<DTORegisterCreator, User> registerCreatorMapper,
             IDtoMapper<User, DTOReturnUser> returnUserMapper)
         {
@@ -40,6 +44,7 @@ namespace Kumadio.Web.Controllers
             _appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
             _registerMapper = registerMapper;
+            _onboardingQuestionMapper = onboardingQuestionMapper;
             _registerCreatorMapper = registerCreatorMapper;
             _returnUserMapper = returnUserMapper;
         }
@@ -47,7 +52,7 @@ namespace Kumadio.Web.Controllers
         #region GET
 
         [HttpGet("current-user")]
-       // [Authorize]
+        // [Authorize]
         public async Task<ActionResult<DTOReturnUser>> GetCurrentUser()
         {
             var user = (User)HttpContext.Items["CurrentUser"]!;
@@ -59,6 +64,24 @@ namespace Kumadio.Web.Controllers
             if (result.IsFailure) return result.Error.ToBadRequest();
 
             return Ok(_returnUserMapper.Map(result.Value));
+        }
+
+        [HttpGet("onboarding-questions")]
+        public ActionResult<IEnumerable<DTOOnboardingQuestion>> GetOnboardingQuestions()
+        {
+            var user = (User)HttpContext.Items["CurrentUser"]!;
+
+            /*if (user == null)
+                return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
+
+            if (user.HasOnboarded)
+                return DomainErrors.Auth.UserAlreadyOnboarded.ToBadRequest();*/
+
+            var onboardingResult = _authService.GetOnboardingQuestions();
+
+            if (onboardingResult.IsFailure) return onboardingResult.Error.ToBadRequest();
+
+            return Ok(_onboardingQuestionMapper.Map(onboardingResult.Value));
         }
 
         #endregion
@@ -220,6 +243,29 @@ namespace Kumadio.Web.Controllers
             });
         }
 
+        [HttpPost("complete-onboarding")]
+        public async Task<IActionResult> CompleteOnboarding([FromBody] DTOOnboardingData onboardingDataDto)
+        {
+            var user = (User)HttpContext.Items["CurrentUser"]!;
+
+            if (user == null)
+                return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
+
+            var onboardingData = new OnboardingData
+            {
+                UserId = user.Id,
+                ChildAge = onboardingDataDto.ChildAge,
+                ChildGender = onboardingDataDto.ChildGender,
+                PreferredDuration = onboardingDataDto.PreferredDuration,
+                SelectedInterestsJson = JsonSerializer.Serialize(onboardingDataDto.SelectedInterests),
+            };
+
+            var onboardingResult = await _authService.CompleteOnboarding(onboardingData);
+
+            if (onboardingResult.IsFailure) return onboardingResult.Error.ToBadRequest();
+
+            return Ok();
+        }
 
         #endregion
 
