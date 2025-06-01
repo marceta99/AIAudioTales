@@ -94,6 +94,12 @@
     height: 50px; /* Ensure all controls have the same height */
     cursor: pointer;
     border-radius: 50%; /* Make buttons circular */
+
+    &.disabled {
+    opacity: 0.4;       /* učini sivo/trasparentno */
+    cursor: default;    /* ne pokazuje ruku za klik */
+    pointer-events: none; /* onemogući događaje klika */
+  }
 }
 
 .controls img {

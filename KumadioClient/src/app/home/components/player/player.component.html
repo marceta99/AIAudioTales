@@ -24,7 +24,7 @@
                   <i id="rewind" class="control small" (click)="rewind()"><img src="../../../../assets/icons/replay10.svg" alt="skip"></i>
                   <i id="prev" class="control medium" (click)="prevBook()"><img src="../../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
-                  <i class="control large" #play [ngClass]="{'pulse': this.currentBook.questionsActive}" (click)="togglePlayPause()">
+                  <i class="control large" #play [ngClass]="{'pulse': this.currentBook.questionsActive, 'disabled': isProcessing}" (click)="togglePlayPause()">
                     <img [src]="getPlayPauseIcon()" alt="play pause">
                   </i>
 

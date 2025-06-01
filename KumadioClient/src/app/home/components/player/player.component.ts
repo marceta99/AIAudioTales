@@ -16,12 +16,13 @@ export class PlayerComponent implements OnInit, OnDestroy {
   private currentBookIndex: number = 0;
   private recognition: any;
   private recognitionActive = false;   // “am I actually running right now?”
-  private shouldListen   = false;     // “do I want to be running?”
+  private shouldListen = false;     // “do I want to be running?”
   private transcriptBuffer = '';
   private transcriptTimeout: any;
   private failedAttempts = 0;
   private readonly maxFailedAttempts = 3;
   private lastTranscriptFragment = '';
+  private repeatAudio: HTMLAudioElement | null = null;
 
   public progress: number = 0;
   public currentTime = '0:00';
@@ -32,6 +33,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public isFullScreen: boolean = false;
   public isLoading: boolean = false;
   public currentBook!: PurchasedBook;
+  public isProcessing = false;
 
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
@@ -251,7 +253,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
 
-  private initializeSpeechRecognition(): void {
+  /*private initializeSpeechRecognition(): void {
     const SpeechRecognition = (window as any).SpeechRecognition
                             || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -320,7 +322,101 @@ export class PlayerComponent implements OnInit, OnDestroy {
       // remove your unconditional restart from here!
       // if you really want to restart after results, do it in onresult instead.
     };
-  }
+  }*/
+
+  private initializeSpeechRecognition(): void {
+    const SpeechRecognition = (window as any).SpeechRecognition
+                            || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.error('Web Speech API not supported');
+      return;
+    }
+
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous      = true;   // pokušava da sluša više segmenata govora
+    this.recognition.interimResults  = true;   // ne prikazujemo nepotpune rezultate
+    this.recognition.maxAlternatives = 1;
+    this.recognition.lang            = 'sr-RS';
+
+    // Kada se prepoznavanje zapravo pokrene
+    this.recognition.onstart = () => {
+      console.log('🎙️ Speech recognition actually started');
+      this.recognitionActive = true; // markiramo da je aktivno
+    };
+
+    // Kada prepozna fragment govora (rezultat)
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[event.resultIndex][0]
+                          .transcript.trim().toLowerCase();
+      console.log("result ", transcript);
+
+      if (!this.isTranscriptValid(transcript)) return;
+
+      // Ignorišemo dupliranje istog fragmenta
+      if (transcript === this.lastTranscriptFragment) return;
+      this.lastTranscriptFragment = transcript;
+
+      this.zone.run(() => {
+        clearTimeout(this.transcriptTimeout);
+        this.transcriptBuffer = transcript;
+
+        // Čekamo da dete prestane govoriti (1.2 s pauze) pre nego što procesiramo
+        this.transcriptTimeout = setTimeout(() => {
+          const finalTranscript = this.transcriptBuffer.trim();
+          this.transcriptBuffer = '';
+          this.lastTranscriptFragment = '';
+
+          this.processChildResponse(finalTranscript);
+        }, 1200);
+      });
+    };
+
+    // Greške u prepoznavanju
+    this.recognition.onerror = (event: any) => {
+      // Ako se ništa ne čuje i treba da slušamo, restartujemo nakon 300 ms
+      if (event.error === 'no-speech' && this.shouldListen) {
+        console.warn('No speech—but I’ll retry in 300ms');
+        setTimeout(() => {
+          if (this.shouldListen && this.currentBook?.questionsActive) {
+            this.recognition.start();
+          }
+        }, 300);
+        return;
+      }
+      // Ignorišemo abort koji smo mi sami pozvali
+      if (event.error === 'aborted') {
+        return;
+      }
+      console.error('Speech error:', event.error);
+    };
+    
+    // Kada prepoznavanje stane (najčešće zbog tišine ili abort)
+    this.recognition.onend = () => {
+      this.recognitionActive = false;
+      console.log('🎙️ Speech ended');
+      // Restartujemo PREPOZNAVANJE SAMO ako:
+      // 1) želimo da slušamo (shouldListen)
+      // 2) trenutno smo u delu sa pitanjima (questionsActive)
+      // 3) nismo u toku obrade backenda (isProcessing === false)
+      if (this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
+        setTimeout(() => {
+          if (this.shouldListen && !this.recognitionActive && !this.isProcessing) {
+            this.recognition.start();
+          }
+        }, 200);
+      }
+    };
+
+    // Ako prepozna glas korisnika, pauziramo audio (knjige) da ne bi ometalo
+    this.recognition.onspeechstart = () => {
+      console.log('🎤 User started speaking—pausing audio');
+      // Ako se u tom trenutku reproducira audio knjige (questionsActive=false),
+      // nemamo šta da slušamo. U svakom slučaju pauziramo.
+      if (this.audioElement?.nativeElement) {
+        this.audioElement.nativeElement.pause();
+      }
+    };
+}
   
   private startRecognition(): void {
     // “I want the mic open”
@@ -407,11 +503,19 @@ export class PlayerComponent implements OnInit, OnDestroy {
             return;
           }
         }
+        
+        // 3a) Backend je odgovorio – vraćamo mikrofon u akciju
+        this.isProcessing = false;
+        this.startRecognition();  // startuje recognizer samo ako questionsActive=true
 
         this.failedAttempts++;
         this.promptChildToRepeat();
       },
       error: error => {
+        // 3a) Backend je odgovorio – vraćamo mikrofon u akciju
+        this.isProcessing = false;
+        this.startRecognition();  // startuje recognizer samo ako questionsActive=true
+
         console.error('There was an error!', error);
         this.failedAttempts++;
         this.promptChildToRepeat();
@@ -420,9 +524,23 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private promptChildToRepeat(): void {
-    // Play an audio message prompting the child to repeat their answer
-    const audio = new Audio('assets/audio/repeat_audio.mp3');
-    audio.play();
+    // Ako već postoji instanca „repeat“ zvuka (iz prethodnih pokušaja), prekidamo je
+    if (this.repeatAudio) {
+      this.repeatAudio.pause();
+      this.repeatAudio = null;
+    }
+
+    // Kreiramo novu instancu
+    this.repeatAudio = new Audio('assets/audio/repeat_audio.mp3');
+
+    // Kad svira „repeat“, NEMOJ da pozivaš stopRecognition()
+    // jer želiš da mikrofon ostane aktivan i spreman da uhvati neki fragment govora.
+    this.repeatAudio.play();
+
+    // Kada se „repeat“ završi prirodno, oslobodi instancu
+    this.repeatAudio.onended = () => {
+      this.repeatAudio = null;
+    };
   }
 
 
