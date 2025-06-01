@@ -4,7 +4,8 @@ export interface User {
   firstName: string,
   lastName: string,
   email: string,
-  role: Role
+  role: Role,
+  isOnboarded: boolean
 }
 
 export interface RegisterUser {
@@ -36,11 +37,9 @@ export interface OnboardingQuestionDto {
   options: OnboardingOptionDto[];
 }
 
-export interface OnboardingDto {
-  childAge?:         number;
-  childGender?:      string;
-  selectedOptionIds?: number[];
-  preferredDuration?: string;
+export interface OnboardingDataDto {
+  childAge?: number;
+  selectedOptions: number[];
 }
 
 // #endregion

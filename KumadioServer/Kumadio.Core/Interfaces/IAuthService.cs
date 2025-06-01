@@ -23,6 +23,6 @@ namespace Kumadio.Core.Interfaces
 
         #endregion
         Task<Result<User>> GetUserWithEmail(string email);
-        Task<Result> CompleteOnboarding(OnboardingData onboardingData);
+        Task<Result> CompleteOnboarding(OnboardingData onboardingData, ICollection<int> selectedOptions);
     }
 }

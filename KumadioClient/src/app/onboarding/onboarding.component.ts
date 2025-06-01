@@ -13,7 +13,7 @@ import {
     Validators,
   } from '@angular/forms';
   import { Router } from '@angular/router';
-import { OnboardingQuestionDto, OnboardingQuestionType } from '../entities';
+import { OnboardingDataDto, OnboardingQuestionDto, OnboardingQuestionType } from '../entities';
 import { OnboardingService } from './onboarding.service';
   
   @Component({
@@ -150,7 +150,6 @@ import { OnboardingService } from './onboarding.service';
       wrapper.style.transform = this.translateXStyle;
     }
   
-    // Called by the pink arrow button
     onNextClick() {
       if (this.currentIndex < this.questions.length - 1) {
         this.currentIndex++;
@@ -162,27 +161,35 @@ import { OnboardingService } from './onboarding.service';
     }
   
     private submitOnboarding() {
-      /*// gather final data from typed form
-      const { childAge, childGender, childInterests, preferredDuration } = this.onboardingForm.value;
-      // childInterests is an array of booleans matching `this.interests`.
-  
-      // Example: convert them to an array of strings
-      const selectedInterests = this.childInterests.value
-        .map((checked, i) => (checked ? this.interests[i] : null))
-        .filter((v): v is string => v !== null);
-  
-      const finalData = {
-        childAge,
-        childGender,
-        selectedInterests,
-        preferredDuration
+      const dto: OnboardingDataDto = {
+        childAge: this.onboardingForm.get('childAge')?.value ?? undefined,
+        selectedOptions: []
       };
-  
-      console.log('Onboarding data:', finalData);
-  
-      // Here you would post to your backend, e.g. /api/auth/onboarding
-      // once done => navigate:
-      this.router.navigate(['/home']);*/
+
+      // Iterate throught each question and if it is single or multiple choice add selection to selectedOptions array
+      this.questions.forEach(q => {
+        const key = q.key;
+        const control = this.onboardingForm.get(key);
+
+        if (q.type === OnboardingQuestionType.SingleChoice) {
+          const selectedId = (control as FormControl<number | null>).value;
+          if (selectedId != null) {
+            dto.selectedOptions.push(selectedId);
+          }
+        } 
+        else if (q.type === OnboardingQuestionType.MultiChoice) {
+          const arr = (control as FormArray<FormControl<boolean>>).controls;
+          arr.forEach((checkboxCtrl, index) => {
+            // If checkbox is selected add it to selectedOptions 
+            if (checkboxCtrl.value) {
+              dto.selectedOptions.push(q.options[index].id);
+            }
+          });
+        }
+      });
+
+      this.onboardingService.completeOnboarding(dto).subscribe(() => {
+        this.router.navigate(['/home']);
+      });
     }
-  }
-  
+}

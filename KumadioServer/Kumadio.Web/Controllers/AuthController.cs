@@ -13,9 +13,6 @@ using Kumadio.Web.Settings;
 using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
-using Microsoft.AspNetCore.Authorization;
-using Kumadio.Core.Models;
-using System.Text.Json;
 
 namespace Kumadio.Web.Controllers
 {
@@ -71,11 +68,11 @@ namespace Kumadio.Web.Controllers
         {
             var user = (User)HttpContext.Items["CurrentUser"]!;
 
-            /*if (user == null)
+            if (user == null)
                 return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
 
-            if (user.HasOnboarded)
-                return DomainErrors.Auth.UserAlreadyOnboarded.ToBadRequest();*/
+            if (user.IsOnboarded)
+                return DomainErrors.Auth.UserAlreadyOnboarded.ToBadRequest();
 
             var onboardingResult = _authService.GetOnboardingQuestions();
 
@@ -251,16 +248,16 @@ namespace Kumadio.Web.Controllers
             if (user == null)
                 return DomainErrors.Auth.JwtTokenMissing.ToBadRequest();
 
+            if (user.IsOnboarded)
+                return DomainErrors.Auth.UserAlreadyOnboarded.ToBadRequest();
+
             var onboardingData = new OnboardingData
             {
                 UserId = user.Id,
-                ChildAge = onboardingDataDto.ChildAge,
-                ChildGender = onboardingDataDto.ChildGender,
-                PreferredDuration = onboardingDataDto.PreferredDuration,
-                SelectedInterestsJson = JsonSerializer.Serialize(onboardingDataDto.SelectedInterests),
+                ChildAge = onboardingDataDto.ChildAge
             };
 
-            var onboardingResult = await _authService.CompleteOnboarding(onboardingData);
+            var onboardingResult = await _authService.CompleteOnboarding(onboardingData, onboardingDataDto.SelectedOptions);
 
             if (onboardingResult.IsFailure) return onboardingResult.Error.ToBadRequest();
 

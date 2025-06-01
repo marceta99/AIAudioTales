@@ -13,7 +13,8 @@ namespace Kumadio.Web.Mappers.UserMappers
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 Email = source.Email,
-                Role = source.Role
+                Role = source.Role,
+                IsOnboarded = source.IsOnboarded
             };
         }
     }

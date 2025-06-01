@@ -116,9 +116,8 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 var opts = new List<OnboardingOption>
             {
                 // childGender (q2.Id)
-                new OnboardingOption { QuestionId = q2.Id, Text = "M", Order = 1 },
-                new OnboardingOption { QuestionId = q2.Id, Text = "F", Order = 2 },
-                new OnboardingOption { QuestionId = q2.Id, Text = "U", Order = 3 },
+                new OnboardingOption { QuestionId = q2.Id, Text = "Muski", Order = 1 },
+                new OnboardingOption { QuestionId = q2.Id, Text = "Zenski", Order = 2 },
 
                 // childInterests (q3.Id)
                 new OnboardingOption { QuestionId = q3.Id, Text = "Avantura", Order = 1 },
@@ -130,9 +129,9 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 new OnboardingOption { QuestionId = q3.Id, Text = "Matematika i logičke igre", Order = 7 },
 
                 // preferredDuration (q4.Id)
-                new OnboardingOption { QuestionId = q4.Id, Text = "short", Order = 1 },
-                new OnboardingOption { QuestionId = q4.Id, Text = "medium", Order = 2 },
-                new OnboardingOption { QuestionId = q4.Id, Text = "long", Order = 3 }
+                new OnboardingOption { QuestionId = q4.Id, Text = "kratke", Order = 1 },
+                new OnboardingOption { QuestionId = q4.Id, Text = "srednje", Order = 2 },
+                new OnboardingOption { QuestionId = q4.Id, Text = "duge", Order = 3 }
             };
                 _dbContext.OnboardingOptions.AddRange(opts);
                 _dbContext.SaveChanges();

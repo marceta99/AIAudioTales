@@ -14,6 +14,7 @@ namespace Kumadio.Core.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IOnboardingQuestionRepository _onboardingQuestionRepository;
         private readonly IOnboardingDataRepository _onboardingDataRepository;
+        private readonly ISelectedOptionRepository _selectedOptionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -21,12 +22,14 @@ namespace Kumadio.Core.Services
             IRefreshTokenRepository refreshTokenRepository,
             IOnboardingQuestionRepository onboardingQuestionRepository,
             IOnboardingDataRepository onboardingDataRepository,
+            ISelectedOptionRepository selectedOptionRepository,
             IUserRepository userRepository,
             IUnitOfWork unitOfWork)
         {
             _refreshTokenRepository = refreshTokenRepository;
             _onboardingQuestionRepository = onboardingQuestionRepository;
             _onboardingDataRepository = onboardingDataRepository;
+            _selectedOptionRepository = selectedOptionRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
@@ -194,11 +197,27 @@ namespace Kumadio.Core.Services
             return user;
         }
 
-        public async Task<Result> CompleteOnboarding(OnboardingData onboardingData)
+        public async Task<Result> CompleteOnboarding(OnboardingData onboardingData, ICollection<int> selectedOptionsIds)
         {
             return await _unitOfWork.ExecuteInTransaction(async () =>
             {
-                await _onboardingDataRepository.Add(onboardingData);
+                var user = await _userRepository.GetFirstWhere(u => u.Id == onboardingData.UserId);
+                
+                user!.IsOnboarded = true;
+
+                var newOnboardingData = await _onboardingDataRepository.AddAndReturn(onboardingData);
+
+                var selectedOptions = new List<SelectedOption>();
+                foreach(var optionId in selectedOptionsIds)
+                {
+                    selectedOptions.Add(new SelectedOption
+                    {
+                        OnboardingDataId = newOnboardingData.UserId,
+                        OnboardingOptionId = optionId
+                    });
+                }
+
+                await _selectedOptionRepository.AddRange(selectedOptions);
 
                 return Result.Success();
             });

@@ -16,7 +16,7 @@ namespace Kumadio.Domain.Entities
         public RefreshToken RefreshToken { get; set; }
         public ICollection<SearchHistory> SearchHistories { get; set; }
         public Subscription Subscription { get; set; }
-        public bool HasOnboarded { get; set; }
+        public bool IsOnboarded { get; set; }
         public OnboardingData OnboardingData { get; set; }
     }
 }

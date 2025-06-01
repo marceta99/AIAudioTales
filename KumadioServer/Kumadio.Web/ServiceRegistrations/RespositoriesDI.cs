@@ -21,6 +21,7 @@ namespace Kumadio.Web.ServiceRegistrations
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOnboardingDataRepository, OnboardingDataRepository>();
             services.AddScoped<IOnboardingQuestionRepository, OnboardingQuestionRepository>();
+            services.AddScoped<ISelectedOptionRepository, SelectedOptionRepository>();
 
             services.AddScoped<IFileStorage, DiskFileStorageService>();
 

@@ -20,6 +20,7 @@ namespace Kumadio.Infrastructure.Data
         public DbSet<OnboardingQuestion> OnboardingQuestions { get; set; }
         public DbSet<OnboardingOption> OnboardingOptions { get; set; }
         public DbSet<OnboardingData> OnboardingData { get; set; }
+        public DbSet<SelectedOption> SelectedOptions { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -211,6 +212,21 @@ namespace Kumadio.Infrastructure.Data
                 .HasOne(o => o.Question)
                 .WithMany(q => q.Options)
                 .HasForeignKey(o => o.QuestionId);
+
+            // M:M OnboardingData → OnboardingOption
+            modelBuilder.Entity<SelectedOption>().HasKey(so => new { so.OnboardingDataId, so.OnboardingOptionId });
+
+            modelBuilder.Entity<SelectedOption>()
+            .HasOne(so => so.OnboardingData)
+            .WithMany(od => od.SelectedOptions)
+            .HasForeignKey(so => so.OnboardingDataId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<SelectedOption>()
+            .HasOne(so => so.OnboardingOption)
+            .WithMany(op => op.SelectedOptions)
+            .HasForeignKey(so => so.OnboardingOptionId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             #endregion
 

@@ -1,8 +1,7 @@
-// onboarding.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { OnboardingDto, OnboardingQuestionDto } from '../entities';
+import { OnboardingDataDto, OnboardingQuestionDto } from '../entities';
 
 @Injectable()
 export class OnboardingService {
@@ -14,7 +13,11 @@ export class OnboardingService {
     return this.http.get<OnboardingQuestionDto[]>(`${this.baseUrl}/onboarding-questions`, { withCredentials: true });
   }
 
-  complete(data: OnboardingDto): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/complete`, data, { withCredentials: true });
+  completeOnboarding(data: OnboardingDataDto): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}/complete-onboarding`,
+      data,
+      { withCredentials: true }
+    );
   }
 }

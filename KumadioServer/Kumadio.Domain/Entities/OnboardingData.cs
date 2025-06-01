@@ -1,4 +1,6 @@
-﻿namespace Kumadio.Domain.Entities
+﻿using Kumadio.Domain.Enums;
+
+namespace Kumadio.Domain.Entities
 {
     public class OnboardingData
     {
@@ -7,8 +9,6 @@
 
         // polja dynamic form-e
         public int? ChildAge { get; set; }
-        public string ChildGender { get; set; }
-        public string SelectedInterestsJson { get; set; }
-        public string PreferredDuration { get; set; }
+        public List<SelectedOption> SelectedOptions { get; set; }
     }
 }
