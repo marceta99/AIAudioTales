@@ -164,11 +164,19 @@ export class PlayerComponent implements OnInit, OnDestroy {
   public nextBook(): void {
     this.isLoading = true;
     this.playerService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
+    
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
   }
 
   public prevBook(): void {
     this.isLoading = true;
     this.playerService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
+
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
   }
 
   private saveProgress(playingPosition?: number, nextBookIndex?: number, questionsActive?: boolean): void {
@@ -243,6 +251,11 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.progressBarUpdate();
       this.playerService.isPlaying.next(true);
       this.audioElement.nativeElement.play();
+
+       // Osiguravamo da je mikrofon ugašen dok traje reprodukcija
+      if (this.recognitionActive) {
+        this.stopRecognition();
+      }
     })
   }
 
@@ -252,77 +265,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
-
-  /*private initializeSpeechRecognition(): void {
-    const SpeechRecognition = (window as any).SpeechRecognition
-                            || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      console.error('Web Speech API not supported');
-      return;
-    }
-
-    this.recognition = new SpeechRecognition();
-    this.recognition.continuous      = true;
-    this.recognition.interimResults  = true;
-    this.recognition.maxAlternatives = 1;
-    this.recognition.lang            = 'sr-RS'    //'sr-RS' en-US;
-
-    this.recognition.onstart = () => {
-      console.log('🎙️ Speech recognition actually started');
-      this.recognitionActive = true;    // mark it running
-    };
-
-    this.recognition.onresult = (event: any) => {
-      const transcript = event.results[event.resultIndex][0].transcript.trim().toLowerCase();
-      console.log("result ", transcript);
-
-      if (!this.isTranscriptValid(transcript)) return;
-
-      // IGNORIŠI ako je isto kao prethodni deo → sprečava dupliranje
-      if (transcript === this.lastTranscriptFragment) return;
-
-      this.lastTranscriptFragment = transcript;
-
-      this.zone.run(() => {
-        clearTimeout(this.transcriptTimeout);
-
-        this.transcriptBuffer = transcript;
-
-        this.transcriptTimeout = setTimeout(() => {
-          const finalTranscript = this.transcriptBuffer.trim();
-          this.transcriptBuffer = '';
-          this.lastTranscriptFragment = '';
-
-          this.processChildResponse(finalTranscript);
-        }, 1200);
-  });
-    };
-
-    this.recognition.onerror = (event: any) => {
-      // handle the no‑speech auto‑retry
-      if (event.error === 'no-speech' && this.shouldListen) {
-        console.warn('No speech—but I’ll retry in 300ms');
-        setTimeout(() => this.recognition.start(), 300);
-        return;
-      }
-    
-      // ignore the user‑initiated abort
-      if (event.error === 'aborted') {
-        // no-op
-        return;
-      }
-    
-      // anything else is actually bad
-      console.error('Speech error:', event.error);
-    };
-    
-    this.recognition.onend = () => {
-      this.recognitionActive = false;
-      console.log('🎙️ Speech ended');
-      // remove your unconditional restart from here!
-      // if you really want to restart after results, do it in onresult instead.
-    };
-  }*/
 
   private initializeSpeechRecognition(): void {
     const SpeechRecognition = (window as any).SpeechRecognition
@@ -573,6 +515,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     } else {
       this.saveProgress(playingPosition, undefined, undefined);
     }
+
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
   }
 
   public fastForward(): void {
@@ -581,6 +527,10 @@ export class PlayerComponent implements OnInit, OnDestroy {
     const playingPosition = Math.min(audio.duration, audio.currentTime + forwardTime);
     audio.currentTime = playingPosition;
     this.progressBarUpdate();
+
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
   }
   
   public toggleFullScreen(): void {
