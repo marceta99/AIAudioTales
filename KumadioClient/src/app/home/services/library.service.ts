@@ -11,7 +11,7 @@ export class LibraryService {
 
     public libraryBooks = new Subject<SearchedBooks>();
   
-    purchasedBooks: BehaviorSubject<PurchasedBook[]> = new BehaviorSubject<PurchasedBook[]>([]);
+    purchasedBooks: Subject<PurchasedBook[]> = new Subject<PurchasedBook[]>();
   
     constructor(private httpClient: HttpClient, private spinnerService: LoadingSpinnerService) { }
   

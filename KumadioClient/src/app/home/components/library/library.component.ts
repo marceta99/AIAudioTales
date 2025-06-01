@@ -11,7 +11,7 @@ import { PlayerService } from '../../services/player.service';
   imports: [CommonModule]
 })
 export class LibraryComponent implements OnInit{
-  books!: PurchasedBook[];
+  books: PurchasedBook[] = [];
   currentBookIndex!: number;
   isPlaying: boolean = false;
 

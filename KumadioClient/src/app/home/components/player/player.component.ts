@@ -12,20 +12,26 @@ import { LibraryService } from '../../services/library.service';
   providers: []
 })
 export class PlayerComponent implements OnInit, OnDestroy {
-  books!: PurchasedBook[];
-  currentBook!: PurchasedBook;
-  currentBookIndex: number = 0;
-  recognition: any;
-  progress: number = 0;
-  currentTime = '0:00';
-  maxDuration = '0:00';
-  isPlaying: boolean = false;
+  private books!: PurchasedBook[];
+  private currentBookIndex: number = 0;
+  private recognition: any;
   private recognitionActive = false;   // “am I actually running right now?”
   private shouldListen   = false;     // “do I want to be running?”
-  isTitleOverflowing: boolean = false;
-  isArtistOverflowing: boolean = false;
-  isFullScreen: boolean = false;
-  isLoading: boolean = false;
+  private transcriptBuffer = '';
+  private transcriptTimeout: any;
+  private failedAttempts = 0;
+  private readonly maxFailedAttempts = 3;
+  private lastTranscriptFragment = '';
+
+  public progress: number = 0;
+  public currentTime = '0:00';
+  public maxDuration = '0:00';
+  public isPlaying: boolean = false;
+  public isTitleOverflowing: boolean = false;
+  public isArtistOverflowing: boolean = false;
+  public isFullScreen: boolean = false;
+  public isLoading: boolean = false;
+  public currentBook!: PurchasedBook;
 
   @ViewChild('audioElement', { static: false }) audioElement!: ElementRef;  
   @ViewChild('progressArea', { static: false }) progressArea!: ElementRef;
@@ -245,98 +251,105 @@ export class PlayerComponent implements OnInit, OnDestroy {
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
 
+  private initializeSpeechRecognition(): void {
+    const SpeechRecognition = (window as any).SpeechRecognition
+                            || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.error('Web Speech API not supported');
+      return;
+    }
 
-    private initializeSpeechRecognition(): void {
-      const SpeechRecognition = (window as any).SpeechRecognition
-                             || (window as any).webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        console.error('Web Speech API not supported');
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous      = true;
+    this.recognition.interimResults  = true;
+    this.recognition.maxAlternatives = 1;
+    this.recognition.lang            = 'sr-RS'    //'sr-RS' en-US;
+
+    this.recognition.onstart = () => {
+      console.log('🎙️ Speech recognition actually started');
+      this.recognitionActive = true;    // mark it running
+    };
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[event.resultIndex][0].transcript.trim().toLowerCase();
+      console.log("result ", transcript);
+
+      if (!this.isTranscriptValid(transcript)) return;
+
+      // IGNORIŠI ako je isto kao prethodni deo → sprečava dupliranje
+      if (transcript === this.lastTranscriptFragment) return;
+
+      this.lastTranscriptFragment = transcript;
+
+      this.zone.run(() => {
+        clearTimeout(this.transcriptTimeout);
+
+        this.transcriptBuffer = transcript;
+
+        this.transcriptTimeout = setTimeout(() => {
+          const finalTranscript = this.transcriptBuffer.trim();
+          this.transcriptBuffer = '';
+          this.lastTranscriptFragment = '';
+
+          this.processChildResponse(finalTranscript);
+        }, 1200);
+  });
+    };
+
+    this.recognition.onerror = (event: any) => {
+      // handle the no‑speech auto‑retry
+      if (event.error === 'no-speech' && this.shouldListen) {
+        console.warn('No speech—but I’ll retry in 300ms');
+        setTimeout(() => this.recognition.start(), 300);
         return;
       }
-  
-      this.recognition = new SpeechRecognition();
-      this.recognition.continuous      = true;
-      this.recognition.interimResults  = true;
-      this.recognition.maxAlternatives = 1;
-      this.recognition.lang            = 'en-US'    //'sr-RS';
-  
-      // ─── inside initializeSpeechRecognition() ────────────────────────────────────
-this.recognition.onstart = () => {
-  console.log('🎙️ Speech recognition actually started');
-  this.recognitionActive = true;    // mark it running
-};
-  
-      this.recognition.onresult = (event: any) => {
-        const transcript = event
-          .results[event.resultIndex][0]
-          .transcript
-          .trim()
-          .toLowerCase();
-        console.log('🗣 Recognized:', transcript);
-  
-        this.zone.run(() => {
-          if (this.currentBook.questionsActive && this.isTranscriptValid(transcript)) {
-            this.processChildResponse(transcript);
-          }
-        });
-      };
-  
-      this.recognition.onerror = (event: any) => {
-        // handle the no‑speech auto‑retry
-        if (event.error === 'no-speech' && this.shouldListen) {
-          console.warn('No speech—but I’ll retry in 300ms');
-          setTimeout(() => this.recognition.start(), 300);
-          return;
-        }
-      
-        // ignore the user‑initiated abort
-        if (event.error === 'aborted') {
-          // no-op
-          return;
-        }
-      
-        // anything else is actually bad
-        console.error('Speech error:', event.error);
-      };
-      
-      this.recognition.onend = () => {
-        this.recognitionActive = false;
-        console.log('🎙️ Speech ended');
-        // remove your unconditional restart from here!
-        // if you really want to restart after results, do it in onresult instead.
-      };
-    }
-  
-    private startRecognition(): void {
-      // “I want the mic open”
-      this.shouldListen = true;
     
-      // only call start() if we’re not already running
-      if (this.recognition && !this.recognitionActive) {
-        try {
-          // immediately mark running so subsequent calls are skipped
-          this.recognitionActive = true;
-          this.recognition.start();
-        } catch (err: any) {
-          // swallow the “already started” error
-          if (err.name !== 'InvalidStateError') {
-            console.error('Unexpected speech‑start error:', err);
-          }
+      // ignore the user‑initiated abort
+      if (event.error === 'aborted') {
+        // no-op
+        return;
+      }
+    
+      // anything else is actually bad
+      console.error('Speech error:', event.error);
+    };
+    
+    this.recognition.onend = () => {
+      this.recognitionActive = false;
+      console.log('🎙️ Speech ended');
+      // remove your unconditional restart from here!
+      // if you really want to restart after results, do it in onresult instead.
+    };
+  }
+  
+  private startRecognition(): void {
+    // “I want the mic open”
+    this.shouldListen = true;
+  
+    // only call start() if we’re not already running
+    if (this.recognition && !this.recognitionActive) {
+      try {
+        // immediately mark running so subsequent calls are skipped
+        this.recognitionActive = true;
+        this.recognition.start();
+      } catch (err: any) {
+        // swallow the “already started” error
+        if (err.name !== 'InvalidStateError') {
+          console.error('Unexpected speech‑start error:', err);
         }
       }
     }
+  }
     
-    private stopRecognition(): void {
-      this.shouldListen = false;
-      if (this.recognition && this.recognitionActive) {
-        // abort() will silently end without firing an “aborted” error
-        this.recognition.abort();
-        // onend will still fire, where you set recognitionActive = false
-      }
+  private stopRecognition(): void {
+    this.shouldListen = false;
+    if (this.recognition && this.recognitionActive) {
+      // abort() will silently end without firing an “aborted” error
+      this.recognition.abort();
+      // onend will still fire, where you set recognitionActive = false
     }
+  }
     
-  
-
   private isTranscriptValid(transcript: string): boolean {
     // Filter out empty or irrelevant transcripts
     if (!transcript || transcript.length < 2) {
@@ -355,31 +368,33 @@ this.recognition.onstart = () => {
   }
 
   private processChildResponse(transcript: string): void {
-    // First, attempt to match on the frontend
-    const matchedAnswer = this.currentBook.playingPart.answers.find(answer => transcript.includes(answer.text.toLowerCase()));
+    const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
+      transcript.includes(answer.text.toLowerCase())
+    );
 
     if (matchedAnswer) {
-        this.nextPart(matchedAnswer.nextPartId);
-    } else {
-      // If no match, send to backend for further processing
+      this.failedAttempts = 0; // resetuj pokušaje
+      this.nextPart(matchedAnswer.nextPartId);
+    } else if (this.failedAttempts < this.maxFailedAttempts) {
       this.sendToBackendForProcessing(transcript);
+    } else {
+      this.promptChildToRepeat(); // ne šaljemo više requestova
     }
   }
 
   private sendToBackendForProcessing(transcript: string): void {
     const possibleAnswers = this.currentBook.playingPart.answers.map(answer => answer.text);
     const prompt = `
-    You are an assistant helping to interpret a child's response in an interactive audiobook. The child was asked a question with the following possible answers: ${possibleAnswers.join(', ')}.
+      You are an assistant helping to interpret a child's response in an interactive audiobook. The child was asked a question with the following possible answers: ${possibleAnswers.join(', ')}.
 
-    Given the child's response: "${transcript}"
+      Given the child's response: "${transcript}"
 
-    Determine which of the possible answers the child intended. If the response is unclear or doesn't match any options, reply "unclear".
+      Determine which of the possible answers the child intended. If the response is unclear or doesn't match any options, reply "unclear".
 
-    Respond with only the chosen answer or "unclear".
+      Respond with only the chosen answer or "unclear".
     `;
 
-    this.playerService.processChildResponse(prompt).subscribe(
-    {
+    this.playerService.processChildResponse(prompt).subscribe({
       next: (response: { reply: string }) => {
         const chosenAnswer = response.reply;
         if (chosenAnswer && chosenAnswer.toLowerCase() !== 'unclear') {
@@ -387,16 +402,19 @@ this.recognition.onstart = () => {
             answer.text.toLowerCase() === chosenAnswer.toLowerCase()
           );
           if (matchedAnswer) {
+            this.failedAttempts = 0;
             this.nextPart(matchedAnswer.nextPartId);
+            return;
           }
-        } else {
-          // Prompt the child to repeat
-          this.promptChildToRepeat();
         }
+
+        this.failedAttempts++;
+        this.promptChildToRepeat();
       },
       error: error => {
-          console.error('There was an error!', error);
-          this.promptChildToRepeat();
+        console.error('There was an error!', error);
+        this.failedAttempts++;
+        this.promptChildToRepeat();
       }
     });
   }
@@ -449,41 +467,5 @@ this.recognition.onstart = () => {
   
   public toggleFullScreen(): void {
     this.isFullScreen = !this.isFullScreen;
-  }
-
-  // Utility function for string similarity
-  private stringSimilarity(str1: string, str2: string): number {
-    // Implement a simple similarity check (e.g., Levenshtein distance)
-    // For simplicity, let's use a basic approach here
-    if (str1 === str2) return 1;
-    const longer = str1.length > str2.length ? str1 : str2;
-    const shorter = str1.length > str2.length ? str2 : str1;
-    const longerLength = longer.length;
-    if (longerLength === 0) return 0;
-    const similarity = (longerLength - this.editDistance(longer, shorter)) / longerLength;
-    return similarity;
-  }
-
-  private editDistance(s1: string, s2: string): number {
-    const costs = [];
-    for (let i = 0; i <= s1.length; i++) {
-      let lastValue = i;
-      for (let j = 0; j <= s2.length; j++) {
-        if (i === 0)
-          costs[j] = j;
-        else {
-          if (j > 0) {
-            let newValue = costs[j - 1];
-            if (s1.charAt(i - 1) !== s2.charAt(j - 1))
-              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-            costs[j - 1] = lastValue;
-            lastValue = newValue;
-          }
-        }
-      }
-      if (i > 0)
-        costs[s2.length] = lastValue;
-    }
-    return costs[s2.length];
   }
 }
