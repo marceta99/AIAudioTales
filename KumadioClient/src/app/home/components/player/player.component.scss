@@ -40,7 +40,7 @@
 
 .book-details .book-cover{
   height: 65px;
-  width: 120px;
+  width: 140px;
   padding: 5px;
   border-radius: 10px;
   object-fit: cover; /* This ensures the image fills the entire space */
@@ -576,4 +576,20 @@
     width: 30px; /* Adjust icon size */
     height: 30px;
 }
+}
+
+/* Target all .control icons that use FontAwesome */
+.minimized-player-container .controls .control i.fa-solid,
+.fullscreen-player .controls .control i.fa-solid {
+  font-size: 28px;      /* Make the icons larger */
+  color: white;       /* Set icon color to blue (#007bff is a common blue tone) */
+}
+
+/* If you need a slightly different size for mobile vs. desktop, you can override inside a media query */
+@media (min-width: 768px) {
+  .minimized-player-container .controls .control i.fa-solid,
+  .fullscreen-player .controls .control i.fa-solid {
+    font-size: 32px;    /* Even larger on desktop */
+    color: white;     /* Same blue */
+  }
 }
