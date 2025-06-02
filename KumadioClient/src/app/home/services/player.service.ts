@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { LoadingSpinnerService } from "src/app/common/services/loading-spinner.service";
-import { PurchasedBook } from "src/app/entities";
+import { PurchasedBook, userResponseDto } from "src/app/entities";
 import { environment } from "src/environments/environment";
 
 @Injectable()
@@ -17,8 +17,8 @@ export class PlayerService {
 
   constructor(private http: HttpClient, private spinnerService: LoadingSpinnerService) { }
 
-  public processChildResponse(prompt: string): Observable<{ reply: string }> {
-    return this.http.post<{ reply: string }>(`${this.baseUrl}/process-response`, { prompt });
+  public processChildResponse(userResponseDto: userResponseDto): Observable<{ reply: string }> {
+    return this.http.post<{ reply: string }>(`${this.baseUrl}/process-response`, userResponseDto);
   }
 
   public nextPart(bookId: number, nextPartId: number): Observable<PurchasedBook>{

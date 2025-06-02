@@ -1,4 +1,5 @@
-﻿using Kumadio.Core.Interfaces;
+﻿using Kumadio.Core.Common;
+using Kumadio.Core.Interfaces;
 using Kumadio.Core.Models;
 using Kumadio.Domain.Entities;
 using Kumadio.Web.Attributes.Filters;
@@ -7,6 +8,7 @@ using Kumadio.Web.DTOS;
 using Kumadio.Web.Mappers.Base;
 using Kumadio.Web.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -23,7 +25,10 @@ namespace Kumadio.Web.Controllers
         private readonly IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> _pbMapper;
         private readonly IDtoMapper<Book, DTOReturnBook> _bookMapper;
         private readonly IDtoMapper<DTOUpdateProgress, UpdateProgressModel> _progressMapper;
+        private readonly IMemoryCache _cache;
         private readonly OpenAISettings _openAISettings;
+
+        private const string CACHE_KEY_PREFIX = "failedAttempts";
 
         protected User CurrentUser => (User)HttpContext.Items["CurrentUser"]!;
 
@@ -32,12 +37,14 @@ namespace Kumadio.Web.Controllers
             IDtoMapper<PurchasedBook, DTOReturnPurchasedBook> pbMapper,
             IDtoMapper<Book, DTOReturnBook> bookMapper,
             IDtoMapper<DTOUpdateProgress, UpdateProgressModel> progressMapper,
+            IMemoryCache cache,
             IOptions<OpenAISettings> openAISettings)
         {
             _libraryService = libraryService;
             _pbMapper = pbMapper;
             _bookMapper = bookMapper;
             _progressMapper = progressMapper;
+            _cache = cache;
             _openAISettings = openAISettings.Value;
         }
 
@@ -116,6 +123,32 @@ namespace Kumadio.Web.Controllers
         [HttpPost("process-response")]
         public async Task<IActionResult> ProcessResponse([FromBody] DTOUserResponse dto)
         {
+            // TO-DO: TO add here check if part with this id exists
+   
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{CurrentUser.Id}_{dto.PartId}";
+
+            var failedAttempts = _cache.GetOrCreate(cacheKey, entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromHours(1);
+                return 0; // if there is no attemts for this part start with 0
+            });
+
+            if (failedAttempts >= 3)
+            {
+                return DomainErrors.Library.MaxFailedAttemptsReached.ToBadRequest();
+            }
+
+            var joinedOptions = string.Join(", ", dto.PossibleAnswers);
+            var promt = $@"
+                You are an assistant helping to interpret a child's response in an interactive audiobook.
+                The child was asked a question with the following possible answers: {joinedOptions}.
+
+                Given the child's response: ""{dto.Transcript}""
+
+                Determine which of the possible answers the child intended. If the response is unclear or doesn't match any options, reply ""unclear"".
+
+                Respond with only the chosen answer or ""unclear"".";
+
             var apiKey = _openAISettings.ApiKey;
             var apiUrl = _openAISettings.ApiUrl;
             var model = _openAISettings.Model;
@@ -126,7 +159,7 @@ namespace Kumadio.Web.Controllers
             var requestBody = new
             {
                 model,
-                messages = new[] { new { role = "user", content = dto.Prompt } },
+                messages = new[] { new { role = "user", content = promt } },
                 max_tokens = 10,
                 temperature = 0.3
             };
@@ -143,15 +176,34 @@ namespace Kumadio.Web.Controllers
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
+                {
+                    // Nepredviđena greška od OpenAI (ili mrežna)
                     return StatusCode((int)response.StatusCode, responseString);
+                }
 
                 var data = JsonConvert.DeserializeObject<dynamic>(responseString);
-                var assistantReply = data.choices[0].message.content.ToString().Trim();
-                return Ok(new { reply = assistantReply });
+                string assistantReply = data.choices[0].message.content.ToString().Trim().ToLower();
+
+                if (!string.IsNullOrEmpty(assistantReply) && assistantReply != "unclear")
+                {
+                    _cache.Remove(cacheKey);
+
+                    return Ok(new { reply = assistantReply });
+                }
+                else
+                {
+                    failedAttempts++;
+                    _cache.Set(cacheKey, failedAttempts, new MemoryCacheEntryOptions
+                    {
+                        SlidingExpiration = TimeSpan.FromHours(1)
+                    });
+
+                    return Ok(new { reply = "unclear" });
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 

@@ -32,6 +32,7 @@
         public const string NextPartNotFound = "NEXT_PART_NOT_FOUND";
         public const string NextBookNotFound = "NEXT_BOOK_NOT_FOUND";
         public const string InvalidSerachTerm = "INVALID_SEARCH_TERM";
+        public const string MaxFailedAttemptsReached = "MAX_FAILED_ATTEMPTS_REACHED";
 
         // Common
         public const string BookNotFound = "BOOK_NOT_FOUND";

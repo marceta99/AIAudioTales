@@ -45,6 +45,8 @@
             public static Error NextPartNotFound => new(ErrorCodes.NextPartNotFound, "Next part with that id is not found.");
             public static Error NextBookNotFound => new(ErrorCodes.NextBookNotFound, "Next book with that id is not found.");
             public static Error InvalidSearchTerm => new(ErrorCodes.InvalidSerachTerm, "Search term value is invalid.");
+            public static Error MaxFailedAttemptsReached => new(ErrorCodes.MaxFailedAttemptsReached, "Max failed attempts reached for this book part.");
+
         }
 
         public static class Common

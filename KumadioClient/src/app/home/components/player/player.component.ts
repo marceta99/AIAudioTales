@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { PurchasedBook } from 'src/app/entities';
+import { PurchasedBook, userResponseDto } from 'src/app/entities';
 import { PlayerService } from '../../services/player.service';
 import { CommonModule } from '@angular/common';
 import { LibraryService } from '../../services/library.service';
@@ -260,133 +260,142 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   public getPlayPauseIcon(): string {
-    if (this.currentBook.questionsActive) {
-      return '../../../assets/icons/mic_24_white.svg';
-    }
     return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
   }
 
-  private initializeSpeechRecognition(): void {
-    const SpeechRecognition = (window as any).SpeechRecognition
-                            || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      console.error('Web Speech API not supported');
+private initializeSpeechRecognition(): void {
+  // pick whichever Web Speech API constructor is available
+  const SpeechRecognition = (window as any).SpeechRecognition
+                          || (window as any).webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    console.error('Web Speech API not supported');
+    return;
+  }
+
+  this.recognition = new SpeechRecognition();
+  this.recognition.continuous      = true;   // attempt to capture multiple segments
+  this.recognition.interimResults  = true;   // we’ll ignore “interim” in onresult if not final
+  this.recognition.maxAlternatives = 1;
+  this.recognition.lang            = 'sr-RS';
+
+  // When the engine actually starts listening
+  this.recognition.onstart = () => {
+    console.log('🎙️ Speech recognition actually started');
+    this.recognitionActive = true;
+  };
+
+  // When we get any result (interim or final)
+  this.recognition.onresult = (event: any) => {
+    // Loop over every new result from event.resultIndex onward
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
+      const transcriptSegment = result[0].transcript.trim().toLowerCase();
+
+      if (!this.isTranscriptValid(transcriptSegment)) {
+        // skip garbage / very short segments
+        continue;
+      }
+
+      if (result.isFinal) {
+        // Final transcript arrived
+        console.log('🟢 Final transcript:', transcriptSegment);
+
+        // Clear any buffers
+        this.lastTranscriptFragment = '';
+        this.transcriptBuffer = '';
+
+        // Process inside Angular zone so UI updates properly
+        this.zone.run(() => {
+          this.processChildResponse(transcriptSegment);
+        });
+      } else {
+        // Interim transcript: just store buffer, but do NOT re‐fire logic
+        this.transcriptBuffer = transcriptSegment;
+        console.log('⚫ Interim transcript:', transcriptSegment);
+      }
+    }
+  };
+
+  // Handle errors
+  this.recognition.onerror = (event: any) => {
+    // If we got "no‐speech" while we still want to listen, schedule a restart
+    if (event.error === 'no-speech' && this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
+      console.warn('No speech—but I’ll retry in 300ms');
+      setTimeout(() => {
+        // Only start again if we truly still want to listen
+        if (this.shouldListen && this.currentBook?.questionsActive && !this.recognitionActive && !this.isProcessing) {
+          this.startRecognition();
+        }
+      }, 300);
       return;
     }
 
-    this.recognition = new SpeechRecognition();
-    this.recognition.continuous      = true;   // pokušava da sluša više segmenata govora
-    this.recognition.interimResults  = true;   // ne prikazujemo nepotpune rezultate
-    this.recognition.maxAlternatives = 1;
-    this.recognition.lang            = 'sr-RS';
+    // If user intentionally aborted, ignore
+    if (event.error === 'aborted') {
+      return;
+    }
 
-    // Kada se prepoznavanje zapravo pokrene
-    this.recognition.onstart = () => {
-      console.log('🎙️ Speech recognition actually started');
-      this.recognitionActive = true; // markiramo da je aktivno
-    };
+    console.error('Speech error:', event.error);
+  };
 
-    // Kada prepozna fragment govora (rezultat)
-    this.recognition.onresult = (event: any) => {
-      const transcript = event.results[event.resultIndex][0]
-                          .transcript.trim().toLowerCase();
-      console.log("result ", transcript);
+  // When the recognition session ends (e.g. silence, or we explicitly called abort())
+  this.recognition.onend = () => {
+    this.recognitionActive = false;
+    console.log('🎙️ Speech ended');
 
-      if (!this.isTranscriptValid(transcript)) return;
+    // Only try to restart if:
+    // 1) we still want to listen (shouldListen === true)
+    // 2) we're in the questions phase (currentBook.questionsActive === true)
+    // 3) we are not currently waiting on a backend call (isProcessing === false)
+    if (this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
+      // Use our helper so it checks recognitionActive internally
+      this.startRecognition();
+    }
+  };
 
-      // Ignorišemo dupliranje istog fragmenta
-      if (transcript === this.lastTranscriptFragment) return;
-      this.lastTranscriptFragment = transcript;
-
-      this.zone.run(() => {
-        clearTimeout(this.transcriptTimeout);
-        this.transcriptBuffer = transcript;
-
-        // Čekamo da dete prestane govoriti (1.2 s pauze) pre nego što procesiramo
-        this.transcriptTimeout = setTimeout(() => {
-          const finalTranscript = this.transcriptBuffer.trim();
-          this.transcriptBuffer = '';
-          this.lastTranscriptFragment = '';
-
-          this.processChildResponse(finalTranscript);
-        }, 1200);
-      });
-    };
-
-    // Greške u prepoznavanju
-    this.recognition.onerror = (event: any) => {
-      // Ako se ništa ne čuje i treba da slušamo, restartujemo nakon 300 ms
-      if (event.error === 'no-speech' && this.shouldListen) {
-        console.warn('No speech—but I’ll retry in 300ms');
-        setTimeout(() => {
-          if (this.shouldListen && this.currentBook?.questionsActive) {
-            this.recognition.start();
-          }
-        }, 300);
-        return;
-      }
-      // Ignorišemo abort koji smo mi sami pozvali
-      if (event.error === 'aborted') {
-        return;
-      }
-      console.error('Speech error:', event.error);
-    };
-    
-    // Kada prepoznavanje stane (najčešće zbog tišine ili abort)
-    this.recognition.onend = () => {
-      this.recognitionActive = false;
-      console.log('🎙️ Speech ended');
-      // Restartujemo PREPOZNAVANJE SAMO ako:
-      // 1) želimo da slušamo (shouldListen)
-      // 2) trenutno smo u delu sa pitanjima (questionsActive)
-      // 3) nismo u toku obrade backenda (isProcessing === false)
-      if (this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
-        setTimeout(() => {
-          if (this.shouldListen && !this.recognitionActive && !this.isProcessing) {
-            this.recognition.start();
-          }
-        }, 200);
-      }
-    };
-
-    // Ako prepozna glas korisnika, pauziramo audio (knjige) da ne bi ometalo
-    this.recognition.onspeechstart = () => {
-      console.log('🎤 User started speaking—pausing audio');
-      // Ako se u tom trenutku reproducira audio knjige (questionsActive=false),
-      // nemamo šta da slušamo. U svakom slučaju pauziramo.
-      if (this.audioElement?.nativeElement) {
-        this.audioElement.nativeElement.pause();
-      }
-    };
+  // As soon as the user starts speaking, we pause the audiobook so voices don’t overlap
+  this.recognition.onspeechstart = () => {
+    console.log('🎤 User started speaking—pausing audio');
+    if (this.audioElement?.nativeElement) {
+      this.audioElement.nativeElement.pause();
+    }
+  };
 }
-  
-  private startRecognition(): void {
-    // “I want the mic open”
-    this.shouldListen = true;
-  
-    // only call start() if we’re not already running
-    if (this.recognition && !this.recognitionActive) {
-      try {
-        // immediately mark running so subsequent calls are skipped
-        this.recognitionActive = true;
-        this.recognition.start();
-      } catch (err: any) {
-        // swallow the “already started” error
-        if (err.name !== 'InvalidStateError') {
-          console.error('Unexpected speech‑start error:', err);
-        }
+
+
+
+/** Helper that checks flags before actually calling recognition.start() **/
+private startRecognition(): void {
+  // Mark that we want to listen
+  this.shouldListen = true;
+
+  // Only call start() if it's not already running
+  if (this.recognition && !this.recognitionActive) {
+    try {
+      console.log('▶️ startRecognition() → calling recognition.start()');
+      // Immediately set recognitionActive so we don’t double‐enter before onstart fires
+      this.recognitionActive = true;
+      this.recognition.start();
+    } catch (err: any) {
+      // Swallow the "already started" error if it somehow races
+      if (err.name !== 'InvalidStateError') {
+        console.error('Unexpected speech‐start error:', err);
       }
+      // Reset the flag so our next onend–>start flow can work
+      this.recognitionActive = false;
     }
   }
-    
-  private stopRecognition(): void {
-    this.shouldListen = false;
-    if (this.recognition && this.recognitionActive) {
-      // abort() will silently end without firing an “aborted” error
-      this.recognition.abort();
-      // onend will still fire, where you set recognitionActive = false
-    }
+}
+
+/** Helper to actually stop listening */
+private stopRecognition(): void {
+  this.shouldListen = false;
+  if (this.recognition && this.recognitionActive) {
+    // Abort will trigger onend, which sets recognitionActive=false
+    this.recognition.abort();
   }
+}
+
     
   private isTranscriptValid(transcript: string): boolean {
     // Filter out empty or irrelevant transcripts
@@ -421,18 +430,14 @@ export class PlayerComponent implements OnInit, OnDestroy {
   }
 
   private sendToBackendForProcessing(transcript: string): void {
-    const possibleAnswers = this.currentBook.playingPart.answers.map(answer => answer.text);
-    const prompt = `
-      You are an assistant helping to interpret a child's response in an interactive audiobook. The child was asked a question with the following possible answers: ${possibleAnswers.join(', ')}.
+    this.isProcessing = true;
+    const dto: userResponseDto = {
+      partId: this.currentBook.playingPart.id,
+      transcript: transcript,
+      possibleAnswers: this.currentBook.playingPart.answers.map(a => a.text)
+    };
 
-      Given the child's response: "${transcript}"
-
-      Determine which of the possible answers the child intended. If the response is unclear or doesn't match any options, reply "unclear".
-
-      Respond with only the chosen answer or "unclear".
-    `;
-
-    this.playerService.processChildResponse(prompt).subscribe({
+    this.playerService.processChildResponse(dto).subscribe({
       next: (response: { reply: string }) => {
         const chosenAnswer = response.reply;
         if (chosenAnswer && chosenAnswer.toLowerCase() !== 'unclear') {
@@ -446,19 +451,20 @@ export class PlayerComponent implements OnInit, OnDestroy {
           }
         }
         
-        // 3a) Backend je odgovorio – vraćamo mikrofon u akciju
+        // Backend responded, turn on mic again
         this.isProcessing = false;
-        this.startRecognition();  // startuje recognizer samo ako questionsActive=true
+        this.startRecognition();
 
         this.failedAttempts++;
         this.promptChildToRepeat();
       },
       error: error => {
-        // 3a) Backend je odgovorio – vraćamo mikrofon u akciju
-        this.isProcessing = false;
-        this.startRecognition();  // startuje recognizer samo ako questionsActive=true
-
         console.error('There was an error!', error);
+
+        // Backend responded, turn on mic again
+        this.isProcessing = false;
+        this.startRecognition();
+
         this.failedAttempts++;
         this.promptChildToRepeat();
       }
@@ -484,7 +490,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
       this.repeatAudio = null;
     };
   }
-
 
   public updatePlayingTime(event: MouseEvent): void {
     const progressWidth = this.progressArea.nativeElement.clientWidth;

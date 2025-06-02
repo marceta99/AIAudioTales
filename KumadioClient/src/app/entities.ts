@@ -231,3 +231,12 @@ export enum OnboardingQuestionType {
 }
 
 // #endregion
+
+// #region DTOs
+export interface userResponseDto {
+  partId: number;
+  transcript: string;
+  possibleAnswers: string[];
+}
+
+// #endregion

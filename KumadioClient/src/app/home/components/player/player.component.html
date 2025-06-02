@@ -24,8 +24,22 @@
                   <i id="rewind" class="control small" (click)="rewind()"><img src="../../../../assets/icons/replay10.svg" alt="skip"></i>
                   <i id="prev" class="control medium" (click)="prevBook()"><img src="../../../../assets/icons/skip_previous.svg" alt="skip"></i>
 
-                  <i class="control large" #play [ngClass]="{'pulse': this.currentBook.questionsActive, 'disabled': isProcessing}" (click)="togglePlayPause()">
-                    <img [src]="getPlayPauseIcon()" alt="play pause">
+                  <i
+                    class="control large"
+                    #play
+                    [ngClass]="{ 'disabled': isProcessing, 'mic-active': currentBook.questionsActive }"
+                    (click)="togglePlayPause()"
+                  >
+                  <i
+                    *ngIf="currentBook.questionsActive"
+                    class="fa-solid fa-microphone mic-icon"
+                  ></i>
+
+                  <img
+                    *ngIf="!currentBook.questionsActive"
+                    [src]="getPlayPauseIcon()"
+                    alt="play pause"
+                  />
                   </i>
 
                   <i id="next" class="control medium" (click)="nextBook()"><img src="../../../../assets/icons/skip_next.svg" alt="skip"></i>

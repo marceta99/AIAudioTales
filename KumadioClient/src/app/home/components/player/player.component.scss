@@ -175,51 +175,6 @@
     width: 50px;
 }
 
-.pulse {
-    border-radius: 50%;
-    animation: pulse 2s linear infinite;
-}
-  
-.pulse:before, .pulse:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    border-radius: 5px;
-  }
-  
-.pulse::before {
-    width: 15px;
-    height: 5.5px;
-}
-  
-.pulse::after {
-    width: 15px;
-    height: 35px;
-}
-  
-@keyframes pulse
-{
-  0%
-  {
-    //box-shadow: 0 0 0 0 #f0f0f0;
-    transform: scale(1);
-
-  }
-  50%
-  {
-    transform: scale(1.10);
-  }
-  100%
-  {
-    transform: scale(1);
-    //box-shadow: 0 0 0 20px rgba(255, 190, 11, 0);
-  }
-}
-
 .side-buttons {
     display: none;
     flex-direction: row;
@@ -274,6 +229,22 @@
 .disabled {
   pointer-events: none;
   opacity: 0.5; /* or any styling to show the button is disabled */
+}
+
+.mic-icon {
+  font-size: 28px; /* Прилагоди величину иконе по потреби */
+  color: red;      /* Почетна боја */
+  animation: blink-mic 1s infinite; /* Треперење */
+}
+
+/* Кеифрамес који мењају боју између црвене и беле */
+@keyframes blink-mic {
+  0%, 100% {
+    color: red;
+  }
+  50% {
+    color: white;
+  }
 }
 
 // for desktop
