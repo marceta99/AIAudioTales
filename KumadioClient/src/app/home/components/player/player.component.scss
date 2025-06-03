@@ -557,6 +557,76 @@
   }
 }
 
+.fullscreen-player .controls .control.large {
+  width: 90px;
+  height: 90px;
+  background: #E9EFF9;
+  border-radius: 55%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Make sure the <i class="fa-solid"> inside is big and dark */
+.fullscreen-player .controls .control.large i.fa-solid {
+  font-size: 48px;
+  color: #192849;
+}
+
+/* 2) “Medium” buttons (Prev/Next): 60×60px, transparent background */
+.fullscreen-player .controls .control.medium {
+  width: 60px;
+  height: 60px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Medium icons slightly smaller */
+.fullscreen-player .controls .control.medium i.fa-solid {
+  font-size: 36px;
+  color: #E9EFF9;
+}
+
+/* 3) “Small” buttons (Rewind/Fast-Forward): 45×45px, transparent background */
+.fullscreen-player .controls .control.small {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Small icons even smaller */
+.fullscreen-player .controls .control.small i.fa-solid {
+  font-size: 23px;
+  color: #E9EFF9;
+}
+
+/* 4) Ensure all five controls sit in a single horizontal row */
+.fullscreen-player .controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* adjust spacing between buttons as needed */
+}
+
+.fullscreen-player .controls .control.large i.fa-play {
+  position: relative;
+  left: 3px; /* push the ▶ one pixel to the right */
+}
+
+/* In fullscreen mode, make the track translucent and the fill white */
+.fullscreen-player .progress-area {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.fullscreen-player .progress-area .progress-bar {
+  background: #ffffff;
+}
+
 @media (min-width: 768px) {
   .controls {
     display: flex;

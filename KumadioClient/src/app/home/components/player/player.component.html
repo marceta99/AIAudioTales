@@ -154,7 +154,7 @@
           </i>
 
           <!-- Play / Pause or Microphone -->
-          <i class="control" (click)="togglePlayPause()">
+          <i class="control large" (click)="togglePlayPause()">
             <i
               *ngIf="currentBook.questionsActive"
               class="fa-solid fa-microphone mic-icon"
@@ -163,8 +163,8 @@
               *ngIf="!currentBook.questionsActive"
               [ngClass]="
                 isPlaying
-                  ? 'fa-solid fa-circle-pause'
-                  : 'fa-solid fa-circle-play'
+                  ? 'fa-solid fa-pause'
+                  : 'fa-solid fa-play'
               "
             ></i>
           </i>
