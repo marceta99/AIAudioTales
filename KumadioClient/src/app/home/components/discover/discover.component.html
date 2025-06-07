@@ -31,7 +31,7 @@
     <div class="cat-head">
 
       <span class="category-title">{{ category.category | bookCategoryPipe }}</span>
-      <span class="view-all">View All</span>
+      <span class="view-all">Vidi sve</span>
     </div>
 
     <app-slider  [size]="(index % 2 === 0) ? 'big' : 'small'" [books]="category.books" [sliderId]="index.toString()"></app-slider>

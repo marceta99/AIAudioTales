@@ -25,7 +25,7 @@ export class DiscoverComponent implements OnInit, AfterViewInit{
   private isSearchFromTerm: boolean = false;
   private noMoreBooks: boolean = false; //there are no more books to load for that category from the server
 
-  disvocerPageCategories : number[] = [5, 6];
+  disvocerPageCategories : number[] = [8, 6];
   categories: { books: ReturnBook[], category: BookCategory }[] = [];
   @ViewChild('bookListContainer') booksContainer!: ElementRef;
 

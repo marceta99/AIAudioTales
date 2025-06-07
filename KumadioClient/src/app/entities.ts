@@ -192,13 +192,14 @@ export enum Role {
 }
 
 export enum BookCategory {
-  BedTime = 0,
-  History = 1,
-  Math = 2,
-  Geography = 3,
-  Nature = 4,
-  Trending = 5,
-  Recommended = 6
+  BedTime = 1,
+  History = 2,
+  Math = 3,
+  Geography = 4,
+  Nature = 5,
+  Trending = 6,
+  Recommended = 7,
+  Finance = 8,
 }
 
 export enum PurchaseType {

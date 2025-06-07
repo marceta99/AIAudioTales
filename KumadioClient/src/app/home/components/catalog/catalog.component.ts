@@ -15,11 +15,11 @@ import { CatalogService } from '../../services/catalog.service';
 export class CatalogComponent implements OnInit {
   @ViewChild('slider', { static: true }) slider!: ElementRef;
 
-  homePageCategories: number[] = [5, 6, 2];
+  homePageCategories: number[] = [8, 6, 3];
   categories: { books: ReturnBook[], category: BookCategory }[] = [];
 
   ads = [
-    { image: 'https://www.catholicmom.com/hubfs/20240104%20CRangel%201.png', alt: 'Banner 2' },
+    { image: 'https://i.pinimg.com/736x/f2/ca/ae/f2caaeb3375ba55fb80ab633c1bb9785.jpg', alt: 'Banner 2' },
     { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXICWl6tskBwvFowpPtfNagBJCQSZVj4hDtA&s', alt: 'Banner 1' },
     { image: 'https://www.thebookwarehouse.com.au/wp-content/uploads/2021/09/image-30.png', alt: 'Banner 3' }
   ];

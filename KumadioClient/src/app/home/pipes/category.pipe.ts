@@ -11,19 +11,23 @@ export class BookCategoryPipe implements PipeTransform {
     }
     switch (category) {
       case BookCategory.BedTime:
-        return 'BedTime';
+        return 'Uspavanke';
       case BookCategory.History:
-        return 'History';
+        return 'Istorija';
       case BookCategory.Geography:
-        return 'Geography';
+        return 'Geografija';
       case BookCategory.Math:
-          return 'Math';
+          return 'Matematika';
       case BookCategory.Nature:
-            return 'Nature';
+            return 'Priroda';
       case BookCategory.Trending:
-            return 'Trending';
+            return 'Popularno';
       case BookCategory.Recommended:
-            return 'Recommended';
+            return 'Preporuceno';
+      case BookCategory.Finance:
+            return 'Finansije';
+      case BookCategory.Preporuceno:
+            return 'Preporučeno';
       // Add other cases as needed
       default:
         return 'Unknown Category';
