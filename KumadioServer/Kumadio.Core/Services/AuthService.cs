@@ -196,7 +196,6 @@ namespace Kumadio.Core.Services
 
             return user;
         }
-
         public async Task<Result> CompleteOnboarding(OnboardingData onboardingData, ICollection<int> selectedOptionsIds)
         {
             return await _unitOfWork.ExecuteInTransaction(async () =>

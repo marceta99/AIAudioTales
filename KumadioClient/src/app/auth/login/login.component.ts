@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
 import {
   FormControl,
   FormGroup,
@@ -12,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { Role } from 'src/app/entities';
 import { AuthService } from '../services/auth.service';
 
+ declare const google: any;
 @Component({
   selector: 'app-login',
   imports: [
@@ -22,7 +22,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.scss'],
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
   private clientId = environment.clientId;
   public showErrorMessage = false;
   public showGoogleErrorMessage = false;
@@ -33,55 +33,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private _ngZone: NgZone,
     private service: AuthService
   ) {}
-  ngAfterViewInit(): void {
-     // Initialize Google One Tap on window load
-    // @ts-ignore
-    window.onGoogleLibraryLoad = () => {
-      console.log("test google ")
-      // @ts-ignore
-      google.accounts.id.initialize({
-        client_id: this.clientId,
-        callback: this.handleCredentialResponse.bind(this),
-        auto_select: false,
-        cancel_on_tap_outside: true
-      });
-      // @ts-ignore
-      google.accounts.id.renderButton(
-        // @ts-ignore
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large", width: "100%" }
-      );
-      // @ts-ignore
-      google.accounts.id.prompt(
-        (notification: PromptMomentNotification) => {}
-      );
-    };
-  }
 
   ngOnInit(): void {
+    this.initializeGoogleSignIn();
+
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(6)])
     });
   }
 
-  handleCredentialResponse(response: CredentialResponse) {
-    /*this.service.loginWithGoogle(response.credential).subscribe({
-      next: (user: User) => {
-        // handle successful login
-      },
-      error: (error: any) => {
-        console.log(error);
-        this.loginForm.reset();
-        this._ngZone.run(() => {
-          this.showErrorMessage = false;
-          this.showGoogleErrorMessage = true;
-        });
-      }
-    });*/
-  }
-
-  login() {
+  public login() {
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
     this.service.login(email, password).subscribe({
@@ -96,6 +58,39 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.showGoogleErrorMessage = false;
         this.showErrorMessage = true;
       }
+    });
+  }
+
+  private initializeGoogleSignIn() {
+    google.accounts.id.initialize({
+      client_id: this.clientId,
+      callback: (response: any) => this.handleCredentialResponse(response)
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large' }  // customization attributes
+    );
+
+    google.accounts.id.prompt(); // also display the One Tap dialog
+  }
+
+  private handleCredentialResponse(response: any) {
+    console.log('Encoded JWT ID token: ' + response.credential);
+    this._ngZone.run(() => {
+      this.service.loginWithGoogle(response.credential).subscribe({
+      next: user => {
+        user.role === Role.CREATOR
+         ? this.router.navigate(['/creator'])
+         : user.isOnboarded ? this.router.navigate(['/home']) : this.router.navigate(['/onboarding']); 
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.loginForm.reset();
+        this.showGoogleErrorMessage = true;
+        this.showErrorMessage = false;
+      }
+    });
     });
   }
 }

@@ -3,7 +3,6 @@ import { LoadingSpinnerComponent } from "../common/components/loading-spinner/lo
 import { CommonModule } from "@angular/common";
 import { IonContent, IonRouterOutlet } from "@ionic/angular/standalone";
 import { Observable } from "rxjs";
-import { AuthService } from "../auth/services/auth.service";
 import { LoadingSpinnerService } from "../common/services/loading-spinner.service";
 import { CreatorSidenavComponent } from "./components/creator-sidenav/creator-sidenav.component";
 import { CreatorService } from "./services/creator.service";

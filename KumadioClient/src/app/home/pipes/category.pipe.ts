@@ -26,8 +26,6 @@ export class BookCategoryPipe implements PipeTransform {
             return 'Preporuceno';
       case BookCategory.Finance:
             return 'Finansije';
-      case BookCategory.Preporuceno:
-            return 'Preporučeno';
       // Add other cases as needed
       default:
         return 'Unknown Category';

@@ -9,8 +9,6 @@ import { PlayerComponent } from './components/player/player.component';
 import { PlayerService } from './services/player.service';
 import { CatalogService } from './services/catalog.service';
 import { LibraryService } from './services/library.service';
-import { AuthService } from '../auth/services/auth.service';
-import { SearchService } from './services/search.service';
 
 @Component({
   selector: 'app-home',

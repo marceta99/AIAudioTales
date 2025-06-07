@@ -71,6 +71,34 @@ export class AuthService {
     }
   }
 
+  public loginWithGoogle(idToken: string): Observable<User> {
+    if (isNativeApp()) {
+      // mobile => call /login-mobile
+      return this.http.post<MobileLoginResponse>(
+        `${this.baseUrl}/google-login-mobile`,
+        JSON.stringify(idToken)
+      ).pipe(
+        switchMap(res => {
+          this.currentUser = res.user;
+          // store tokens
+          return from(this.storageService.setTokens(res.accessToken, res.refreshToken)).pipe(
+            map(() => res.user)
+          );
+        })
+      );
+    } else {
+      // web => call /login-web (withCredentials so cookies are set)
+      return this.http.post<WebLoginResponse>(
+        `${this.baseUrl}/google-login-web`,
+        JSON.stringify(idToken),
+        { withCredentials: true}
+      ).pipe(map(response => {
+        this.currentUser = response.user;
+        return response.user;
+      }));
+    }
+  }
+
   public refresh(): Observable<MobileRefreshResponse | ApiMessageResponse | string> {
     if (isNativeApp()) {
       // mobile => call /refresh-mobile with the stored refresh token

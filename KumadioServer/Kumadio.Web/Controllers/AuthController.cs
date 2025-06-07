@@ -13,6 +13,7 @@ using Kumadio.Web.Settings;
 using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
+using Google.Apis.Auth;
 
 namespace Kumadio.Web.Controllers
 {
@@ -113,16 +114,13 @@ namespace Kumadio.Web.Controllers
             var loginResult = await LoginHelper(model);
             if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
 
-            var (accessToken, refreshToken) = loginResult.Value;
-
-            var userResult = await _authService.GetUserWithEmail(model.Email);
-            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
+            var (accessToken, refreshToken, user) = loginResult.Value;
 
             return Ok(new 
             {   
                 accessToken,
                 refreshToken,
-                user = _returnUserMapper.Map(userResult.Value)
+                user = _returnUserMapper.Map(user)
             });
         }
 
@@ -132,40 +130,82 @@ namespace Kumadio.Web.Controllers
             var loginResult = await LoginHelper(model);
             if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
 
-            var (accessToken, refreshToken) = loginResult.Value;
+            var (accessToken, refreshToken, user) = loginResult.Value;
 
             SetJwtCookie(accessToken);
             SetRefreshTokenCookie(refreshToken);
 
-            var userResult = await _authService.GetUserWithEmail(model.Email);
-            if (userResult.IsFailure) return userResult.Error.ToBadRequest();
-
             return Ok(new
             {
-                user = _returnUserMapper.Map(userResult.Value)
-            }); ;
+                user = _returnUserMapper.Map(user)
+            });
         }
 
-        [HttpPost("google-login")]
-        public async Task<ActionResult<DTOReturnUser>> GoogleLogin([FromBody] string credentials)
+        [HttpPost("google-login-web")]
+        public async Task<ActionResult<DTOReturnUser>> GoogleLoginWeb([FromBody] string idToken)
         {
-            /*var settings = new GoogleJsonWebSignature.ValidationSettings
+            var settings = new GoogleJsonWebSignature.ValidationSettings
             {
                 Audience = new List<string> { _appSettings.GoogleClientId }
             };
 
-            var payload = await GoogleJsonWebSignature.ValidateAsync(credentials, settings);
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
             if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid.ToBadRequest();
 
             var resultGetUser = await _authService.GetUserWithEmail(payload.Email);
             if (resultGetUser.IsFailure) return resultGetUser.Error.ToBadRequest();
 
             var user = resultGetUser.Value;
-            var generateJwtResult = await GenerateJwt(user);
-            if (generateJwtResult.IsFailure) return generateJwtResult.Error.ToBadRequest();
 
-            return Ok(_returnUserMapper.Map(user));*/
-            return Ok();
+            var accessToken = GenerateJwt(user);
+            if (String.IsNullOrEmpty(accessToken))
+                return DomainErrors.Auth.JwtTokenIssue.ToBadRequest();
+
+            var refreshToken = GenerateRefreshToken();
+
+            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error.ToBadRequest();
+
+            SetJwtCookie(accessToken);
+            SetRefreshTokenCookie(refreshToken);
+
+            return Ok(new
+            {
+                user = _returnUserMapper.Map(user)
+            });
+        }
+
+        [HttpPost("google-login-mobile")]
+        public async Task<ActionResult<DTOReturnUser>> GoogleLoginMobile([FromBody] string idToken)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new List<string> { _appSettings.GoogleClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid.ToBadRequest();
+
+            var resultGetUser = await _authService.GetUserWithEmail(payload.Email);
+            if (resultGetUser.IsFailure) return resultGetUser.Error.ToBadRequest();
+
+            var user = resultGetUser.Value;
+
+            var accessToken = GenerateJwt(user);
+            if (String.IsNullOrEmpty(accessToken))
+                return DomainErrors.Auth.JwtTokenIssue.ToBadRequest();
+
+            var refreshToken = GenerateRefreshToken();
+
+            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error.ToBadRequest();
+
+            return Ok(new
+            {
+                accessToken,
+                refreshToken,
+                user = _returnUserMapper.Map(user)
+            });
         }
 
         [HttpPost("logout-web")]
@@ -281,7 +321,7 @@ namespace Kumadio.Web.Controllers
         #endregion
 
         #region Private Helper Methods
-        private async Task<Result<(string accessToken, RefreshToken refreshToken)>> LoginHelper(DTOLogin model)
+        private async Task<Result<(string accessToken, RefreshToken refreshToken, User user)>> LoginHelper(DTOLogin model)
         {
             var loginResult = await _authService.Login(model.Email, model.Password);
             if (loginResult.IsFailure)
@@ -298,7 +338,7 @@ namespace Kumadio.Web.Controllers
             var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
             if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
 
-            return (accessToken, refreshToken);
+            return (accessToken, refreshToken, user);
         }
         private async Task<Result<(string newAccessToken, RefreshToken newRefreshToken)>> RefreshTokenHelper(string? oldRefreshToken)
         {
