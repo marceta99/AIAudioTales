@@ -330,7 +330,8 @@ namespace Kumadio.Web.Controllers
             var refreshToken = GenerateRefreshToken();
 
             var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
-            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
+            if (saveRefreshResult.IsFailure)
+                return saveRefreshResult.Error;
 
             return (accessToken, refreshToken, user);
         }

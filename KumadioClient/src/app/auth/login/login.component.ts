@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   private clientId = environment.clientId;
   public showErrorMessage = false;
   public showGoogleErrorMessage = false;
+  public showinvalidLoginMethod = false;
   public loginForm!: FormGroup;
 
   constructor(
@@ -56,7 +57,12 @@ export class LoginComponent implements OnInit {
         console.log(error);
         this.loginForm.reset();
         this.showGoogleErrorMessage = false;
-        this.showErrorMessage = true;
+
+        if (error.error?.code === 'INVALID_LOGIN_METHOD') {
+          this.showinvalidLoginMethod = true;
+        } else {
+          this.showErrorMessage = true;
+        }
       }
     });
   }
@@ -89,6 +95,7 @@ export class LoginComponent implements OnInit {
         this.loginForm.reset();
         this.showGoogleErrorMessage = true;
         this.showErrorMessage = false;
+        this.showinvalidLoginMethod = false;
       }
     });
     });

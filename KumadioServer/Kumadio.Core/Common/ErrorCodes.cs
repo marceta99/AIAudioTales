@@ -16,6 +16,7 @@
         public const string UserNull = "USER_NULL";
         public const string JwtTokenIssue = "JWT_TOKEN_ISSUE";
         public const string UserAlreadyOnboarded = "USER_ALREADY_ONBOARDED";
+        public const string InvalidLoginMethod = "INVALID_LOGIN_METHOD";
 
         // Catalog
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";

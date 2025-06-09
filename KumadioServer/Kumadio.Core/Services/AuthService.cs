@@ -6,6 +6,7 @@ using Kumadio.Core.Common;
 using Kumadio.Core.Common.Interfaces;
 using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Core.Models;
+using Kumadio.Domain.Enums;
 
 namespace Kumadio.Core.Services
 {
@@ -62,14 +63,14 @@ namespace Kumadio.Core.Services
 
         public async Task<Result> GoogleRegister(User user)
         {
-            if (user == null) 
+            if (user == null)
                 return DomainErrors.Auth.UserNull;
 
             var userExists = await _userRepository.Any(u => u.Email == user.Email);
 
             if (userExists)
                 return DomainErrors.Auth.EmailAlreadyExists;
-            
+
             return await _unitOfWork.ExecuteInTransaction(async () =>
             {
                 await _userRepository.Add(user);
@@ -108,6 +109,9 @@ namespace Kumadio.Core.Services
             {
                 return DomainErrors.Auth.UserEmailNotFound;
             }
+
+            if (user.AuthProvider != AuthProvider.Local)
+                return DomainErrors.Auth.InvalidLoginMethod;
 
             var passwordMatch = PasswordMatch(password, user);
             if (!passwordMatch)
