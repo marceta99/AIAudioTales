@@ -14,7 +14,8 @@ namespace Kumadio.Web.Mappers.UserMappers
                 FirstName = source.FirstName,
                 LastName = source.LastName,
                 Email = source.Email,
-                Role = Role.LISTENER_NO_SUBSCRIPTION
+                Role = Role.LISTENER_NO_SUBSCRIPTION,
+                AuthProvider = AuthProvider.Local
             };
         }
     }

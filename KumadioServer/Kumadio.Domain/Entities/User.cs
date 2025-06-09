@@ -8,8 +8,8 @@ namespace Kumadio.Domain.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public byte[]? PasswordHash { get; set; }
+        public byte[]? PasswordSalt { get; set; }
         public Role Role { get; set; }
         public ICollection<Book> CreatedBooks { get; set; }
         public ICollection<PurchasedBook> PurchasedBooks { get; set; }
@@ -18,5 +18,8 @@ namespace Kumadio.Domain.Entities
         public Subscription Subscription { get; set; }
         public bool IsOnboarded { get; set; }
         public OnboardingData OnboardingData { get; set; }
+        public AuthProvider AuthProvider { get; set; }
+        public string? ExternalId { get; set; } // GoogleId etc...
+
     }
 }

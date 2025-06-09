@@ -21,13 +21,20 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 {
                     new User
                     {
-                       Email = "kumadio@gmail.com",
-                       PasswordHash = new byte[]{},
-                       PasswordSalt = new byte[] {},
+                       Email = "kumadiobooks@gmail.com",
                        Role = Role.CREATOR,
                        FirstName = "Kumadio",
-                       LastName = "Kumadic"
-                    }
+                       LastName = "Kumadic",
+                       AuthProvider = AuthProvider.Google
+                    },
+                    new User
+                    {
+                       Email = "mmmihailomarcetic@gmail.com",
+                       Role = Role.LISTENER_WITH_SUBSCRIPTION,
+                       FirstName = "Mihailo",
+                       LastName = "Marcetic",
+                       AuthProvider = AuthProvider.Google
+                    },
                 };
                 _dbContext.Users.AddRange(usersInitialData);
                 _dbContext.SaveChanges();

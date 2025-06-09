@@ -60,6 +60,24 @@ namespace Kumadio.Core.Services
             });
         }
 
+        public async Task<Result> GoogleRegister(User user)
+        {
+            if (user == null) 
+                return DomainErrors.Auth.UserNull;
+
+            var userExists = await _userRepository.Any(u => u.Email == user.Email);
+
+            if (userExists)
+                return DomainErrors.Auth.EmailAlreadyExists;
+            
+            return await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                await _userRepository.Add(user);
+
+                return Result.Success();
+            });
+        }
+
         public async Task<Result> RegisterCreator(User user, string password)
         {
             using (HMACSHA512 hmac = new HMACSHA512())

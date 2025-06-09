@@ -176,6 +176,10 @@ export class AuthService {
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register`, user);
   }
 
+  public googleRegister(idToken: string):Observable<ApiMessageResponse>{
+    return this.http.post<ApiMessageResponse>(`${this.baseUrl}/google-register`, JSON.stringify(idToken));
+  }
+
   public registerCreator(creator: RegisterCreator): Observable<ApiMessageResponse>{
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register-creator`, creator);
   }

@@ -5,7 +5,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RegisterUser } from 'src/app/entities';
 import { passwordMatchValidator } from '../custom-validators';
 import { AuthService } from '../services/auth.service';
+import { environment } from 'src/environments/environment';
 
+declare const google: any;
 @Component({
   selector: 'app-register',                  
   imports: [                          
@@ -17,6 +19,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+  private clientId = environment.clientId;
   public registerForm!: FormGroup;
 
   constructor(
@@ -26,6 +29,8 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initializeGoogleRegistration();
+    
     this.registerForm = new FormGroup({
       firstName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
       lastName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -38,6 +43,7 @@ export class RegisterComponent implements OnInit {
   }
 
   public onSubmit(): void {
+
     const user: RegisterUser = {
       firstName: this.registerForm.controls['firstName'].value,
       lastName: this.registerForm.controls['lastName'].value,
@@ -54,9 +60,40 @@ export class RegisterComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(error);
-        // handle error, e.g., reset form or show alert
+        this.registerForm.reset();
       }
     });
   }
+
+   private initializeGoogleRegistration() {
+      google.accounts.id.initialize({
+        client_id: this.clientId,
+        callback: (response: any) => this.handleCredentialResponse(response)
+      });
+  
+      google.accounts.id.renderButton(
+        document.getElementById('google-signin-button'),
+        { theme: 'outline', size: 'large' }
+      );
+  
+      google.accounts.id.prompt();
+    }
+  
+    private handleCredentialResponse(response: any) {
+      console.log('Encoded JWT ID token: ' + response.credential);
+      this._ngZone.run(() => {
+        this.authService.googleRegister(response.credential).subscribe({
+        next: () => {
+          this._ngZone.run(() => {
+            this.router.navigate(['/login']).then(() => window.location.reload());
+          });
+        },
+        error: (error: any) => {
+          console.log(error);
+          this.registerForm.reset();
+        }
+      });
+      });
+    }
 
 }

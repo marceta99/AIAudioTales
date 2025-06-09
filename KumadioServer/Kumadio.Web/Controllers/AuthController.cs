@@ -14,6 +14,7 @@ using Kumadio.Web.Mappers.Base;
 using Kumadio.Core.Common;
 using Kumadio.Web.Common;
 using Google.Apis.Auth;
+using Kumadio.Domain.Enums;
 
 namespace Kumadio.Web.Controllers
 {
@@ -97,6 +98,33 @@ namespace Kumadio.Web.Controllers
             return MessageResponse.Ok("Successful registration");
         }
 
+        [HttpPost("google-register")]
+        public async Task<IActionResult> GoogleRegister([FromBody] string idToken)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new List<string> { _appSettings.GoogleClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid.ToBadRequest();
+
+            var user = new User
+            {
+                Email = payload.Email,
+                FirstName = payload.GivenName,
+                LastName = payload.FamilyName,
+                Role = Role.LISTENER_NO_SUBSCRIPTION,
+                AuthProvider = AuthProvider.Google,
+                ExternalId = payload.Subject
+            };
+
+            var result = await _authService.GoogleRegister(user);
+            if (result.IsFailure) return result.Error!.ToBadRequest();
+
+            return MessageResponse.Ok("Successful registration");
+        }
+
         [HttpPost("register-creator")]
         public async Task<IActionResult> RegisterCreator([FromBody] DTORegisterCreator model)
         {
@@ -144,27 +172,10 @@ namespace Kumadio.Web.Controllers
         [HttpPost("google-login-web")]
         public async Task<ActionResult<DTOReturnUser>> GoogleLoginWeb([FromBody] string idToken)
         {
-            var settings = new GoogleJsonWebSignature.ValidationSettings
-            {
-                Audience = new List<string> { _appSettings.GoogleClientId }
-            };
+            var loginResult = await GoogleLoginHelper(idToken);
+            if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
 
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
-            if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid.ToBadRequest();
-
-            var resultGetUser = await _authService.GetUserWithEmail(payload.Email);
-            if (resultGetUser.IsFailure) return resultGetUser.Error.ToBadRequest();
-
-            var user = resultGetUser.Value;
-
-            var accessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(accessToken))
-                return DomainErrors.Auth.JwtTokenIssue.ToBadRequest();
-
-            var refreshToken = GenerateRefreshToken();
-
-            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
-            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error.ToBadRequest();
+            var (accessToken, refreshToken, user) = loginResult.Value;
 
             SetJwtCookie(accessToken);
             SetRefreshTokenCookie(refreshToken);
@@ -178,27 +189,10 @@ namespace Kumadio.Web.Controllers
         [HttpPost("google-login-mobile")]
         public async Task<ActionResult<DTOReturnUser>> GoogleLoginMobile([FromBody] string idToken)
         {
-            var settings = new GoogleJsonWebSignature.ValidationSettings
-            {
-                Audience = new List<string> { _appSettings.GoogleClientId }
-            };
+            var loginResult = await GoogleLoginHelper(idToken);
+            if (loginResult.IsFailure) return loginResult.Error.ToBadRequest();
 
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
-            if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid.ToBadRequest();
-
-            var resultGetUser = await _authService.GetUserWithEmail(payload.Email);
-            if (resultGetUser.IsFailure) return resultGetUser.Error.ToBadRequest();
-
-            var user = resultGetUser.Value;
-
-            var accessToken = GenerateJwt(user);
-            if (String.IsNullOrEmpty(accessToken))
-                return DomainErrors.Auth.JwtTokenIssue.ToBadRequest();
-
-            var refreshToken = GenerateRefreshToken();
-
-            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
-            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error.ToBadRequest();
+            var (accessToken, refreshToken, user) = loginResult.Value;
 
             return Ok(new
             {
@@ -340,6 +334,34 @@ namespace Kumadio.Web.Controllers
 
             return (accessToken, refreshToken, user);
         }
+
+        private async Task<Result<(string accessToken, RefreshToken refreshToken, User user)>> GoogleLoginHelper(string idToken)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new List<string> { _appSettings.GoogleClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            if (payload == null) return DomainErrors.Auth.GoogleCredentialsNotValid;
+
+            var resultGetUser = await _authService.GetUserWithEmail(payload.Email);
+            if (resultGetUser.IsFailure) return resultGetUser.Error;
+
+            var user = resultGetUser.Value;
+
+            var accessToken = GenerateJwt(user);
+            if (String.IsNullOrEmpty(accessToken))
+                return DomainErrors.Auth.JwtTokenIssue;
+
+            var refreshToken = GenerateRefreshToken();
+
+            var saveRefreshResult = await _authService.SaveRefreshToken(refreshToken, user);
+            if (saveRefreshResult.IsFailure) return saveRefreshResult.Error;
+
+            return (accessToken, refreshToken, user);
+        }
+
         private async Task<Result<(string newAccessToken, RefreshToken newRefreshToken)>> RefreshTokenHelper(string? oldRefreshToken)
         {
             if (string.IsNullOrEmpty(oldRefreshToken))

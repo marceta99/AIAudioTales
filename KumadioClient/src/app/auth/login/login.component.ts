@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
 
     google.accounts.id.renderButton(
       document.getElementById('google-signin-button'),
-      { theme: 'outline', size: 'large' }  // customization attributes
+      { theme: 'outline', size: 'large' }
     );
 
     google.accounts.id.prompt(); // also display the One Tap dialog
