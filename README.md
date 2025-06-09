@@ -207,6 +207,6 @@ For major changes, [open an issue](../../issues) first.
 **Enjoy Kumadio** – A new horizon for interactive storytelling!
 
 <div align="center">
-  <img src="https://media.licdn.com/dms/image/v2/D4E0BAQHrhPezbdG85A/company-logo_200_200/company-logo_200_200/0/1730828228363/kumadio_logo?e=1749081600&v=beta&t=c4dRSnD6-tORESnJgNuRdFZUEVE1j7dhc3k9kVD2JA0" alt="Kumadio Logo" width="200">
+  <img src="https://media.licdn.com/dms/image/v2/D4E0BAQHrhPezbdG85A/company-logo_200_200/company-logo_200_200/0/1730828228363/kumadio_logo?e=1755129600&v=beta&t=XzIqUJHALyVu_ENRXM7S-EfipJdujjBpqsXgTsV61Fs" alt="Kumadio Logo" width="200">
 </div>
 
