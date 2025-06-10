@@ -3,6 +3,7 @@ using Kumadio.Core.Common.Interfaces.Base;
 using Kumadio.Infrastructure.DiskFileStorage;
 using Kumadio.Infrastructure.Repositories.Base;
 using Kumadio.Infrastructure.Repositories.Domain;
+using Kumadio.Infrastructure.SmptEmail;
 
 namespace Kumadio.Web.ServiceRegistrations
 {
@@ -24,6 +25,7 @@ namespace Kumadio.Web.ServiceRegistrations
             services.AddScoped<ISelectedOptionRepository, SelectedOptionRepository>();
 
             services.AddScoped<IFileStorage, DiskFileStorageService>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             return services;
         }

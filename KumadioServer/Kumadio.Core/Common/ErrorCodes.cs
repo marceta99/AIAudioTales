@@ -17,6 +17,11 @@
         public const string JwtTokenIssue = "JWT_TOKEN_ISSUE";
         public const string UserAlreadyOnboarded = "USER_ALREADY_ONBOARDED";
         public const string InvalidLoginMethod = "INVALID_LOGIN_METHOD";
+        public const string NotAllowedOrigin = "NOT_ALLOWED_ORIGIN";
+        public const string UserNotFound = "USER_NOT_FOUND";
+        public const string EmailAlreadyConfirmed = "EMAIL_ALEADY_CONFIRMED";
+        public const string ConfirmationTokenExpired = "CONFIRMATION_TOKEN_EXPIRED";
+        public const string InvalidConfirmationToken = "INVALID_CONFIRMATION_TOKEN";
 
         // Catalog
         public const string CategoriesNotFound = "CATEGORIES_NOT_FOUND";

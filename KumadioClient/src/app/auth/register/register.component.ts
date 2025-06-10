@@ -43,7 +43,6 @@ export class RegisterComponent implements OnInit {
   }
 
   public onSubmit(): void {
-
     const user: RegisterUser = {
       firstName: this.registerForm.controls['firstName'].value,
       lastName: this.registerForm.controls['lastName'].value,
@@ -55,7 +54,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register(user).subscribe({
       next: () => {
         this._ngZone.run(() => {
-          this.router.navigate(['/login']).then(() => window.location.reload());
+          this.router.navigate(['/email-confirmation-sent']);
         });
       },
       error: (error: any) => {
@@ -65,35 +64,35 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-   private initializeGoogleRegistration() {
-      google.accounts.id.initialize({
-        client_id: this.clientId,
-        callback: (response: any) => this.handleCredentialResponse(response)
-      });
+  private initializeGoogleRegistration() {
+    google.accounts.id.initialize({
+      client_id: this.clientId,
+      callback: (response: any) => this.handleCredentialResponse(response)
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large' }
+    );
+
+    google.accounts.id.prompt();
+  }
   
-      google.accounts.id.renderButton(
-        document.getElementById('google-signin-button'),
-        { theme: 'outline', size: 'large' }
-      );
-  
-      google.accounts.id.prompt();
-    }
-  
-    private handleCredentialResponse(response: any) {
-      console.log('Encoded JWT ID token: ' + response.credential);
-      this._ngZone.run(() => {
-        this.authService.googleRegister(response.credential).subscribe({
-        next: () => {
-          this._ngZone.run(() => {
-            this.router.navigate(['/login']).then(() => window.location.reload());
-          });
-        },
-        error: (error: any) => {
-          console.log(error);
-          this.registerForm.reset();
-        }
-      });
-      });
-    }
+  private handleCredentialResponse(response: any) {
+    console.log('Encoded JWT ID token: ' + response.credential);
+    this._ngZone.run(() => {
+      this.authService.googleRegister(response.credential).subscribe({
+      next: () => {
+        this._ngZone.run(() => {
+          this.router.navigate(['/login']).then(() => window.location.reload());
+        });
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.registerForm.reset();
+      }
+    });
+    });
+  }
 
 }

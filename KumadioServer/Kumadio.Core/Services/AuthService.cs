@@ -17,6 +17,7 @@ namespace Kumadio.Core.Services
         private readonly IOnboardingDataRepository _onboardingDataRepository;
         private readonly ISelectedOptionRepository _selectedOptionRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailSender _emailSender;
         private readonly IUnitOfWork _unitOfWork;
 
         public AuthService(
@@ -25,6 +26,7 @@ namespace Kumadio.Core.Services
             IOnboardingDataRepository onboardingDataRepository,
             ISelectedOptionRepository selectedOptionRepository,
             IUserRepository userRepository,
+            IEmailSender emailSender,
             IUnitOfWork unitOfWork)
         {
             _refreshTokenRepository = refreshTokenRepository;
@@ -32,6 +34,7 @@ namespace Kumadio.Core.Services
             _onboardingDataRepository = onboardingDataRepository;
             _selectedOptionRepository = selectedOptionRepository;
             _userRepository = userRepository;
+            _emailSender = emailSender;
             _unitOfWork = unitOfWork;
         }
         #region Registration & Login
@@ -60,7 +63,6 @@ namespace Kumadio.Core.Services
                 return Result.Success();
             });
         }
-
         public async Task<Result> GoogleRegister(User user)
         {
             if (user == null)
@@ -78,7 +80,30 @@ namespace Kumadio.Core.Services
                 return Result.Success();
             });
         }
+        public async Task<Result> SendConfirmationEmail(string link, User user)
+        {
+            var html = $@"
+              <h3>Potvrdite mejl</h3>
+              <p>Kliknite <a href=""{link}"">ovde</a> da verifikujete svoj nalog.</p>";
 
+            await _emailSender.SendEmailAsync(user.Email, "Verifikacija Mejla", html);
+
+            return Result.Success();
+        }
+        public async Task<Result> MarkEmailAsConfirmed(int userId)
+        {
+            return await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var user = await _userRepository.GetById(userId);
+
+                if (user == null)
+                    return DomainErrors.Auth.UserEmailNotFound;
+
+                user.IsEmailConfirmed = true;
+
+                return Result.Success();
+            });
+        }
         public async Task<Result> RegisterCreator(User user, string password)
         {
             using (HMACSHA512 hmac = new HMACSHA512())
@@ -101,7 +126,6 @@ namespace Kumadio.Core.Services
                 return Result.Success();
             });
         }
-
         public async Task<Result<User>> Login(string email, string password)
         {
             var user = await _userRepository.GetFirstWhere(u => u.Email == email);
@@ -121,7 +145,6 @@ namespace Kumadio.Core.Services
 
             return user;
         }
-
         public Result<IEnumerable<OnboardingQuestion>> GetOnboardingQuestions()
         {
             var questions = _onboardingQuestionRepository.GetAllQuestions();

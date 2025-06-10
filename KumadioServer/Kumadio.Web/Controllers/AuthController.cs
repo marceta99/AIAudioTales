@@ -15,6 +15,7 @@ using Kumadio.Core.Common;
 using Kumadio.Web.Common;
 using Google.Apis.Auth;
 using Kumadio.Domain.Enums;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Kumadio.Web.Controllers
 {
@@ -83,6 +84,58 @@ namespace Kumadio.Web.Controllers
             return Ok(_onboardingQuestionMapper.Map(onboardingResult.Value));
         }
 
+        [HttpGet("confirm-email")]
+        [EnableRateLimiting("emailVerification")] // max 10 req/15 min po IP
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
+        {
+            var request = HttpContext.Request;
+            var origin = request.Headers["Origin"].FirstOrDefault() ??
+                    request.Headers["Referer"].FirstOrDefault();
+
+            if (origin == null || !_appSettings.ClientUrls.Any(url => origin.StartsWith(url.TrimEnd('/'))))
+            {
+                return DomainErrors.Auth.NotAllowedOrigin.ToBadRequest();
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = handler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                                                Encoding.UTF8.GetBytes(_appSettings.Secret)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out _);
+
+                var email = principal.FindFirstValue(ClaimTypes.Email)!;
+                var userRes = await _authService.GetUserWithEmail(email);
+                if (userRes.IsFailure)
+                    return userRes.Error.ToBadRequest();
+
+                var user = userRes.Value;
+                if (user.IsEmailConfirmed)
+                    return DomainErrors.Auth.EmailAlreadyConfirmed.ToBadRequest();
+
+                var confimationResult = await _authService.MarkEmailAsConfirmed(user.Id);
+                if (confimationResult.IsFailure)
+                        return confimationResult.Error.ToBadRequest();
+
+                return MessageResponse.Ok("Successful email confirmation");
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return DomainErrors.Auth.ConfirmationTokenExpired.ToBadRequest();
+            }
+            catch
+            {
+                return DomainErrors.Auth.InvalidConfirmationToken.ToBadRequest();
+
+            }
+        }
+
         #endregion
 
         #region POST
@@ -91,9 +144,27 @@ namespace Kumadio.Web.Controllers
         public async Task<IActionResult> Register([FromBody] DTORegister model)
         {
             var user = _registerMapper.Map(model);
+            user.IsEmailConfirmed = false;
+            user.AuthProvider = AuthProvider.Local;
 
             var result = await _authService.Register(user!, model.Password);
-            if (result.IsFailure) return result.Error!.ToBadRequest();
+            if (result.IsFailure) return result.Error.ToBadRequest();
+
+            var request = HttpContext.Request;
+            var origin = request.Headers["Origin"].FirstOrDefault() ??
+                     request.Headers["Referer"].FirstOrDefault();
+
+            if (origin == null || !_appSettings.ClientUrls.Any(url => origin.StartsWith(url.TrimEnd('/'))))
+            {
+                return DomainErrors.Auth.NotAllowedOrigin.ToBadRequest();
+            }
+
+            var token = GenerateEmailConfirmationToken(user.Email);
+            var link = $"{origin}/confirm-email?token={token}";
+
+            var confimationResult = await _authService.SendConfirmationEmail(link, user);
+            if (confimationResult.IsFailure)
+                return result.Error.ToBadRequest();
 
             return MessageResponse.Ok("Successful registration");
         }
@@ -335,7 +406,6 @@ namespace Kumadio.Web.Controllers
 
             return (accessToken, refreshToken, user);
         }
-
         private async Task<Result<(string accessToken, RefreshToken refreshToken, User user)>> GoogleLoginHelper(string idToken)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
@@ -362,7 +432,6 @@ namespace Kumadio.Web.Controllers
 
             return (accessToken, refreshToken, user);
         }
-
         private async Task<Result<(string newAccessToken, RefreshToken newRefreshToken)>> RefreshTokenHelper(string? oldRefreshToken)
         {
             if (string.IsNullOrEmpty(oldRefreshToken))
@@ -490,6 +559,21 @@ namespace Kumadio.Web.Controllers
                 };
             }
         }
+        private string GenerateEmailConfirmationToken(string email)
+        {
+            // Claim email adrese
+            var claims = new[] { new Claim(ClaimTypes.Email, email) };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(15),  // 15 min važi
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         private void SetJwtCookie(string tokenValue)
         {
             var response = _httpContextAccessor.HttpContext?.Response;

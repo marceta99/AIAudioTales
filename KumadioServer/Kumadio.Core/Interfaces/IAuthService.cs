@@ -8,6 +8,8 @@ namespace Kumadio.Core.Interfaces
     {
         #region Registration & Login
         Task<Result> Register(User user, string password);
+        Task<Result> SendConfirmationEmail(string link, User user);
+        Task<Result> MarkEmailAsConfirmed(int userId);
         Task<Result> GoogleRegister(User user);
         Task<Result> RegisterCreator(User user, string password);
         Task<Result<User>> Login(string email, string password);

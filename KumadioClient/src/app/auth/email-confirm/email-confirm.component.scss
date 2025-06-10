@@ -1,0 +1,64 @@
+/* osiguraj da html/body idu do vrha */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* centralni kontejner za confirm-email */
+.confirm-email {
+  display: flex;
+  flex-direction: column;   /* složi elemente jedan ispod drugog */
+  justify-content: center;  /* vertikalno centriraj */
+  align-items: center;      /* horizontalno centriraj */
+  height: 100vh;            /* 100% visine vidljivog dela */
+  text-align: center;       
+  padding: 20px;            /* opcioni “gutter” */
+  box-sizing: border-box;
+}
+
+/* poruke unutar */
+.message-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+}
+
+/* ikone, naslovi, dugmad ostaju istog izgleda */
+.icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.success-icon {
+  color: #28a745;
+}
+
+.error-icon {
+  color: #dc3545;
+}
+
+.confirm-email h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.confirm-email p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #155a9c;
+}

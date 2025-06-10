@@ -13,7 +13,6 @@ export const routes: Routes = [
     path: 'onboarding',
     loadComponent: () => import('./onboarding/onboarding.component').then(m => m.OnboardingComponent),
   },
-
   {
     path: "login",
     loadComponent: () => import("./auth/login/login.component").then(m => m.LoginComponent)
@@ -21,6 +20,14 @@ export const routes: Routes = [
   {
     path: "register",
     loadComponent: () => import("./auth/register/register.component").then(m => m.RegisterComponent)
+  },
+  {
+    path: "email-confirmation-sent",
+    loadComponent: () => import("./auth/email-confirmation-sent/email-confirmation-sent.component").then(m => m.EmailConfirmationSentComponent)
+  },
+   {
+    path: "confirm-email",
+    loadComponent: () => import("./auth/email-confirm/email-confirm.component").then(m => m.ConfirmEmailComponent)
   },
   {
     path: "register-creator",

@@ -21,6 +21,11 @@
             public static Error JwtTokenIssue => new (ErrorCodes.JwtTokenIssue, "Issue with creating new jwt token.");
             public static Error UserAlreadyOnboarded => new (ErrorCodes.UserAlreadyOnboarded, "User has already onboarded.");
             public static Error InvalidLoginMethod => new (ErrorCodes.InvalidLoginMethod, "This account can only log in with Google.");
+            public static Error NotAllowedOrigin => new (ErrorCodes.NotAllowedOrigin, "Request from this origin is not allowed");
+            public static Error UserNotFound => new (ErrorCodes.UserNotFound, "User with that id is not found.");
+            public static Error EmailAlreadyConfirmed => new (ErrorCodes.EmailAlreadyConfirmed, "Email is aleady confirmed.");
+            public static Error ConfirmationTokenExpired => new (ErrorCodes.ConfirmationTokenExpired, "Confirmation Token expired.");
+            public static Error InvalidConfirmationToken => new (ErrorCodes.InvalidConfirmationToken, "Invalid Confirmation Token.");
         }
 
         public static class Catalog

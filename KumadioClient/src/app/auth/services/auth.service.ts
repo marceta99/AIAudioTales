@@ -43,6 +43,8 @@ export class AuthService {
     private storageService: AuthStorageService
   ) {}
 
+  
+  // #region Login
   public login(email: string, password: string): Observable<User> {
     if (isNativeApp()) {
       // mobile => call /login-mobile
@@ -99,6 +101,35 @@ export class AuthService {
     }
   }
 
+  public logout(): Observable<ApiMessageResponse | string> {
+    if (isNativeApp()) {
+      // mobile => call /logout-mobile + remove tokens from storage
+      return from(this.storageService.getRefreshToken()).pipe(
+        switchMap(rToken => {
+          if (!rToken) {
+            // no token, just clear anyway
+            return from(this.storageService.clearTokens()).pipe(map(() => 'No refresh token found.'));
+          }
+          return this.http.post<ApiMessageResponse>(`${this.baseUrl}/logout-mobile`, { refreshToken: rToken })
+            .pipe(
+              switchMap(res => 
+                from(this.storageService.clearTokens()).pipe(
+                map(() => res)
+              )
+            )
+          );
+        })
+      );
+    } else {
+      // web => call /logout-web, cookies are cleared
+      return this.http.post<ApiMessageResponse>(
+        `${this.baseUrl}/logout-web`,
+        {},
+        { withCredentials: true}
+      );
+    }
+  }
+ 
   public refresh(): Observable<MobileRefreshResponse | ApiMessageResponse | string> {
     if (isNativeApp()) {
       // mobile => call /refresh-mobile with the stored refresh token
@@ -131,35 +162,6 @@ export class AuthService {
     }
   }
 
-  public logout(): Observable<ApiMessageResponse | string> {
-    if (isNativeApp()) {
-      // mobile => call /logout-mobile + remove tokens from storage
-      return from(this.storageService.getRefreshToken()).pipe(
-        switchMap(rToken => {
-          if (!rToken) {
-            // no token, just clear anyway
-            return from(this.storageService.clearTokens()).pipe(map(() => 'No refresh token found.'));
-          }
-          return this.http.post<ApiMessageResponse>(`${this.baseUrl}/logout-mobile`, { refreshToken: rToken })
-            .pipe(
-              switchMap(res => 
-                from(this.storageService.clearTokens()).pipe(
-                map(() => res)
-              )
-            )
-          );
-        })
-      );
-    } else {
-      // web => call /logout-web, cookies are cleared
-      return this.http.post<ApiMessageResponse>(
-        `${this.baseUrl}/logout-web`,
-        {},
-        { withCredentials: true}
-      );
-    }
-  }
-
   public isLoggedIn(): Observable<boolean> {
     if (isNativeApp()) {
       return from(this.storageService.getAccessToken()).pipe(
@@ -172,6 +174,10 @@ export class AuthService {
     }
   }
 
+  // #endregion
+
+  // #region Register
+
   public register(user: RegisterUser):Observable<ApiMessageResponse>{
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register`, user);
   }
@@ -183,6 +189,15 @@ export class AuthService {
   public registerCreator(creator: RegisterCreator): Observable<ApiMessageResponse>{
     return this.http.post<ApiMessageResponse>(`${this.baseUrl}/register-creator`, creator);
   }
+
+  public confirmEmail(token: string): Observable<void> {
+    return this.http.get<void>(
+      `${this.baseUrl}/confirm-email`,
+      { params: { token }, withCredentials: true }
+    );
+  }
+
+  // #endregion
 
   public getCurrentUser(): Observable<User> {
      return this.http.get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})

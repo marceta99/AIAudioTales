@@ -1,4 +1,5 @@
-﻿using Kumadio.Infrastructure.Data;
+﻿using Kumadio.Core.Common;
+using Kumadio.Infrastructure.Data;
 using Kumadio.Web.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -37,6 +38,9 @@ namespace Kumadio.Web.ServiceRegistrations
             );
             services.Configure<OpenAISettings>(
                     configuration.GetSection("OpenAI")
+            );
+            services.Configure<SmtpSettings>(
+                    configuration.GetSection("SmtpSettings")
             );
 
             // 5) Newtonsoft JSON / Memory Cache

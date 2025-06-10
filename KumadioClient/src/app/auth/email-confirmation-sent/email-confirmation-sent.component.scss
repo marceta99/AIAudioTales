@@ -1,0 +1,48 @@
+/* osiguraj da html/body zauzimaju celu visinu */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* centralni kontejner */
+.confirmation-sent {
+  display: flex;
+  flex-direction: column;      /* složi elemente jedan ispod drugog */
+  justify-content: center;     /* vertikalno centriranje */
+  align-items: center;         /* horizontalno centriranje */
+  height: 100vh;               /* zauzima celu visinu ekrana */
+  padding: 20px;               /* malo „rupa“ oko sadržaja */
+  box-sizing: border-box;      /* padding ne širi flex */
+  text-align: center;
+}
+
+/* ilustracija, naslov i tekst ostaju isti */
+.illustration {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.confirmation-sent h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.confirmation-sent p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #155a9c;
+}

@@ -20,6 +20,6 @@ namespace Kumadio.Domain.Entities
         public OnboardingData OnboardingData { get; set; }
         public AuthProvider AuthProvider { get; set; }
         public string? ExternalId { get; set; } // GoogleId etc...
-
+        public bool IsEmailConfirmed { get; set; }
     }
 }

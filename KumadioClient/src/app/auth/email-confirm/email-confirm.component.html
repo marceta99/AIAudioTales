@@ -1,0 +1,18 @@
+<div class="confirm-email">
+  <!-- Success message -->
+  <div *ngIf="isSuccess" class="message-box">
+    <div class="icon success-icon">✔️</div>
+    <h1>Email uspešno potvrđen</h1>
+    <p>Sada se možete prijaviti koristeći Vaš mejl.</p>
+    <button class="btn" (click)="goToLogin()">
+      Prijavi se
+    </button>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="isError" class="message-box">
+    <div class="icon error-icon">❌</div>
+    <h1>Verifikacija neuspešna</h1>
+    <button class="btn" (click)="retry()">Pokušajte ponovo</button>
+  </div>
+</div>
