@@ -83,8 +83,74 @@ namespace Kumadio.Core.Services
         public async Task<Result> SendConfirmationEmail(string link, User user)
         {
             var html = $@"
-              <h3>Potvrdite mejl</h3>
-              <p>Kliknite <a href=""{link}"">ovde</a> da verifikujete svoj nalog.</p>";
+                <!DOCTYPE html>
+                <html lang=""en"">
+                <head>
+                  <meta charset=""UTF-8"">
+                  <title>Confirm your email</title>
+                </head>
+                <body style=""margin:0; padding:0; background:#F7F8FA; font-family: 'Segoe UI', Arial, sans-serif;"">
+                  <!-- Preheader Text -->
+                  <div style=""display:none; max-height:0; overflow:hidden; color:#F7F8F7; line-height:1px; font-size:1px;"">
+                    Confirm your Kumadio account to get started.
+                  </div>
+
+                  <table role=""presentation"" width=""100%"" style=""border-collapse:collapse;"">
+                    <tr>
+                      <td align=""center"" style=""padding:40px 10px;"">
+                        <table role=""presentation"" width=""600"" style=""max-width:600px; background:#FFFFFF; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05);"">
+                          <tr>
+                            <td align=""center"" style=""padding:30px 0;"">
+                              <img src=""https://media.licdn.com/dms/image/v2/D4E0BAQHrhPezbdG85A/company-logo_200_200/company-logo_200_200/0/1730828228363/kumadio_logo?e=1755129600&v=beta&t=XzIqUJHALyVu_ENRXM7S-EfipJdujjBpqsXgTsV61Fs"" alt=""Kumadio"" width=""120"" style=""height:auto; display:block;""/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align=""center"" style=""padding:0 40px;"">
+                              <h1 style=""margin:0; font-size:24px; color:#212121;"">Dobrodošli u Kumadio!</h1>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align=""center"" style=""padding:20px 40px; color:#555555; font-size:16px; line-height:1.5;"">
+                              <p style=""margin:0 0 16px;"">
+                                Hvala što ste se prijavili! Samo jedan korak vas deli od interaktivnih audio priča za decu.
+                              </p>
+                              <p style=""margin:0;"">
+                                Potvrdite vaš mejl klikom na dugme ispod:
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align=""center"" style=""padding:20px 40px;"">
+                              <a href=""{link}""
+                                 style=""background:#4A90E2; color:#FFFFFF; text-decoration:none; padding:14px 28px; border-radius:4px; font-size:16px; display:inline-block;"">
+                                Potvrdi mejl adresu
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align=""center"" style=""padding:0 40px 30px; color:#999999; font-size:14px; line-height:1.4;"">
+                              <p style=""margin:0;"">
+                                Ako dugme ne radi, kopirajte i nalepite ovaj URL u vaš pregledač:
+                              </p>
+                              <p style=""word-break:break-all; margin:8px 0 0;"">
+                                <a href=""{link}"" style=""color:#4A90E2; text-decoration:none;"">
+                                  {link}
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align=""center"" style=""background:#F0F0F0; padding:20px; color:#999999; font-size:12px;"">
+                              &copy; 2025 Kumadio Ltd. Sva prava zadržana.<br/>
+                              Belgrade, Serbia
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </body>
+                </html>";
 
             await _emailSender.SendEmailAsync(user.Email, "Verifikacija Mejla", html);
 

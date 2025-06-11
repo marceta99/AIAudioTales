@@ -189,7 +189,7 @@ namespace Kumadio.Infrastructure.Data.Seed.BooksPictures
                 _dbContext.SaveChanges();
             }
 
-            var creator = _dbContext.Users.Where(u => u.Email == "kumadio@gmail.com").FirstOrDefault();
+            var creator = _dbContext.Users.Where(u => u.Email == "kumadiobooks@gmail.com").FirstOrDefault();
 
             if (creator != null && !_dbContext.Books.Any())
             {
