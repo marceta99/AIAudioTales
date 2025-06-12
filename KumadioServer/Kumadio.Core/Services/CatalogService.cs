@@ -32,6 +32,18 @@ namespace Kumadio.Core.Services
 
             return book;
         }
+        public async Task<Result<(Book, BookPart)>> GetBookWithPreview(int bookId)
+        {
+            var book = await _bookRepository.GetFirstWhere(b => b.Id == bookId);
+            if (book == null)
+                return DomainErrors.Catalog.BookNotFound;
+
+            var bookPart = await _bookPartRepository.GetRootPart(bookId);
+            if (bookPart == null)
+                return DomainErrors.Catalog.BookPartNotFound;
+
+            return (book, bookPart);
+        }
 
         public async Task<Result<IList<Book>>> GetBooks(int categoryId, int pageNumber, int pageSize)
         {

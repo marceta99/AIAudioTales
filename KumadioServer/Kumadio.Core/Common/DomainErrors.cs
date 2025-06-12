@@ -33,6 +33,7 @@
             public static Error CategoriesNotFound => new(ErrorCodes.CategoriesNotFound, "Categories are not found.");
             public static Error BookNotFound => new(ErrorCodes.BookNotFound, "Book with that id is not found.");
             public static Error BookPartNotFound => new(ErrorCodes.BookPartNotFound, "Book part with that id is not found.");
+            public static Error RootPartNotFound => new(ErrorCodes.RootPartNotFound, "Root part for that book is not found.");
         }
 
         public static class Editor

@@ -45,12 +45,16 @@ namespace Kumadio.Web.Controllers
         }
 
         [HttpGet("books/{bookId}")]
-        public async Task<ActionResult<DTOReturnBook>> GetBook(int bookId)
+        public async Task<ActionResult<DtoBookPreview>> GetBookWithPreview(int bookId)
         {
-            var bookResult = await _catalogService.GetBook(bookId);
+            var bookResult = await _catalogService.GetBookWithPreview(bookId);
             if(bookResult.IsFailure) return bookResult.Error.ToBadRequest();
-            
-            return Ok(_bookMapper.Map(bookResult.Value));
+
+            var (book, rootPart) = bookResult.Value;
+
+            var bookPreview = new DtoBookPreview(book.Id, book.Title, book.Description, book.ImageURL, book.CategoryId, rootPart.PartAudioLink);
+
+            return Ok(bookPreview);
         }
 
         [HttpGet("books")]

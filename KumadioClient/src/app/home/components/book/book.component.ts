@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReturnBook, Toast, ToastIcon, ToastType } from 'src/app/entities';
+import { DtoBookPreview, ReturnBook, Toast, ToastIcon, ToastType } from 'src/app/entities';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { ToastNotificationService } from 'src/app/common/services/toast-notification.service';
@@ -14,10 +14,10 @@ import { BookCategoryPipe } from '../../pipes/category.pipe';
   imports: [CommonModule, BookCategoryPipe, RouterModule]
 })
 export class BookComponent implements OnInit{
-  book! : ReturnBook;
-  userHasBook: boolean = false;
-  disableButton: boolean = false;
-  freeBook: boolean = true;
+  public book!: DtoBookPreview;
+  public userHasBook: boolean = false;
+  public isPlaying = false;
+  private audio = new Audio();
 
   constructor(
     private catalogService: CatalogService,
@@ -30,10 +30,16 @@ export class BookComponent implements OnInit{
     this.route.params.subscribe(params => {
       const id = +params['bookId'];
 
-      this.catalogService.getBookWithId(id).subscribe({
-        next: (book: ReturnBook) => {
+      this.catalogService.getBookWithPreivew(id).subscribe({
+        next: (book: DtoBookPreview) => {
           console.log(book);
           this.book = book;
+
+          this.audio.src = this.book.rootPartAudio; 
+          this.audio.load();
+          this.audio.onended = () => {
+            this.isPlaying = false;
+          };
 
           this.libraryService.userHasBook(this.book.id).subscribe({
             next: (hasBook: boolean) => {
@@ -82,5 +88,14 @@ export class BookComponent implements OnInit{
         this.notificationService.show(toast);
     }
     })
+  }
+
+  public togglePreview(): void {
+    if (this.isPlaying) {
+      this.audio.pause();
+    } else {
+      this.audio.play().catch(err => console.error('Audio play failed:', err));
+    }
+    this.isPlaying = !this.isPlaying;
   }
 }

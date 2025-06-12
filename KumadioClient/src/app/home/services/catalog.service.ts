@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { finalize, Observable } from "rxjs";
 import { LoadingSpinnerService } from "src/app/common/services/loading-spinner.service";
-import { Category, ReturnBook } from "src/app/entities";
+import { Category, DtoBookPreview, ReturnBook } from "src/app/entities";
 import { environment } from "src/environments/environment";
 
 @Injectable()
@@ -20,10 +20,10 @@ export class CatalogService {
     return this.http.get<ReturnBook[]>(`${this.baseUrl}/books`, {params, withCredentials : true});
   }
 
-  public getBookWithId(bookId: number): Observable<ReturnBook>{
+  public getBookWithPreivew(bookId: number): Observable<DtoBookPreview>{
     this.spinnerService.setLoading(true);
 
-    return this.http.get<ReturnBook>(`${this.baseUrl}/books/${bookId}`, {withCredentials : true})
+    return this.http.get<DtoBookPreview>(`${this.baseUrl}/books/${bookId}`, {withCredentials : true})
     .pipe(
       finalize(() => this.spinnerService.setLoading(false)) //finalize operator has guaranteed execution, so it is called regardless where it is error or successfull response
     );

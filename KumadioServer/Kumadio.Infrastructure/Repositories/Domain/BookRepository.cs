@@ -19,7 +19,6 @@ namespace Kumadio.Infrastructure.Repositories.Domain
                 .Take(take)
                 .ToListAsync();
         }
-
         public async Task<IList<Book>> SearchBooks(string searchTerm, int skip, int take)
         {
             return await _dbSet

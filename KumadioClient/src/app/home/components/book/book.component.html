@@ -17,8 +17,13 @@
 
     <button *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library']" ><img src="../../../../assets/icons/enroll.svg" alt="play">Listen</button>
 
-    <button class="btn_ghost btn-g"><img src="../../../../assets/icons/preview-sound.svg" alt="story-list">
-      Preview</button>
+    <button class="btn_ghost btn-g" (click)="togglePreview()">
+      <i class="fa" 
+        [class.fa-play]="!isPlaying" 
+        [class.fa-pause]="isPlaying">
+      </i>
+      {{ isPlaying ? 'Pause' : 'Preview' }}
+    </button>
   </div>
   <p class="book-desc">{{book.description}}</p>
 </div>

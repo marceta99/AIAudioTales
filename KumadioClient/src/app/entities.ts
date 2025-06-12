@@ -239,5 +239,13 @@ export interface userResponseDto {
   transcript: string;
   possibleAnswers: string[];
 }
+export interface DtoBookPreview {
+  id: number;
+  title: string;
+  description: string;
+  imageURL: string;
+  categoryId: number;
+  rootPartAudio: string;
+}
 
 // #endregion
