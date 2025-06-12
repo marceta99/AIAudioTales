@@ -54,7 +54,10 @@ export class RegisterComponent implements OnInit {
     this.authService.register(user).subscribe({
       next: () => {
         this._ngZone.run(() => {
-          this.router.navigate(['/email-confirmation-sent']);
+          this.router.navigate(
+            ['/email-confirmation-sent'],
+            { state: { email: user.email } }
+          );
         });
       },
       error: (error: any) => {

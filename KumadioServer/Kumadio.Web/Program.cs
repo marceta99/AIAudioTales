@@ -4,7 +4,6 @@ using Kumadio.Web.ServiceRegistrations;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-
 // Add user secrets for dev environment
 if (builder.Environment.IsDevelopment())
 {
