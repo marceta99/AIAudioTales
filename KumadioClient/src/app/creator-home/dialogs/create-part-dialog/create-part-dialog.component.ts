@@ -19,6 +19,7 @@ export interface CreatePartDialogResult {
 })
 export class CreatePartDialogComponent implements IDialogComponent<CreatePartDialogProps, CreatePartDialogResult> ,OnInit {
   public partForm!: FormGroup;
+  selectedFile: File | null = null;
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -41,25 +42,22 @@ export class CreatePartDialogComponent implements IDialogComponent<CreatePartDia
       return; // no files selected
     }
   
-    const file = input.files[0];
-    
-    // Patch the file object into the form control
-    this.partForm.patchValue({
-      partAudio: file
-    });
-  
-    // If you want to trigger validation or valueChanges logic:
-    this.partForm.get('partAudio')?.updateValueAndValidity();
+    this.selectedFile = input.files[0];
+    console.log("selected file", this.selectedFile)
   }
 
   public addPart(){
-    const result: CreatePartDialogResult = {
-      questionText: this.partForm.value.questionText,
-      file: this.partForm.value.partAudio,
-      answers: this.partFormAnswers.controls.map(control => control.value.text)
-    };
+    if (this.selectedFile) {
+      const result: CreatePartDialogResult = {
+        questionText: this.partForm.value.questionText,
+        file: this.selectedFile,
+        answers: this.partFormAnswers.controls.map(control => control.value.text)
+      };
 
-    this.closeDialog(result);
+      this.selectedFile = null;
+      this.closeDialog(result);
+    }
+   
   }
 
  public addAnswer(){

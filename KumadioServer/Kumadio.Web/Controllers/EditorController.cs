@@ -35,15 +35,14 @@ namespace Kumadio.Web.Controllers
 
             if (partAudio == null
              || partAudio.Length == 0
-             || string.IsNullOrEmpty(bookIdStr))
-                return BadRequest("Missing audio file or bookId");
+             || string.IsNullOrEmpty(bookIdStr)
+             || string.IsNullOrEmpty(answersJson))
+                return BadRequest("Missing audio file, bookId or answers");
 
             if (!int.TryParse(bookIdStr, out int bookId))
                 return BadRequest("Invalid bookId for root part");
 
-            var answers = string.IsNullOrEmpty(answersJson)
-                ? null
-                : JsonConvert.DeserializeObject<List<string>>(answersJson);
+            var answers = JsonConvert.DeserializeObject<List<string>>(answersJson);
 
             if (answers == null) 
                 return BadRequest("Invalid answers");
@@ -88,19 +87,16 @@ namespace Kumadio.Web.Controllers
             var answersJson = form["answers"].FirstOrDefault();
 
             if (partAudio == null
-                || partAudio.Length == 0
-                || string.IsNullOrEmpty(bookIdStr) 
-                || string.IsNullOrEmpty(parentAnswerIdStr))
-                return BadRequest("Missing partAudio, bookId, or parentAnswerId");
-                
+             || partAudio.Length == 0
+             || string.IsNullOrEmpty(bookIdStr) 
+             || string.IsNullOrEmpty(parentAnswerIdStr)
+             || string.IsNullOrEmpty(answersJson))
+                return BadRequest("Missing partAudio, bookId, parentAnswerId or answers");
 
             if (!int.TryParse(bookIdStr, out int bookId) || !int.TryParse(parentAnswerIdStr, out int parentAnswerId))
                 return BadRequest("Invalid Ids");
-                
 
-            var answers = string.IsNullOrEmpty(answersJson)
-                ? null
-                : JsonConvert.DeserializeObject<List<string>>(answersJson);
+            var answers = JsonConvert.DeserializeObject<List<string>>(answersJson);
 
             if (answers == null)
                 return BadRequest("Invalid answers");

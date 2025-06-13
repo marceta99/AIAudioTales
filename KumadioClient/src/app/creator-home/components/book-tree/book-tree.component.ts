@@ -20,7 +20,6 @@ import { PartInfoDialogComponent } from '../../dialogs/part-info-dialog/part-inf
 })
 export class BookTreeComponent implements OnInit {
   rootPartForm!: FormGroup;
-  partForm!: FormGroup;
   bookId!: number;
   partTree!: PartTree;
   clickedPartId!: number;
@@ -51,12 +50,7 @@ export class BookTreeComponent implements OnInit {
 
     this.rootPartForm = this.formBuilder.group({
       questionText: ['', [Validators.maxLength(200)]],
-      partAudio: ['', Validators.required],
-      answers: this.formBuilder.array([])
-    }) 
-
-    this.partForm = this.formBuilder.group({
-      partAudio: ['', [Validators.required, Validators.maxLength(500)]],
+      partAudio: [null, Validators.required],
       answers: this.formBuilder.array([])
     }) 
   }
@@ -93,7 +87,7 @@ export class BookTreeComponent implements OnInit {
                 const formData = new FormData();
                 formData.append('bookId', this.bookId.toString());
                 formData.append('questionText', result.questionText);
-                formData.append('partAudio', result.file);
+                formData.append('partAudio',   result.file);
                 formData.append('answers', JSON.stringify(result.answers)); 
                 formData.append('parentAnswerId', this.clickedPartId.toString());
 
@@ -158,6 +152,7 @@ export class BookTreeComponent implements OnInit {
   
       this.creatorService.addRootPart(formData).subscribe((rootPart: ReturnPart) => {
         console.log('rootPart created successfully', rootPart);
+        this.rootPartForm.reset();
         this.getBookTree();
       });
       

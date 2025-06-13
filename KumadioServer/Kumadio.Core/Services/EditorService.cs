@@ -115,7 +115,10 @@ namespace Kumadio.Core.Services
                     CurrentPartId = newPart.Id
                 }).ToList();
 
-                await _answerRepository.AddRange(answers);
+                if (answers.Any())
+                {
+                   await _answerRepository.AddRange(answers);
+                }
 
                 newPart.Answers = answers;
                 return Result<BookPart>.Success(newPart);
