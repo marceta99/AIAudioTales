@@ -20,6 +20,26 @@
 
     <!-- Your form content -->
     <form [formGroup]="partForm" (ngSubmit)="addPart()" class="dialog-form">
+      <!-- Question text -->
+      <div class="form-group md-input-group">
+          <label for="questionText">Question Text</label>
+          <input
+            id="questionText"
+            type="text"
+            formControlName="questionText"
+            placeholder="Enter your question (max 200 chars)"
+          />
+          <div
+            class="error"
+            *ngIf="partForm.get('questionText')?.invalid && (partForm.get('questionText')?.touched || partForm.get('questionText')?.dirty)">
+            <small *ngIf="partForm.get('questionText')?.hasError('maxlength')">
+              Max {{
+                partForm.get('questionText')?.errors?.['maxlength'].requiredLength
+              }}
+              characters.
+            </small>
+          </div>
+        </div>
 
       <!-- Audio input -->
       <div class="form-group">
@@ -30,7 +50,6 @@
           accept=".mp3"
           formControlName="partAudio"
         />
-        <!-- You can show an error or other validation message if needed -->
         <div class="error" *ngIf="partForm.get('partAudio')?.invalid && partForm.get('partAudio')?.touched">
           * Audio is required
         </div>

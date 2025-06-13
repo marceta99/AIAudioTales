@@ -50,6 +50,7 @@ export class BookTreeComponent implements OnInit {
     });
 
     this.rootPartForm = this.formBuilder.group({
+      questionText: ['', [Validators.maxLength(200)]],
       partAudio: ['', Validators.required],
       answers: this.formBuilder.array([])
     }) 
@@ -63,10 +64,8 @@ export class BookTreeComponent implements OnInit {
   private getBookTree(): void {
     this.creatorService.getBookTree(this.bookId).subscribe({
       next: (partTree: PartTree) => {
-        console.log('BookTree', partTree);
         this.partTree = partTree;
         this.cdr.detectChanges();
-        console.log("tree container",this.treeContainer)
         this.treeContainer.nativeElement.innerHTML = this.generateTreeHtml(this.partTree);
         this.addClickListeners(this.treeContainer.nativeElement);
       },
@@ -93,6 +92,7 @@ export class BookTreeComponent implements OnInit {
               switchMap(result => {
                 const formData = new FormData();
                 formData.append('bookId', this.bookId.toString());
+                formData.append('questionText', result.questionText);
                 formData.append('partAudio', result.file);
                 formData.append('answers', JSON.stringify(result.answers)); 
                 formData.append('parentAnswerId', this.clickedPartId.toString());
@@ -146,13 +146,15 @@ export class BookTreeComponent implements OnInit {
   }
 
   public addRootPart(){
+    const questionText = this.rootPartForm.value.questionText;
     const answers = this.rootPartFormAnswers.controls.map(control => control.value.text);
 
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('bookId', this.bookId.toString());
+      formData.append('questionText', questionText);
       formData.append('partAudio', this.selectedFile);   
-      formData.append('answers', JSON.stringify(answers));     
+      formData.append('answers', JSON.stringify(answers));   
   
       this.creatorService.addRootPart(formData).subscribe((rootPart: ReturnPart) => {
         console.log('rootPart created successfully', rootPart);

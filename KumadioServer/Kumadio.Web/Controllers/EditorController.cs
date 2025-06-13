@@ -28,11 +28,14 @@ namespace Kumadio.Web.Controllers
         public async Task<ActionResult<DTOReturnPart>> AddRootPart()
         {
             var form = await Request.ReadFormAsync();
-            var partAudio = form.Files["partAudio"];
             var bookIdStr = form["bookId"].FirstOrDefault();
+            var questionText = form["questionText"].FirstOrDefault();
+            var partAudio = form.Files["partAudio"];
             var answersJson = form["answers"].FirstOrDefault();
 
-            if (partAudio == null || partAudio.Length == 0 || string.IsNullOrEmpty(bookIdStr))
+            if (partAudio == null
+             || partAudio.Length == 0
+             || string.IsNullOrEmpty(bookIdStr))
                 return BadRequest("Missing audio file or bookId");
 
             if (!int.TryParse(bookIdStr, out int bookId))
@@ -58,9 +61,10 @@ namespace Kumadio.Web.Controllers
             var rootPart = new RootPartModel
             {
                 BookId = bookId,
+                QuestionText = questionText,
                 AudioBytes = audioBytes,
                 Extension = extension,
-                AnswersText = answers
+                AnswersText = answers,
             };
 
             var scheme = Request.Scheme; // "http" or "https"
@@ -79,6 +83,7 @@ namespace Kumadio.Web.Controllers
             var form = await Request.ReadFormAsync();
             var partAudio = form.Files["partAudio"];
             var bookIdStr = form["bookId"].FirstOrDefault();
+            var questionText = form["questionText"].FirstOrDefault();
             var parentAnswerIdStr = form["parentAnswerId"].FirstOrDefault();
             var answersJson = form["answers"].FirstOrDefault();
 
@@ -113,6 +118,7 @@ namespace Kumadio.Web.Controllers
             var part = new PartModel
             {
                 BookId = bookId,
+                QuestionText = questionText,
                 ParentAnswerId = parentAnswerId,
                 AudioBytes = audioBytes,
                 Extension = extension,

@@ -52,7 +52,8 @@ namespace Kumadio.Core.Services
                 {
                     BookId = root.BookId,
                     IsRoot = true,
-                    PartAudioLink = fileLink
+                    PartAudioLink = fileLink,
+                    QuestionText = root.QuestionText
                 };
 
                 var newPart = await _bookPartRepository.AddAndReturn(bookPart);
@@ -98,8 +99,9 @@ namespace Kumadio.Core.Services
                 var bookPart = new BookPart
                 {
                     BookId = part.BookId,
+                    QuestionText = part.QuestionText,
                     IsRoot = false,
-                    PartAudioLink = fileLink
+                    PartAudioLink = fileLink,
                 };
 
                 var newPart = await _bookPartRepository.AddAndReturn(bookPart);

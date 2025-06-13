@@ -4,6 +4,27 @@
       <h1 class="form-title">Add First Part of the Book</h1>
       
       <form [formGroup]="rootPartForm" (ngSubmit)="addRootPart()" class="root-part-form">
+        <!-- Question text -->
+        <div class="form-group">
+          <label for="questionText">Question Text</label>
+          <input
+            id="questionText"
+            type="text"
+            formControlName="questionText"
+            placeholder="Enter your question (max 200 chars)"
+          />
+          <div
+            class="error"
+            *ngIf="rootPartForm.get('questionText')?.invalid && (rootPartForm.get('questionText')?.touched || rootPartForm.get('questionText')?.dirty)">
+            <small *ngIf="rootPartForm.get('questionText')?.hasError('maxlength')">
+              Max {{
+                rootPartForm.get('questionText')?.errors?.['maxlength'].requiredLength
+              }}
+              characters.
+            </small>
+          </div>
+        </div>
+        
         <!-- Part Audio -->
         <div class="form-group">
           <label>Audio File</label>
@@ -13,6 +34,11 @@
             accept=".mp3"
             formControlName="partAudio"
           />
+          <div class="error" *ngIf=" rootPartForm.get('partAudio')?.invalid && rootPartForm.get('partAudio')?.touched">
+            <small *ngIf="rootPartForm.get('partAudio')?.hasError('required')">
+              Please select an audio file.
+            </small>
+          </div>
         </div>
   
         <!-- Answers Array -->

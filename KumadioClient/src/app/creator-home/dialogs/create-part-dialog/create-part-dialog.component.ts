@@ -6,6 +6,7 @@ import { IDialogComponent } from "src/app/common/components/dialog/base/idialog-
 export interface CreatePartDialogProps { }
 
 export interface CreatePartDialogResult {
+  questionText: string,
   file: File;
   answers: string[];
 }
@@ -23,8 +24,9 @@ export class CreatePartDialogComponent implements IDialogComponent<CreatePartDia
 
   ngOnInit(): void {
     this.partForm = this.formBuilder.group({
-          partAudio: ['', [Validators.required, Validators.maxLength(500)]],
-          answers: this.formBuilder.array([])
+      questionText: ['', [Validators.maxLength(200)]],
+      partAudio: ['', [Validators.required, Validators.maxLength(500)]],
+      answers: this.formBuilder.array([])
     }) 
   }
 
@@ -52,6 +54,7 @@ export class CreatePartDialogComponent implements IDialogComponent<CreatePartDia
 
   public addPart(){
     const result: CreatePartDialogResult = {
+      questionText: this.partForm.value.questionText,
       file: this.partForm.value.partAudio,
       answers: this.partFormAnswers.controls.map(control => control.value.text)
     };

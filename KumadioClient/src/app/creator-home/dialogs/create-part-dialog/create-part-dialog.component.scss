@@ -176,3 +176,44 @@
     }
   }
   
+  // ---- Material-light input ----
+.md-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+
+  > label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #333;
+  }
+
+  > input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 8px 0;
+    font-size: 1rem;
+    background: transparent;
+    transition: border-color 0.2s ease;
+
+    /* make placeholder visible again */
+    &::placeholder {
+      color: #999;
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: none;
+      border-bottom-color: #3f51b5;
+    }
+  }
+
+  .error {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: #d32f2f;
+  }
+}
+
+
