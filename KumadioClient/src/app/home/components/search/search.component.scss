@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
+  height: 100vh;       // fill the viewport
 }
   
   .search-history-container {
@@ -78,11 +79,13 @@
   }
 
   .categories {
+    flex: 0 0 auto;      // never shrink or grow
     display: flex;
     overflow-x: auto;
     gap: 12px;
     padding: 8px 16px;
-    margin-bottom: 16px;
+    background: white;   // so scrolling list won’t paint behind it
+    z-index: 1;          // float above the scroller
 
     /* Hide the scrollbar */
     scrollbar-width: none; /* For Firefox */
@@ -109,6 +112,8 @@
   }
   
   .searched-books {
+    flex: 1 1 auto;      // take remaining space
+    overflow-y: auto;    // scroll when content overflows
     display: flex;
     flex-direction: column;
     gap: 16px;
