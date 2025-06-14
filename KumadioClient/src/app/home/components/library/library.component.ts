@@ -36,6 +36,7 @@ export class LibraryComponent implements OnInit{
     this.libraryService.purchasedBooks.subscribe((books: PurchasedBook[])=>{
       console.log("purchased books observable")
       this.books = books;
+      this.setCurrentBook();    // <— highlight the right index
     })
 
     this.playerService.currentBookIndex.subscribe((index: number)=>{

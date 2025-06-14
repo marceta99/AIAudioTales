@@ -15,7 +15,10 @@
     <button *ngIf="!userHasBook" 
     (click)="addToLibrary()" class="btn_prim">Add to library</button>
 
-    <button *ngIf="userHasBook" class="btn_prim" [routerLink]="['/home/library']" ><img src="../../../../assets/icons/enroll.svg" alt="play">Listen</button>
+    <button *ngIf="userHasBook" (click)="onListenClick()" class="btn_prim">
+      <img src="../../../../assets/icons/enroll.svg" alt="play">
+      Listen
+    </button>
 
     <button class="btn_ghost btn-g" (click)="togglePreview()">
       <i class="fa" 
