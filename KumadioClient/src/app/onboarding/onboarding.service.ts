@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OnboardingDataDto, OnboardingQuestionDto } from '../entities';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class OnboardingService {
-  private baseUrl = 'http://localhost:5000/api/auth';
+  private baseUrl = environment.apiUrl + '/auth';
 
   constructor(private http: HttpClient) {}
 

@@ -20,8 +20,16 @@ declare const google: any;
 })
 export class RegisterComponent implements OnInit {
   private clientId = environment.clientId;
-  public registerForm!: FormGroup;
-
+  public registerForm = new FormGroup({
+    firstName: new FormControl('', { nonNullable: true, validators: [ Validators.required, Validators.minLength(2) ]}),
+    lastName: new FormControl('',  { nonNullable: true, validators: [ Validators.required, Validators.minLength(2) ] }),
+    email: new FormControl('',  { nonNullable: true, validators: [ Validators.required, Validators.email ]}),
+    password: new FormControl('',  { nonNullable: true, validators: [ Validators.required, Validators.minLength(6) ] }),
+    confirmPassword: new FormControl('', { nonNullable: true, validators: [ Validators.required, Validators.minLength(6) ] }),
+  }, {
+    validators: passwordMatchValidator
+  });
+  
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -31,15 +39,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.initializeGoogleRegistration();
     
-    this.registerForm = new FormGroup({
-      firstName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-      lastName: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
-      confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(6)])
-    }, {
-      validators: passwordMatchValidator
-    });
   }
 
   public onSubmit(): void {

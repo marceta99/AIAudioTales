@@ -184,7 +184,12 @@
   </ng-template>
 
   <!-- Hidden HTMLAudioElement to play the track -->
-  <audio #audioElement (timeupdate)="progressBarUpdate()" (ended)="activateQuestions()">
-    <source [src]="currentBook.playingPart.partAudioLink" type="audio/mpeg" />
-  </audio>
+        
+  <audio
+    #audioElement
+    [src]="currentBook.playingPart.partAudioLink"
+    preload="metadata"
+    (timeupdate)="progressBarUpdate()"
+    (ended)="activateQuestions()">
+</audio>
 </div>

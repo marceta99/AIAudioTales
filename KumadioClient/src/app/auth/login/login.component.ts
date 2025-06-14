@@ -27,7 +27,10 @@ export class LoginComponent implements OnInit {
   public showErrorMessage = false;
   public showGoogleErrorMessage = false;
   public showinvalidLoginMethod = false;
-  public loginForm!: FormGroup;
+  public loginForm = new FormGroup({
+      email: new FormControl("", { nonNullable: true, validators: [ Validators.required, Validators.email ] }),
+      password: new FormControl("", { nonNullable: true, validators: [ Validators.required, Validators.minLength(6)] } )
+  });
 
   constructor(
     private router: Router,
@@ -38,10 +41,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initializeGoogleSignIn();
 
-    this.loginForm = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
-    });
   }
 
   public login() {
