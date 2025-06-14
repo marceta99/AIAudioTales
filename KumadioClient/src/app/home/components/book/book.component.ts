@@ -71,7 +71,7 @@ export class BookComponent implements OnInit{
       next: () => {
         this.userHasBook = true;
         const toast: Toast = {
-          text: "Added to basket",
+          text: "Added to library",
           toastIcon: ToastIcon.Success,
           toastType: ToastType.Success
         }

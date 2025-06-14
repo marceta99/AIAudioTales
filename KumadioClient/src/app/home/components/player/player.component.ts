@@ -77,7 +77,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     this.stopRecognition();
   }
 
-  setInitialCurrentBook(): void{
+  private setInitialCurrentBook(): void {
     for (let i = 0; i < this.books.length; i++) {
       if (this.books[i].isBookPlaying) {
         this.playerService.currentBookIndex.next(i);
@@ -141,7 +141,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
     }
   }
   
-
   private formatTime(seconds: number): string {
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
@@ -259,143 +258,136 @@ export class PlayerComponent implements OnInit, OnDestroy {
     })
   }
 
-  public getPlayPauseIcon(): string {
-    return this.isPlaying ? '../../../assets/icons/pause_circle.svg' : '../../../assets/icons/play_circle.svg';
-  }
-
-private initializeSpeechRecognition(): void {
-  // pick whichever Web Speech API constructor is available
-  const SpeechRecognition = (window as any).SpeechRecognition
-                          || (window as any).webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    console.error('Web Speech API not supported');
-    return;
-  }
-
-  this.recognition = new SpeechRecognition();
-  this.recognition.continuous      = true;   // attempt to capture multiple segments
-  this.recognition.interimResults  = true;   // we’ll ignore “interim” in onresult if not final
-  this.recognition.maxAlternatives = 1;
-  this.recognition.lang            = 'sr-RS';
-
-  // When the engine actually starts listening
-  this.recognition.onstart = () => {
-    console.log('🎙️ Speech recognition actually started');
-    this.recognitionActive = true;
-  };
-
-  // When we get any result (interim or final)
-  this.recognition.onresult = (event: any) => {
-    // Loop over every new result from event.resultIndex onward
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const result = event.results[i];
-      const transcriptSegment = result[0].transcript.trim().toLowerCase();
-
-      if (!this.isTranscriptValid(transcriptSegment)) {
-        // skip garbage / very short segments
-        continue;
-      }
-
-      if (result.isFinal) {
-        // Final transcript arrived
-        console.log('🟢 Final transcript:', transcriptSegment);
-
-        // Clear any buffers
-        this.lastTranscriptFragment = '';
-        this.transcriptBuffer = '';
-
-        // Process inside Angular zone so UI updates properly
-        this.zone.run(() => {
-          this.processChildResponse(transcriptSegment);
-        });
-      } else {
-        // Interim transcript: just store buffer, but do NOT re‐fire logic
-        this.transcriptBuffer = transcriptSegment;
-        console.log('⚫ Interim transcript:', transcriptSegment);
-      }
-    }
-  };
-
-  // Handle errors
-  this.recognition.onerror = (event: any) => {
-    // If we got "no‐speech" while we still want to listen, schedule a restart
-    if (event.error === 'no-speech' && this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
-      console.warn('No speech—but I’ll retry in 300ms');
-      setTimeout(() => {
-        // Only start again if we truly still want to listen
-        if (this.shouldListen && this.currentBook?.questionsActive && !this.recognitionActive && !this.isProcessing) {
-          this.startRecognition();
-        }
-      }, 300);
+  private initializeSpeechRecognition(): void {
+    // pick whichever Web Speech API constructor is available
+    const SpeechRecognition = (window as any).SpeechRecognition
+                            || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.error('Web Speech API not supported');
       return;
     }
 
-    // If user intentionally aborted, ignore
-    if (event.error === 'aborted') {
-      return;
-    }
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous      = true;   // attempt to capture multiple segments
+    this.recognition.interimResults  = true;   // we’ll ignore “interim” in onresult if not final
+    this.recognition.maxAlternatives = 1;
+    this.recognition.lang            = 'sr-RS';
 
-    console.error('Speech error:', event.error);
-  };
-
-  // When the recognition session ends (e.g. silence, or we explicitly called abort())
-  this.recognition.onend = () => {
-    this.recognitionActive = false;
-    console.log('🎙️ Speech ended');
-
-    // Only try to restart if:
-    // 1) we still want to listen (shouldListen === true)
-    // 2) we're in the questions phase (currentBook.questionsActive === true)
-    // 3) we are not currently waiting on a backend call (isProcessing === false)
-    if (this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
-      // Use our helper so it checks recognitionActive internally
-      this.startRecognition();
-    }
-  };
-
-  // As soon as the user starts speaking, we pause the audiobook so voices don’t overlap
-  this.recognition.onspeechstart = () => {
-    console.log('🎤 User started speaking—pausing audio');
-    if (this.audioElement?.nativeElement) {
-      this.audioElement.nativeElement.pause();
-    }
-  };
-}
-
-
-
-/** Helper that checks flags before actually calling recognition.start() **/
-private startRecognition(): void {
-  // Mark that we want to listen
-  this.shouldListen = true;
-
-  // Only call start() if it's not already running
-  if (this.recognition && !this.recognitionActive) {
-    try {
-      console.log('▶️ startRecognition() → calling recognition.start()');
-      // Immediately set recognitionActive so we don’t double‐enter before onstart fires
+    // When the engine actually starts listening
+    this.recognition.onstart = () => {
+      console.log('🎙️ Speech recognition actually started');
       this.recognitionActive = true;
-      this.recognition.start();
-    } catch (err: any) {
-      // Swallow the "already started" error if it somehow races
-      if (err.name !== 'InvalidStateError') {
-        console.error('Unexpected speech‐start error:', err);
+    };
+
+    // When we get any result (interim or final)
+    this.recognition.onresult = (event: any) => {
+      // Loop over every new result from event.resultIndex onward
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        const transcriptSegment = result[0].transcript.trim().toLowerCase();
+
+        if (!this.isTranscriptValid(transcriptSegment)) {
+          // skip garbage / very short segments
+          continue;
+        }
+
+        if (result.isFinal) {
+          // Final transcript arrived
+          console.log('🟢 Final transcript:', transcriptSegment);
+
+          // Clear any buffers
+          this.lastTranscriptFragment = '';
+          this.transcriptBuffer = '';
+
+          // Process inside Angular zone so UI updates properly
+          this.zone.run(() => {
+            this.processChildResponse(transcriptSegment);
+          });
+        } else {
+          // Interim transcript: just store buffer, but do NOT re‐fire logic
+          this.transcriptBuffer = transcriptSegment;
+          console.log('⚫ Interim transcript:', transcriptSegment);
+        }
       }
-      // Reset the flag so our next onend–>start flow can work
+    };
+
+    // Handle errors
+    this.recognition.onerror = (event: any) => {
+      // If we got "no‐speech" while we still want to listen, schedule a restart
+      if (event.error === 'no-speech' && this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
+        console.warn('No speech—but I’ll retry in 300ms');
+        setTimeout(() => {
+          // Only start again if we truly still want to listen
+          if (this.shouldListen && this.currentBook?.questionsActive && !this.recognitionActive && !this.isProcessing) {
+            this.startRecognition();
+          }
+        }, 300);
+        return;
+      }
+
+      // If user intentionally aborted, ignore
+      if (event.error === 'aborted') {
+        return;
+      }
+
+      console.error('Speech error:', event.error);
+    };
+
+    // When the recognition session ends (e.g. silence, or we explicitly called abort())
+    this.recognition.onend = () => {
       this.recognitionActive = false;
+      console.log('🎙️ Speech ended');
+
+      // Only try to restart if:
+      // 1) we still want to listen (shouldListen === true)
+      // 2) we're in the questions phase (currentBook.questionsActive === true)
+      // 3) we are not currently waiting on a backend call (isProcessing === false)
+      if (this.shouldListen && this.currentBook?.questionsActive && !this.isProcessing) {
+        // Use our helper so it checks recognitionActive internally
+        this.startRecognition();
+      }
+    };
+
+    // As soon as the user starts speaking, we pause the audiobook so voices don’t overlap
+    this.recognition.onspeechstart = () => {
+      console.log('🎤 User started speaking—pausing audio');
+      if (this.audioElement?.nativeElement) {
+        this.audioElement.nativeElement.pause();
+      }
+    };
+  }
+
+  /** Helper that checks flags before actually calling recognition.start() **/
+  private startRecognition(): void {
+    // Mark that we want to listen
+    this.shouldListen = true;
+
+    // Only call start() if it's not already running
+    if (this.recognition && !this.recognitionActive) {
+      try {
+        console.log('▶️ startRecognition() → calling recognition.start()');
+        // Immediately set recognitionActive so we don’t double‐enter before onstart fires
+        this.recognitionActive = true;
+        this.recognition.start();
+      } catch (err: any) {
+        // Swallow the "already started" error if it somehow races
+        if (err.name !== 'InvalidStateError') {
+          console.error('Unexpected speech‐start error:', err);
+        }
+        // Reset the flag so our next onend–>start flow can work
+        this.recognitionActive = false;
+      }
     }
   }
-}
 
-/** Helper to actually stop listening */
-private stopRecognition(): void {
-  this.shouldListen = false;
-  if (this.recognition && this.recognitionActive) {
-    // Abort will trigger onend, which sets recognitionActive=false
-    this.recognition.abort();
+  /** Helper to actually stop listening */
+  private stopRecognition(): void {
+    this.shouldListen = false;
+    if (this.recognition && this.recognitionActive) {
+      // Abort will trigger onend, which sets recognitionActive=false
+      this.recognition.abort();
+    }
   }
-}
-
     
   private isTranscriptValid(transcript: string): boolean {
     // Filter out empty or irrelevant transcripts
