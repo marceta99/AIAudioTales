@@ -3,6 +3,11 @@ import { MyProfileComponent } from "./my-profile.component";
 
 export default [
     {path: "", component: MyProfileComponent, children: [
+      {
+        path: "",
+        loadComponent: () =>
+          import("./my-profile.component").then(m => m.MyProfileComponent)
+      },
         {
           path: "account",
           loadComponent: () => import("./settings/account/account.component").then(m => m.AccountComponent)
@@ -23,11 +28,7 @@ export default [
           path: "achievements",
           loadComponent: () => import("./settings/achievements/achievements.component").then(m => m.AchievementsComponent)
         },
-        {
-            path: '',
-            redirectTo: 'account', // account default route
-            pathMatch: 'full',
-          },
+     
       ]
     },
     

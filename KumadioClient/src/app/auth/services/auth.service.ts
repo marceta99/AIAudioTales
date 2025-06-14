@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthStorageService } from './auth-storage.service';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { isNativeApp } from 'src/utils/functions';
 import { ApiMessageResponse, RegisterCreator, RegisterUser, User } from 'src/app/entities';
 
@@ -200,6 +200,10 @@ export class AuthService {
   // #endregion
 
   public getCurrentUser(): Observable<User> {
-     return this.http.get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})
+     return this.http
+     .get<User>(`${this.baseUrl}/current-user`, { withCredentials: true})
+     .pipe(
+        tap(user => this.currentUserSubject.next(user))
+      );
   }
 }
