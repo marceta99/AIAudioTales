@@ -1,4 +1,4 @@
-# Kumadio
+# Kumadio :)
 
 **Kumadio** is an interactive audio books platform built with **.NET** (Clean Architecture), **Angular** (standalone components), and **Ionic** for mobile integration. The platform enables branching audio storytelling, advanced creator tools, and a smooth user experience across web and mobile devices.
 
