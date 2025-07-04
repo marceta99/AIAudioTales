@@ -1,4 +1,3 @@
-<!-- player.component.html -->
 <div *ngIf="currentBook">
   <!-- MINIMIZED PLAYER -->
   <div *ngIf="!isFullScreen; else fullscreen" class="minimized-player-container">
@@ -184,12 +183,11 @@
   </ng-template>
 
   <!-- Hidden HTMLAudioElement to play the track -->
-        
   <audio
     #audioElement
     [src]="currentBook.playingPart.partAudioLink"
     preload="metadata"
     (timeupdate)="progressBarUpdate()"
     (ended)="activateQuestions()">
-</audio>
+  </audio>
 </div>

@@ -3,7 +3,11 @@ import { PurchasedBook, userResponseDto } from 'src/app/entities';
 import { PlayerService } from '../../services/player.service';
 import { CommonModule } from '@angular/common';
 import { LibraryService } from '../../services/library.service';
-
+import { isNativeApp } from 'src/utils/functions';
+import {
+  SpeechRecognition,
+  type PermissionStatus   // ← plugin’s interface: { speechRecognition: PermissionState }
+} from '@capacitor-community/speech-recognition';
 @Component({
   selector: 'app-player',
   templateUrl: 'player.component.html',
@@ -47,7 +51,7 @@ export class PlayerComponent implements OnInit, OnDestroy {
     private zone: NgZone) {}
 
   ngOnInit(): void {
-    this.initializeSpeechRecognition();
+     if (!isNativeApp()) this.initializeWebSpeechRecognition();
 
     this.libraryService.getPurchasedBooks().subscribe({
       next: (books : PurchasedBook[] ) => {
@@ -75,136 +79,6 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopRecognition();
-  }
-
-  private setInitialCurrentBook(): void {
-    for (let i = 0; i < this.books.length; i++) {
-      if (this.books[i].isBookPlaying) {
-        this.playerService.currentBookIndex.next(i);
-        this.loadBook(i); // call loadBook() on initial load, because intialy saveProgress will not be called
-        break; // Exit loop once the book is found
-      }
-    }
-  }
-
-  private loadBook(index: number): void {
-    if (!this.currentBook) {
-      console.log("player active")
-      this.playerService.playerActive.next(true); // set playerActive to true if previously there was not activePlayer
-    }
-
-    this.currentBook = this.books[index];
-    this.currentBookIndex = index;
-    this.cdr.detectChanges();
-
-    this.isTitleOverflowing = this.isOverflowing(this.titleElement.nativeElement);
-    this.isArtistOverflowing = this.isOverflowing(this.artistElement.nativeElement);
-
-    this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
-    this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
-    this.progressBarUpdate();
-
-    if (this.currentBook.questionsActive) {
-      this.playerService.isPlaying.next(false);
-      this.audioElement.nativeElement.pause();
-      if(!this.recognitionActive) this.startRecognition(); //no need to start recognition again if it is started already
-      this.progress = 100; //set progress bar width to 100% when questions are active, because that means that previous part is finished
-    } else {
-       if (this.isPlaying) this.audioElement.nativeElement.play();
-       if (this.recognitionActive) this.stopRecognition(); // stop recognition if was active before
-    }
-
-    this.isLoading = false;
-  }
-
-  private isOverflowing(element: HTMLElement): boolean {
-    return element.scrollWidth > element.clientWidth;
-  }
-
-  public progressBarUpdate(): void {
-    const current = this.audioElement.nativeElement.currentTime;
-    const duration = this.audioElement.nativeElement.duration;
-  
-    if (!isNaN(duration)) {
-      this.progress = (current / duration) * 100;
-      this.currentTime = this.formatTime(current);
-      this.maxDuration = this.formatTime(duration);
-  
-      const remainingTime = duration - current;
-      this.playerService.remainingTime.next(Math.max(0, Math.floor(remainingTime))); // Emit remaining time
-    } else {
-      this.currentTime = '00:00';
-      this.maxDuration = '00:00';
-      this.progress = 0;
-  
-      this.playerService.remainingTime.next(0); // Emit 0 if duration is not valid
-    }
-  }
-  
-  private formatTime(seconds: number): string {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  }
-
-  public togglePlayPause(): void {
-    // only play something if microphone is not active
-    if(!this.currentBook.questionsActive){
-      if (this.isPlaying) {
-        this.audioElement.nativeElement.pause();
-        this.saveProgress(); // save playing progress when pause is clicked
-      } else {
-        this.audioElement.nativeElement.play();
-      }
-      this.playerService.isPlaying.next(!this.isPlaying);
-    }
-  }
-
-  public nextBook(): void {
-    this.isLoading = true;
-    this.playerService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
-    
-    if (this.recognitionActive) {
-        this.stopRecognition();
-    }
-  }
-
-  public prevBook(): void {
-    this.isLoading = true;
-    this.playerService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
-
-    if (this.recognitionActive) {
-        this.stopRecognition();
-    }
-  }
-
-  private saveProgress(playingPosition?: number, nextBookIndex?: number, questionsActive?: boolean): void {
-    const bookId = this.books[this.currentBookIndex].bookId;
-    const currentTimeSec = playingPosition ? playingPosition : this.audioElement.nativeElement.currentTime;
-    const nextBookId = nextBookIndex ? this.books[nextBookIndex].bookId : undefined ; 
-
-    this.playerService.updateProgress(bookId, currentTimeSec, nextBookId, questionsActive).subscribe({
-      next: (purchasedBook: PurchasedBook) => { 
-        console.log("progress updated")
-        this.currentBook = purchasedBook;
-        this.updateBookList();
-        if(nextBookIndex !== undefined) this.loadBook(nextBookIndex); // only if there is need for next book, call loadbook() to load next book
-      },
-      error: (error) => console.error('Error updating progress', error)
-    });
-  }
-
-  private updateBookList(): void {
-    // Preserve the remainingTime for the currently playing book
-    if (this.books[this.currentBookIndex]) {
-      const remainingTime = this.books[this.currentBookIndex].remainingTime;
-      this.books[this.currentBookIndex] = { ...this.currentBook, remainingTime };
-    } else {
-      this.books[this.currentBookIndex] = this.currentBook;
-    }
-  
-    // Update the purchasedBooks observable
-    this.libraryService.purchasedBooks.next(this.books);
   }
 
   public activateQuestions(): void {
@@ -241,24 +115,86 @@ export class PlayerComponent implements OnInit, OnDestroy {
     const bookId = this.currentBook.bookId;
     const nextPartId = nextPlayingPartId as number;
 
-    this.playerService.nextPart(bookId, nextPartId).subscribe((updatedPurchasedBook: PurchasedBook)=>{
+    this.playerService.nextPart(bookId, nextPartId).subscribe((updatedPurchasedBook: PurchasedBook) => {
       this.currentBook = updatedPurchasedBook;
       this.updateBookList();
 
-      this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
-      this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
+      const audio: HTMLAudioElement = this.audioElement.nativeElement;
+      audio.src = this.currentBook.playingPart.partAudioLink;
+      audio.currentTime = this.currentBook.playingPosition;
       this.progressBarUpdate();
-      this.playerService.isPlaying.next(true);
-      this.audioElement.nativeElement.play();
 
-       // Osiguravamo da je mikrofon ugašen dok traje reprodukcija
+      // Wait for enough data to begin playback
+      const onCanPlay = () => {
+        audio.removeEventListener('canplay', onCanPlay);
+        audio.play().catch(err => {
+          console.warn('Play interrupted or prevented:', err);  
+        });
+        this.playerService.isPlaying.next(true);
+      };
+
+      audio.addEventListener('canplay', onCanPlay);
+      // trigger load() explicitly
+      audio.load();
+
+      // Stop any recognition that might have still been running
       if (this.recognitionActive) {
         this.stopRecognition();
       }
-    })
+    });
   }
 
-  private initializeSpeechRecognition(): void {
+  private async startRecognition() {
+    // Mark that we want to listen
+    this.shouldListen = true;
+    
+    if (isNativeApp()) {
+          console.log("start mobile")
+          await this.startNativeSpeechLoop();
+    } else {
+        // Only call start() if it's not already running
+      if (this.recognition && !this.recognitionActive) {
+        try {
+          // Immediately set recognitionActive so we don’t double‐enter before onstart fires
+          this.recognitionActive = true;
+          console.log("start web");
+          this.recognition.start();
+            
+        } catch (err: any) {
+          // Swallow the "already started" error if it somehow races
+          if (err.name !== 'InvalidStateError') {
+            console.error('Unexpected speech‐start error:', err);
+          }
+          // Reset the flag so our next onend–>start flow can work
+          this.recognitionActive = false;
+        }
+      }
+    }
+  }
+
+  private stopRecognition(): void {
+    this.shouldListen = false;
+    isNativeApp() ? this.stopNativeSpeechLoop(): this.stopWebRecognition();
+  }
+
+  private saveProgress(playingPosition?: number, nextBookIndex?: number, questionsActive?: boolean): void {
+    const bookId = this.books[this.currentBookIndex].bookId;
+    const currentTimeSec = playingPosition ? playingPosition : this.audioElement.nativeElement.currentTime;
+    const nextBookId = nextBookIndex ? this.books[nextBookIndex].bookId : undefined ; 
+
+    this.playerService.updateProgress(bookId, currentTimeSec, nextBookId, questionsActive).subscribe({
+      next: (purchasedBook: PurchasedBook) => { 
+        console.log("progress updated")
+        this.currentBook = purchasedBook;
+        this.updateBookList();
+        if(nextBookIndex !== undefined) this.loadBook(nextBookIndex); // only if there is need for next book, call loadbook() to load next book
+      },
+      error: (error) => console.error('Error updating progress', error)
+    });
+  }
+
+  //#region WEB Speech Recognition
+  private initializeWebSpeechRecognition(): void {
     // pick whichever Web Speech API constructor is available
     const SpeechRecognition = (window as any).SpeechRecognition
                             || (window as any).webkitSpeechRecognition;
@@ -357,147 +293,194 @@ export class PlayerComponent implements OnInit, OnDestroy {
     };
   }
 
-  /** Helper that checks flags before actually calling recognition.start() **/
-  private startRecognition(): void {
-    // Mark that we want to listen
-    this.shouldListen = true;
-
-    // Only call start() if it's not already running
-    if (this.recognition && !this.recognitionActive) {
-      try {
-        console.log('▶️ startRecognition() → calling recognition.start()');
-        // Immediately set recognitionActive so we don’t double‐enter before onstart fires
-        this.recognitionActive = true;
-        this.recognition.start();
-      } catch (err: any) {
-        // Swallow the "already started" error if it somehow races
-        if (err.name !== 'InvalidStateError') {
-          console.error('Unexpected speech‐start error:', err);
-        }
-        // Reset the flag so our next onend–>start flow can work
-        this.recognitionActive = false;
-      }
-    }
-  }
-
-  /** Helper to actually stop listening */
-  private stopRecognition(): void {
-    this.shouldListen = false;
+  private stopWebRecognition(): void {
     if (this.recognition && this.recognitionActive) {
       // Abort will trigger onend, which sets recognitionActive=false
       this.recognition.abort();
     }
   }
-    
-  private isTranscriptValid(transcript: string): boolean {
-    // Filter out empty or irrelevant transcripts
-    if (!transcript || transcript.length < 2) {
-      // Ignore very short or empty transcripts
-      return false;
+  //#endregion
+
+  //#region Android Speech Recognition
+  public async startNativeSpeechLoop() {
+    // feature check
+    const { available } = await SpeechRecognition.available();
+    if (!available) {
+      console.warn('Native speech recognition unavailable');
+      return;
     }
 
-    // Optionally, implement more advanced filtering
-    // For example, check if transcript contains at least one valid word character
-    const validWordPattern = /[a-zA-Zčćžđš]/; // Adjust pattern for your language
-    if (!validWordPattern.test(transcript)) {
-      return false;
+    // permission check
+    let perms = await SpeechRecognition.checkPermissions();
+    if (perms.speechRecognition !== 'granted') {
+      perms = await SpeechRecognition.requestPermissions();
+      if (perms.speechRecognition !== 'granted') {
+        alert(
+          'Please enable Microphone & Speech permissions in Settings to use voice answers.'
+        );
+        return;
+      }
     }
 
-    return true;
-  }
+    // loop until we have a usable utterance
+    this.shouldListen = true;
+    while (this.shouldListen) {
+      try {
+        // return as soon as you speak or timeout
+        const { matches } = await SpeechRecognition.start({
+          popup: false,
+          language: 'sr-RS',
+          partialResults: false,
+          maxResults: 1
+        });
 
-  private processChildResponse(transcript: string): void {
-    const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
-      transcript.includes(answer.text.toLowerCase())
-    );
-
-    if (matchedAnswer) {
-      this.failedAttempts = 0; // resetuj pokušaje
-      this.nextPart(matchedAnswer.nextPartId);
-    } else if (this.failedAttempts < this.maxFailedAttempts) {
-      this.sendToBackendForProcessing(transcript);
-    } else {
-      this.promptChildToRepeat(); // ne šaljemo više requestova
-    }
-  }
-
-  private sendToBackendForProcessing(transcript: string): void {
-    this.isProcessing = true;
-    const dto: userResponseDto = {
-      partId: this.currentBook.playingPart.id,
-      transcript: transcript,
-      possibleAnswers: this.currentBook.playingPart.answers.map(a => a.text)
-    };
-
-    this.playerService.processChildResponse(dto).subscribe({
-      next: (response: { reply: string }) => {
-        const chosenAnswer = response.reply;
-        if (chosenAnswer && chosenAnswer.toLowerCase() !== 'unclear') {
-          const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
-            answer.text.toLowerCase() === chosenAnswer.toLowerCase()
-          );
-          if (matchedAnswer) {
-            this.failedAttempts = 0;
-            this.nextPart(matchedAnswer.nextPartId);
-            return;
-          }
+        const utterance = matches?.[0]?.trim(); 
+        if (utterance) {
+          // we got speech — stop looping and hand off
+          this.shouldListen = false;
+          this.zone.run(() => this.processChildResponse(utterance.toLowerCase()));
+        } else {
+          // empty string: retry the loop
+          console.debug('Native speech: no content, retrying…');
         }
-        
-        // Backend responded, turn on mic again
-        this.isProcessing = false;
-        this.startRecognition();
 
-        this.failedAttempts++;
-        this.promptChildToRepeat();
-      },
-      error: error => {
-        console.error('There was an error!', error);
-
-        // Backend responded, turn on mic again
-        this.isProcessing = false;
-        this.startRecognition();
-
-        this.failedAttempts++;
-        this.promptChildToRepeat();
+      } catch (err: any) {
+        console.warn('Native speech error:', err.message);
+        // if it’s one of the “no match” cases, we just retry
+        if (
+          err.message === 'No match' ||
+          err.message === 'Client side error' 
+        ) {
+          continue;
+        } else { 
+          // some other fatal error — bail
+          console.error('Fatal native speech error', err);
+          this.shouldListen = false;
+        }
       }
-    });
+    }
   }
 
-  private promptChildToRepeat(): void {
-    // Ako već postoji instanca „repeat“ zvuka (iz prethodnih pokušaja), prekidamo je
-    if (this.repeatAudio) {
-      this.repeatAudio.pause();
-      this.repeatAudio = null;
+  public async stopNativeSpeechLoop() {
+    this.shouldListen = false;
+    try {
+      await SpeechRecognition.stop();
+      await SpeechRecognition.removeAllListeners();
+    } catch {
+      /* ignore */
+    }
+  }
+  //#endregion 
+
+  //#region Book List Logic
+  public nextBook(): void {
+    this.isLoading = true;
+    this.playerService.currentBookIndex.next(this.currentBookIndex + 1 > this.books.length-1 ? 0 : this.currentBookIndex + 1);
+    
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
+  }
+
+  public prevBook(): void {
+    this.isLoading = true;
+    this.playerService.currentBookIndex.next(this.currentBookIndex - 1 < 0 ? this.books.length -1 : this.currentBookIndex - 1);
+
+    if (this.recognitionActive) {
+        this.stopRecognition();
+    }
+  }
+
+  private loadBook(index: number): void {
+    if (!this.currentBook) {
+      console.log("player active")
+      this.playerService.playerActive.next(true); // set playerActive to true if previously there was not activePlayer
     }
 
-    // Kreiramo novu instancu
-    this.repeatAudio = new Audio('assets/audio/repeat_audio.mp3');
+    this.currentBook = this.books[index];
+    this.currentBookIndex = index;
+    this.cdr.detectChanges();
 
-    // Kad svira „repeat“, NEMOJ da pozivaš stopRecognition()
-    // jer želiš da mikrofon ostane aktivan i spreman da uhvati neki fragment govora.
-    this.repeatAudio.play();
+    this.isTitleOverflowing = this.isOverflowing(this.titleElement.nativeElement);
+    this.isArtistOverflowing = this.isOverflowing(this.artistElement.nativeElement);
 
-    // Kada se „repeat“ završi prirodno, oslobodi instancu
-    this.repeatAudio.onended = () => {
-      this.repeatAudio = null;
-    };
+    this.audioElement.nativeElement.src = this.currentBook.playingPart.partAudioLink;
+    this.audioElement.nativeElement.currentTime = this.currentBook.playingPosition;
+    this.progressBarUpdate();
+
+    if (this.currentBook.questionsActive) {
+      this.playerService.isPlaying.next(false);
+      this.audioElement.nativeElement.pause();
+      if(!this.recognitionActive) this.startRecognition(); //no need to start recognition again if it is started already
+      this.progress = 100; //set progress bar width to 100% when questions are active, because that means that previous part is finished
+    } else {
+       if (this.isPlaying) this.audioElement.nativeElement.play();
+       if (this.recognitionActive) this.stopRecognition(); // stop recognition if was active before
+    }
+
+    this.isLoading = false;
   }
 
-  public updatePlayingTime(event: MouseEvent): void {
-    const progressWidth = this.progressArea.nativeElement.clientWidth;
-    const clickedOffsetX = event.offsetX;
+  private setInitialCurrentBook(): void {
+    for (let i = 0; i < this.books.length; i++) {
+      if (this.books[i].isBookPlaying) {
+        this.playerService.currentBookIndex.next(i);
+        this.loadBook(i); // call loadBook() on initial load, because intialy saveProgress will not be called
+        break; // Exit loop once the book is found
+      }
+    }
+  }
+
+  private updateBookList(): void {
+    // Preserve the remainingTime for the currently playing book
+    if (this.books[this.currentBookIndex]) {
+      const remainingTime = this.books[this.currentBookIndex].remainingTime;
+      this.books[this.currentBookIndex] = { ...this.currentBook, remainingTime };
+    } else {
+      this.books[this.currentBookIndex] = this.currentBook;
+    }
+
+    // Update the purchasedBooks observable
+    this.libraryService.purchasedBooks.next(this.books);
+  }
+  //#endregion
+
+  //#region Player Actions
+  public progressBarUpdate(): void {
+    const current = this.audioElement.nativeElement.currentTime;
     const duration = this.audioElement.nativeElement.duration;
-
-    const playingPosition = (clickedOffsetX / progressWidth) * duration; 
-    this.audioElement.nativeElement.currentTime  = playingPosition;
-
-    if(playingPosition < duration){
-      if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions active to false because now it is rewound 10sec and questions are not active
-        this.saveProgress(playingPosition, undefined, false);
-      } else {
-        this.saveProgress(playingPosition, undefined, undefined);
-      }
+  
+    if (!isNaN(duration)) {
+      this.progress = (current / duration) * 100;
+      this.currentTime = this.formatTime(current);
+      this.maxDuration = this.formatTime(duration);
+  
+      const remainingTime = duration - current;
+      this.playerService.remainingTime.next(Math.max(0, Math.floor(remainingTime))); // Emit remaining time
+    } else {
+      this.currentTime = '00:00';
+      this.maxDuration = '00:00';
+      this.progress = 0;
+  
+      this.playerService.remainingTime.next(0); // Emit 0 if duration is not valid
     }
+  }
+
+  public togglePlayPause(): void {
+    // only play something if microphone is not active
+    if(!this.currentBook.questionsActive){
+      if (this.isPlaying) {
+        this.audioElement.nativeElement.pause();
+        this.saveProgress(); // save playing progress when pause is clicked
+      } else {
+        this.audioElement.nativeElement.play();
+      }
+      this.playerService.isPlaying.next(!this.isPlaying);
+    }
+  }
+
+  public toggleFullScreen(): void {
+    this.isFullScreen = !this.isFullScreen;
   }
 
   public rewind(): void {
@@ -529,8 +512,129 @@ export class PlayerComponent implements OnInit, OnDestroy {
         this.stopRecognition();
     }
   }
-  
-  public toggleFullScreen(): void {
-    this.isFullScreen = !this.isFullScreen;
+
+  public updatePlayingTime(event: MouseEvent): void {
+    const progressWidth = this.progressArea.nativeElement.clientWidth;
+    const clickedOffsetX = event.offsetX;
+    const duration = this.audioElement.nativeElement.duration;
+
+    const playingPosition = (clickedOffsetX / progressWidth) * duration; 
+    this.audioElement.nativeElement.currentTime  = playingPosition;
+
+    if(playingPosition < duration){
+      if (this.currentBook.questionsActive) { // if questions(mic) are active, set questions active to false because now it is rewound 10sec and questions are not active
+        this.saveProgress(playingPosition, undefined, false);
+      } else {
+        this.saveProgress(playingPosition, undefined, undefined);
+      }
+    }
   }
+
+  private formatTime(seconds: number): string {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+  }
+
+  private isOverflowing(element: HTMLElement): boolean {
+    return element.scrollWidth > element.clientWidth;
+  }
+  //#endregion
+
+  //#region Response Processing
+  private promptChildToRepeat(): void {
+    // Ako već postoji instanca „repeat“ zvuka (iz prethodnih pokušaja), prekidamo je
+    if (this.repeatAudio) {
+      this.repeatAudio.pause();
+      this.repeatAudio = null;
+    }
+
+    // Kreiramo novu instancu
+    this.repeatAudio = new Audio('assets/audio/repeat_audio.mp3');
+
+    // Kad svira „repeat“, NEMOJ da pozivaš stopRecognition()
+    // jer želiš da mikrofon ostane aktivan i spreman da uhvati neki fragment govora.
+    this.repeatAudio.play();
+
+    // Kada se „repeat“ završi prirodno, oslobodi instancu
+    this.repeatAudio.onended = () => {
+      this.repeatAudio = null;
+    };
+  }
+
+  private isTranscriptValid(transcript: string): boolean {
+    // Filter out empty or irrelevant transcripts
+    if (!transcript || transcript.length < 2) {
+      // Ignore very short or empty transcripts
+      return false;
+    }
+
+    // Optionally, implement more advanced filtering
+    // For example, check if transcript contains at least one valid word character
+    const validWordPattern = /[a-zA-Zčćžđš]/; // Adjust pattern for your language
+    if (!validWordPattern.test(transcript)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private processChildResponse(transcript: string): void {
+    const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
+      transcript.includes(answer.text.toLowerCase())
+    );
+
+    if (matchedAnswer) {
+      this.failedAttempts = 0; // resetuj pokušaje
+      this.nextPart(matchedAnswer.nextPartId);
+    } else if (this.failedAttempts < this.maxFailedAttempts) {
+      this.sendToBackendForProcessing(transcript);
+    } else {
+      this.promptChildToRepeat();
+    }
+  }
+
+  private sendToBackendForProcessing(transcript: string): void {
+    this.isProcessing = true;
+    const dto: userResponseDto = {
+      partId: this.currentBook.playingPart.id,  
+      transcript: transcript,
+      possibleAnswers: this.currentBook.playingPart.answers.map(a => a.text)
+    };
+
+    this.playerService.processChildResponse(dto).subscribe({
+      next: (response: { reply: string }) => {
+        const chosenAnswer = response.reply;
+        if (chosenAnswer && chosenAnswer.toLowerCase() !== 'unclear') {
+          const matchedAnswer = this.currentBook.playingPart.answers.find(answer =>
+            answer.text.toLowerCase().includes(chosenAnswer.toLowerCase())
+          );
+          if (matchedAnswer) {
+            this.failedAttempts = 0;
+            this.nextPart(matchedAnswer.nextPartId);
+            return;
+          }
+        }
+        
+        // Backend responded, turn on mic again
+        this.isProcessing = false;
+        this.startRecognition();
+
+        this.failedAttempts++;
+        this.promptChildToRepeat();
+      },
+      error: error => {
+        console.error('There was an error!', error);
+
+        // Backend responded, turn on mic again
+        this.isProcessing = false;
+        this.startRecognition();
+
+        this.failedAttempts++;
+        this.promptChildToRepeat();
+      }
+    });
+  }
+
+  //#endregion
 }
