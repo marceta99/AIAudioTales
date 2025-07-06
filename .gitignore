@@ -87,3 +87,6 @@ KumadioServer/KumadioServer/Migrations
 KumadioClient/www/
 KumadioClient/android/
 KumadioClient/ios/
+
+# Exclude local environment secrets
+.env

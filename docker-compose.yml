@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  backend:
+    build: ./KumadioServer
+    container_name: kumadio-server
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # Override iz appsettings.json
+      ApplicationSettings__Secret: "${APP_SECRET}"
+      ApplicationSettings__GoogleClientId: "${GOOGLE_CLIENT_ID}"
+      OpenAI__ApiKey: "${OPENAI_API_KEY}"
+      SmtpSettings__Username: "${SMTP_USERNAME}"
+      SmtpSettings__Password: "${SMTP_PASSWORD}"
+      # ConnectionString za lokalni SQL
+      ConnectionStrings__DefaultConnection: >
+        Server=db;Database=KumadioV1;
+        User Id=sa;Password=${SA_PASSWORD};
+        TrustServerCertificate=True
+    ports:
+      - "5000:80"
+
+  frontend:
+    build: ./KumadioClient
+    container_name: kumadio-client
+    ports:
+      - "4200:80"
