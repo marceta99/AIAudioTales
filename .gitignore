@@ -65,10 +65,7 @@ KumadioServer/.vs/*
 *.vbproj.user
 
 # Exclude audio files
-KumadioServer/KumadioServer/uploads
-
-# Exclude migrations
-KumadioServer/KumadioServer/Migrations
+KumadioServer/Kumadio.Web/uploads
 
 # -------------------------------
 # Additional .NET build artifacts
